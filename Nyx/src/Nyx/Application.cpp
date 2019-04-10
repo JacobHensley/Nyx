@@ -1,3 +1,4 @@
+#include "NXpch.h"
 #include "Application.h"
 
 Application::Application()

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Nyx">
+      <UniqueIdentifier>{C40E880B-3018-887C-B993-9E7C259C937C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\NXpch.h" />
+    <ClInclude Include="src\Nyx.h" />
+    <ClInclude Include="src\Nyx\Application.h">
+      <Filter>Nyx</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\NXpch.cpp" />
+    <ClCompile Include="src\Nyx\Application.cpp">
+      <Filter>Nyx</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

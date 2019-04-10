@@ -1,4 +1,4 @@
-#include "Nyx/Application.h"
+#include <Nyx.h>
 
 int main()
 {

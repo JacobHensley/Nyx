@@ -19,6 +19,9 @@ project "Nyx"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin/intermediates/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "NXpch.h"
+	pchsource "Nyx/src/NXpch.cpp"	
+
 	files
 	{
 		"%{prj.name}/src/**.h",
