@@ -10,6 +10,10 @@ workspace "Nyx"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
+IncludeDir["glm"] = "Nyx/vendor/glm"
+
 project "Nyx"
 	location "Nyx"
 	kind "StaticLib"
@@ -32,7 +36,8 @@ project "Nyx"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor",
-		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.glm}",
 	}
 
 
@@ -83,7 +88,8 @@ project "Sandbox"
 		"%{prj.name}/src",
 		"Nyx/src",
 		"Nyx/vendor",
-		"Nyx/vendor/spdlog/include",
+		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.glm}",
 	}
 
 	links 
