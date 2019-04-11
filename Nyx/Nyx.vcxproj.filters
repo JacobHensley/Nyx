@@ -11,10 +11,19 @@
     <ClInclude Include="src\Nyx\Application.h">
       <Filter>Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\Common.h">
+      <Filter>Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\Log.h">
+      <Filter>Nyx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />
     <ClCompile Include="src\Nyx\Application.cpp">
+      <Filter>Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>Nyx</Filter>
     </ClCompile>
   </ItemGroup>

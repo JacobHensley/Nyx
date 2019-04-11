@@ -32,6 +32,7 @@ project "Nyx"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor",
+		"%{prj.name}/vendor/spdlog/include",
 	}
 
 
@@ -52,6 +53,11 @@ project "Nyx"
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "On"
+
+		defines 
+		{
+			"NX_ENABLE_ASSERTS"
+		}
 
 	filter "configurations:Release"
 		runtime "Release"
@@ -76,7 +82,8 @@ project "Sandbox"
 	{
 		"%{prj.name}/src",
 		"Nyx/src",
-		"Nyx/vendor"
+		"Nyx/vendor",
+		"Nyx/vendor/spdlog/include",
 	}
 
 	links 
