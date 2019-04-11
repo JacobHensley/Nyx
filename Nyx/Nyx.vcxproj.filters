@@ -4,6 +4,9 @@
     <Filter Include="Nyx">
       <UniqueIdentifier>{C40E880B-3018-887C-B993-9E7C259C937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\graphics">
+      <UniqueIdentifier>{A44FBDD3-90B2-4C78-3938-852E257A18FB}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NXpch.h" />
@@ -17,6 +20,9 @@
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Window.h">
+      <Filter>Nyx\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />
@@ -25,6 +31,9 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Window.cpp">
+      <Filter>Nyx\graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

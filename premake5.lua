@@ -13,6 +13,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
 IncludeDir["glm"] = "Nyx/vendor/glm"
+IncludeDir["GLFW"] = "Nyx/vendor/GLFW/include"
+IncludeDir["Glad"] = "Nyx/vendor/Glad/include"
+
+include "Nyx/vendor/GLFW"
+include "Nyx/vendor/Glad"
 
 project "Nyx"
 	location "Nyx"
@@ -38,6 +43,8 @@ project "Nyx"
 		"%{prj.name}/vendor",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 
@@ -47,7 +54,8 @@ project "Nyx"
 
 		defines 
 		{
-			"NX_PLATFORM_WINDOWS"
+			"NX_PLATFORM_WINDOWS",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands
@@ -90,11 +98,16 @@ project "Sandbox"
 		"Nyx/vendor",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links 
 	{ 
-		"Nyx"
+		"GLFW",
+		"Glad",
+		"Nyx",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
