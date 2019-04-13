@@ -7,6 +7,9 @@
     <Filter Include="Nyx\graphics">
       <UniqueIdentifier>{A44FBDD3-90B2-4C78-3938-852E257A18FB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\graphics\Layers">
+      <UniqueIdentifier>{E3655322-4FC7-3030-D834-77E2449567EF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NXpch.h" />
@@ -20,6 +23,12 @@
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Layers\Layer.h">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\Window.h">
       <Filter>Nyx\graphics</Filter>
     </ClInclude>
@@ -31,6 +40,12 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp">
+      <Filter>Nyx\graphics\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Window.cpp">
       <Filter>Nyx\graphics</Filter>
