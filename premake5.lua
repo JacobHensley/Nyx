@@ -15,9 +15,11 @@ IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
 IncludeDir["glm"] = "Nyx/vendor/glm"
 IncludeDir["GLFW"] = "Nyx/vendor/GLFW/include"
 IncludeDir["Glad"] = "Nyx/vendor/Glad/include"
+IncludeDir["imgui"] = "Nyx/vendor/imgui"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/Glad"
+include "Nyx/vendor/imgui"
 
 project "Nyx"
 	location "Nyx"
@@ -44,7 +46,8 @@ project "Nyx"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.imgui}"
 	}
 
 
@@ -99,13 +102,15 @@ project "Sandbox"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.imgui}"
 	}
 
 	links 
 	{ 
 		"GLFW",
 		"Glad",
+		"imgui",
 		"Nyx",
 		"opengl32.lib"
 	}

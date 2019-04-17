@@ -19,6 +19,7 @@ public:
 
 	void Update();
 	void Render();
+	void ImGUIRender();
 private:
 	std::vector<Layer*> m_Layers;
 	std::vector<Layer*> m_Overlays;

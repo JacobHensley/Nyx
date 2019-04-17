@@ -12,7 +12,7 @@ public:
 	void Clear();
 	bool IsClosed();
 
-	inline GLFWwindow* GetWindow() const { return m_Window; }
+	inline GLFWwindow* GetGLFWWindow() const { return m_Window; }
 	inline const int GetWidth() const { return m_Width; }
 	inline const int GetHeight() const { return m_Height; }
 private:

@@ -69,3 +69,16 @@ void LayerStack::Render()
 			m_Overlays[i]->Render();
 	}
 }
+
+void LayerStack::ImGUIRender()
+{
+	for (int i = 0; i < m_Layers.size(); i++)
+	{
+		m_Layers[i]->ImGUIRender();
+	}
+
+	for (int i = 0; i < m_Overlays.size(); i++)
+	{
+		m_Overlays[i]->ImGUIRender();
+	}
+}

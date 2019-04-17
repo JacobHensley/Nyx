@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics/Window.h"
 #include "graphics/Layers/LayerStack.h"
+#include "graphics/ImGUI/ImGUILayer.h"
 
 class Application
 {
@@ -16,10 +17,16 @@ public:
 	 
 	void Update();
 	void Render();
+	void ImGUIRender();
 
 	void Run();
+
+	inline Window& GetWindow() { return *m_Window; }
+	inline static Application& GetApp() { return *s_Instance; }
 private:
 	Window* m_Window;
 	LayerStack* m_LayerStack;
-	bool m_Running;
+	ImGUILayer* m_ImGUILayer;
+private:
+	static Application* s_Instance;
 };

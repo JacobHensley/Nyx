@@ -6,10 +6,11 @@ class GameLayer : public Layer
 public:
 	GameLayer(const String& name);
 
-	void OnAttach() override;
-	void OnDetach() override;
-	void Update() override;
-	void Render() override;
+	virtual void OnAttach() override;
+	virtual void OnDetach() override;
+	virtual void Update() override;
+	virtual void Render() override;
+	virtual void ImGUIRender() override;
 
 private:
 

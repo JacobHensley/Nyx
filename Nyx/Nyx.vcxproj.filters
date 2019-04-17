@@ -7,6 +7,9 @@
     <Filter Include="Nyx\graphics">
       <UniqueIdentifier>{A44FBDD3-90B2-4C78-3938-852E257A18FB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\graphics\ImGUI">
+      <UniqueIdentifier>{8EEB93E9-7ACF-543F-E32F-4F92CF323FC1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Nyx\graphics\Layers">
       <UniqueIdentifier>{E3655322-4FC7-3030-D834-77E2449567EF}</UniqueIdentifier>
     </Filter>
@@ -22,6 +25,9 @@
     </ClInclude>
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h">
+      <Filter>Nyx\graphics\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\Layers\Layer.h">
       <Filter>Nyx\graphics\Layers</Filter>
@@ -40,6 +46,12 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp">
+      <Filter>Nyx\graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp">
+      <Filter>Nyx\graphics\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp">
       <Filter>Nyx\graphics\Layers</Filter>

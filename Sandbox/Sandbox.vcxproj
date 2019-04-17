@@ -15,7 +15,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Sandbox</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\Glad\include;..\Nyx\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\Glad\include;..\Nyx\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -91,8 +91,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\layers\GameLayer.cpp" />
+    <ClInclude Include="src\layers\GameLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\layers\GameLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nyx\vendor\GLFW\GLFW.vcxproj">
@@ -101,12 +104,12 @@
     <ProjectReference Include="..\Nyx\vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Nyx\vendor\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Nyx\Nyx.vcxproj">
       <Project>{C40E880B-3018-887C-B993-9E7C259C937C}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\layers\GameLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
