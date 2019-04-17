@@ -1,7 +1,7 @@
 #pragma once
 #include "NXpch.h"
 #include "GLFW/glfw3.h"
-#include "Nyx/input/Input.h"
+#include "Nyx/Input/Input.h"
 
 class Window
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "NXpch.h"
-#include "Nyx/graphics/Layers/Layer.h"
+#include "Nyx/Graphics/Layers/Layer.h"
 
 class ImGUILayer : public Layer
 {

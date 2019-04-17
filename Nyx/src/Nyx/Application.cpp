@@ -1,5 +1,6 @@
 #include "NXpch.h"
 #include "Application.h"
+#include "Nyx/Input/KeyCodes.h"
 
 Application* Application::s_Instance = nullptr;
 

@@ -101,6 +101,7 @@
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Common.h" />
+    <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\Log.h" />
     <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h" />
     <ClInclude Include="src\Nyx\graphics\Layers\Layer.h" />
