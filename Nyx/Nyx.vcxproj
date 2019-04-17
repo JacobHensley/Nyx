@@ -106,6 +106,7 @@
     <ClInclude Include="src\Nyx\graphics\Layers\Layer.h" />
     <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h" />
     <ClInclude Include="src\Nyx\graphics\Window.h" />
+    <ClInclude Include="src\Nyx\input\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
@@ -118,6 +119,7 @@
     <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp" />
     <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Nyx\graphics\Window.cpp" />
+    <ClCompile Include="src\Nyx\input\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

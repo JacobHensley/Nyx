@@ -31,6 +31,8 @@ void Window::Init()
 
 	glfwSetWindowUserPointer(m_Window, this);
 	glfwSwapInterval(0);
+
+	m_Input = new Input();
 }
 
 void Window::Update()

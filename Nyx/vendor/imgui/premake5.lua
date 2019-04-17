@@ -24,7 +24,7 @@ project "ImGui"
         "IMGUI_DEFINE_MATH_OPERATORS",
         "IMGUI_IMPL_OPENGL_LOADER_GLAD",
     }
-h
+
 	filter "system:windows"
         systemversion "latest"
         cppdialect "C++17"

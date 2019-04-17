@@ -13,6 +13,9 @@
     <Filter Include="Nyx\graphics\Layers">
       <UniqueIdentifier>{E3655322-4FC7-3030-D834-77E2449567EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\input">
+      <UniqueIdentifier>{E3D1BDA5-4F3C-721C-987A-23C204245071}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NXpch.h" />
@@ -38,6 +41,9 @@
     <ClInclude Include="src\Nyx\graphics\Window.h">
       <Filter>Nyx\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\input\Input.h">
+      <Filter>Nyx\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />
@@ -61,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Window.cpp">
       <Filter>Nyx\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\input\Input.cpp">
+      <Filter>Nyx\input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
