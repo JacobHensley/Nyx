@@ -20,10 +20,13 @@ public:
 
 private:
 	void Init();
+	void UpdateFPSCounter();
 private:
 	GLFWwindow* m_Window;
 	const String& m_Name;
 	int m_Width, m_Height;
+	float m_LastTime, m_MSFrame, m_FPS;
+	int m_FrameCount;
 private:
 	Input* m_Input;
 };

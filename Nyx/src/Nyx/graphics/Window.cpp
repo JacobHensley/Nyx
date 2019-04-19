@@ -8,6 +8,7 @@ Window::Window(const String& name, int width, int height)
 	: m_Name(name), m_Width(width), m_Height(height) 
 {
 	Init();
+	m_LastTime = glfwGetTime();
 }
 
 Window::~Window()
@@ -38,8 +39,27 @@ void Window::Init()
 	m_Input = new Input();
 }
 
+void Window::UpdateFPSCounter()
+{
+	float currentTime = (float)glfwGetTime();
+	m_FrameCount++;
+
+	if (currentTime - m_LastTime >= 1.0)
+	{
+		m_MSFrame = 1000.0 / m_FrameCount;
+		m_FPS = m_FrameCount;
+
+		m_FrameCount = 0;
+		m_LastTime += 1.0f;
+
+		NX_CORE_TRACE(m_MSFrame);
+		NX_CORE_TRACE(m_FPS);
+	}
+}
+
 void Window::Update()
 {
+	UpdateFPSCounter();
 	glfwSwapBuffers(m_Window);
 	glfwPollEvents();
 }
