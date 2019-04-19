@@ -45,6 +45,7 @@
       <Filter>Nyx\input</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
+    <ClInclude Include="src\Nyx\GLError.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />

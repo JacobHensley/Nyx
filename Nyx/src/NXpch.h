@@ -1,5 +1,7 @@
 #pragma once
 
+/* Nyx pre-compiled header */
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -12,8 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Nyx/Log.h"
 #include "Nyx/Common.h"
+#include "Nyx/Log.h"
 
 #ifdef NX_PLATFORM_WINDOWS
 	#include <Windows.h>

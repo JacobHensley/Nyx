@@ -1,7 +1,8 @@
-#include "NXpch.h"
+﻿#include "NXpch.h"
 #include "Window.h"
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
+#include "Nyx/GLError.h"
 
 Window::Window(const String& name, int width, int height)
 	: m_Name(name), m_Width(width), m_Height(height) 
@@ -26,6 +27,8 @@ void Window::Init()
 	glfwMakeContextCurrent(m_Window);
 
 	NX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Glad Failed to Initialize");
+
+	GLErrorInit();
 
 	glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 
