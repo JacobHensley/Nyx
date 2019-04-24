@@ -2,6 +2,7 @@
 #include "graphics/Window.h"
 #include "graphics/Layers/LayerStack.h"
 #include "graphics/ImGUI/ImGUILayer.h"
+#include "Nyx/Events/AppEvent.h"
 
 class Application
 {
@@ -18,6 +19,9 @@ public:
 	void Update();
 	void Render();
 	void ImGUIRender();
+
+	void OnEvent(Event& e);
+	bool OnWindowClose(WindowCloseEvent& e);
 
 	void Run();
 

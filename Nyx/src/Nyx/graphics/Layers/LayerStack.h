@@ -1,6 +1,7 @@
 #pragma once
 #include "NXpch.h"
 #include "Layer.h"
+#include "Nyx/Events/Event.h"
 
 class LayerStack
 {
@@ -20,6 +21,7 @@ public:
 	void Update();
 	void Render();
 	void ImGUIRender();
+	void OnEvent(Event& e);
 private:
 	std::vector<Layer*> m_Layers;
 	std::vector<Layer*> m_Overlays;

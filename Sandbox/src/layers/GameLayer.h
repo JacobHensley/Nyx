@@ -11,7 +11,7 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 	virtual void ImGUIRender() override;
-
+	virtual void OnEvent(Event& e) override;
 private:
 
 };

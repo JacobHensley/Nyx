@@ -101,6 +101,10 @@
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Common.h" />
+    <ClInclude Include="src\Nyx\Events\AppEvent.h" />
+    <ClInclude Include="src\Nyx\Events\Event.h" />
+    <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
+    <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\Log.h" />

@@ -46,6 +46,10 @@
     </ClInclude>
     <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
+    <ClInclude Include="src\Nyx\Events\AppEvent.h" />
+    <ClInclude Include="src\Nyx\Events\Event.h" />
+    <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
+    <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />

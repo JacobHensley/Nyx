@@ -1,5 +1,6 @@
 #pragma once
 #include "NXpch.h"
+#include "Nyx/Events/Event.h"
 
 class Layer
 {
@@ -13,6 +14,7 @@ public:
 	virtual void Update() {}
 	virtual void Render() {}
 	virtual void ImGUIRender() {}
+	virtual void OnEvent(Event& e) {}
 
 	inline void Toggle() { m_Visible = !m_Visible; }
 	inline bool IsVisible() const { return m_Visible; }

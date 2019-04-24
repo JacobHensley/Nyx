@@ -1,8 +1,11 @@
 #include "NXpch.h"
 #include "Application.h"
 #include "Nyx/Input/KeyCodes.h"
+#include "Nyx/Events/AppEvent.h"
 
 Application* Application::s_Instance = nullptr;
+
+#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 Application::Application()
 {
@@ -12,6 +15,7 @@ Application::Application()
 	Log::Init();
 
 	m_Window = new Window("Nyx Engine", 1280, 720);
+	m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 	m_LayerStack = new LayerStack();
 
 	m_ImGUILayer = new ImGUILayer("ImGUILayer");
@@ -57,6 +61,19 @@ void Application::ImGUIRender()
 	m_ImGUILayer->Begin();
 	m_LayerStack->ImGUIRender();
 	m_ImGUILayer->End();
+}
+
+bool Application::OnWindowClose(WindowCloseEvent& e)
+{
+	return false;
+}
+
+void Application::OnEvent(Event& e)
+{
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+
+	m_LayerStack->OnEvent(e);
 }
 
 void Application::Run()
