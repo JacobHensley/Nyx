@@ -3,34 +3,38 @@
 #include "Nyx/Application.h"
 #include <GLFW/glfw3.h>
 
-bool Input::IsKeyPressed(int keycode)
-{
-	GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
-	return glfwGetKey(window, keycode);
-}
+namespace Nyx {
 
-bool Input::IsMouseButtonPressed(int keycode)
-{
-	GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
-	return glfwGetMouseButton(window, keycode);
-}
+	bool Input::IsKeyPressed(int keycode)
+	{
+		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		return glfwGetKey(window, keycode);
+	}
 
-std::pair<float, float> Input::GetMousePos()
-{
-	GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
-	double x, y;
-	glfwGetCursorPos(window, &x, &y);
-	return { (float)x, (float)y };
-}
+	bool Input::IsMouseButtonPressed(int keycode)
+	{
+		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		return glfwGetMouseButton(window, keycode);
+	}
 
-float Input::GetMouseX()
-{
-	auto[x, y] = GetMousePos();
-	return x;
-}
+	std::pair<float, float> Input::GetMousePos()
+	{
+		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		return { (float)x, (float)y };
+	}
 
-float Input::GetMouseY()
-{
-	auto[x, y] = GetMousePos();
-	return y;
+	float Input::GetMouseX()
+	{
+		auto[x, y] = GetMousePos();
+		return x;
+	}
+
+	float Input::GetMouseY()
+	{
+		auto[x, y] = GetMousePos();
+		return y;
+	}
+
 }

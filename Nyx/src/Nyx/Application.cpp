@@ -3,90 +3,94 @@
 #include "Nyx/Input/KeyCodes.h"
 #include "Nyx/Events/AppEvent.h"
 
-Application* Application::s_Instance = nullptr;
-
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-Application::Application()
-{
-	NX_CORE_ASSERT(!s_Instance, "Instance of Application already exists");
-	s_Instance = this;
+namespace Nyx {
 
-	Log::Init();
+	Application* Application::s_Instance = nullptr;
 
-	m_Window = new Window("Nyx Engine", 1280, 720);
-	m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-	m_LayerStack = new LayerStack();
-
-	m_ImGUILayer = new ImGUILayer("ImGUILayer");
-	PushOverlay(m_ImGUILayer);
-}
-
-Application::~Application()
-{
-}
-
-void Application::PushLayer(Layer* layer)
-{
-	m_LayerStack->PushLayer(layer);
-}
-
-void Application::PopLayer(Layer* layer)
-{
-	m_LayerStack->PopLayer(layer);
-}
-
-void Application::PushOverlay(Layer* overlay)
-{
-	m_LayerStack->PushOverlay(overlay);
-}
-
-void Application::PopOverlay(Layer* overlay)
-{
-	m_LayerStack->PopOverlay(overlay);
-}
-
-void Application::Update()
-{
-	m_LayerStack->Update();
-}
-
-void Application::Render()
-{
-	m_LayerStack->Render();
-}
-
-void Application::ImGUIRender()
-{
-	m_ImGUILayer->Begin();
-	m_LayerStack->ImGUIRender();
-	m_ImGUILayer->End();
-}
-
-bool Application::OnWindowClose(WindowCloseEvent& e)
-{
-	return false;
-}
-
-void Application::OnEvent(Event& e)
-{
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-
-	m_LayerStack->OnEvent(e);
-}
-
-void Application::Run()
-{
-	while (!m_Window->IsClosed())
+	Application::Application()
 	{
-		Update();
+		NX_CORE_ASSERT(!s_Instance, "Instance of Application already exists");
+		s_Instance = this;
 
-		m_Window->Clear();
+		Log::Init();
 
-		Render();
-		ImGUIRender();
+		m_Window = new Window("Nyx Engine", 1280, 720);
+		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_LayerStack = new LayerStack();
 
-		m_Window->Update();
+		m_ImGUILayer = new ImGUILayer("ImGUILayer");
+		PushOverlay(m_ImGUILayer);
 	}
+
+	Application::~Application()
+	{
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack->PushLayer(layer);
+	}
+
+	void Application::PopLayer(Layer* layer)
+	{
+		m_LayerStack->PopLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack->PushOverlay(overlay);
+	}
+
+	void Application::PopOverlay(Layer* overlay)
+	{
+		m_LayerStack->PopOverlay(overlay);
+	}
+
+	void Application::Update()
+	{
+		m_LayerStack->Update();
+	}
+
+	void Application::Render()
+	{
+		m_LayerStack->Render();
+	}
+
+	void Application::ImGUIRender()
+	{
+		m_ImGUILayer->Begin();
+		m_LayerStack->ImGUIRender();
+		m_ImGUILayer->End();
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		return false;
+	}
+
+	void Application::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+
+		m_LayerStack->OnEvent(e);
+	}
+
+	void Application::Run()
+	{
+		while (!m_Window->IsClosed())
+		{
+			Update();
+
+			m_Window->Clear();
+
+			Render();
+			ImGUIRender();
+
+			m_Window->Update();
+		}
+	}
+
 }

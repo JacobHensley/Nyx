@@ -32,7 +32,7 @@ void GameLayer::ImGUIRender()
 	ImGui::Text("Test Text");
 }
 
-void GameLayer::OnEvent(Event & e)
+void GameLayer::OnEvent(Nyx::Event & e)
 {
 	NX_TRACE(e);
 }

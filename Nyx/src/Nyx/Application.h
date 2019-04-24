@@ -4,33 +4,37 @@
 #include "graphics/ImGUI/ImGUILayer.h"
 #include "Nyx/Events/AppEvent.h"
 
-class Application
-{
-public:
-	Application();
-	~Application();
+namespace Nyx {
 
-	void PushLayer(Layer* layer);
-	void PopLayer(Layer* layer);
+	class Application
+	{
+	public:
+		Application();
+		~Application();
 
-	void PushOverlay(Layer* overlay);
-	void PopOverlay(Layer* overlay);
-	 
-	void Update();
-	void Render();
-	void ImGUIRender();
+		void PushLayer(Layer* layer);
+		void PopLayer(Layer* layer);
 
-	void OnEvent(Event& e);
-	bool OnWindowClose(WindowCloseEvent& e);
+		void PushOverlay(Layer* overlay);
+		void PopOverlay(Layer* overlay);
 
-	void Run();
+		void Update();
+		void Render();
+		void ImGUIRender();
 
-	inline Window& GetWindow() { return *m_Window; }
-	inline static Application& GetApp() { return *s_Instance; }
-private:
-	Window* m_Window;
-	LayerStack* m_LayerStack;
-	ImGUILayer* m_ImGUILayer;
-private:
-	static Application* s_Instance;
-};
+		void OnEvent(Event& e);
+		bool OnWindowClose(WindowCloseEvent& e);
+
+		void Run();
+
+		inline Window& GetWindow() { return *m_Window; }
+		inline static Application& GetApp() { return *s_Instance; }
+	private:
+		Window* m_Window;
+		LayerStack* m_LayerStack;
+		ImGUILayer* m_ImGUILayer;
+	private:
+		static Application* s_Instance;
+	};
+
+}

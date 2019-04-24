@@ -3,26 +3,30 @@
 #include "Layer.h"
 #include "Nyx/Events/Event.h"
 
-class LayerStack
-{
-public:
-	LayerStack();
-	~LayerStack();
+namespace Nyx {
 
-	void PushLayer(Layer* layer);
-	void PopLayer(Layer* layer);
+	class LayerStack
+	{
+	public:
+		LayerStack();
+		~LayerStack();
 
-	void PushOverlay(Layer* overlay);
-	void PopOverlay(Layer* overlay);
+		void PushLayer(Layer* layer);
+		void PopLayer(Layer* layer);
 
-	inline std::vector<Layer*> GetLayers() const { return m_Layers; }
-	inline std::vector<Layer*> GetOverlays() const { return m_Overlays; }
+		void PushOverlay(Layer* overlay);
+		void PopOverlay(Layer* overlay);
 
-	void Update();
-	void Render();
-	void ImGUIRender();
-	void OnEvent(Event& e);
-private:
-	std::vector<Layer*> m_Layers;
-	std::vector<Layer*> m_Overlays;
-};   
+		inline std::vector<Layer*> GetLayers() const { return m_Layers; }
+		inline std::vector<Layer*> GetOverlays() const { return m_Overlays; }
+
+		void Update();
+		void Render();
+		void ImGUIRender();
+		void OnEvent(Event& e);
+	private:
+		std::vector<Layer*> m_Layers;
+		std::vector<Layer*> m_Overlays;
+	};
+
+}

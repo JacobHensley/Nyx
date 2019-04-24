@@ -3,7 +3,7 @@
 
 int main()
 {
-	Application app = Application();
+	Nyx::Application app = Nyx::Application();
 	GameLayer* game = new GameLayer("GameLayer");
 	app.PushLayer(game);
 	app.Run();

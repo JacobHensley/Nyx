@@ -1,14 +1,18 @@
 #include "NXpch.h"
 #include "Log.h"
 
-std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+namespace Nyx {
 
-void Log::Init()
-{
-	spdlog::set_pattern("%^[%T] [%l] %n: %v%$");
-	spdlog::set_level(NX_LEVEL_TRACE);
+	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
+	std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
 
-	s_CoreLogger = spdlog::stderr_color_mt("Core");
-	s_ClientLogger = spdlog::stderr_color_mt("Client");
+	void Log::Init()
+	{
+		spdlog::set_pattern("%^[%T] [%l] %n: %v%$");
+		spdlog::set_level(NX_LEVEL_TRACE);
+
+		s_CoreLogger = spdlog::stderr_color_mt("Core");
+		s_ClientLogger = spdlog::stderr_color_mt("Client");
+	}
+
 }

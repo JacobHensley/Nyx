@@ -2,18 +2,22 @@
 #include "NXpch.h"
 #include "Nyx/Graphics/Layers/Layer.h"
 
-class ImGUILayer : public Layer
-{
-public:
-	ImGUILayer(const String& name);
-	~ImGUILayer();
+namespace Nyx {
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
-	virtual void ImGUIRender() override;
+	class ImGUILayer : public Layer
+	{
+	public:
+		ImGUILayer(const String& name);
+		~ImGUILayer();
 
-	void Begin();
-	void End();
-private:
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
+		virtual void ImGUIRender() override;
 
-};
+		void Begin();
+		void End();
+	private:
+
+	};
+
+}
