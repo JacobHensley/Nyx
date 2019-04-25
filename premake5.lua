@@ -12,10 +12,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
-IncludeDir["glm"] = "Nyx/vendor/glm"
-IncludeDir["GLFW"] = "Nyx/vendor/GLFW/include"
-IncludeDir["Glad"] = "Nyx/vendor/Glad/include"
-IncludeDir["imgui"] = "Nyx/vendor/imgui"
+IncludeDir["glm"] =    "Nyx/vendor/glm"
+IncludeDir["GLFW"] =   "Nyx/vendor/GLFW/include"
+IncludeDir["Glad"] =   "Nyx/vendor/Glad/include"
+IncludeDir["imgui"] =  "Nyx/vendor/imgui"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/Glad"

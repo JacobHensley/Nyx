@@ -1,8 +1,7 @@
 #pragma once
-#include "graphics/Window.h"
-#include "graphics/Layers/LayerStack.h"
-#include "graphics/ImGUI/ImGUILayer.h"
-#include "Nyx/Events/AppEvent.h"
+#include "Nyx/graphics/Window.h"
+#include "Nyx/graphics/Layers/LayerStack.h"
+#include "Nyx/graphics/ImGUI/ImGUILayer.h"
 
 namespace Nyx {
 
@@ -23,12 +22,12 @@ namespace Nyx {
 		void ImGUIRender();
 
 		void OnEvent(Event& e);
-		bool OnWindowClose(WindowCloseEvent& e);
 
 		void Run();
 
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& GetApp() { return *s_Instance; }
+
 	private:
 		Window* m_Window;
 		LayerStack* m_LayerStack;

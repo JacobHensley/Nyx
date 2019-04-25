@@ -106,26 +106,26 @@
     <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
     <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
+    <ClInclude Include="src\Nyx\Graphics\ImGUI\ImGUILayer.h" />
+    <ClInclude Include="src\Nyx\Graphics\Layers\Layer.h" />
+    <ClInclude Include="src\Nyx\Graphics\Layers\LayerStack.h" />
+    <ClInclude Include="src\Nyx\Graphics\Window.h" />
+    <ClInclude Include="src\Nyx\Input\Input.h" />
     <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\Log.h" />
-    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h" />
-    <ClInclude Include="src\Nyx\graphics\Layers\Layer.h" />
-    <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h" />
-    <ClInclude Include="src\Nyx\graphics\Window.h" />
-    <ClInclude Include="src\Nyx\input\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
+    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUIBuild.cpp" />
+    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUILayer.cpp" />
+    <ClCompile Include="src\Nyx\Graphics\Layers\Layer.cpp" />
+    <ClCompile Include="src\Nyx\Graphics\Layers\LayerStack.cpp" />
+    <ClCompile Include="src\Nyx\Graphics\Window.cpp" />
+    <ClCompile Include="src\Nyx\Input\Input.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
-    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp" />
-    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp" />
-    <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp" />
-    <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp" />
-    <ClCompile Include="src\Nyx\graphics\Window.cpp" />
-    <ClCompile Include="src\Nyx\input\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

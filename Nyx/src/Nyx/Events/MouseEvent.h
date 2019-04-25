@@ -54,6 +54,7 @@ namespace Nyx {
 		MouseButtonEvent(int button)
 			: m_Button(button) {}
 
+	protected:
 		int m_Button;
 	};
 

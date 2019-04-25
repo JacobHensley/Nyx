@@ -12,18 +12,18 @@ namespace Nyx {
 	};
 
 	#define EVENT_FUNCTIONS(type) static EventType GetStaticType() { return EventType::##type; } \
-						      virtual EventType GetEventType() const override { return GetStaticType(); } \
-							  virtual String GetName() const override { return #type; }
+								  virtual EventType GetEventType() const override { return GetStaticType(); } \
+							      virtual String GetName() const override { return #type; }
 
 	class Event
 	{
 	public:
-		bool m_Handled = false;
 		inline bool IsHandled() { return m_Handled; }
-	public:
 		virtual EventType GetEventType() const = 0;
 		virtual String GetName() const = 0;
 		virtual String ToString() const { return GetName(); }
+	public:
+		bool m_Handled = false;
 	};
 
 	class EventDispatcher

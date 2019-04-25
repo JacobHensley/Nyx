@@ -21,10 +21,16 @@ namespace Nyx {
 		glfwTerminate();
 	}
 
+	static void GlfwErrorCallback(int error, const char* message)
+	{
+		NX_CORE_ASSERT("GLFW Error (0): {1}", error, message);
+	}
+
 	void Window::Init()
 	{
 		NX_ASSERT(glfwInit(), "GLFW Failed to Initialize");
 
+		glfwSetErrorCallback(GlfwErrorCallback);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -149,6 +155,7 @@ namespace Nyx {
 	void Window::Update()
 	{
 		UpdateFPSCounter();
+
 		glfwSwapBuffers(m_Window);
 		glfwPollEvents();
 	}

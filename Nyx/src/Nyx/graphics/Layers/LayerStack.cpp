@@ -87,14 +87,14 @@ namespace Nyx {
 
 	void LayerStack::OnEvent(Event& e)
 	{
-		for (auto it = m_Overlays.end(); it != m_Overlays.begin(); )
+		for (auto it = m_Layers.end(); it != m_Layers.begin(); )
 		{
 			(*--it)->OnEvent(e);
 			if (e.IsHandled())
 				break;
 		}
 
-		for (auto it = m_Layers.end(); it != m_Layers.begin(); )
+		for (auto it = m_Overlays.end(); it != m_Overlays.begin(); )
 		{
 			(*--it)->OnEvent(e);
 			if (e.IsHandled())

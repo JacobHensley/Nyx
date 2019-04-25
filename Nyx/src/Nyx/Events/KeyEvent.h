@@ -12,6 +12,7 @@ namespace Nyx {
 		KeyEvent(int keycode)
 			: m_Keycode(keycode) {}
 
+	protected:
 		int m_Keycode;
 	};
 

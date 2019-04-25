@@ -16,8 +16,6 @@ namespace Nyx {
 
 		void Begin();
 		void End();
-	private:
-
 	};
 
 }

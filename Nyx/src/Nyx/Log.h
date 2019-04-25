@@ -18,7 +18,8 @@ namespace Nyx {
 
 		inline static void DisablePattern() { s_CoreLogger->set_pattern("%v"); }
 		inline static void EnablePattern() { s_CoreLogger->set_pattern("%^[%T] [%l] %n: %v%$"); }
-
+	
+	public:
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 

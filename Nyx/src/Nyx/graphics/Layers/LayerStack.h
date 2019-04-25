@@ -23,6 +23,7 @@ namespace Nyx {
 		void Update();
 		void Render();
 		void ImGUIRender();
+
 		void OnEvent(Event& e);
 	private:
 		std::vector<Layer*> m_Layers;

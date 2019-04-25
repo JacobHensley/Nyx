@@ -37,3 +37,6 @@ project "ImGui"
     filter "configurations:Release"
         runtime "Release"
         optimize "On"
+
+    filter { "system:windows", "configurations:Release" }
+        buildoptions "/MT"
