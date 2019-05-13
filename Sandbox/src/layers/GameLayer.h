@@ -1,7 +1,9 @@
 #pragma once
 #include "Nyx.h"
 
-class GameLayer : public Nyx::Layer
+using namespace Nyx;
+
+class GameLayer : public Layer
 {
 public:
 	GameLayer(const String& name);
@@ -14,7 +16,5 @@ public:
 
 	virtual void ImGUIRender() override;
 
-	virtual void OnEvent(Nyx::Event& e) override;
-private:
-
+	virtual void OnEvent(Event& e) override;
 };

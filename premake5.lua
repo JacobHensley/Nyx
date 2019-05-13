@@ -72,7 +72,8 @@ project "Nyx"
 
 		defines 
 		{
-			"NX_ENABLE_ASSERTS"
+			"NX_ENABLE_ASSERTS",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 
 	filter "configurations:Release"

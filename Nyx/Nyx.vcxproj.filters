@@ -4,20 +4,26 @@
     <Filter Include="Nyx">
       <UniqueIdentifier>{C40E880B-3018-887C-B993-9E7C259C937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\Events">
-      <UniqueIdentifier>{28F6080A-14AE-4A57-7DB5-23B3698CE547}</UniqueIdentifier>
+    <Filter Include="Nyx\events">
+      <UniqueIdentifier>{480AAE54-34C2-EFA1-9DC9-C8FD89A08A92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\Graphics">
-      <UniqueIdentifier>{84B3824B-7016-12F0-199C-4AA605DEDD72}</UniqueIdentifier>
+    <Filter Include="Nyx\graphics">
+      <UniqueIdentifier>{A44FBDD3-90B2-4C78-3938-852E257A18FB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\Graphics\ImGUI">
-      <UniqueIdentifier>{6EB78C81-5A9B-4DD7-C3FB-472AAFFE3759}</UniqueIdentifier>
+    <Filter Include="Nyx\graphics\ImGUI">
+      <UniqueIdentifier>{8EEB93E9-7ACF-543F-E32F-4F92CF323FC1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\Graphics\Layers">
-      <UniqueIdentifier>{C3AD65B9-2F0F-43C7-B87C-897924DD7986}</UniqueIdentifier>
+    <Filter Include="Nyx\graphics\Layers">
+      <UniqueIdentifier>{E3655322-4FC7-3030-D834-77E2449567EF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\Input">
-      <UniqueIdentifier>{C3C17AA3-2F2C-2F1A-786A-E0BFE4130D6F}</UniqueIdentifier>
+    <Filter Include="Nyx\graphics\renderer">
+      <UniqueIdentifier>{EA07B130-5674-6C2B-1F68-04898B938E93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Nyx\graphics\renderer\API">
+      <UniqueIdentifier>{D3D181B0-3F94-B53A-8844-44C7F4458E18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Nyx\input">
+      <UniqueIdentifier>{E3D1BDA5-4F3C-721C-987A-23C204245071}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,41 +35,53 @@
     <ClInclude Include="src\Nyx\Common.h">
       <Filter>Nyx</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\Events\AppEvent.h">
-      <Filter>Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\Event.h">
-      <Filter>Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\KeyEvent.h">
-      <Filter>Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\MouseEvent.h">
-      <Filter>Nyx\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\GLError.h">
       <Filter>Nyx</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\Graphics\ImGUI\ImGUILayer.h">
-      <Filter>Nyx\Graphics\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Graphics\Layers\Layer.h">
-      <Filter>Nyx\Graphics\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Graphics\Layers\LayerStack.h">
-      <Filter>Nyx\Graphics\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Graphics\Window.h">
-      <Filter>Nyx\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Input\Input.h">
-      <Filter>Nyx\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Input\KeyCodes.h">
-      <Filter>Nyx\Input</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\AppEvent.h">
+      <Filter>Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\Event.h">
+      <Filter>Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\KeyEvent.h">
+      <Filter>Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\MouseEvent.h">
+      <Filter>Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h">
+      <Filter>Nyx\graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Layers\Layer.h">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\Window.h">
+      <Filter>Nyx\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\input\Input.h">
+      <Filter>Nyx\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\input\KeyCodes.h">
+      <Filter>Nyx\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,26 +89,38 @@
     <ClCompile Include="src\Nyx\Application.cpp">
       <Filter>Nyx</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUIBuild.cpp">
-      <Filter>Nyx\Graphics\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUILayer.cpp">
-      <Filter>Nyx\Graphics\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\Layers\Layer.cpp">
-      <Filter>Nyx\Graphics\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\Layers\LayerStack.cpp">
-      <Filter>Nyx\Graphics\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\Window.cpp">
-      <Filter>Nyx\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Input\Input.cpp">
-      <Filter>Nyx\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp">
+      <Filter>Nyx\graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp">
+      <Filter>Nyx\graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp">
+      <Filter>Nyx\graphics\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\Window.cpp">
+      <Filter>Nyx\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\input\Input.cpp">
+      <Filter>Nyx\input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

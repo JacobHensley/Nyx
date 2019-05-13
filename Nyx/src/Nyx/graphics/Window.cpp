@@ -13,7 +13,7 @@ namespace Nyx {
 		: m_Name(name), m_Width(width), m_Height(height)
 	{
 		Init();
-		m_LastTime = glfwGetTime();
+		m_LastTime = (float)glfwGetTime();
 	}
 
 	Window::~Window()
@@ -42,7 +42,7 @@ namespace Nyx {
 
 		GLErrorInit();
 
-		glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSwapInterval(0);
@@ -141,8 +141,8 @@ namespace Nyx {
 
 		if (currentTime - m_LastTime >= 1.0)
 		{
-			m_MSFrame = 1000.0 / m_FrameCount;
-			m_FPS = m_FrameCount;
+			m_MSFrame = (float)(1000.0 / m_FrameCount);
+			m_FPS = (float)m_FrameCount;
 
 			m_FrameCount = 0;
 			m_LastTime += 1.0f;

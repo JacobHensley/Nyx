@@ -57,7 +57,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;NX_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;NX_ENABLE_ASSERTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -101,31 +101,39 @@
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Common.h" />
-    <ClInclude Include="src\Nyx\Events\AppEvent.h" />
-    <ClInclude Include="src\Nyx\Events\Event.h" />
-    <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
-    <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
-    <ClInclude Include="src\Nyx\Graphics\ImGUI\ImGUILayer.h" />
-    <ClInclude Include="src\Nyx\Graphics\Layers\Layer.h" />
-    <ClInclude Include="src\Nyx\Graphics\Layers\LayerStack.h" />
-    <ClInclude Include="src\Nyx\Graphics\Window.h" />
-    <ClInclude Include="src\Nyx\Input\Input.h" />
-    <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\Log.h" />
+    <ClInclude Include="src\Nyx\events\AppEvent.h" />
+    <ClInclude Include="src\Nyx\events\Event.h" />
+    <ClInclude Include="src\Nyx\events\KeyEvent.h" />
+    <ClInclude Include="src\Nyx\events\MouseEvent.h" />
+    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h" />
+    <ClInclude Include="src\Nyx\graphics\Layers\Layer.h" />
+    <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h" />
+    <ClInclude Include="src\Nyx\graphics\Window.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h" />
+    <ClInclude Include="src\Nyx\input\Input.h" />
+    <ClInclude Include="src\Nyx\input\KeyCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUIBuild.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUILayer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Layers\Layer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Layers\LayerStack.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Window.cpp" />
-    <ClCompile Include="src\Nyx\Input\Input.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp" />
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Window.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\input\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,9 @@
 #pragma once
 #include "NXpch.h"
 
-typedef std::string String;
+using String = std::string;
+using uint = unsigned int;
+using byte = unsigned char;
 
 #ifdef NX_ENABLE_ASSERTS
 	#define NX_ASSERT(x, ...) { if(!(x)) { NX_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }

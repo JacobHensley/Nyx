@@ -2,8 +2,11 @@
 #include "GameLayer.h"
 #include "imgui/imgui.h"
 
+using namespace Nyx;
+
 GameLayer::GameLayer(const String& name)
 	:	Layer(name) {
+
 }
 
 void GameLayer::OnAttach()
@@ -32,7 +35,7 @@ void GameLayer::ImGUIRender()
 	ImGui::Text("Test Text");
 }
 
-void GameLayer::OnEvent(Nyx::Event & e)
+void GameLayer::OnEvent(Event & e)
 {
 	NX_TRACE(e);
 }

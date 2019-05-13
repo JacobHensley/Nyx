@@ -19,3 +19,8 @@
 #include "Nyx/Events/AppEvent.h"
 #include "Nyx/Events/KeyEvent.h"
 #include "Nyx/Events/MouseEvent.h"
+
+#include "Nyx/graphics/renderer/API/BufferLayout.h"
+#include "Nyx/graphics/renderer/API/IndexBuffer.h"
+#include "Nyx/graphics/renderer/API/VertexArray.h"
+#include "Nyx/graphics/renderer/API/VertexBuffer.h"
