@@ -32,8 +32,8 @@ namespace Nyx {
 		GLFWwindow* m_Window;
 		const String& m_Name;
 		int m_Width, m_Height;
-
 		Input* m_Input;
+
 		EvenCallbackFn m_EventCallback;
 
 		float m_LastTime, m_MSFrame, m_FPS;

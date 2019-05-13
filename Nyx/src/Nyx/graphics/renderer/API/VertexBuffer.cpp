@@ -4,25 +4,37 @@
 
 namespace Nyx {
 
-	VertexBuffer::VertexBuffer(uint count)
+	VertexBuffer::VertexBuffer()
+	{
+		glGenBuffers(1, &m_BufferID);
+	}
+
+	VertexBuffer::VertexBuffer(uint size)
 	{
 		glGenBuffers(1, &m_BufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), NULL, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), NULL, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	VertexBuffer::VertexBuffer(float* data, int count)
+	VertexBuffer::VertexBuffer(float* data, int size)
 	{
 		glGenBuffers(1, &m_BufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
-		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), data, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
 		glDeleteBuffers(1, &m_BufferID);
+	}
+
+	void VertexBuffer::SetData(float* data, int size)
+	{
+		Bind();
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		Unbind();
 	}
 
 	void VertexBuffer::Bind() const

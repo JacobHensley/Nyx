@@ -1,5 +1,5 @@
 #pragma once
-#include "Nyx/graphics/renderer/API/VertexBuffer.h"
+#include "VertexBuffer.h"
 
 namespace Nyx {
 

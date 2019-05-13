@@ -52,8 +52,8 @@ namespace Nyx {
 				n++;
 		}
 
-		NX_CORE_ERROR("{0}: ({1}): {2}", GLenumToNameType(type), id, shortMessage);
-
+	//	NX_CORE_ERROR("{0}: ({1}): {2}", GLenumToNameType(type), id, shortMessage);
+		NX_CORE_ERROR(message);
 		if (severity == GL_DEBUG_SEVERITY_HIGH)
 			__debugbreak();
 	}

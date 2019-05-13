@@ -4,6 +4,11 @@
 
 namespace Nyx {
 
+	IndexBuffer::IndexBuffer()
+	{
+		glGenBuffers(1, &m_BufferID);
+	}
+
 	IndexBuffer::IndexBuffer(const uint* data, uint count)
 		: m_Count(count)
 	{
@@ -16,6 +21,12 @@ namespace Nyx {
 	IndexBuffer::~IndexBuffer()
 	{
 		glDeleteBuffers(1, &m_BufferID);
+	}
+
+	void IndexBuffer::SetData(const uint* data, uint count)
+	{
+		m_Count = count;
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint), data, GL_STATIC_DRAW);
 	}
 
 	void IndexBuffer::Draw() const

@@ -73,6 +73,7 @@ namespace Nyx {
 	{
 		while (!m_Window->IsClosed())
 		{
+
 			Update();
 
 			m_Window->Clear();

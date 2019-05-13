@@ -33,7 +33,7 @@ namespace Nyx {
 		glfwSetErrorCallback(GlfwErrorCallback);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Name.c_str(), NULL, NULL);
 		glfwMakeContextCurrent(m_Window);
@@ -44,11 +44,11 @@ namespace Nyx {
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-		glfwSetWindowUserPointer(m_Window, this);
-		glfwSwapInterval(0);
-
 		m_Input = new Input();
 
+		glfwSetWindowUserPointer(m_Window, this);
+		glfwSwapInterval(0);
+		
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
 			Window& win = *(Window*)glfwGetWindowUserPointer(window);

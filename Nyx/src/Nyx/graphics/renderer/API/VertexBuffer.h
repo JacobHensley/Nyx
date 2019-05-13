@@ -1,15 +1,18 @@
 #pragma once
 #include "Nyx/Common.h"
-#include "Nyx/graphics/renderer/API/BufferLayout.h"
+#include "BufferLayout.h"
 
 namespace Nyx {
 
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(uint count);
-		VertexBuffer(float* data, int count);
+		VertexBuffer();
+		VertexBuffer(uint size);
+		VertexBuffer(float* data, int size);
 		~VertexBuffer();
+
+		void SetData(float* data, int size);
 
 		inline void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
 		inline const BufferLayout& GetLayout() const { return m_Layout; }

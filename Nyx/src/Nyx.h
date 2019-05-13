@@ -24,3 +24,6 @@
 #include "Nyx/graphics/renderer/API/IndexBuffer.h"
 #include "Nyx/graphics/renderer/API/VertexArray.h"
 #include "Nyx/graphics/renderer/API/VertexBuffer.h"
+
+#include "Nyx/graphics/renderer/shaders/Shader.h"
+#include "Nyx/graphics/renderer/shaders/ShaderUniform.h"

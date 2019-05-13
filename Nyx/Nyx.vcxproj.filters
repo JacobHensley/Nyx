@@ -22,6 +22,9 @@
     <Filter Include="Nyx\graphics\renderer\API">
       <UniqueIdentifier>{D3D181B0-3F94-B53A-8844-44C7F4458E18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\graphics\renderer\shaders">
+      <UniqueIdentifier>{E30EB320-4F27-9A4A-18D4-29E484AB2EE4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Nyx\input">
       <UniqueIdentifier>{E3D1BDA5-4F3C-721C-987A-23C204245071}</UniqueIdentifier>
     </Filter>
@@ -77,6 +80,12 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h">
       <Filter>Nyx\graphics\renderer\API</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\shaders\Shader.h">
+      <Filter>Nyx\graphics\renderer\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.h">
+      <Filter>Nyx\graphics\renderer\shaders</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\input\Input.h">
       <Filter>Nyx\input</Filter>
     </ClInclude>
@@ -118,6 +127,12 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp">
       <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\shaders\Shader.cpp">
+      <Filter>Nyx\graphics\renderer\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.cpp">
+      <Filter>Nyx\graphics\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\input\Input.cpp">
       <Filter>Nyx\input</Filter>

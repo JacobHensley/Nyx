@@ -6,8 +6,11 @@ namespace Nyx {
 	class IndexBuffer
 	{
 	public:
+		IndexBuffer();
 		IndexBuffer(const uint* data, uint count);
 		~IndexBuffer();
+
+		void SetData(const uint* data, uint count);
 
 		void Draw() const;
 		void Draw(uint count) const;

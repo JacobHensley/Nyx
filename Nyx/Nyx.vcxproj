@@ -115,6 +115,8 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\shaders\Shader.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.h" />
     <ClInclude Include="src\Nyx\input\Input.h" />
     <ClInclude Include="src\Nyx\input\KeyCodes.h" />
   </ItemGroup>
@@ -133,6 +135,8 @@
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\shaders\Shader.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.cpp" />
     <ClCompile Include="src\Nyx\input\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
