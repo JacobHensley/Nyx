@@ -1,6 +1,11 @@
 #include "NXpch.h"
 #include "Application.h"
 
+/* THIS IS TEST CODE REMOVE AFTER COMMIT */
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 namespace Nyx {
@@ -21,6 +26,15 @@ namespace Nyx {
 
 		m_ImGUILayer = new ImGUILayer("ImGUILayer");
 		PushOverlay(m_ImGUILayer);
+
+		/* THIS IS TEST CODE REMOVE AFTER COMMIT */
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile("", aiProcess_Triangulate | aiProcess_FlipUVs);
+
+		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			NX_CORE_ASSERT(false, importer.GetErrorString());
+		}
 	}
 
 	Application::~Application()

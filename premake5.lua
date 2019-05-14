@@ -13,6 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
 IncludeDir["glm"] =    "Nyx/vendor/glm"
+IncludeDir["assimp"] = "Nyx/vendor/assimp/include"
 IncludeDir["GLFW"] =   "Nyx/vendor/GLFW/include"
 IncludeDir["Glad"] =   "Nyx/vendor/Glad/include"
 IncludeDir["imgui"] =  "Nyx/vendor/imgui"
@@ -20,6 +21,7 @@ IncludeDir["imgui"] =  "Nyx/vendor/imgui"
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/Glad"
 include "Nyx/vendor/imgui"
+include "Nyx/vendor/assimp"
 
 project "Nyx"
 	location "Nyx"
@@ -46,6 +48,7 @@ project "Nyx"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.assimp}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imgui}"
 	}
@@ -72,8 +75,7 @@ project "Nyx"
 
 		defines 
 		{
-			"NX_ENABLE_ASSERTS",
-			"_CRT_SECURE_NO_WARNINGS"
+			"NX_ENABLE_ASSERTS"
 		}
 
 	filter "configurations:Release"
@@ -103,6 +105,7 @@ project "Sandbox"
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.assimp}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.imgui}"
 	}
@@ -111,6 +114,7 @@ project "Sandbox"
 	{ 
 		"GLFW",
 		"Glad",
+		"assimp",
 		"imgui",
 		"Nyx",
 		"opengl32.lib"

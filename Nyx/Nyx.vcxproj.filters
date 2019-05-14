@@ -4,8 +4,8 @@
     <Filter Include="Nyx">
       <UniqueIdentifier>{C40E880B-3018-887C-B993-9E7C259C937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Nyx\events">
-      <UniqueIdentifier>{480AAE54-34C2-EFA1-9DC9-C8FD89A08A92}</UniqueIdentifier>
+    <Filter Include="Nyx\Events">
+      <UniqueIdentifier>{28F6080A-14AE-4A57-7DB5-23B3698CE547}</UniqueIdentifier>
     </Filter>
     <Filter Include="Nyx\graphics">
       <UniqueIdentifier>{A44FBDD3-90B2-4C78-3938-852E257A18FB}</UniqueIdentifier>
@@ -38,23 +38,23 @@
     <ClInclude Include="src\Nyx\Common.h">
       <Filter>Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\Events\AppEvent.h">
+      <Filter>Nyx\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\Events\Event.h">
+      <Filter>Nyx\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\Events\KeyEvent.h">
+      <Filter>Nyx\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\Events\MouseEvent.h">
+      <Filter>Nyx\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\GLError.h">
       <Filter>Nyx</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>Nyx</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\events\AppEvent.h">
-      <Filter>Nyx\events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\events\Event.h">
-      <Filter>Nyx\events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\events\KeyEvent.h">
-      <Filter>Nyx\events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\events\MouseEvent.h">
-      <Filter>Nyx\events</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h">
       <Filter>Nyx\graphics\ImGUI</Filter>
