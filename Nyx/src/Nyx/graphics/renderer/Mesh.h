@@ -34,7 +34,7 @@ namespace Nyx {
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint> m_Indices;
 		std::vector<Texture> m_Textures;
-		unsigned int VAO, VBO, EBO;
+
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;
 		VertexBuffer* m_VertexBuffer;

@@ -9,42 +9,8 @@ using namespace Nyx;
 GameLayer::GameLayer(const String& name)
 	:	Layer(name) {
 
-	m_VertexArray = new VertexArray();
-	m_VertexArray->Bind();
-
-	m_VertexBuffer = new VertexBuffer();
-	m_VertexBuffer->Bind();
-
-	float vertices[3 * 3] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
-
-	m_VertexBuffer->SetData(vertices, sizeof(vertices));
-	m_VertexBuffer->Bind();
-
-	BufferLayout layout;
-	layout.Push<glm::vec3>("pos");
-	m_VertexBuffer->SetLayout(layout);
-
-	m_VertexArray->PushVertexBuffer(m_VertexBuffer);
-	m_VertexArray->Bind();
-
-	m_IndexBuffer = new IndexBuffer();
-	m_IndexBuffer->Bind();
-
-	uint indices[3] = { 0, 1, 2 };
-	m_IndexBuffer->SetData(indices, 3);
-	m_IndexBuffer->Bind();
-
-	m_Shader = new Shader("res/shaders/Basic.shader");
-	m_Shader->Bind();
-
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
-//	m_ModelShader->Bind();
-
-	m_Model = new Model("res/models/nanosuit.obj");
+	m_Model = new Model("res/models/bunny.obj");
 }
 
 void GameLayer::OnAttach()
@@ -61,38 +27,32 @@ void GameLayer::Update()
 
 void GameLayer::Render()
 {
+	m_ModelShader->Bind();
+
 	glm::mat4 projection(1.0f);
-	m_ModelShader->SetUniformMat4("projection", projection);
+	projection = glm::perspective(65.0f, 1280.0f / 720.0f, 0.01f, 1000.0f);
 
 	glm::mat4 view(1.0f);
-	m_ModelShader->SetUniformMat4("view", view);
 
 	glm::mat4 model(1.0f);
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(transX, transY, transZ));
-	m_ModelShader->SetUniformMat4("model", model);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.02f));
+	model = glm::rotate(model, glm::radians(m_Angle), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
 
-	m_ModelShader->Bind();
-//	m_VertexArray->Bind();
-//	m_IndexBuffer->Bind();
-// 	m_IndexBuffer->Draw();
-	
-	m_Model->Render(*m_Shader);
+	m_ModelShader->SetUniformMat4("u_ModelMatrix", model);
+
+	glm::mat4 mvp = projection * view * model;
+
+	m_ModelShader->SetUniformMat4("u_MVP", mvp);
+
+	m_Model->Render(*m_ModelShader);
 }
 
 void GameLayer::ImGUIRender()
 {
-	
-	ImGui::Begin("Test Window");
-	ImGui::SliderFloat("X", &transX, -20, 20);
-	ImGui::SliderFloat("Y", &transY, -20, 20);
-	ImGui::SliderFloat("Z", &transZ, -20, 20);
-	ImGui::End();
-
-//	ImGui::Text("Test Text");
+	ImGui::SliderFloat("Angle", &m_Angle, -360, 360);
 }
 
 void GameLayer::OnEvent(Event& e)
 {
-	NX_TRACE(e);
 }

@@ -2,6 +2,7 @@
 #include "Nyx.h"
 
 #include "Nyx/graphics/renderer/Model.h"
+#include "Nyx/graphics/renderer/camera/Camera.h"
 
 using namespace Nyx;
 
@@ -20,14 +21,8 @@ public:
 
 	virtual void OnEvent(Event& e) override;
 private:
-	Shader* m_Shader;
-	IndexBuffer* m_IndexBuffer;
-	VertexArray* m_VertexArray;
-	VertexBuffer* m_VertexBuffer;
-	float transX = 0;
-	float transY = 0;
-	float transZ = 0;
-
+	Camera* cam;
 	Shader* m_ModelShader;
 	Model* m_Model;
+	float m_Angle = 0.0f;
 };

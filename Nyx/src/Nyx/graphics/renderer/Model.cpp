@@ -2,7 +2,6 @@
 #include "Model.h"
 
 #include "glad/glad.h"
-//#define STBI_INCLUDE_STB_IMAGE_H
 #include "stbimage/stb_image.h"
 
 namespace Nyx {
