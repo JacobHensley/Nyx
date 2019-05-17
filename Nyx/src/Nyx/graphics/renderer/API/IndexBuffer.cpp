@@ -26,7 +26,9 @@ namespace Nyx {
 	void IndexBuffer::SetData(const uint* data, uint count)
 	{
 		m_Count = count;
+		Bind();
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint), data, GL_STATIC_DRAW);
+		Unbind();
 	}
 
 	void IndexBuffer::Draw() const

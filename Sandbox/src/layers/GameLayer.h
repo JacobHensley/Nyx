@@ -1,6 +1,8 @@
 #pragma once
 #include "Nyx.h"
 
+#include "Nyx/graphics/renderer/Model.h"
+
 using namespace Nyx;
 
 class GameLayer : public Layer
@@ -22,4 +24,10 @@ private:
 	IndexBuffer* m_IndexBuffer;
 	VertexArray* m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
+	float transX = 0;
+	float transY = 0;
+	float transZ = 0;
+
+	Shader* m_ModelShader;
+	Model* m_Model;
 };

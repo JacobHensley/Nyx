@@ -92,6 +92,9 @@
     <ClInclude Include="src\Nyx\input\KeyCodes.h">
       <Filter>Nyx\input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\Model.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
+    <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />
@@ -137,5 +140,8 @@
     <ClCompile Include="src\Nyx\input\Input.cpp">
       <Filter>Nyx\input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp" />
+    <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
 </Project>

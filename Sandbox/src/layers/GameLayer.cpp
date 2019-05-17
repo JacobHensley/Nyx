@@ -1,6 +1,8 @@
 #include "Nyx.h"
 #include "GameLayer.h"
 #include "imgui/imgui.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 using namespace Nyx;
 
@@ -39,7 +41,10 @@ GameLayer::GameLayer(const String& name)
 	m_Shader = new Shader("res/shaders/Basic.shader");
 	m_Shader->Bind();
 
-	m_Shader->SetUniform4f("u_Color", 0.2f, 1.0f, 1.0f, 1.0f);
+	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
+//	m_ModelShader->Bind();
+
+	m_Model = new Model("res/models/nanosuit.obj");
 }
 
 void GameLayer::OnAttach()
@@ -56,19 +61,35 @@ void GameLayer::Update()
 
 void GameLayer::Render()
 {
-	m_VertexArray->Bind();
-	m_IndexBuffer->Bind();
-	m_IndexBuffer->Draw();
+	glm::mat4 projection(1.0f);
+	m_ModelShader->SetUniformMat4("projection", projection);
+
+	glm::mat4 view(1.0f);
+	m_ModelShader->SetUniformMat4("view", view);
+
+	glm::mat4 model(1.0f);
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(transX, transY, transZ));
+	m_ModelShader->SetUniformMat4("model", model);
+
+	m_ModelShader->Bind();
+//	m_VertexArray->Bind();
+//	m_IndexBuffer->Bind();
+// 	m_IndexBuffer->Draw();
+	
+	m_Model->Render(*m_Shader);
 }
 
 void GameLayer::ImGUIRender()
 {
 	
 	ImGui::Begin("Test Window");
-	ImGui::Text("Hello World");
+	ImGui::SliderFloat("X", &transX, -20, 20);
+	ImGui::SliderFloat("Y", &transY, -20, 20);
+	ImGui::SliderFloat("Z", &transZ, -20, 20);
 	ImGui::End();
 
-	ImGui::Text("Test Text");
+//	ImGui::Text("Test Text");
 }
 
 void GameLayer::OnEvent(Event& e)
