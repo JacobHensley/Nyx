@@ -13,7 +13,7 @@ namespace Nyx {
 		glm::vec2 textureCoords;
 	};
 
-	struct Texture
+	struct MeshTexture
 	{
 		uint id;
 		String type;
@@ -23,7 +23,7 @@ namespace Nyx {
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<Texture>& textures);
+		Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures);
 		~Mesh();
 
 		void Render(const Shader& shader);
@@ -33,7 +33,7 @@ namespace Nyx {
 
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint> m_Indices;
-		std::vector<Texture> m_Textures;
+		std::vector<MeshTexture> m_Textures;
 
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;

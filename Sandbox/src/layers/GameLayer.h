@@ -21,6 +21,12 @@ public:
 
 	virtual void OnEvent(Event& e) override;
 private:
+	Shader* m_Shader;
+	Texture* m_Texture;
+	IndexBuffer* m_IndexBuffer;
+	VertexArray* m_VertexArray;
+	VertexBuffer* m_VertexBuffer;
+
 	Camera* cam;
 	Shader* m_ModelShader;
 	Model* m_Model;

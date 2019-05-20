@@ -28,5 +28,5 @@ in vec3 f_Normal;
 void main()
 {
 	vec3 norm = normalize(f_Normal);
-	color = vec4(norm.xyz, 1.0);
+	color = vec4(norm.xyz * 0.5 + 0.5, 1.0);
 }

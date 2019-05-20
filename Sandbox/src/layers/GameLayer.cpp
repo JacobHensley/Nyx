@@ -9,6 +9,39 @@ using namespace Nyx;
 GameLayer::GameLayer(const String& name)
 	:	Layer(name) {
 
+	m_VertexArray = new VertexArray();
+	m_VertexArray->Bind();
+
+	m_VertexBuffer = new VertexBuffer();
+	m_VertexBuffer->Bind();
+
+	float vertices[3 * 3] = {
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
+	};
+
+	m_VertexBuffer->SetData(vertices, sizeof(vertices));
+	m_VertexBuffer->Bind();
+
+	BufferLayout layout;
+	layout.Push<glm::vec3>("pos");
+	layout.Push<glm::vec3>("textureCoords");
+	m_VertexBuffer->SetLayout(layout);
+
+	m_VertexArray->PushVertexBuffer(m_VertexBuffer);
+	m_VertexArray->Bind();
+
+	m_IndexBuffer = new IndexBuffer();
+	m_IndexBuffer->Bind();
+
+	uint indices[3] = { 0, 1, 2 };
+	m_IndexBuffer->SetData(indices, 3);
+	m_IndexBuffer->Bind();
+
+	m_Shader = new Shader("res/shaders/basic.shader");
+	m_Texture = new Texture("res/textures/texture.png", TextureParameters(TextureFormat::RGB));
+
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
 	m_Model = new Model("res/models/bunny.obj");
 }
@@ -27,6 +60,7 @@ void GameLayer::Update()
 
 void GameLayer::Render()
 {
+
 	m_ModelShader->Bind();
 
 	glm::mat4 projection(1.0f);
@@ -46,6 +80,13 @@ void GameLayer::Render()
 	m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
 	m_Model->Render(*m_ModelShader);
+
+	
+	m_Shader->Bind();
+	m_Shader->SetUniformMat4("u_MVP", mvp);
+	m_VertexArray->Bind();
+	m_IndexBuffer->Bind();
+	m_IndexBuffer->Draw();
 }
 
 void GameLayer::ImGUIRender()

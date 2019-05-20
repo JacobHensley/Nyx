@@ -4,7 +4,7 @@
 
 namespace Nyx {
 
-	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<Texture>& textures)
+	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures)
 		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		Init();

@@ -1,8 +1,6 @@
 #include "NXpch.h"
 #include "Model.h"
-
-#include "glad/glad.h"
-#include "stbimage/stb_image.h"
+#include "Nyx/graphics/renderer/API/Texture.h"
 
 namespace Nyx {
 
@@ -67,7 +65,7 @@ namespace Nyx {
 		// Data to fill
 		std::vector<Vertex> vertices;
 		std::vector<uint> indices;
-		std::vector<Texture> textures;
+		std::vector<MeshTexture> textures;
 
 		// Walk through each of the mesh's vertices
 		for (uint i = 0; i < mesh->mNumVertices; i++)
@@ -128,11 +126,11 @@ namespace Nyx {
 			// Normal: texture_normalN
 
 			// 1. Diffuse maps
-			std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			std::vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 			// 2. Specular maps
-			std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		}
 
@@ -142,9 +140,9 @@ namespace Nyx {
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
-	std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName)
+	std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName)
 	{
-		std::vector<Texture> textures;
+		std::vector<MeshTexture> textures;
 
 		for (uint i = 0; i < mat->GetTextureCount(type); i++)
 		{
@@ -168,8 +166,8 @@ namespace Nyx {
 			if (!skip)
 			{   
 				// If texture hasn't been loaded already, load it
-				Texture texture;
-				texture.id = TextureFromFile(str.C_Str(), m_Directory);
+				MeshTexture texture;
+				texture.id = Texture(str.C_Str()).GetTextureID();
 				texture.type = typeName;
 				texture.path = str.C_Str();
 				textures.push_back(texture);
@@ -180,35 +178,5 @@ namespace Nyx {
 
 		return textures;
 	}
-
-	uint Model::TextureFromFile(const char* path, const String& directory)
-	{
-		//Generate texture ID and load texture data
-		String filename = String(path);
-		filename = directory + '/' + filename;
-		uint textureID;
-		glGenTextures(1, &textureID);
-
-		int width, height;
-
-		unsigned char* image = stbi_load(filename.c_str(), &width, &height, 0, 0);
-
-		// Assign texture to ID
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		// Parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		stbi_image_free(image);
-
-		return textureID;
-	}
-
 
 }
