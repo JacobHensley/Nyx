@@ -3,6 +3,8 @@
 #include "imgui/imgui.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "imgui/ImGuizmo.h"
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace Nyx;
 
@@ -44,6 +46,18 @@ GameLayer::GameLayer(const String& name)
 
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
 	m_Model = new Model("res/models/bunny.obj");
+
+	projection = glm::mat4(1.0f);
+	view = glm::mat4(1.0f);
+	model = glm::mat4(1.0f);
+
+	projection = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f);
+
+	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -4.0f));
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
+	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void GameLayer::OnAttach()
@@ -63,17 +77,6 @@ void GameLayer::Render()
 
 	m_ModelShader->Bind();
 
-	glm::mat4 projection(1.0f);
-	projection = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f);
-
-	glm::mat4 view(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -4.0f));
-
-	glm::mat4 model(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
-	model = glm::rotate(model, glm::radians(m_Angle), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-
 	m_ModelShader->SetUniformMat4("u_ModelMatrix", model);
 
 	glm::mat4 mvp = projection * view * model;
@@ -90,7 +93,9 @@ void GameLayer::Render()
 
 void GameLayer::ImGUIRender()
 {
-	ImGui::SliderFloat("Angle", &m_Angle, -360, 360);
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &model[0][0]);
 }
 
 void GameLayer::OnEvent(Event& e)

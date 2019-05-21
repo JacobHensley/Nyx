@@ -4,6 +4,7 @@
 #include "examples/imgui_impl_opengl3.h"
 #include "examples/imgui_impl_glfw.h"
 #include "Nyx/Application.h"
+#include "imgui/ImGuizmo.h"
 
 namespace Nyx {
 
@@ -62,6 +63,7 @@ namespace Nyx {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGUILayer::End()

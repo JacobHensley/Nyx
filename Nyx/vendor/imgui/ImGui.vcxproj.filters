@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="examples">
-      <UniqueIdentifier>{84D830B1-70A5-8BBC-99BE-796485EAC04A}</UniqueIdentifier>
+    <Filter Include="ImGuizmo">
+      <UniqueIdentifier>{36FD234F-22CA-7E5A-4BE3-6C02370FB4E8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="examples\imgui_impl_glfw.h">
-      <Filter>examples</Filter>
+    <ClInclude Include="ImGuizmo\ImCurveEdit.h">
+      <Filter>ImGuizmo</Filter>
     </ClInclude>
-    <ClInclude Include="examples\imgui_impl_opengl3.h">
-      <Filter>examples</Filter>
+    <ClInclude Include="ImGuizmo\ImGradient.h">
+      <Filter>ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImSequencer.h">
+      <Filter>ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -20,11 +26,17 @@
     <ClInclude Include="imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\imgui_impl_glfw.cpp">
-      <Filter>examples</Filter>
+    <ClCompile Include="ImGuizmo\ImCurveEdit.cpp">
+      <Filter>ImGuizmo</Filter>
     </ClCompile>
-    <ClCompile Include="examples\imgui_impl_opengl3.cpp">
-      <Filter>examples</Filter>
+    <ClCompile Include="ImGuizmo\ImGradient.cpp">
+      <Filter>ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImSequencer.cpp">
+      <Filter>ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />

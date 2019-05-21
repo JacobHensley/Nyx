@@ -27,8 +27,11 @@ private:
 	VertexArray* m_VertexArray;
 	VertexBuffer* m_VertexBuffer;
 
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 projection;
+
 	Camera* cam;
 	Shader* m_ModelShader;
 	Model* m_Model;
-	float m_Angle = 0.0f;
 };

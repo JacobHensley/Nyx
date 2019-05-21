@@ -138,7 +138,6 @@
     <ClCompile Include="src\Nyx\graphics\Window.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture (LAPTOP-6LDRN672's conflicted copy 2019-05-20).cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp" />

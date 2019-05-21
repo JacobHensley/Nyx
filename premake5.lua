@@ -38,7 +38,9 @@ project "Nyx"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stbimage/**.h",
+		"%{prj.name}/vendor/stbimage/**.cpp"
 	}
 
 	includedirs

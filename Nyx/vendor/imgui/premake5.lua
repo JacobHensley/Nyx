@@ -17,8 +17,16 @@ project "ImGui"
         "imstb_textedit.h",
         "imstb_truetype.h",
         "imgui_demo.cpp",
+        "ImCurveEdit.cpp",
+        "ImCurveEdit.h",
+        "ImGradient.cpp",
+        "ImGradient.h",
+        "ImGuizmo.cpp",
+        "ImGuizmo.h",
+        "ImSequencer.cpp",
+        "ImSequencer.h"
     }
-   
+
     defines
     {
         "IMGUI_DEFINE_MATH_OPERATORS",
