@@ -22,6 +22,9 @@
     <Filter Include="Nyx\graphics\renderer\API">
       <UniqueIdentifier>{D3D181B0-3F94-B53A-8844-44C7F4458E18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Nyx\graphics\renderer\camera">
+      <UniqueIdentifier>{42658830-2E20-78DC-D7D7-F026C371C26C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Nyx\graphics\renderer\shaders">
       <UniqueIdentifier>{E30EB320-4F27-9A4A-18D4-29E484AB2EE4}</UniqueIdentifier>
     </Filter>
@@ -74,11 +77,23 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h">
       <Filter>Nyx\graphics\renderer\API</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h">
       <Filter>Nyx\graphics\renderer\API</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h">
       <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h">
+      <Filter>Nyx\graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\Model.h">
+      <Filter>Nyx\graphics\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h">
+      <Filter>Nyx\graphics\renderer\camera</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\Shader.h">
       <Filter>Nyx\graphics\renderer\shaders</Filter>
@@ -92,11 +107,7 @@
     <ClInclude Include="src\Nyx\input\KeyCodes.h">
       <Filter>Nyx\input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\renderer\Model.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp" />
@@ -127,11 +138,26 @@
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp">
       <Filter>Nyx\graphics\renderer\API</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture (LAPTOP-6LDRN672's conflicted copy 2019-05-20).cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp">
+      <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp">
       <Filter>Nyx\graphics\renderer\API</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp">
       <Filter>Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp">
+      <Filter>Nyx\graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp">
+      <Filter>Nyx\graphics\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp">
+      <Filter>Nyx\graphics\renderer\camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\shaders\Shader.cpp">
       <Filter>Nyx\graphics\renderer\shaders</Filter>
@@ -142,10 +168,6 @@
     <ClCompile Include="src\Nyx\input\Input.cpp">
       <Filter>Nyx\input</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
   </ItemGroup>
 </Project>

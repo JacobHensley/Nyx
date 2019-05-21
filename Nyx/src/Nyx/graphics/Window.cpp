@@ -44,6 +44,7 @@ namespace Nyx {
 		GLErrorInit();
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
 
 		m_Input = new Input();
 

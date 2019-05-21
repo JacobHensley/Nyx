@@ -14,7 +14,7 @@ void main()
 {
 	gl_Position = u_MVP * vec4(position, 1.0f);
 
-	f_Normal = mat3(transpose(inverse(u_ModelMatrix))) * normal;
+	f_Normal = mat3(u_ModelMatrix) * normal;
 }
 
 #Shader Fragment

@@ -59,8 +59,6 @@ namespace Nyx {
 		inline const uint GetTextureID() const { return m_TextureID; }
 		inline const String& GetPath() const { return m_Path; }
 	private:
-		friend class TextureParameters;
-
 		const String& m_Path;
 		int m_Width, m_Height;
 		TextureParameters m_Parameters;

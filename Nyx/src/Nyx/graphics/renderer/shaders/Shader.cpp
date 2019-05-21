@@ -263,7 +263,7 @@ namespace Nyx {
 
 	void Shader::SetUniformMat4(const String& name, const glm::mat4& matrix)
 	{
-		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_TRUE, glm::value_ptr(matrix[0]));
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix[0]));
 	}
 
 }

@@ -97,9 +97,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\Model.h" />
     <ClInclude Include="src\NXpch.h" />
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
@@ -116,19 +113,19 @@
     <ClInclude Include="src\Nyx\graphics\Window.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\Model.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\Shader.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.h" />
     <ClInclude Include="src\Nyx\input\Input.h" />
     <ClInclude Include="src\Nyx\input\KeyCodes.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp" />
     <ClCompile Include="src\NXpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -141,12 +138,16 @@
     <ClCompile Include="src\Nyx\graphics\Window.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture (LAPTOP-6LDRN672's conflicted copy 2019-05-20).cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\shaders\Shader.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.cpp" />
     <ClCompile Include="src\Nyx\input\Input.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

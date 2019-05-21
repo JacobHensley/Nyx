@@ -15,10 +15,10 @@ GameLayer::GameLayer(const String& name)
 	m_VertexBuffer = new VertexBuffer();
 	m_VertexBuffer->Bind();
 
-	float vertices[3 * 3] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+	float vertices[3 * 5] = {
+		 0.25f, 0.25f, 0.0f,  0.0f, 0.0f,
+		 0.75f,  0.25f, 0.0f,  1.0f, 0.0f,
+		 0.5f,  0.75f, 0.0f,  0.5f, 1.0f
 	};
 
 	m_VertexBuffer->SetData(vertices, sizeof(vertices));
@@ -26,7 +26,7 @@ GameLayer::GameLayer(const String& name)
 
 	BufferLayout layout;
 	layout.Push<glm::vec3>("pos");
-	layout.Push<glm::vec3>("textureCoords");
+	layout.Push<glm::vec2>("textureCoords");
 	m_VertexBuffer->SetLayout(layout);
 
 	m_VertexArray->PushVertexBuffer(m_VertexBuffer);
@@ -40,7 +40,7 @@ GameLayer::GameLayer(const String& name)
 	m_IndexBuffer->Bind();
 
 	m_Shader = new Shader("res/shaders/basic.shader");
-	m_Texture = new Texture("res/textures/texture.png", TextureParameters(TextureFormat::RGB));
+	m_Texture = new Texture("res/textures/texture.png", TextureParameters(TextureFormat::RGB, TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE));
 
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
 	m_Model = new Model("res/models/bunny.obj");
@@ -64,26 +64,25 @@ void GameLayer::Render()
 	m_ModelShader->Bind();
 
 	glm::mat4 projection(1.0f);
-	projection = glm::perspective(65.0f, 1280.0f / 720.0f, 0.01f, 1000.0f);
+	projection = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f);
 
 	glm::mat4 view(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -4.0f));
 
 	glm::mat4 model(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.02f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
 	model = glm::rotate(model, glm::radians(m_Angle), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	m_ModelShader->SetUniformMat4("u_ModelMatrix", model);
 
 	glm::mat4 mvp = projection * view * model;
-
 	m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
 	m_Model->Render(*m_ModelShader);
-
 	
 	m_Shader->Bind();
-	m_Shader->SetUniformMat4("u_MVP", mvp);
+	m_Texture->Bind();
 	m_VertexArray->Bind();
 	m_IndexBuffer->Bind();
 	m_IndexBuffer->Draw();
