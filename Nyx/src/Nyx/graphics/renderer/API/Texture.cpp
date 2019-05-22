@@ -11,6 +11,12 @@ namespace Nyx {
 		m_TextureID = LoadFromFile(path);
 	}
 
+	Texture::Texture(int width, int height, TextureParameters parameters /*= TextureParameters()*/)
+		:	m_Path(""), m_Width(width), m_Height(height), m_Parameters(parameters)
+	{
+		m_TextureID = Init(0, width, height);
+	}
+
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_TextureID);

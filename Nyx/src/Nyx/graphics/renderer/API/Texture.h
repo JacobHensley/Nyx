@@ -46,6 +46,7 @@ namespace Nyx {
 	{
 	public:
 		Texture(const String& path, TextureParameters parameters = TextureParameters());
+		Texture(int width, int height, TextureParameters parameters = TextureParameters());
 		~Texture();
 
 		void Bind();

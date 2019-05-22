@@ -4,6 +4,7 @@
 #include "Nyx/graphics/renderer/Model.h"
 #include "Nyx/graphics/renderer/camera/Camera.h"
 
+
 using namespace Nyx;
 
 class GameLayer : public Layer
@@ -21,6 +22,10 @@ public:
 
 	virtual void OnEvent(Event& e) override;
 private:
+	GLuint FramebufferName = 0;
+	GLuint depthrenderbuffer;
+	Texture* m_RenderedTexture;
+
 	Shader* m_Shader;
 	Texture* m_Texture;
 	IndexBuffer* m_IndexBuffer;
