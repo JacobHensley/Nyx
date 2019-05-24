@@ -97,6 +97,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h" />
     <ClInclude Include="src\NXpch.h" />
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp" />
     <ClCompile Include="src\NXpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

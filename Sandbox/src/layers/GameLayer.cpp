@@ -11,24 +11,9 @@ using namespace Nyx;
 
 GameLayer::GameLayer(const String& name)
 	:	Layer(name) {
-
-	glGenFramebuffers(1, &FramebufferName);
-	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-
-	m_RenderedTexture = new Texture(1280, 720, TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_RenderedTexture->Bind();
-
-	glGenRenderbuffers(1, &depthrenderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1280, 720);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_RenderedTexture->GetTextureID(), 0);
-
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, DrawBuffers);
-
-	glViewport(0, 0, 1280, 720);
+	
+	m_FrameBuffer = new FrameBuffer(1280, 720, TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+	m_FrameBuffer->Bind();
 
 	m_VertexArray = new VertexArray();
 	m_VertexArray->Bind();
@@ -122,7 +107,7 @@ void GameLayer::ImGUIRender()
 		flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
 	ImGui::Begin("RenderSpace", &open, flags);
 	NX_CORE_INFO("X ({0}), Y ({1})", ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-	ImGui::Image((void*)m_RenderedTexture->GetTextureID(), ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
+	ImGui::Image((void*)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, io.DisplaySize.x, io.DisplaySize.y);

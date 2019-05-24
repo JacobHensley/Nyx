@@ -25,6 +25,7 @@
 #include "Nyx/graphics/renderer/API/VertexArray.h"
 #include "Nyx/graphics/renderer/API/VertexBuffer.h"
 #include "Nyx/graphics/renderer/API/Texture.h"
+#include "Nyx/graphics/renderer/API/FrameBuffer.h"
 
 #include "Nyx/graphics/renderer/shaders/Shader.h"
 #include "Nyx/graphics/renderer/shaders/ShaderUniform.h"

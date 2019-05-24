@@ -3,7 +3,7 @@
 
 #include "Nyx/graphics/renderer/Model.h"
 #include "Nyx/graphics/renderer/camera/Camera.h"
-
+#include "Nyx/graphics/renderer/API/FrameBuffer.h"
 
 using namespace Nyx;
 
@@ -22,9 +22,7 @@ public:
 
 	virtual void OnEvent(Event& e) override;
 private:
-	GLuint FramebufferName = 0;
-	GLuint depthrenderbuffer;
-	Texture* m_RenderedTexture;
+	FrameBuffer* m_FrameBuffer;
 
 	Shader* m_Shader;
 	Texture* m_Texture;
