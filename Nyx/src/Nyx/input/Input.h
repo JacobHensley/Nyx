@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/glm.hpp"
 
 namespace Nyx {
 
@@ -7,7 +8,7 @@ namespace Nyx {
 	public:
 		bool IsKeyPressed(int keycode);
 		bool IsMouseButtonPressed(int keycode);
-		std::pair<float, float> GetMousePos();
+		glm::vec2 GetMousePos();
 
 		float GetMouseX();
 		float GetMouseY();

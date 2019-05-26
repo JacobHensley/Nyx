@@ -1,5 +1,4 @@
 //#include "Nyx.h"
-#include "glad/glad.h"
 #include "GameLayer.h"
 #include "imgui/imgui.h"
 #include "glm/glm.hpp"
@@ -11,7 +10,7 @@ using namespace Nyx;
 
 GameLayer::GameLayer(const String& name)
 	:	Layer(name) {
-	
+
 	m_FrameBuffer = new FrameBuffer(1280, 720, TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 	m_FrameBuffer->Bind();
 
@@ -49,16 +48,14 @@ GameLayer::GameLayer(const String& name)
 	m_Texture = new Texture("res/textures/texture.png", TextureParameters(TextureFormat::RGB, TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE));
 
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
-	m_Model = new Model("res/models/bunny.obj");
+	m_Model = new Model("res/models/bunny.obj");	
 
-	projection = glm::mat4(1.0f);
-	view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f);
+	cam = new Camera(projection);
+
+	cam->SetPosition(glm::vec3(0.0f, 0.25f, 4.0f));
+
 	model = glm::mat4(1.0f);
-
-	projection = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f);
-
-	view = glm::translate(view, glm::vec3(0.0f, -0.5f, -4.0f));
-
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
 	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -74,16 +71,16 @@ void GameLayer::OnDetach()
 
 void GameLayer::Update()
 {
+	cam->Update();
 }
 
 void GameLayer::Render()
 {
-
 	m_ModelShader->Bind();
 
 	m_ModelShader->SetUniformMat4("u_ModelMatrix", model);
 
-	glm::mat4 mvp = projection * view * model;
+	glm::mat4 mvp = cam->GetProjectionMatrix() * cam->GetViewMatrix() * model;
 	m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
 	m_Model->Render(*m_ModelShader);
@@ -106,18 +103,15 @@ void GameLayer::ImGUIRender()
 	if (ImGuizmo::IsOver())
 		flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
 	ImGui::Begin("RenderSpace", &open, flags);
-	NX_CORE_INFO("X ({0}), Y ({1})", ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+//	NX_CORE_INFO("X ({0}), Y ({1})", ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
 	ImGui::Image((void*)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, io.DisplaySize.x, io.DisplaySize.y);
-	ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, &model[0][0]);
+	ImGuizmo::Manipulate(glm::value_ptr(cam->GetViewMatrix()), glm::value_ptr(cam->GetProjectionMatrix()), ImGuizmo::ROTATE, ImGuizmo::LOCAL, &model[0][0]);
 
 	ImGui::End();
 	ImGui::PopStyleVar();
-
-	
-
 }
 
 void GameLayer::OnEvent(Event& e)

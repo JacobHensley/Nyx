@@ -17,24 +17,22 @@ namespace Nyx {
 		return glfwGetMouseButton(window, keycode);
 	}
 
-	std::pair<float, float> Input::GetMousePos()
+	glm::vec2 Input::GetMousePos()
 	{
 		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
-		return { (float)x, (float)y };
+		return glm::vec2(x, y);
 	}
 
 	float Input::GetMouseX()
-	{
-		auto[x, y] = GetMousePos();
-		return x;
+	{  
+		return GetMousePos().x;
 	}
 
 	float Input::GetMouseY()
 	{
-		auto[x, y] = GetMousePos();
-		return y;
+		return GetMousePos().y;
 	}
 
 }
