@@ -11,6 +11,8 @@ namespace Nyx {
 		
 		void Bind();
 		void Unbind();
+		void Clear();
+		void SetViewPortSize(int x, int y, int width, int height);
 
 		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
 		inline uint GetRenderBufferID() const { return m_RenderBufferID; }

@@ -25,6 +25,7 @@ namespace Nyx {
 
 		void Run();
 
+		inline ImGUILayer& GetImGUILayer() { return *m_ImGUILayer; }
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& GetApp() { return *s_Instance; }
 

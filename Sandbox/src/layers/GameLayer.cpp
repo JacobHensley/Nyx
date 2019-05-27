@@ -82,32 +82,41 @@ void GameLayer::Render()
 
 	glm::mat4 mvp = cam->GetProjectionMatrix() * cam->GetViewMatrix() * model;
 	m_ModelShader->SetUniformMat4("u_MVP", mvp);
-
-	m_Model->Render(*m_ModelShader);
+	Application app = Application::GetApp();
 	
+	m_FrameBuffer->Clear();
+	m_FrameBuffer->Bind();
+	m_Model->Render(*m_ModelShader);
 	m_Shader->Bind();
 	m_Texture->Bind();
 	m_VertexArray->Bind();
 	m_IndexBuffer->Bind();
 	m_IndexBuffer->Draw();
+	m_FrameBuffer->Unbind();
 }
 
 void GameLayer::ImGUIRender()
 {
 	ImGuiIO& io = ImGui::GetIO();
 	
+	ImGui::Begin("Test Window2");
+	ImGui::Text("Test");
+	ImGui::End();
+
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	bool open = true;
-	ImGui::SetNextWindowSize(ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y));
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
+//	ImGui::SetNextWindowSize(ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y));
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
 	if (ImGuizmo::IsOver())
-		flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
-	ImGui::Begin("RenderSpace", &open, flags);
+		flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
+	ImGui::Begin("RenderSpace2", &open, flags);
+	m_FrameBuffer->SetViewPortSize(0, 0, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 //	NX_CORE_INFO("X ({0}), Y ({1})", ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-	ImGui::Image((void*)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2::ImVec2(io.DisplaySize.x, io.DisplaySize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
+	ImGui::Image((void*)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight()), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 	ImGuizmo::Manipulate(glm::value_ptr(cam->GetViewMatrix()), glm::value_ptr(cam->GetProjectionMatrix()), ImGuizmo::ROTATE, ImGuizmo::LOCAL, &model[0][0]);
 
 	ImGui::End();
