@@ -66,6 +66,8 @@ namespace Nyx {
 		std::vector<Vertex> vertices;
 		std::vector<uint> indices;
 		std::vector<MeshTexture> textures;
+		std::vector<glm::vec3> tangents;
+		std::vector<glm::vec3> binormals;
 
 		// Walk through each of the mesh's vertices
 		for (uint i = 0; i < mesh->mNumVertices; i++)
@@ -84,6 +86,18 @@ namespace Nyx {
 			vector.y = mesh->mNormals[i].y;
 			vector.z = mesh->mNormals[i].z;
 			vertex.normal = vector;
+
+			glm::vec3 binormal;
+			binormal.x = mesh->mBitangents[i].x;
+			binormal.y = mesh->mBitangents[i].y;
+			binormal.z = mesh->mBitangents[i].z;
+			vertex.binormal = binormal;
+
+			glm::vec3 tangent;
+			tangent.x = mesh->mTangents[i].x;
+			tangent.y = mesh->mTangents[i].y;
+			tangent.z = mesh->mTangents[i].z;
+			vertex.tangent = tangent;
 
 			// Texture Coordinates
 			if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
@@ -114,6 +128,24 @@ namespace Nyx {
 			}
 		}
 
+		for (uint i = 0; i < mesh->mNumVertices; i++)
+		{
+			glm::vec3 tangent;
+			tangent.x = mesh->mTangents[i].x;
+			tangent.y = mesh->mTangents[i].y;
+			tangent.z = mesh->mTangents[i].z;
+			tangents.push_back(tangent);
+		}
+
+		for (uint i = 0; i < mesh->mNumVertices; i++)
+		{
+			glm::vec3 binormal;
+			binormal.x = mesh->mBitangents[i].x;
+			binormal.y = mesh->mBitangents[i].y;
+			binormal.z = mesh->mBitangents[i].z;
+			binormals.push_back(binormal);
+		}
+
 		// Process materials
 		if (mesh->mMaterialIndex >= 0)
 		{
@@ -135,7 +167,7 @@ namespace Nyx {
 		}
 
 		// Return a mesh object created from the extracted mesh data
-		return Mesh(vertices, indices, textures);
+		return Mesh(vertices, indices, textures, tangents, binormals);
 	}
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.

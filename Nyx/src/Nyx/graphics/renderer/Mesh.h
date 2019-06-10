@@ -10,6 +10,8 @@ namespace Nyx {
 	{
 		glm::vec3 position;
 		glm::vec3 normal;
+		glm::vec3 tangent;
+		glm::vec3 binormal;
 		glm::vec2 textureCoords;
 	};
 
@@ -23,7 +25,7 @@ namespace Nyx {
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures);
+		Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& binormals);
 		~Mesh();
 
 		void Render(const Shader& shader);
@@ -34,6 +36,9 @@ namespace Nyx {
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint> m_Indices;
 		std::vector<MeshTexture> m_Textures;
+
+		std::vector<glm::vec3> m_Tangents;
+		std::vector<glm::vec3> m_BiNormals;
 
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;

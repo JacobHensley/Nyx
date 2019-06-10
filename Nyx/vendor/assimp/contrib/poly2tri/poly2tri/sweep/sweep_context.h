@@ -52,47 +52,47 @@ class SweepContext {
 public:
 
 /// Constructor
-SweepContext(const std::vector<Point*>& polyline);
+SweepContext(std::vector<Point*> polyline);
 /// Destructor
 ~SweepContext();
 
 void set_head(Point* p1);
 
-Point* head() const;
+Point* head();
 
 void set_tail(Point* p1);
 
-Point* tail() const;
+Point* tail();
 
-size_t point_count() const;
+int point_count();
 
-Node& LocateNode(const Point& point);
+Node& LocateNode(Point& point);
 
 void RemoveNode(Node* node);
 
-void CreateAdvancingFront(const std::vector<Node*>& nodes);
+void CreateAdvancingFront(std::vector<Node*> nodes);
 
 /// Try to map a node to all sides of this triangle that don't have a neighbor
 void MapTriangleToNodes(Triangle& t);
 
 void AddToMap(Triangle* triangle);
 
-Point* GetPoint(size_t index);
+Point* GetPoint(const int& index);
 
 Point* GetPoints();
 
 void RemoveFromMap(Triangle* triangle);
 
-void AddHole(const std::vector<Point*>& polyline);
+void AddHole(std::vector<Point*> polyline);
 
 void AddPoint(Point* point);
 
-AdvancingFront* front() const;
+AdvancingFront* front();
 
 void MeshClean(Triangle& triangle);
 
-std::vector<Triangle*> &GetTriangles();
-std::list<Triangle*> &GetMap();
+std::vector<Triangle*> GetTriangles();
+std::list<Triangle*> GetMap();
 
 std::vector<Edge*> edge_list;
 
@@ -147,16 +147,16 @@ Point* tail_;
 Node *af_head_, *af_middle_, *af_tail_;
 
 void InitTriangulation();
-void InitEdges(const std::vector<Point*>& polyline);
+void InitEdges(std::vector<Point*> polyline);
 
 };
 
-inline AdvancingFront* SweepContext::front() const
+inline AdvancingFront* SweepContext::front()
 {
   return front_;
 }
 
-inline size_t SweepContext::point_count() const
+inline int SweepContext::point_count()
 {
   return points_.size();
 }
@@ -166,7 +166,7 @@ inline void SweepContext::set_head(Point* p1)
   head_ = p1;
 }
 
-inline Point* SweepContext::head() const
+inline Point* SweepContext::head()
 {
   return head_;
 }
@@ -176,7 +176,7 @@ inline void SweepContext::set_tail(Point* p1)
   tail_ = p1;
 }
 
-inline Point* SweepContext::tail() const
+inline Point* SweepContext::tail()
 {
   return tail_;
 }

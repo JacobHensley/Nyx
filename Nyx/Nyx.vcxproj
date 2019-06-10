@@ -15,7 +15,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Nyx</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -97,7 +97,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h" />
     <ClInclude Include="src\NXpch.h" />
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
@@ -113,6 +112,7 @@
     <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h" />
     <ClInclude Include="src\Nyx\graphics\Window.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h" />
@@ -127,7 +127,6 @@
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp" />
     <ClCompile Include="src\NXpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -139,6 +138,7 @@
     <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Nyx\graphics\Window.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />

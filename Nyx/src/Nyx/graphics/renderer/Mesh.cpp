@@ -4,8 +4,8 @@
 
 namespace Nyx {
 
-	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures)
-		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
+	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& binormals)
+		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures), m_Tangents(tangents), m_BiNormals(binormals)
 	{
 		Init();
 	}
@@ -38,6 +38,8 @@ namespace Nyx {
 		BufferLayout layout;
 		layout.Push<glm::vec3>("position");
 		layout.Push<glm::vec3>("normal");
+		layout.Push<glm::vec3>("tangent");
+		layout.Push<glm::vec3>("binormals");
 		layout.Push<glm::vec2>("textureCoords");
 
 		m_VertexBuffer->SetLayout(layout);

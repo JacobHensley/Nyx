@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Nyx\vendor\imgui\I
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nyx", "Nyx\Nyx.vcxproj", "{C40E880B-3018-887C-B993-9E7C259C937C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assimp", "Nyx\vendor\assimp\assimp.vcxproj", "{724885F2-5EEA-AFC8-47A5-C31C33E63619}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,10 +37,6 @@ Global
 		{C40E880B-3018-887C-B993-9E7C259C937C}.Debug|x64.Build.0 = Debug|x64
 		{C40E880B-3018-887C-B993-9E7C259C937C}.Release|x64.ActiveCfg = Release|x64
 		{C40E880B-3018-887C-B993-9E7C259C937C}.Release|x64.Build.0 = Release|x64
-		{724885F2-5EEA-AFC8-47A5-C31C33E63619}.Debug|x64.ActiveCfg = Debug|x64
-		{724885F2-5EEA-AFC8-47A5-C31C33E63619}.Debug|x64.Build.0 = Debug|x64
-		{724885F2-5EEA-AFC8-47A5-C31C33E63619}.Release|x64.ActiveCfg = Release|x64
-		{724885F2-5EEA-AFC8-47A5-C31C33E63619}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

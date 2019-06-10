@@ -7,6 +7,12 @@
 
 using namespace Nyx;
 
+struct Light
+{
+	glm::vec3 Direction;
+	glm::vec3 Radiance;
+};
+
 class GameLayer : public Layer
 {
 public:
@@ -24,17 +30,11 @@ public:
 private:
 	FrameBuffer* m_FrameBuffer;
 
-	Shader* m_Shader;
-	Texture* m_Texture;
-	IndexBuffer* m_IndexBuffer;
-	VertexArray* m_VertexArray;
-	VertexBuffer* m_VertexBuffer;
+	glm::mat4 m_ModelMatrix;
 
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 projection;
+	Light* m_Light;
 
-	Camera* cam;
+	Camera* m_Camera;
 	Shader* m_ModelShader;
 	Model* m_Model;
 };

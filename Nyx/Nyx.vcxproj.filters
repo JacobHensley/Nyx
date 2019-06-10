@@ -87,6 +87,9 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h">
+      <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClInclude>
@@ -123,7 +126,6 @@
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
@@ -151,6 +153,9 @@
       <Filter>src\Nyx\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp">
+      <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp">
@@ -186,6 +191,5 @@
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp" />
   </ItemGroup>
 </Project>

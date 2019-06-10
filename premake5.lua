@@ -21,7 +21,6 @@ IncludeDir["imgui"] =  "Nyx/vendor/imgui"
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/Glad"
 include "Nyx/vendor/imgui"
-include "Nyx/vendor/assimp"
 
 project "Nyx"
 	location "Nyx"
@@ -116,11 +115,17 @@ project "Sandbox"
 	{ 
 		"GLFW",
 		"Glad",
-		"assimp",
+		"Nyx/vendor/assimp/lib64/assimp-vc141-mtd.lib",
 		"imgui",
 		"Nyx",
 		"opengl32.lib"
 	}
+
+	postbuildcommands
+	{
+		("{COPY} ../Nyx/vendor/assimp/bin64/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+	}
+
 
 	filter "system:windows"
 		cppdialect "C++17"
