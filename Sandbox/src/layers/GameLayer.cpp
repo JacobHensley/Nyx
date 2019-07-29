@@ -24,7 +24,7 @@ GameLayer::GameLayer(const String& name)
 	m_ModelMatrix = glm::rotate(m_ModelMatrix, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	m_ModelMatrix = glm::scale(m_ModelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 
-	m_Light = new Light();
+	m_Light = new Light(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void GameLayer::OnAttach()
@@ -49,19 +49,23 @@ void GameLayer::Render()
 
 	glm::mat4 mvp;
 
-	for (int i = 0;i < 5;i++)
-	{
-		m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
-		mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
-		m_ModelShader->SetUniformMat4("u_MVP", mvp);
+	m_ModelShader->SetUniform3f("u_Light.Direction", m_Light->Direction);
+	m_ModelShader->SetUniform3f("u_Light.Radiance", m_Light->Radiance);
+	m_ModelShader->SetUniform1i("u_LightExponent", m_LightExponent);
 
-		m_Model->Render(*m_ModelShader);
-	}
-
-	for (int i = 0; i < 5; i++)
+	for (int i = 0;i < 10;i++)
 	{
-		m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, -2.5f, 0.0f)));
-		mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, -2.5f, 0.0f));
+		if (i < 5) 
+		{
+			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
+			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
+		}
+		else 
+		{
+			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
+			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
+		}
+			
 		m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
 		m_Model->Render(*m_ModelShader);
@@ -75,8 +79,9 @@ void GameLayer::ImGUIRender()
 	ImGuiIO& io = ImGui::GetIO();
 	
 	ImGui::Begin("Light");
-	ImGui::SliderFloat3("m_Direction", glm::value_ptr(m_Light->Direction), -1.0f, 1.0f);
-	ImGui::ColorPicker3("m_Radiance", glm::value_ptr(m_Light->Radiance));
+	ImGui::SliderFloat3("Light Direction", glm::value_ptr(m_Light->Direction), -1.0f, 1.0f);
+	ImGui::SliderInt("Light Exponent", &m_LightExponent, 1, 3);
+	ImGui::ColorPicker3("Light Radiance", glm::value_ptr(m_Light->Radiance));
 	ImGui::End();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));

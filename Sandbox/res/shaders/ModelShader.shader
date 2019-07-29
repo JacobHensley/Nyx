@@ -16,7 +16,7 @@ void main()
 {
 	gl_Position = u_MVP * vec4(position, 1.0f);
 
-	f_Normal = mat3(u_ModelMatrix) * binormals;
+	f_Normal = mat3(u_ModelMatrix) * normal;
 }
 
 #Shader Fragment
@@ -33,9 +33,17 @@ struct Light
 
 in vec3 f_Normal;
 uniform Light u_Light;
+uniform int u_LightExponent;
 
 void main()
 {
+	vec3 light = -normalize(u_Light.Direction);
 	vec3 norm = normalize(f_Normal);
-	color = vec4(norm.xyz * 0.5 + 0.5, 1.0);
+	float brightness = dot(light, norm) * 0.5 + 0.5;
+//	color = vec4(norm.xyz * 0.5 + 0.5, 1.0);
+	if (u_LightExponent == 2)
+		brightness = brightness * brightness;
+	if (u_LightExponent == 3)
+		brightness = brightness * brightness * brightness;
+	color = vec4(brightness * u_Light.Radiance.x, brightness * u_Light.Radiance.y, brightness * u_Light.Radiance.z, 1.0);
 }

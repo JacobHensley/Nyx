@@ -9,6 +9,11 @@ using namespace Nyx;
 
 struct Light
 {
+	Light(glm::vec3 direction, glm::vec3 radiance)
+		: Direction(direction), Radiance(radiance)
+	{
+	}
+
 	glm::vec3 Direction;
 	glm::vec3 Radiance;
 };
@@ -33,6 +38,7 @@ private:
 	glm::mat4 m_ModelMatrix;
 
 	Light* m_Light;
+	int m_LightExponent = 2;
 
 	Camera* m_Camera;
 	Shader* m_ModelShader;
