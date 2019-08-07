@@ -4,6 +4,7 @@
 #include "Nyx/graphics/renderer/Model.h"
 #include "Nyx/graphics/renderer/camera/Camera.h"
 #include "Nyx/graphics/renderer/API/FrameBuffer.h"
+#include "Nyx/graphics/renderer/API/TextureCube.h"
 
 using namespace Nyx;
 
@@ -40,6 +41,7 @@ private:
 	Light* m_Light;
 	int m_LightExponent = 2;
 
+	TextureCube* m_TextureCube;
 	Camera* m_Camera;
 	Shader* m_ModelShader;
 	Model* m_Model;

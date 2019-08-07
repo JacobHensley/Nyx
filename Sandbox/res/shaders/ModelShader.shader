@@ -35,6 +35,8 @@ in vec3 f_Normal;
 uniform Light u_Light;
 uniform int u_LightExponent;
 
+uniform samplerCube u_TextureCube;
+
 void main()
 {
 	vec3 light = -normalize(u_Light.Direction);
@@ -45,5 +47,6 @@ void main()
 		brightness = brightness * brightness;
 	if (u_LightExponent == 3)
 		brightness = brightness * brightness * brightness;
-	color = vec4(brightness * u_Light.Radiance.x, brightness * u_Light.Radiance.y, brightness * u_Light.Radiance.z, 1.0);
+	color = texture(u_TextureCube, norm);
+//	color = vec4(brightness * u_Light.Radiance.x, brightness * u_Light.Radiance.y, brightness * u_Light.Radiance.z, 1.0);
 }
