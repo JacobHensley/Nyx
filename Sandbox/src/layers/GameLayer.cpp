@@ -24,8 +24,8 @@ GameLayer::GameLayer(const String& name)
 	m_ModelMatrix = glm::rotate(m_ModelMatrix, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	m_ModelMatrix = glm::scale(m_ModelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 
-//	m_TextureCube = new TextureCube("res/textures/DebugCubeMap.png");
-	m_TextureCube = new TextureCube("res/textures/canyon.png"); 
+	m_TextureCube = new TextureCube("res/textures/DebugCubeMap.png");
+//	m_TextureCube = new TextureCube("res/textures/canyon.png"); 
 	m_Light = new Light(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -55,6 +55,7 @@ void GameLayer::Render()
 	m_ModelShader->SetUniform3f("u_Light.Radiance", m_Light->Radiance);
 	m_ModelShader->SetUniform1i("u_LightExponent", m_LightExponent);
 
+	m_ModelShader->SetUniform3f("u_CameraPos", m_Camera->GetPosition());
 
 	for (int i = 0;i < 10;i++)
 	{

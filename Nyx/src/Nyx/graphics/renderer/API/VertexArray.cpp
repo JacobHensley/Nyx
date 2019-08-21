@@ -26,7 +26,7 @@ namespace Nyx {
 		for (uint i = 0; i < elements.size(); i++)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, elements[i].count, elements[i].type, GL_FALSE, stride, (const void*)elements[i].offset);
+			glVertexAttribPointer(i, elements[i].count, elements[i].type, GL_FALSE, stride, (const void*)(uint64_t)elements[i].offset);
 		}
 
 		glBindVertexArray(0);

@@ -45,6 +45,7 @@ namespace Nyx {
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 		m_Input = new Input();
 

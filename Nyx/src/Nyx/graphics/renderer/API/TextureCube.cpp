@@ -71,8 +71,6 @@ namespace Nyx {
 				int xFaceOffset = x * faceWidth;
 				int yFaceOffset = y * faceHeight;
 
-				NX_CORE_DEBUG("X {0}, Y {1}, Index {2}, ", xFaceOffset, yFaceOffset, faceIndex);
-
 				byte* dest = faceBuffers[faceIndex];
 				for (int yPixel = 0; yPixel < faceHeight; yPixel++)
 				{
@@ -118,8 +116,6 @@ namespace Nyx {
 
 		stbi_image_free(imageData);
 
-
-		NX_CORE_DEBUG("{0}", faceIndex);
 		return uint();
 	}
 

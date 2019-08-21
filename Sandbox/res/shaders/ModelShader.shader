@@ -8,6 +8,7 @@ layout(location = 3) in vec3 binormals;
 layout(location = 4) in vec2 texCoords;
 
 out vec3 f_Normal;
+out vec3 f_WorldPos;
 
 uniform mat4 u_MVP;
 uniform mat4 u_ModelMatrix;
@@ -17,6 +18,7 @@ void main()
 	gl_Position = u_MVP * vec4(position, 1.0f);
 
 	f_Normal = mat3(u_ModelMatrix) * normal;
+	f_WorldPos = vec3(u_ModelMatrix * vec4(normal, 1.0f));
 }
 
 #Shader Fragment
@@ -32,13 +34,19 @@ struct Light
 };
 
 in vec3 f_Normal;
+in vec3 f_WorldPos;
 uniform Light u_Light;
 uniform int u_LightExponent;
+
+uniform vec3 u_CameraPos;
 
 uniform samplerCube u_TextureCube;
 
 void main()
 {
+	vec3 view = -normalize(u_CameraPos - f_WorldPos);
+
+
 	vec3 light = -normalize(u_Light.Direction);
 	vec3 norm = normalize(f_Normal);
 	float brightness = dot(light, norm) * 0.5 + 0.5;
@@ -47,6 +55,10 @@ void main()
 		brightness = brightness * brightness;
 	if (u_LightExponent == 3)
 		brightness = brightness * brightness * brightness;
-	color = texture(u_TextureCube, norm);
+//	color = texture(u_TextureCube, norm);
+
+	vec3 tc = reflect(view, norm);
+
+	color = textureLod(u_TextureCube, tc, 8.0);
 //	color = vec4(brightness * u_Light.Radiance.x, brightness * u_Light.Radiance.y, brightness * u_Light.Radiance.z, 1.0);
 }
