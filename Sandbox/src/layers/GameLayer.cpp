@@ -24,7 +24,7 @@ GameLayer::GameLayer(const String& name)
 	m_ModelMatrix = glm::rotate(m_ModelMatrix, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	m_ModelMatrix = glm::scale(m_ModelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 
-	m_TextureCube = new TextureCube("res/textures/DebugCubeMap.png");
+	m_TextureCube = new TextureCube("res/textures/canyon_irradiance.png");
 //	m_TextureCube = new TextureCube("res/textures/canyon.png"); 
 	m_Light = new Light(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
@@ -57,22 +57,29 @@ void GameLayer::Render()
 
 	m_ModelShader->SetUniform3f("u_CameraPos", m_Camera->GetPosition());
 
+	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::scale(m_ModelMatrix, glm::vec3(200.5f, 200.5f, 200.5f)));
+	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::scale(m_ModelMatrix, glm::vec3(200.5f, 200.5f, 200.5f));
+
+	m_ModelShader->SetUniformMat4("u_MVP", mvp);
+
+	m_Model->Render(*m_ModelShader);
+
 	for (int i = 0;i < 10;i++)
 	{
 		if (i < 5) 
 		{
-			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
-			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
+		//	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
+		//	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
 		}
 		else 
 		{
-			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
-			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
+		//	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
+		//	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
 		}
 			
-		m_ModelShader->SetUniformMat4("u_MVP", mvp);
+	//	m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
-		m_Model->Render(*m_ModelShader);
+	//	m_Model->Render(*m_ModelShader);
 	}
 
 	m_FrameBuffer->Unbind();
