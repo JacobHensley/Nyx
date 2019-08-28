@@ -12,7 +12,7 @@ namespace Nyx {
 
 		void SetData(const uint* data, uint count);
 
-		void Draw() const;
+		void Draw(bool depthTesting = true) const;
 		void Draw(uint count) const;
 
 		void Bind() const;

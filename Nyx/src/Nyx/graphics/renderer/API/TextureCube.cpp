@@ -17,12 +17,12 @@ namespace Nyx {
 
 	void TextureCube::bind()
 	{
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
 	}
 
 	void TextureCube::unbind()
 	{
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	uint TextureCube::LoadFromFile(const String& path)

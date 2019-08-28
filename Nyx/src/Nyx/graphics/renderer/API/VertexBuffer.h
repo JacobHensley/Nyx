@@ -9,7 +9,7 @@ namespace Nyx {
 	public:
 		VertexBuffer();
 		VertexBuffer(uint size);
-		VertexBuffer(float* data, int size);
+		VertexBuffer(void* data, int size);
 		~VertexBuffer();
 
 		void SetData(float* data, int size);

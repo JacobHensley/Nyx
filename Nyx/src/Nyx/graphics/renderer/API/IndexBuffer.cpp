@@ -31,9 +31,14 @@ namespace Nyx {
 		Unbind();
 	}
 
-	void IndexBuffer::Draw() const
+	void IndexBuffer::Draw(bool depthTesting) const
 	{
+		if (!depthTesting)
+			glDisable(GL_DEPTH_TEST);
+
 		Draw(m_Count);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void IndexBuffer::Draw(uint count) const

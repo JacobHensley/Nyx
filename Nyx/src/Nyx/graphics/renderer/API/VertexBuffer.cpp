@@ -17,7 +17,7 @@ namespace Nyx {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	VertexBuffer::VertexBuffer(float* data, int size)
+	VertexBuffer::VertexBuffer(void* data, int size)
 	{
 		glGenBuffers(1, &m_BufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);

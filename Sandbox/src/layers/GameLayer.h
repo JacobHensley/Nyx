@@ -45,4 +45,9 @@ private:
 	Camera* m_Camera;
 	Shader* m_ModelShader;
 	Model* m_Model;
+
+	VertexBuffer* m_VertexBuffer;
+	Shader* m_SkyboxShader;
+	VertexArray* m_VertexArray;
+	IndexBuffer* m_IndexBuffer;
 };

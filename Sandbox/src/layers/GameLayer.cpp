@@ -27,6 +27,43 @@ GameLayer::GameLayer(const String& name)
 	m_TextureCube = new TextureCube("res/textures/canyon_irradiance.png");
 //	m_TextureCube = new TextureCube("res/textures/canyon.png"); 
 	m_Light = new Light(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+	float x = -1.0f, y = -1.0f;
+	float width = 2.0f, height = 2.0f;
+	struct QuadVertex
+	{
+		glm::vec3 Position;
+		glm::vec2 TexCoord;
+	};
+
+	std::array<QuadVertex, 4> vertices;
+	
+	vertices[0].Position = { x, y, 0.0f };
+	vertices[0].TexCoord = { 0.0f, 0.0f };
+
+	vertices[1].Position = { x + width, y, 0.0f };
+	vertices[1].TexCoord = { 1.0f, 0.0f };
+
+	vertices[2].Position = { x + width, y + height, 0.0f };
+	vertices[2].TexCoord = { 1.0f, 1.0f };
+
+	vertices[3].Position = { x, y + height, 0.0f };
+	vertices[3].TexCoord = { 0.0f, 1.0f };
+
+	std::array<uint32_t, 6> indices = { 0, 1, 2, 2, 3, 0 };
+
+	m_VertexBuffer = new VertexBuffer(&vertices[0], sizeof(QuadVertex) * vertices.size());
+
+	BufferLayout layout;
+	layout.Push<glm::vec3>("Position");
+	layout.Push<glm::vec2>("TexCoord");
+	m_VertexBuffer->SetLayout(layout);
+
+	m_IndexBuffer = new IndexBuffer(&indices[0], indices.size());
+	m_VertexArray = new VertexArray();
+	m_VertexArray->PushVertexBuffer(m_VertexBuffer);
+
+	m_SkyboxShader = new Shader("res/shaders/Skybox.shader");
 }
 
 void GameLayer::OnAttach()
@@ -44,11 +81,22 @@ void GameLayer::Update()
 
 void GameLayer::Render()
 {
-	m_ModelShader->Bind();
-	
 	m_FrameBuffer->Clear();
 	m_FrameBuffer->Bind();
-
+	
+	// Bind skybox shader
+	// Bind irradiance texture
+	// Get inverse camera VP matrix
+	// Render fullscreen quad (with depth-testing off)
+	m_SkyboxShader->Bind();
+	m_SkyboxShader->SetUniformMat4("u_InverseVP", glm::inverse(m_Camera->GetViewMatrix()));
+	m_SkyboxShader->SetUniform1i("u_SkyboxTexture", 0);
+	m_TextureCube->bind();
+	m_VertexArray->Bind();
+	m_IndexBuffer->Bind();
+	m_IndexBuffer->Draw(false);
+	
+	m_ModelShader->Bind();
 	glm::mat4 mvp;
 	
 	m_ModelShader->SetUniform3f("u_Light.Direction", m_Light->Direction);
@@ -62,24 +110,24 @@ void GameLayer::Render()
 
 	m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
-	m_Model->Render(*m_ModelShader);
+//	m_Model->Render(*m_ModelShader);
 
 	for (int i = 0;i < 10;i++)
 	{
 		if (i < 5) 
 		{
-		//	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
-		//	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
+			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
+			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
 		}
 		else 
 		{
-		//	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
-		//	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
+			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
+			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
 		}
 			
-	//	m_ModelShader->SetUniformMat4("u_MVP", mvp);
+		m_ModelShader->SetUniformMat4("u_MVP", mvp);
 
-	//	m_Model->Render(*m_ModelShader);
+		m_Model->Render(*m_ModelShader);
 	}
 
 	m_FrameBuffer->Unbind();
