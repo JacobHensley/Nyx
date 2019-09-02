@@ -40,19 +40,6 @@ namespace Nyx {
 
 	void APIENTRY GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
-		int n = 0;
-		String shortMessage;
-		for (int i = 0; i < length; i++)
-		{
-			if (n >= 2)
-			{
-				shortMessage += message[i];
-			}
-			if (message[i] == ')')
-				n++;
-		}
-
-	//	NX_CORE_ERROR("{0}: ({1}): {2}", GLenumToNameType(type), id, shortMessage);
 		NX_CORE_ERROR(message);
 		if (severity == GL_DEBUG_SEVERITY_HIGH)
 			__debugbreak();

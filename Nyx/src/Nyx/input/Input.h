@@ -6,11 +6,13 @@ namespace Nyx {
 	class Input
 	{
 	public:
-		bool IsKeyPressed(int keycode);
-		bool IsMouseButtonPressed(int keycode);
-		glm::vec2 GetMousePos();
+		static bool IsKeyPressed(int keycode);
+		static bool IsMouseButtonPressed(int keycode);
+		static glm::vec2 GetMousePos();
 
-		float GetMouseX();
-		float GetMouseY();
+		static float GetMouseX();
+		static float GetMouseY();
+	private:
+		static Input* s_Instance;
 	};
 }

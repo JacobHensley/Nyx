@@ -1,7 +1,8 @@
 #pragma once
 #include "Nyx/Common.h"
-#include "Nyx/graphics/renderer/shaders/Shader.h"
 #include "Nyx/graphics/renderer/Mesh.h"
+#include "Nyx/graphics/renderer/shaders/Shader.h"
+
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

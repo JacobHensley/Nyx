@@ -5,6 +5,8 @@
 
 namespace Nyx {
 
+	Input* Input::s_Instance = new Input();
+
 	bool Input::IsKeyPressed(int keycode)
 	{
 		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();

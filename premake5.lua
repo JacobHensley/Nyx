@@ -62,7 +62,8 @@ project "Nyx"
 		defines 
 		{
 			"NX_PLATFORM_WINDOWS",
-			"GLFW_INCLUDE_NONE"
+			"GLFW_INCLUDE_NONE",
+			"_CRT_SECURE_NO_WARNINGS"
 		}
 
 		postbuildcommands

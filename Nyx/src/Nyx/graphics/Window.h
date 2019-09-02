@@ -22,8 +22,6 @@ namespace Nyx {
 		inline const int GetWidth() const { return m_Width; }
 		inline const int GetHeight() const { return m_Height; }
 
-		inline Input* const GetInput() const { return m_Input; }
-
 		inline void SetEventCallback(const EvenCallbackFn& callback) { m_EventCallback = callback; };
 	private:
 		void Init();
@@ -32,7 +30,6 @@ namespace Nyx {
 		GLFWwindow* m_Window;
 		const String& m_Name;
 		int m_Width, m_Height;
-		Input* m_Input;
 
 		EvenCallbackFn m_EventCallback;
 

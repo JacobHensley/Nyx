@@ -1,10 +1,7 @@
 #pragma once
 #include "Nyx.h"
-
+#include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/Model.h"
-#include "Nyx/graphics/renderer/camera/Camera.h"
-#include "Nyx/graphics/renderer/API/FrameBuffer.h"
-#include "Nyx/graphics/renderer/API/TextureCube.h"
 
 using namespace Nyx;
 

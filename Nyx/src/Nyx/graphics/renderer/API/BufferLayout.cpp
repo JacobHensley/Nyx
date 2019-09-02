@@ -4,21 +4,19 @@
 namespace Nyx {
 
 	BufferLayout::BufferLayout()
-		: m_Stride(0)
 	{
 	}
 
-	void BufferLayout::PushInternal(const String& name, uint type, byte count, byte size)
+	void BufferLayout::CalculateOffsetsAndStride()
 	{
-		byte index = 0;
-		byte offset = 0;
-		if (m_Elements.size() > 0)
+		uint32_t offset = 0;
+		m_Stride = 0;
+		for (auto& element : m_Elements)
 		{
-			const BufferElement& prev = m_Elements.back();
-			offset = prev.offset + prev.size * prev.count;
+			element.offset = offset;
+			offset += element.size;
+			m_Stride += element.size;
 		}
-		m_Elements.push_back({ name, type, count, size, offset });
-		m_Stride += count * size;
 	}
 
 }

@@ -47,8 +47,6 @@ namespace Nyx {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-		m_Input = new Input();
-
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSwapInterval(0);
 		

@@ -31,6 +31,7 @@ project "ImGui"
     {
         "IMGUI_DEFINE_MATH_OPERATORS",
         "IMGUI_IMPL_OPENGL_LOADER_GLAD",
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
 	filter "system:windows"

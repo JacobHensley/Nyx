@@ -1,9 +1,8 @@
-//#include "Nyx.h"
 #include "GameLayer.h"
 #include "imgui/imgui.h"
+#include "imgui/ImGuizmo.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "imgui/ImGuizmo.h"
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace Nyx;
@@ -17,16 +16,16 @@ GameLayer::GameLayer(const String& name)
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
 	m_Model = new Model("res/models/Model.fbx");	
 
-	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-
 	m_ModelMatrix = glm::mat4(1.0f);
 	m_ModelMatrix = glm::translate(m_ModelMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
 	m_ModelMatrix = glm::rotate(m_ModelMatrix, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	m_ModelMatrix = glm::scale(m_ModelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 
 	m_TextureCube = new TextureCube("res/textures/canyon_irradiance.png");
-//	m_TextureCube = new TextureCube("res/textures/canyon.png"); 
+
 	m_Light = new Light(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
 	float x = -1.0f, y = -1.0f;
 	float width = 2.0f, height = 2.0f;
@@ -52,14 +51,16 @@ GameLayer::GameLayer(const String& name)
 
 	std::array<uint32_t, 6> indices = { 0, 1, 2, 2, 3, 0 };
 
-	m_VertexBuffer = new VertexBuffer(&vertices[0], sizeof(QuadVertex) * vertices.size());
+	m_VertexBuffer = new VertexBuffer(&vertices[0], (int)(sizeof(QuadVertex) * vertices.size()));
 
-	BufferLayout layout;
-	layout.Push<glm::vec3>("Position");
-	layout.Push<glm::vec2>("TexCoord");
+	BufferLayout layout = {
+		{ShaderDataType::Vec3, "a_Position"},
+		{ShaderDataType::Vec2, "a_TexCoord"}
+	};
+
 	m_VertexBuffer->SetLayout(layout);
 
-	m_IndexBuffer = new IndexBuffer(&indices[0], indices.size());
+	m_IndexBuffer = new IndexBuffer(&indices[0], (uint)indices.size());
 	m_VertexArray = new VertexArray();
 	m_VertexArray->PushVertexBuffer(m_VertexBuffer);
 
@@ -84,19 +85,18 @@ void GameLayer::Render()
 	m_FrameBuffer->Clear();
 	m_FrameBuffer->Bind();
 	
-	// Bind skybox shader
-	// Bind irradiance texture
-	// Get inverse camera VP matrix
-	// Render fullscreen quad (with depth-testing off)
 	m_SkyboxShader->Bind();
+
 	m_SkyboxShader->SetUniformMat4("u_InverseVP", glm::inverse(m_Camera->GetViewMatrix()));
 	m_SkyboxShader->SetUniform1i("u_SkyboxTexture", 0);
+
 	m_TextureCube->bind();
 	m_VertexArray->Bind();
 	m_IndexBuffer->Bind();
 	m_IndexBuffer->Draw(false);
 	
 	m_ModelShader->Bind();
+
 	glm::mat4 mvp;
 	
 	m_ModelShader->SetUniform3f("u_Light.Direction", m_Light->Direction);
@@ -104,13 +104,6 @@ void GameLayer::Render()
 	m_ModelShader->SetUniform1i("u_LightExponent", m_LightExponent);
 
 	m_ModelShader->SetUniform3f("u_CameraPos", m_Camera->GetPosition());
-
-	m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::scale(m_ModelMatrix, glm::vec3(200.5f, 200.5f, 200.5f)));
-	mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::scale(m_ModelMatrix, glm::vec3(200.5f, 200.5f, 200.5f));
-
-	m_ModelShader->SetUniformMat4("u_MVP", mvp);
-
-//	m_Model->Render(*m_ModelShader);
 
 	for (int i = 0;i < 10;i++)
 	{
@@ -150,8 +143,8 @@ void GameLayer::ImGUIRender()
 
 	ImGui::Begin("RenderSpace", &open, flags);
 
-	m_FrameBuffer->SetViewPortSize(0, 0, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-	ImGui::Image((void*)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight()), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
+	m_FrameBuffer->SetViewPortSize(0, 0, (int)ImGui::GetWindowWidth(), (int)ImGui::GetWindowHeight());
+	ImGui::Image((void*)(uint64_t)m_FrameBuffer->GetTexture()->GetTextureID(), ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight()), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());

@@ -30,17 +30,18 @@ namespace Nyx {
 		m_VertexArray->Bind();
 
 		m_VertexBuffer->Bind();
-		m_VertexBuffer->SetData((float*)&m_Vertices[0], m_Vertices.size() * sizeof(Vertex));
+		m_VertexBuffer->SetData((float*)&m_Vertices[0], (int)(m_Vertices.size() * sizeof(Vertex)));
 
 		m_IndexBuffer->Bind();
-		m_IndexBuffer->SetData(&m_Indices[0], m_Indices.size());
+		m_IndexBuffer->SetData(&m_Indices[0], (uint)m_Indices.size());
 
-		BufferLayout layout;
-		layout.Push<glm::vec3>("position");
-		layout.Push<glm::vec3>("normal");
-		layout.Push<glm::vec3>("tangent");
-		layout.Push<glm::vec3>("binormals");
-		layout.Push<glm::vec2>("textureCoords");
+		BufferLayout layout = {
+			{ShaderDataType::Vec3, "position"},
+			{ShaderDataType::Vec3, "normal"},
+			{ShaderDataType::Vec3, "tangent"},
+			{ShaderDataType::Vec3, "binormals"},
+			{ShaderDataType::Vec2, "textureCoords"}
+		};
 
 		m_VertexBuffer->SetLayout(layout);
 

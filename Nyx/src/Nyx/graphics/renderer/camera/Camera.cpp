@@ -40,18 +40,17 @@ namespace Nyx {
 	void Camera::Update()
 	{
 
-		Input* input = Application::GetApp().GetWindow().GetInput();
-		if (input->IsKeyPressed(NX_KEY_LEFT_ALT))
+		if (Input::IsKeyPressed(NX_KEY_LEFT_ALT))
 		{
-			const glm::vec2& mouse{ input->GetMouseX(), input->GetMouseY() };
+			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = mouse - m_InitialMousePosition;
 			m_InitialMousePosition = mouse;
 
-			if (input->IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
+			if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE)) 
 				MousePan(delta);
-			else if (input->IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
+			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
 				MouseRotate(delta);
-			else if (input->IsMouseButtonPressed(NX_MOUSE_BUTTON_RIGHT))
+			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_RIGHT))
 				MouseZoom(delta.y);
 		}
 
