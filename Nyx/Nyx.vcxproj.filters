@@ -34,6 +34,9 @@
     <Filter Include="src\Nyx\input">
       <UniqueIdentifier>{BA3378E5-26F4-F31B-EF2E-3D995BAE38F8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Nyx\math">
+      <UniqueIdentifier>{34DDFD25-2040-8DCA-C9C5-C580B507594D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -71,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>src\Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\DebugRenderer.h">
+      <Filter>src\Nyx\graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h">
       <Filter>src\Nyx\graphics\ImGUI</Filter>
@@ -126,6 +132,12 @@
     <ClInclude Include="src\Nyx\input\KeyCodes.h">
       <Filter>src\Nyx\input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\math\AABB.h">
+      <Filter>src\Nyx\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\math\Ray.h">
+      <Filter>src\Nyx\math</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
@@ -139,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>src\Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp">
+      <Filter>src\Nyx\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp">
       <Filter>src\Nyx\graphics\ImGUI</Filter>

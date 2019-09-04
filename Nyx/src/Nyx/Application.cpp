@@ -1,6 +1,8 @@
 #include "NXpch.h"
 #include "Application.h"
 
+#include "Nyx/graphics/DebugRenderer.h"
+
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 namespace Nyx {
@@ -16,6 +18,8 @@ namespace Nyx {
 
 		m_Window = new Window("Nyx Engine", 1280, 720);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		DebugRenderer::Init();
 
 		m_LayerStack = new LayerStack();
 

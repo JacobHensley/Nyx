@@ -5,6 +5,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Nyx/graphics/DebugRenderer.h"
+
 using namespace Nyx;
 
 GameLayer::GameLayer(const String& name)
@@ -84,6 +86,8 @@ void GameLayer::Render()
 {
 	m_FrameBuffer->Clear();
 	m_FrameBuffer->Bind();
+
+	DebugRenderer::Begin(*m_Camera);
 	
 	m_SkyboxShader->Bind();
 
@@ -107,22 +111,21 @@ void GameLayer::Render()
 
 	for (int i = 0;i < 10;i++)
 	{
+		glm::mat4 transform;
 		if (i < 5) 
-		{
-			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f)));
-			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
-		}
+			transform = glm::translate(m_ModelMatrix, glm::vec3(i * 2.5f, 0.0f, 0.0f));
 		else 
-		{
-			m_ModelShader->SetUniformMat4("u_ModelMatrix", glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f)));
-			mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
-		}
+			transform = glm::translate(m_ModelMatrix, glm::vec3((i - 5) * 2.5f, -2.5f, 0.0f));
 			
+		m_ModelShader->SetUniformMat4("u_ModelMatrix", transform);
+		mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * transform;
 		m_ModelShader->SetUniformMat4("u_MVP", mvp);
-
 		m_Model->Render(*m_ModelShader);
+		m_Model->DebugDrawBoundingBox(transform);
 	}
 
+	DebugRenderer::End();
+	DebugRenderer::Flush();
 	m_FrameBuffer->Unbind();
 }
 

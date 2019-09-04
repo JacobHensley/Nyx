@@ -24,7 +24,7 @@ namespace Nyx {
 	void Mesh::Init()
 	{
 		m_VertexArray = new VertexArray();
-		m_VertexBuffer = new VertexBuffer();
+		m_VertexBuffer = new VertexBuffer((int)(m_Vertices.size() * sizeof(Vertex)));
 		m_IndexBuffer = new IndexBuffer();
 
 		m_VertexArray->Bind();

@@ -3,6 +3,7 @@
 #include "Nyx/graphics/renderer/API/VertexArray.h"
 #include "Nyx/graphics/renderer/API/VertexBuffer.h"
 #include "Nyx/graphics/renderer/shaders/Shader.h"
+#include "Nyx/math/AABB.h"
 
 namespace Nyx {
 
@@ -30,6 +31,8 @@ namespace Nyx {
 
 		void Render(const Shader& shader);
 
+		const AABB& GetBoundingBox() const { return m_BoundingBox; }
+		void SetBoundingBox(const AABB& boundingBox) { m_BoundingBox = boundingBox; }
 	private:
 		void Init();
 
@@ -43,6 +46,8 @@ namespace Nyx {
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;
 		VertexBuffer* m_VertexBuffer;
+
+		AABB m_BoundingBox;
 	};
 
 }

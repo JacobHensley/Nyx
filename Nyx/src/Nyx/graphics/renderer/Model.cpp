@@ -2,6 +2,9 @@
 #include "Model.h"
 #include "Nyx/graphics/renderer/API/Texture.h"
 
+#include "Nyx/math/AABB.h"
+#include "Nyx/graphics/DebugRenderer.h"
+
 namespace Nyx {
 
 	Model::Model(const String& path)
@@ -20,6 +23,11 @@ namespace Nyx {
 		{
 			m_Meshes[i].Render(shader);
 		}
+	}
+
+	void Model::DebugDrawBoundingBox(const glm::mat4& transform) const
+	{
+		DebugRenderer::DrawAABB(m_BoundingBox, transform);
 	}
 
 	// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -69,6 +77,9 @@ namespace Nyx {
 		std::vector<glm::vec3> tangents;
 		std::vector<glm::vec3> binormals;
 
+		glm::vec3 bbMin(FLT_MAX);
+		glm::vec3 bbMax(-FLT_MAX);
+
 		// Walk through each of the mesh's vertices
 		for (uint i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -80,6 +91,9 @@ namespace Nyx {
 			vector.y = mesh->mVertices[i].y;
 			vector.z = mesh->mVertices[i].z;
 			vertex.position = vector;
+
+			bbMin = glm::min(vector, bbMin);
+			bbMax = glm::max(vector, bbMax);
 
 			// Normals
 			vector.x = mesh->mNormals[i].x;
@@ -116,6 +130,9 @@ namespace Nyx {
 
 			vertices.push_back(vertex);
 		}
+
+		// TODO: Make this work for multiple submeshes
+		m_BoundingBox = AABB(bbMin, bbMax);
 
 		// Now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 		for (uint i = 0; i < mesh->mNumFaces; i++)
@@ -167,7 +184,9 @@ namespace Nyx {
 		}
 
 		// Return a mesh object created from the extracted mesh data
-		return Mesh(vertices, indices, textures, tangents, binormals);
+		Mesh result = Mesh(vertices, indices, textures, tangents, binormals);
+		result.SetBoundingBox(m_BoundingBox);
+		return result;
 	}
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.

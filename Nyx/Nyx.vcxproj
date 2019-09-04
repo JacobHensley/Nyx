@@ -107,6 +107,7 @@
     <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
+    <ClInclude Include="src\Nyx\graphics\DebugRenderer.h" />
     <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h" />
     <ClInclude Include="src\Nyx\graphics\Layers\Layer.h" />
     <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h" />
@@ -125,6 +126,8 @@
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.h" />
     <ClInclude Include="src\Nyx\input\Input.h" />
     <ClInclude Include="src\Nyx\input\KeyCodes.h" />
+    <ClInclude Include="src\Nyx\math\AABB.h" />
+    <ClInclude Include="src\Nyx\math\Ray.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +136,7 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
+    <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp" />
     <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp" />
     <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp" />
     <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp" />

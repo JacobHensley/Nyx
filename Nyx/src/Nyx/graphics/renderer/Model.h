@@ -17,6 +17,10 @@ namespace Nyx {
 		~Model();
 
 		void Render(const Shader& shader);
+
+		const AABB& GetBoundingBox() const { return m_BoundingBox; }
+
+		void DebugDrawBoundingBox(const glm::mat4& transform) const;
 	private:
 		const String& m_Path;
 		std::vector<Mesh> m_Meshes;
@@ -28,6 +32,8 @@ namespace Nyx {
 		void processNode(aiNode* node, const aiScene* scene);
 		Mesh processMesh(aiMesh* mesh, const aiScene *scene);
 		std::vector<MeshTexture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const String& typeName);
+	private:
+		AABB m_BoundingBox;
 	};
 
 }
