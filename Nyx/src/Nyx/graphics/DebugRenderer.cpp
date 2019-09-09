@@ -90,30 +90,26 @@ namespace Nyx {
 
 	void DebugRenderer::DrawAABBInternal(const AABB& aabb, const glm::mat4& transform, const glm::vec4& color)
 	{
-		glm::vec3 min = aabb.Min;
-		glm::vec3 max = aabb.Max;
-
-		min = glm::vec3(transform * glm::vec4(min, 1.0f));
-		max = glm::vec3(transform * glm::vec4(max, 1.0f));
-		glm::vec3 size = max - min;
+		const glm::vec3& min = aabb.Min;
+		const glm::vec3& max = aabb.Max;
 
 		// Front quad
-		DrawLine(min, { min.x + size.x, min.y, min.z }, color);
-		DrawLine({ min.x + size.x, min.y, min.z }, { min.x + size.x, min.y + size.y, min.z }, color);
-		DrawLine({ min.x + size.x, min.y + size.y, min.z }, { min.x, min.y + size.y, min.z }, color);
-		DrawLine({ min.x, min.y + size.y, min.z }, min, color);
+		DrawLine(glm::vec3(transform * glm::vec4(min, 1.0f)), glm::vec3(transform * glm::vec4(max.x, min.y, min.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, min.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(max.x, max.y, min.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, max.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(min.x, max.y, min.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(min.x, max.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(min, 1.0f)), color);
 
 		// Join
-		DrawLine(min, { min.x, min.y, max.z }, color);
-		DrawLine({ max.x, min.y, min.z }, { max.x, min.y, max.z }, color);
-		DrawLine({ max.x, max.y, min.z }, { max.x, max.y, max.z }, color);
-		DrawLine({ min.x, max.y, min.z }, { min.x, max.y, max.z }, color);
+		DrawLine(glm::vec3(transform * glm::vec4(min, 1.0f)), glm::vec3(transform * glm::vec4(min.x, min.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, min.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(max.x, min.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, max.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(max.x, max.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(min.x, max.y, min.z, 1.0f)), glm::vec3(transform * glm::vec4(min.x, max.y, max.z, 1.0f)), color);
 
 		// Back quad
-		DrawLine({ min.x, min.y, max.z }, { min.x + size.x, min.y, max.z }, color);
-		DrawLine({ min.x + size.x, min.y, max.z }, { min.x + size.x, min.y + size.y, max.z }, color);
-		DrawLine({ min.x + size.x, min.y + size.y, max.z }, { min.x, min.y + size.y, max.z }, color);
-		DrawLine({ min.x, min.y + size.y, max.z }, { min.x, min.y, max.z }, color);
+		DrawLine(glm::vec3(transform * glm::vec4(min.x, min.y, max.z, 1.0f)), glm::vec3(transform * glm::vec4(max.x, min.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, min.y, max.z, 1.0f)), glm::vec3(transform * glm::vec4(max.x, max.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(max.x, max.y, max.z, 1.0f)), glm::vec3(transform * glm::vec4(min.x, max.y, max.z, 1.0f)), color);
+		DrawLine(glm::vec3(transform * glm::vec4(min.x, max.y, max.z, 1.0f)), glm::vec3(transform * glm::vec4(min.x, min.y, max.z, 1.0f)), color);
 	}
 
 

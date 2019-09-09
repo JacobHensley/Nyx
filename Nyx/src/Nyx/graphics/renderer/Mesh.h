@@ -1,9 +1,15 @@
 #pragma once
+#include "Nyx/Common.h"
+#include "NXpch.h"
 #include "Nyx/graphics/renderer/API/IndexBuffer.h"
 #include "Nyx/graphics/renderer/API/VertexArray.h"
 #include "Nyx/graphics/renderer/API/VertexBuffer.h"
 #include "Nyx/graphics/renderer/shaders/Shader.h"
 #include "Nyx/math/AABB.h"
+#include "glm/glm.hpp"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace Nyx {
 
@@ -16,38 +22,50 @@ namespace Nyx {
 		glm::vec2 textureCoords;
 	};
 
-	struct MeshTexture
+	struct SubMesh 
 	{
-		uint id;
-		String type;
-		String path;
+		uint vertexOffset;
+		uint indexOffset;
+		uint indexCount;
+		AABB boundingBox;
+
+		SubMesh(uint vertexOffset, uint indexOffset, uint indexCount)
+			: vertexOffset(vertexOffset), indexOffset(indexOffset), indexCount(indexCount)
+		{
+
+		}
 	};
 
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint>& indices, std::vector<MeshTexture>& textures, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& binormals);
+		Mesh(const String& path);
 		~Mesh();
 
-		void Render(const Shader& shader);
-
-		const AABB& GetBoundingBox() const { return m_BoundingBox; }
-		void SetBoundingBox(const AABB& boundingBox) { m_BoundingBox = boundingBox; }
+		void Render();
+		void DebugDrawBoundingBox(const glm::mat4& transform) const;
 	private:
-		void Init();
+		void Load();
+		void processNode(aiNode* node, const aiScene* scene);
+		SubMesh processMesh(aiMesh* mesh, const aiScene* scene);
+		std::vector<Texture> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName);
 
+		const String m_Path;
+
+		std::vector<SubMesh> m_SubMeshes;
+		std::vector<Texture> m_TexturesLoaded;
+
+		AABB m_BoundingBox;
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint> m_Indices;
-		std::vector<MeshTexture> m_Textures;
+		uint m_BaseVertexPointer = 0;
+		uint m_BaseIndexPointer = 0;
 
-		std::vector<glm::vec3> m_Tangents;
-		std::vector<glm::vec3> m_BiNormals;
+		glm::vec3 m_bbMin = {  FLT_MAX,  FLT_MAX,  FLT_MAX };
+		glm::vec3 m_bbMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;
 		VertexBuffer* m_VertexBuffer;
-
-		AABB m_BoundingBox;
 	};
-
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include "Nyx.h"
 #include "Nyx/graphics/renderer/Mesh.h"
-#include "Nyx/graphics/renderer/Model.h"
 
 using namespace Nyx;
 
@@ -41,7 +40,7 @@ private:
 	TextureCube* m_TextureCube;
 	Camera* m_Camera;
 	Shader* m_ModelShader;
-	Model* m_Model;
+	Mesh* m_Model;
 
 	VertexBuffer* m_VertexBuffer;
 	Shader* m_SkyboxShader;

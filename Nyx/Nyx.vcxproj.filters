@@ -114,9 +114,6 @@
     <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\renderer\Model.h">
-      <Filter>src\Nyx\graphics\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h">
       <Filter>src\Nyx\graphics\renderer\camera</Filter>
     </ClInclude>
@@ -192,9 +189,6 @@
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp">
-      <Filter>src\Nyx\graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp">

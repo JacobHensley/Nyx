@@ -16,7 +16,7 @@ GameLayer::GameLayer(const String& name)
 	m_FrameBuffer->Bind();
 
 	m_ModelShader = new Shader("res/shaders/ModelShader.shader");
-	m_Model = new Model("res/models/Model.fbx");	
+	m_Model = new Mesh("res/models/Model.fbx");	
 
 	m_ModelMatrix = glm::mat4(1.0f);
 	m_ModelMatrix = glm::translate(m_ModelMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
@@ -120,7 +120,7 @@ void GameLayer::Render()
 		m_ModelShader->SetUniformMat4("u_ModelMatrix", transform);
 		mvp = m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * transform;
 		m_ModelShader->SetUniformMat4("u_MVP", mvp);
-		m_Model->Render(*m_ModelShader);
+		m_Model->Render();
 		m_Model->DebugDrawBoundingBox(transform);
 	}
 

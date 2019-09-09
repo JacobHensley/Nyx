@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -15,20 +15,20 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Nyx</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -120,7 +120,6 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexArray.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\Model.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\camera\Camera.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\Shader.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.h" />
@@ -150,7 +149,6 @@
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexArray.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\Model.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\camera\Camera.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\shaders\Shader.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\shaders\ShaderUniform.cpp" />
