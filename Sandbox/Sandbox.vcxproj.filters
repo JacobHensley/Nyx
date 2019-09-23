@@ -9,10 +9,16 @@
     <ClInclude Include="src\layers\GameLayer.h">
       <Filter>layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\layers\ViewerLayer.h">
+      <Filter>layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\layers\GameLayer.cpp">
+      <Filter>layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\layers\ViewerLayer.cpp">
       <Filter>layers</Filter>
     </ClCompile>
   </ItemGroup>

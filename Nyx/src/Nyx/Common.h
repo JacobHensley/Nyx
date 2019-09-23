@@ -12,3 +12,13 @@ using byte = unsigned char;
 	#define NX_ASSERT(x, ...) x
 	#define NX_CORE_ASSERT(x, ...) x
 #endif
+
+namespace Nyx {
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+}

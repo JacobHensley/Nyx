@@ -17,6 +17,8 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
+		void Reload();
+
 		void ParseUniforms();
 		void PushUniform(ShaderUniform* uniform);
 		void PrintUniforms();

@@ -46,10 +46,18 @@ namespace Nyx {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSwapInterval(0);
 		
+		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int xpos, int ypos)
+		{
+				Window& win = *(Window*)glfwGetWindowUserPointer(window);
+				win.m_WindowPos.x = (float)xpos;
+				win.m_WindowPos.y = (float)ypos;
+		});
+
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
 			Window& win = *(Window*)glfwGetWindowUserPointer(window);

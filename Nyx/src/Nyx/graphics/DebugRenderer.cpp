@@ -35,7 +35,7 @@ namespace Nyx {
 		m_IndexBuffer = std::make_unique<IndexBuffer>(indices, MAX_INDEX_COUNT);
 		m_IndexBuffer->SetData(indices, MAX_INDEX_COUNT);
 
-		m_LineShader = std::make_unique<Shader>("res/shaders/DebugLine.shader");
+		m_LineShader = std::make_unique<Shader>("assets/shaders/DebugLine.shader");
 	} 
 
 	DebugRenderer::~DebugRenderer()
@@ -68,7 +68,7 @@ namespace Nyx {
 		m_IndexBuffer->Bind();
 		
 		//glDisable(GL_DEPTH_TEST);
-		glLineWidth(2.0f);
+		glLineWidth(3.0f);
 		glDrawElements(GL_LINES, m_LineIndexCount, GL_UNSIGNED_INT, nullptr);
 		//glEnable(GL_DEPTH_TEST);
 	}

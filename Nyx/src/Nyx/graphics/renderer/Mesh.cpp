@@ -19,9 +19,10 @@ namespace Nyx {
 	{
 		m_VertexArray->Bind();
 		m_IndexBuffer->Bind();
-		
+		glEnable(GL_BLEND);
 		for (SubMesh& mesh : m_SubMeshes)
 		{
+			//renderer.submit(vertexarray)
 			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
 		}
 	}
@@ -35,8 +36,8 @@ namespace Nyx {
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
+		const aiScene* scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			NX_CORE_ASSERT(false, importer.GetErrorString());
@@ -208,10 +209,10 @@ namespace Nyx {
 			if (!skip)
 			{
 				// If texture hasn't been loaded already, load it
-				String path = str.C_Str();
-				Texture texture = Texture(str.C_Str());
+		//		String path = str.C_Str();
+		//		Texture texture = Texture(str.C_Str());
 
-				m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+		//		m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}
 		}
 

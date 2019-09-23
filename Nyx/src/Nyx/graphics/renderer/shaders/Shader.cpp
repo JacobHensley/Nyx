@@ -201,6 +201,14 @@ namespace Nyx {
 		glUseProgram(0);
 	}
 
+	void Shader::Reload()
+	{
+		m_ShaderID = Init();
+		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL");
+
+		ParseUniforms();
+	}
+
 	void Shader::SetTextureIDs(const String& name)
 	{
 		int textureIDs[32];

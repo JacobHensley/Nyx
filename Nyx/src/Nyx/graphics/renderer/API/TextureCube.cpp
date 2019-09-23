@@ -15,12 +15,12 @@ namespace Nyx {
 	{
 	}
 
-	void TextureCube::bind()
+	void TextureCube::Bind(uint slot)
 	{
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
+		glBindTextureUnit(slot, m_TextureID);
 	}
 
-	void TextureCube::unbind()
+	void TextureCube::Unbind()
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
@@ -101,11 +101,11 @@ namespace Nyx {
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[2]);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[0]);
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[4]); 
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[4]);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[5]);
 
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[1]);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[3]); 
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[3]);
 
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 

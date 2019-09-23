@@ -7,17 +7,17 @@
     <Filter Include="src\Nyx">
       <UniqueIdentifier>{5B9B2FA9-C77A-AE44-D092-391B3CF114A6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Nyx\Events">
-      <UniqueIdentifier>{DF920F41-CB60-0347-B4F4-736DA061DFAB}</UniqueIdentifier>
+    <Filter Include="src\Nyx\events">
+      <UniqueIdentifier>{FFA6B48B-EB74-A891-D408-19B8C07584F6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Nyx\graphics">
       <UniqueIdentifier>{1BF6DDE6-07EF-FC38-3021-E2BD1C79DC44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Nyx\graphics\ImGUI">
-      <UniqueIdentifier>{454F6BE0-3149-9432-1AB6-2A43064FFA9E}</UniqueIdentifier>
+    <Filter Include="src\Nyx\graphics\imGUI">
+      <UniqueIdentifier>{655FAEE2-5159-D734-3AC6-6D45265F3DA1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Nyx\graphics\Layers">
-      <UniqueIdentifier>{7A4017F4-E677-5F8B-EF81-C3AE5B388684}</UniqueIdentifier>
+    <Filter Include="src\Nyx\graphics\layers">
+      <UniqueIdentifier>{9A54BC3E-068C-04D6-0F96-68F97B4C2BCF}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Nyx\graphics\renderer">
       <UniqueIdentifier>{41E4D582-ADA6-090D-F656-98996258E2EA}</UniqueIdentifier>
@@ -36,6 +36,12 @@
     </Filter>
     <Filter Include="src\Nyx\math">
       <UniqueIdentifier>{34DDFD25-2040-8DCA-C9C5-C580B507594D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Nyx\scene">
+      <UniqueIdentifier>{D8F026E6-44B1-A21C-0DEC-EB99796BE7F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Nyx\scene\component">
+      <UniqueIdentifier>{5AD74BCC-C60E-9463-CF18-F8863BCFBA5C}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -57,38 +63,38 @@
     <ClInclude Include="src\Nyx\Common.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\Events\AppEvent.h">
-      <Filter>src\Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\Event.h">
-      <Filter>src\Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\KeyEvent.h">
-      <Filter>src\Nyx\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\Events\MouseEvent.h">
-      <Filter>src\Nyx\Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\GLError.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\events\AppEvent.h">
+      <Filter>src\Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\Event.h">
+      <Filter>src\Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\KeyEvent.h">
+      <Filter>src\Nyx\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\events\MouseEvent.h">
+      <Filter>src\Nyx\events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\DebugRenderer.h">
       <Filter>src\Nyx\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h">
-      <Filter>src\Nyx\graphics\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\Layers\Layer.h">
-      <Filter>src\Nyx\graphics\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h">
-      <Filter>src\Nyx\graphics\Layers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\Window.h">
       <Filter>src\Nyx\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\imGUI\ImGUILayer.h">
+      <Filter>src\Nyx\graphics\imGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\layers\Layer.h">
+      <Filter>src\Nyx\graphics\layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\layers\LayerStack.h">
+      <Filter>src\Nyx\graphics\layers</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
@@ -135,6 +141,24 @@
     <ClInclude Include="src\Nyx\math\Ray.h">
       <Filter>src\Nyx\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\scene\Scene.h">
+      <Filter>src\Nyx\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\SceneObject.h">
+      <Filter>src\Nyx\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\component\Component.h">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\component\ComponentCache.h">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\component\MeshComponent.h">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\component\TransformComponent.h">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
@@ -152,20 +176,20 @@
     <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp">
       <Filter>src\Nyx\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp">
-      <Filter>src\Nyx\graphics\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp">
-      <Filter>src\Nyx\graphics\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\Layers\Layer.cpp">
-      <Filter>src\Nyx\graphics\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp">
-      <Filter>src\Nyx\graphics\Layers</Filter>
-    </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Window.cpp">
       <Filter>src\Nyx\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\imGUI\ImGUIBuild.cpp">
+      <Filter>src\Nyx\graphics\imGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\imGUI\ImGUILayer.cpp">
+      <Filter>src\Nyx\graphics\imGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\layers\Layer.cpp">
+      <Filter>src\Nyx\graphics\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\layers\LayerStack.cpp">
+      <Filter>src\Nyx\graphics\layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
@@ -202,6 +226,18 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\input\Input.cpp">
       <Filter>src\Nyx\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\scene\Scene.cpp">
+      <Filter>src\Nyx\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\scene\SceneObject.cpp">
+      <Filter>src\Nyx\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp">
+      <Filter>src\Nyx\scene\component</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>

@@ -21,6 +21,7 @@ namespace Nyx {
 		inline GLFWwindow* GetGLFWWindow() const { return m_Window; }
 		inline const int GetWidth() const { return m_Width; }
 		inline const int GetHeight() const { return m_Height; }
+		inline const glm::vec2 GetWindowPos() const { return m_WindowPos; }
 
 		inline void SetEventCallback(const EvenCallbackFn& callback) { m_EventCallback = callback; };
 	private:
@@ -30,6 +31,7 @@ namespace Nyx {
 		GLFWwindow* m_Window;
 		const String& m_Name;
 		int m_Width, m_Height;
+		glm::vec2 m_WindowPos;
 
 		EvenCallbackFn m_EventCallback;
 

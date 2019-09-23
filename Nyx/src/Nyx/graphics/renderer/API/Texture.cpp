@@ -22,6 +22,11 @@ namespace Nyx {
 		glDeleteTextures(1, &m_TextureID);
 	}
 
+	void Texture::Bind(uint slot)
+	{
+		glBindTextureUnit(slot, m_TextureID);
+	}
+
 	void Texture::Bind()
 	{
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);

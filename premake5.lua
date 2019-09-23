@@ -15,11 +15,11 @@ IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
 IncludeDir["glm"] =    "Nyx/vendor/glm"
 IncludeDir["assimp"] = "Nyx/vendor/assimp/include"
 IncludeDir["GLFW"] =   "Nyx/vendor/GLFW/include"
-IncludeDir["Glad"] =   "Nyx/vendor/Glad/include"
+IncludeDir["glad"] =   "Nyx/vendor/glad/include"
 IncludeDir["imgui"] =  "Nyx/vendor/imgui"
 
 include "Nyx/vendor/GLFW"
-include "Nyx/vendor/Glad"
+include "Nyx/vendor/glad"
 include "Nyx/vendor/imgui"
 
 project "Nyx"
@@ -50,7 +50,7 @@ project "Nyx"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.Glad}",
+		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}"
 	}
 
@@ -108,14 +108,14 @@ project "Sandbox"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.assimp}",
-		"%{IncludeDir.Glad}",
+		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}"
 	}
 
 	links 
 	{ 
 		"GLFW",
-		"Glad",
+		"glad",
 		"Nyx/vendor/assimp/lib64/assimp-vc141-mtd.lib",
 		"imgui",
 		"Nyx",

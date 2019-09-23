@@ -7,20 +7,20 @@
 //#include "Nyx/GLError.h"
 #include "Nyx/Log.h"
 
-#include "Nyx/Events/Event.h"
-#include "Nyx/Events/AppEvent.h"
-#include "Nyx/Events/KeyEvent.h"
-#include "Nyx/Events/MouseEvent.h"
+#include "Nyx/events/Event.h"
+#include "Nyx/events/AppEvent.h"
+#include "Nyx/events/KeyEvent.h"
+#include "Nyx/events/MouseEvent.h"
 
+//#include "Nyx/graphics/DebugRenderer.h"
 #include "Nyx/Graphics/Window.h"
 
 #include "Nyx/Graphics/ImGUI/ImGUILayer.h"
 
-#include "Nyx/Graphics/Layers/Layer.h"
-#include "Nyx/Graphics/Layers/LayerStack.h"
+#include "Nyx/Graphics/layers/Layer.h"
+#include "Nyx/Graphics/layers/LayerStack.h"
 
 //#include "Nyx/graphics/renderer/Mesh.h"
-//#include "Nyx/graphics/renderer/Model.h"
 
 #include "Nyx/graphics/renderer/API/BufferLayout.h"
 #include "Nyx/graphics/renderer/API/FrameBuffer.h"
@@ -37,3 +37,14 @@
 
 #include "Nyx/Input/Input.h"
 #include "Nyx/Input/KeyCodes.h"
+
+#include "Nyx/math/AABB.h"
+#include "Nyx/math/Ray.h"
+
+#include "Nyx/scene/Scene.h"
+#include "Nyx/scene/SceneObject.h"
+
+#include "Nyx/scene/component/Component.h"
+#include "Nyx/scene/component/ComponentCache.h"
+//#include "Nyx/scene/component/MeshComponent.h"
+#include "Nyx/scene/component/TransformComponent.h"

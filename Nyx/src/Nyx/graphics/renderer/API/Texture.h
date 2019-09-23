@@ -49,6 +49,7 @@ namespace Nyx {
 		Texture(int width, int height, TextureParameters parameters = TextureParameters());
 		~Texture();
 
+		void Bind(uint slot);
 		void Bind();
 		void Unbind();
 

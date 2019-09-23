@@ -10,8 +10,8 @@ namespace Nyx {
 		~TextureCube();
 
 		inline const uint GetTextureID() const { return m_TextureID; }
-		void bind();
-		void unbind();
+		void Bind(uint slot);
+		void Unbind();
 	private:
 		uint LoadFromFile(const String& path);
 

@@ -1,6 +1,12 @@
 #pragma once
 #include "Nyx.h"
 #include "Nyx/graphics/renderer/Mesh.h"
+#include "Nyx/math/Ray.h"
+
+#include "Nyx/scene/Scene.h"
+#include "Nyx/scene/SceneObject.h"
+#include "Nyx/scene/component/MeshComponent.h"
+#include "Nyx/scene/component/TransformComponent.h"
 
 using namespace Nyx;
 
@@ -26,6 +32,8 @@ public:
 	virtual void Update() override;
 	virtual void Render() override;
 
+	void MousePick();
+
 	virtual void ImGUIRender() override;
 
 	virtual void OnEvent(Event& e) override;
@@ -34,8 +42,19 @@ private:
 
 	glm::mat4 m_ModelMatrix;
 
+	Scene m_Scene;
+	SceneObject object;
+	MeshComponent* meshComponent;
+	TransformComponent* transformComponent;
+
 	Light* m_Light;
 	int m_LightExponent = 2;
+
+	int m_RenderSpaceHeight = 0;
+	int m_RenderSpaceWidth = 0;
+	glm::vec2 m_RenderSpacePos;
+
+	Ray m_Ray;
 
 	TextureCube* m_TextureCube;
 	Camera* m_Camera;
