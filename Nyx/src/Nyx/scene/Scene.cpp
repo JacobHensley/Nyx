@@ -25,19 +25,53 @@ namespace Nyx {
 
 		for (auto component : meshComponents)
 		{
-
 			MeshComponent* meshComp = (MeshComponent*)component;
 
-			TransformComponent*  transformComp = m_ComponentCache.Get<TransformComponent>(meshComp->GetSceneObject());
-			NX_ASSERT(transformComp, "Transform Component is invaild");
-			meshComp->RenderMesh(transformComp->GetTransform());
+			NX_ASSERT(meshComp->GetSceneObject(), "Scene Object is null");
+
+			SceneObject* object = meshComp->GetSceneObject();
+
+			if (object->IsVisible())
+			{
+				TransformComponent*  transformComp = m_ComponentCache.Get<TransformComponent>(meshComp->GetSceneObject());
+				NX_ASSERT(transformComp, "Transform Component is invaild");
+				meshComp->RenderMesh(transformComp->GetTransform());
+			}
+
 		}
+	}
+
+	SceneObject* Scene::CreateObject()
+	{
+		SceneObject* object = new SceneObject();
+		AddObject(*object);
+		return object;
+	}
+
+	SceneObject* Scene::CreateObject(std::initializer_list<Component*> components)
+	{
+		SceneObject* object = new SceneObject();
+		AddObject(*object);
+		
+		for (auto component : components) 
+		{
+			object->AddComponent(component);
+		}
+
+		return object;
 	}
 
 	void Scene::AddObject(SceneObject& object)
 	{
 		object.Init(this);
 		m_SceneObjects.push_back(object);
+	}
+
+	void Scene::Remove(const SceneObject& sceneObject)
+	{
+		auto e = std::find(m_SceneObjects.begin(), m_SceneObjects.end(), sceneObject);
+		if (e != m_SceneObjects.end())
+			m_SceneObjects.erase(e);
 	}
 
 	void Scene::RemoveAll()

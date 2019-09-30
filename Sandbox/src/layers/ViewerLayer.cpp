@@ -27,6 +27,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	//Load Shaders
 	m_SkyboxShader = new Shader("assets/shaders/Skybox.shader");
 	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
+	m_ConstPBRShader = new Shader("assets/shaders/ConstPBR.shader");
 	m_GridShader = new Shader("assets/shaders/Grid.shader");
 
 	//Setup quads for skybox and grid
@@ -37,20 +38,20 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransform = glm::mat4(1.0f);
 	m_GridTransform = glm::mat4(1.0f);
 
-	//Init scene and Cerberus components
+	//Init scene
 	m_Scene = new Scene();
+
+	//Setup Sphere components and add object to scene
+	m_SphereObject = m_Scene->CreateObject({ new MeshComponent(Mesh("assets/models/Sphere.FBX")) , new TransformComponent(glm::mat4(1.0f)) });
+
+	//Setup Cerberus components and add object to scene
 	m_CerberusMeshComponent = new MeshComponent(*m_CerberusMesh);
 	m_CerberusTransformComponent = new TransformComponent(m_CerberusTransform);
-	
-	//Setup and add Cerberus object to scene
-	m_CerberusObject = new SceneObject();
-	m_CerberusObject->Init(m_Scene);
-	m_CerberusObject->AddComponent(m_CerberusMeshComponent);
-	m_CerberusObject->AddComponent(m_CerberusTransformComponent);
-	m_Scene->AddObject(*m_CerberusObject);
+	m_CerberusObject = m_Scene->CreateObject({ m_CerberusMeshComponent , m_CerberusTransformComponent });
 
 	//Modify transforms
-	m_CerberusTransformComponent->m_Transform = glm::rotate(m_CerberusTransformComponent->m_Transform, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	m_CerberusTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
+	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
@@ -117,8 +118,8 @@ void ViewerLayer::InitSkyboxQuad()
 
 void ViewerLayer::InitGridQuad()
 {
-	float x = -500.0f, y = -500.0f, z = 0.0f;
-	float width = 1000.0f, height = 1000.0f;
+	float x = -5.0f, y = -5.0f, z = 0.0f;
+	float width = 10.0f, height = 10.0f;
 
 	struct QuadVertex
 	{
@@ -230,8 +231,42 @@ void ViewerLayer::Render()
 	m_PBRShader->SetUniform1i("u_RoughnessMap", 6);
 	m_RoughnessMap->Bind(6);
 
+	//Upload uniforms for const PBR shader
+	m_ConstPBRShader->Bind();
+
+	m_ConstPBRShader->SetUniformMat4("u_ModelMatrix", m_Scene->GetComponent<TransformComponent>(m_SphereObject)->GetTransform());
+	m_ConstPBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
+	m_ConstPBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_Scene->GetComponent<TransformComponent>(m_SphereObject)->GetTransform());
+
+	m_PBRShader->SetUniform1i("u_IrradianceTexture", 0);
+	m_IrradianceTexture->Bind(0);
+
+	m_PBRShader->SetUniform1i("u_RadianceTexture", 1);
+	m_RadianceTexture->Bind(1);
+
+	m_ConstPBRShader->SetUniform3f("u_Albedo", m_Albedo);
+	m_ConstPBRShader->SetUniform1f("u_Metalness", m_Metalness);
+	m_ConstPBRShader->SetUniform1f("u_Normal", m_Normal);
+	m_ConstPBRShader->SetUniform1f("u_Roughness", m_Roughness);
+
+	if (m_SceneMode == 0) 
+	{
+		m_SphereObject->SetVisibility(false);
+		m_CerberusObject->SetVisibility(true);
+		m_PBRShader->Bind();
+	}
+	else if (m_SceneMode == 1) 
+	{
+		m_SphereObject->SetVisibility(true);
+		m_CerberusObject->SetVisibility(false);
+		m_ConstPBRShader->Bind();
+	}
+		
 	//Render Scene
 	m_Scene->Render();
+
+	//Render mouse ray
+	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
 
 	//Render Grid
 	m_GridShader->Bind();
@@ -242,9 +277,6 @@ void ViewerLayer::Render()
 	m_GridIndexBuffer->Bind();
 	m_GridIndexBuffer->Draw(true);
 
-	//Render mouse ray
-	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
-
 	DebugRenderer::End();
 	DebugRenderer::Flush();
 
@@ -254,21 +286,37 @@ void ViewerLayer::Render()
 void ViewerLayer::ImGUIRender()
 {
 	ImGui::Begin("Settings");
+
 	if (ImGui::Button("Refresh PBR Shader"))
-		m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
+		m_PBRShader->Reload();
 	if (ImGui::Button("Refresh Skybox Shader"))
-		m_SkyboxShader = new Shader("assets/shaders/Skybox.shader");
+		m_SkyboxShader->Reload();
 	if (ImGui::Button("Refresh Grid Shader"))
-		m_GridShader = new Shader("assets/shaders/Grid.shader");
+		m_GridShader->Reload();
+	if (ImGui::Button("Refresh Const PBR Shader"))
+		m_ConstPBRShader->Reload();
 	ImGui::Separator();
+
+	ImGui::RadioButton("Cerberus", &m_SceneMode, 0); ImGui::SameLine();
+	ImGui::RadioButton("Sphere", &m_SceneMode, 1);
+	ImGui::Separator();
+
+	if (m_SceneMode == 1) 
+	{
+		ImGui::ColorEdit3("Albedo", glm::value_ptr(m_Albedo));
+		ImGui::SliderFloat("Metalness", &m_Metalness, 0, 1);
+		ImGui::SliderFloat("Normal", &m_Normal, -1, 1);
+		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
+		ImGui::Separator();
+	}
+
+	ImGui::RadioButton("TRANSLATE", &m_GizmoMode, 0); ImGui::SameLine();
+	ImGui::RadioButton("ROTATE", &m_GizmoMode, 1); ImGui::SameLine();
+	ImGui::RadioButton("SCALE", &m_GizmoMode, 2);
+	ImGui::Separator();
+
 	ImGui::Checkbox("Toggle Ray Hold", &m_HoldRay);
 	ImGui::Separator();
-	if (ImGui::Button("TRANSLATE"))
-		m_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
-	if (ImGui::Button("ROTATE"))
-		m_GizmoMode = ImGuizmo::OPERATION::ROTATE;
-	if (ImGui::Button("SCALE"))
-		m_GizmoMode = ImGuizmo::OPERATION::SCALE;
 
 	ImGui::End();
 
@@ -297,7 +345,10 @@ void ViewerLayer::ImGUIRender()
 
 	m_Camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), (float)m_RenderSpaceWidth, (float)m_RenderSpaceHeight, 0.01f, 1000.0f));
 
-	ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::LOCAL, &m_CerberusTransformComponent->m_Transform[0][0]);
+	if (m_SceneMode == 0)
+		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoMode, ImGuizmo::LOCAL, &m_CerberusTransformComponent->m_Transform[0][0]);
+	if (m_SceneMode == 1)
+		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoMode, ImGuizmo::LOCAL, &m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform[0][0]);
 
 	ImGui::End();
 	ImGui::PopStyleVar();

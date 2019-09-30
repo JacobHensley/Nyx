@@ -114,6 +114,7 @@
     <ClInclude Include="src\Nyx\graphics\layers\LayerStack.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\BufferLayout.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\API\GraphicsContext.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\Texture.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\API\TextureCube.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="src\Nyx\graphics\layers\LayerStack.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\BufferLayout.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\API\GraphicsContext.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\Texture.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\API\TextureCube.cpp" />

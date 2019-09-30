@@ -36,10 +36,10 @@ uniform samplerCube u_RadianceTexture;
 
 uniform sampler2D u_BRDFLutTexture;
 
-uniform sampler2D u_AlbedoMap;
-uniform sampler2D u_MetalnessMap;
-uniform sampler2D u_NormalMap;
-uniform sampler2D u_RoughnessMap;
+uniform vec3 u_Albedo;
+uniform float u_Metalness;
+uniform float u_Normal;
+uniform float u_Roughness;
 
 in vec3 v_Normal;
 in vec3 v_WorldPosition;
@@ -55,10 +55,10 @@ void main()
 
 	int mipLevels = textureQueryLevels(u_RadianceTexture);
 
-	float roughness = sqrt(texture(u_RoughnessMap, v_TexCoords).x) * mipLevels;
+	float roughness = sqrt(u_Roughness) * mipLevels;
 
-//	color = texture(u_MetalnessMap, v_TexCoords);
-//	color = vec4(1.0f, 0.0f, 1.0f, 1.0f);
-//	color = textureLod(u_RadianceTexture, tc, roughness);
-	color = textureLod(u_RadianceTexture, tc, roughness) * texture(u_AlbedoMap, v_TexCoords);
+	//	color = texture(u_MetalnessMap, v_TexCoords);
+	//	color = vec4(1.0f, 0.0f, 1.0f, 1.0f);
+	//	color = textureLod(u_RadianceTexture, tc, roughness);
+	color = textureLod(u_RadianceTexture, tc, roughness) * vec4(u_Albedo.xyz, 1.0f);
 }

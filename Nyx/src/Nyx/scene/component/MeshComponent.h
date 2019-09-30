@@ -8,7 +8,6 @@ namespace Nyx {
 	{
 	public:
 		Mesh m_Mesh;
-
 	public:
 		MeshComponent(const Mesh& mesh);
 

@@ -15,11 +15,19 @@ namespace Nyx {
 		void Init(Scene* Scene);
 		void Update();
 		void Render();
+		
+		inline void SetVisibility(bool visible) { m_Visibility = visible; }
+		inline bool IsVisible() { return m_Visibility; }
 
 		void AddComponent(Component* component);
 
+		bool operator==(const SceneObject& other) const {
+			return false;
+		}
+
 	private:
 		Scene* m_Scene = nullptr;
+		bool m_Visibility = true;
 	};
 
 }

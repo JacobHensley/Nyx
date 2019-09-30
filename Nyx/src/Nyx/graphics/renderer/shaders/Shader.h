@@ -38,7 +38,6 @@ namespace Nyx {
 
 		void SetUniform4f(const String& name, float x, float y, float z, float w);
 		void SetUniformMat4(const String& name, const glm::mat4& matrix);
-
 	private:
 		uint m_ShaderID;
 		String m_FilePath;

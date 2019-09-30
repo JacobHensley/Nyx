@@ -43,7 +43,8 @@ private:
 
 	Camera* m_Camera = nullptr;
 
-	ImGuizmo::OPERATION m_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
+	int m_GizmoMode = 0;
+	int m_SceneMode = 0;
 
 	//Texture Cubes
 	TextureCube* m_IrradianceTexture = nullptr;
@@ -70,13 +71,25 @@ private:
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
 
+	//Const PBR shader and uniforms
+	Shader* m_ConstPBRShader = nullptr;
+	glm::vec3 m_Albedo = glm::vec3(1.0f);
+	float m_Metalness = 0.0f;
+	float m_Normal = 0.0f;
+	float m_Roughness = 0.0f;
+
+	//Scene
+	Scene* m_Scene = nullptr;
+
 	//Cerberus data
 	Mesh* m_CerberusMesh = nullptr;
 	glm::mat4 m_CerberusTransform;
-
-	//Scene and Components
-	Scene* m_Scene = nullptr;
+	
+	//Cerberus object
 	SceneObject* m_CerberusObject = nullptr;
 	MeshComponent* m_CerberusMeshComponent = nullptr;
 	TransformComponent* m_CerberusTransformComponent = nullptr;
+
+	//Sphere object
+	SceneObject* m_SphereObject = nullptr;
 };

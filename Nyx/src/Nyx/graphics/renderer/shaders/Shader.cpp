@@ -15,7 +15,7 @@ namespace Nyx {
 		: m_FilePath(filePath)
 	{
 		m_ShaderID = Init();
-		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL");
+		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL (Shader most likely failed to compile)");
 
 		ParseUniforms();
 	}
@@ -110,7 +110,6 @@ namespace Nyx {
 			glGetShaderInfoLog(shader, length, &length, &error[0]);
 
 			NX_CORE_ERROR("{0}", &error[0]);
-			NX_CORE_ASSERT(false, "Shader failed to compile!");
 			glDeleteShader(shader);
 			return 0;
 		}
@@ -203,9 +202,18 @@ namespace Nyx {
 
 	void Shader::Reload()
 	{
-		m_ShaderID = Init();
-		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL");
+		m_UniformLocationCache.clear();
+		uint reloadedShader = Init();
 
+		if (reloadedShader == NULL)
+		{
+			NX_CORE_WARN("Shader failed to compile aborting shader reload!");
+			return;
+		}
+
+		glDeleteProgram(m_ShaderID);
+		m_UniformLocationCache.clear();
+		m_ShaderID = reloadedShader;
 		ParseUniforms();
 	}
 

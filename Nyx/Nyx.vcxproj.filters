@@ -102,6 +102,9 @@
     <ClInclude Include="src\Nyx\graphics\renderer\API\FrameBuffer.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\API\GraphicsContext.h">
+      <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\IndexBuffer.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClInclude>
@@ -195,6 +198,9 @@
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\FrameBuffer.cpp">
+      <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\API\GraphicsContext.cpp">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\IndexBuffer.cpp">

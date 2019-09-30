@@ -13,10 +13,10 @@ namespace Nyx {
 		return glfwGetKey(window, keycode);
 	}
 
-	bool Input::IsMouseButtonPressed(int keycode)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
-		return glfwGetMouseButton(window, keycode);
+		return glfwGetMouseButton(window, button);
 	}
 
 	glm::vec2 Input::GetMousePos()

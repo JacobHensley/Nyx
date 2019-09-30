@@ -2,7 +2,6 @@
 #include "Window.h"
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
-#include "Nyx/GLError.h"
 #include "Nyx/Events/AppEvent.h"
 #include "Nyx/Events/KeyEvent.h"
 #include "Nyx/Events/MouseEvent.h"
@@ -37,17 +36,10 @@ namespace Nyx {
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Name.c_str(), NULL, NULL);
-		glfwMakeContextCurrent(m_Window);
 
-		NX_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Glad Failed to Initialize");
+		m_Context = new GraphicsContext(m_Window);
+		m_Context->Init();
 
-		GLErrorInit();
-
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glfwSetWindowUserPointer(m_Window, this);
 		glfwSwapInterval(0);
 		
@@ -165,13 +157,13 @@ namespace Nyx {
 	{
 		UpdateFPSCounter();
 
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
 		glfwPollEvents();
 	}
 
 	void Window::Clear()
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		m_Context->Clear();
 	}
 
 	bool Window::IsClosed()

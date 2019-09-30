@@ -24,7 +24,7 @@ namespace Nyx {
 	void SceneObject::Render()
 	{
 	}
-
+	
 	void SceneObject::AddComponent(Component* component)
 	{
 		NX_ASSERT(m_Scene, "Scene has not been initialized");

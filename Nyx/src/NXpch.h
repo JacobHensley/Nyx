@@ -14,6 +14,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <initializer_list>
 
 #include "Nyx/Common.h"
 #include "Nyx/Log.h"

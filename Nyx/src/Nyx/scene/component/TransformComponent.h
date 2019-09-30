@@ -12,6 +12,10 @@ namespace Nyx {
 	public:
 		TransformComponent(const glm::mat4& transform);
 
+		void Rotate(float degrees, glm::vec3 axis);
+		void Translate(glm::vec3 delta);
+		void Scale(glm::vec3 scaler);
+
 		const glm::mat4& GetTransform() { return m_Transform; }
 
 		static Component::Type* GetStaticType()

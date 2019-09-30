@@ -3,6 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "Nyx/Input/Input.h"
 #include "Nyx/Events/Event.h"
+#include "Nyx/graphics/renderer/API/GraphicsContext.h"
 
 namespace Nyx {
 
@@ -29,6 +30,7 @@ namespace Nyx {
 		void UpdateFPSCounter();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 		const String& m_Name;
 		int m_Width, m_Height;
 		glm::vec2 m_WindowPos;

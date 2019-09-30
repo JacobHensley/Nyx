@@ -209,8 +209,8 @@ namespace Nyx {
 			if (!skip)
 			{
 				// If texture hasn't been loaded already, load it
-		//		String path = str.C_Str();
-		//		Texture texture = Texture(str.C_Str());
+			//	String path = str.C_Str();
+			//	Texture texture = Texture(str.C_Str());
 
 		//		m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}

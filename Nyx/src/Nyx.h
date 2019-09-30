@@ -24,6 +24,7 @@
 
 #include "Nyx/graphics/renderer/API/BufferLayout.h"
 #include "Nyx/graphics/renderer/API/FrameBuffer.h"
+#include "Nyx/graphics/renderer/API/GraphicsContext.h"
 #include "Nyx/graphics/renderer/API/IndexBuffer.h"
 #include "Nyx/graphics/renderer/API/Texture.h"
 #include "Nyx/graphics/renderer/API/TextureCube.h"
