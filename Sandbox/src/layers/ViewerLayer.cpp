@@ -27,8 +27,10 @@ ViewerLayer::ViewerLayer(const String& name)
 	//Load Shaders
 	m_SkyboxShader = new Shader("assets/shaders/Skybox.shader");
 	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
-	m_ConstPBRShader = new Shader("assets/shaders/ConstPBR.shader");
 	m_GridShader = new Shader("assets/shaders/Grid.shader");
+
+	//Init Lights
+	m_Light = Light();
 
 	//Setup quads for skybox and grid
 	InitSkyboxQuad();
@@ -53,6 +55,18 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	//Model node graph
+	//Fix ImGui Scroll
+	//Add uniforms for grid
+	//Build demo scene
+	//Fix assimp release build
+	//Traverse nodes in Mesh class
+	//Delete GameLayer
+	//Fix Grid shader
+	//Add light controls
+	//stop using raw pointers in Viewer
+	//Fix assimp using debug dll in release
 }
 
 ViewerLayer::~ViewerLayer()
@@ -210,6 +224,9 @@ void ViewerLayer::Render()
 	m_PBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
 	m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_CerberusTransformComponent->m_Transform);
 
+	m_PBRShader->SetUniform3f("u_Light.direction", m_Light.direction);
+	m_PBRShader->SetUniform3f("u_Light.radiance", m_Light.radiance);
+
 	m_PBRShader->SetUniform1i("u_BRDFLutTexture", 0);
 	m_BRDFLutTexture->Bind(0);
 
@@ -219,47 +236,38 @@ void ViewerLayer::Render()
 	m_PBRShader->SetUniform1i("u_RadianceTexture", 2);
 	m_RadianceTexture->Bind(2);
 
+	// Albedo uniforms
 	m_PBRShader->SetUniform1i("u_AlbedoMap", 3);
 	m_AlbedoMap->Bind(3);
+	m_PBRShader->SetUniformBool("u_UsingAlbedoMap", true);
 
+	// Metalness uniforms
 	m_PBRShader->SetUniform1i("u_MetalnessMap", 4);
 	m_MetalnessMap->Bind(4);
+	m_PBRShader->SetUniformBool("u_UsingMetalnessMap", true);
 
+	// Normal uniforms
 	m_PBRShader->SetUniform1i("u_NormalMap", 5);
 	m_NormalMap->Bind(5);
+	m_PBRShader->SetUniformBool("u_UsingNormalMap", true);
 
+	// Roughness uniforms
 	m_PBRShader->SetUniform1i("u_RoughnessMap", 6);
 	m_RoughnessMap->Bind(6);
+	m_PBRShader->SetUniformBool("u_UsingRoughnessMap", true);
 
-	//Upload uniforms for const PBR shader
-	m_ConstPBRShader->Bind();
-
-	m_ConstPBRShader->SetUniformMat4("u_ModelMatrix", m_Scene->GetComponent<TransformComponent>(m_SphereObject)->GetTransform());
-	m_ConstPBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
-	m_ConstPBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_Scene->GetComponent<TransformComponent>(m_SphereObject)->GetTransform());
-
-	m_PBRShader->SetUniform1i("u_IrradianceTexture", 0);
-	m_IrradianceTexture->Bind(0);
-
-	m_PBRShader->SetUniform1i("u_RadianceTexture", 1);
-	m_RadianceTexture->Bind(1);
-
-	m_ConstPBRShader->SetUniform3f("u_Albedo", m_Albedo);
-	m_ConstPBRShader->SetUniform1f("u_Metalness", m_Metalness);
-	m_ConstPBRShader->SetUniform1f("u_Normal", m_Normal);
-	m_ConstPBRShader->SetUniform1f("u_Roughness", m_Roughness);
+	m_PBRShader->Bind();
 
 	if (m_SceneMode == 0) 
 	{
 		m_SphereObject->SetVisibility(false);
 		m_CerberusObject->SetVisibility(true);
-		m_PBRShader->Bind();
+		
 	}
 	else if (m_SceneMode == 1) 
 	{
 		m_SphereObject->SetVisibility(true);
 		m_CerberusObject->SetVisibility(false);
-		m_ConstPBRShader->Bind();
 	}
 		
 	//Render Scene
@@ -293,22 +301,11 @@ void ViewerLayer::ImGUIRender()
 		m_SkyboxShader->Reload();
 	if (ImGui::Button("Refresh Grid Shader"))
 		m_GridShader->Reload();
-	if (ImGui::Button("Refresh Const PBR Shader"))
-		m_ConstPBRShader->Reload();
 	ImGui::Separator();
 
 	ImGui::RadioButton("Cerberus", &m_SceneMode, 0); ImGui::SameLine();
 	ImGui::RadioButton("Sphere", &m_SceneMode, 1);
 	ImGui::Separator();
-
-	if (m_SceneMode == 1) 
-	{
-		ImGui::ColorEdit3("Albedo", glm::value_ptr(m_Albedo));
-		ImGui::SliderFloat("Metalness", &m_Metalness, 0, 1);
-		ImGui::SliderFloat("Normal", &m_Normal, -1, 1);
-		ImGui::SliderFloat("Roughness", &m_Roughness, 0, 1);
-		ImGui::Separator();
-	}
 
 	ImGui::RadioButton("TRANSLATE", &m_GizmoMode, 0); ImGui::SameLine();
 	ImGui::RadioButton("ROTATE", &m_GizmoMode, 1); ImGui::SameLine();
@@ -316,6 +313,11 @@ void ViewerLayer::ImGUIRender()
 	ImGui::Separator();
 
 	ImGui::Checkbox("Toggle Ray Hold", &m_HoldRay);
+	ImGui::Separator();
+
+	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_Light.radiance));
+	ImGui::SliderFloat4("Light Direction", glm::value_ptr(m_Light.direction), -10.0f, 10.0f);
+
 	ImGui::Separator();
 
 	ImGui::End();

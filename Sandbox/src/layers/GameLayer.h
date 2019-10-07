@@ -17,6 +17,11 @@ struct Light
 	{
 	}
 
+	Light()
+		: Direction(glm::vec3(1.0f, 1.0f, 1.0f)), Radiance(glm::vec3(1.0f, 1.0f, 1.0f))
+	{
+	}
+
 	glm::vec3 Direction;
 	glm::vec3 Radiance;
 };

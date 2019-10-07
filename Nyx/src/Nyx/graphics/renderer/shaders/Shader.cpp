@@ -271,6 +271,11 @@ namespace Nyx {
 		SetUniform4f(name, vec.x, vec.y, vec.z, vec.w);
 	}
 
+	void Shader::SetUniformBool(const String& name, bool value)
+	{
+		glUniform1i(GetUniformLocation(name), value);
+	}
+
 	void Shader::SetUniform4f(const String& name, float x, float y, float z, float w)
 	{
 		int test = GetUniformLocation(name);

@@ -12,6 +12,23 @@ using namespace Nyx;
 
 class ViewerLayer : public Layer
 {
+	struct Light
+	{
+		glm::vec3 radiance;
+		glm::vec3 direction;
+	
+
+		Light(glm::vec3 radiance, glm::vec3 direction)
+			: radiance(radiance), direction(direction)
+		{
+		}
+
+		Light()
+			: radiance(1.0f, 1.0f, 1.0f), direction(0.0f, 0.0f, 0.0f)
+		{
+		}
+	};
+
 public:
 	ViewerLayer(const String& name);
 	~ViewerLayer();
@@ -71,12 +88,8 @@ private:
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
 
-	//Const PBR shader and uniforms
-	Shader* m_ConstPBRShader = nullptr;
-	glm::vec3 m_Albedo = glm::vec3(1.0f);
-	float m_Metalness = 0.0f;
-	float m_Normal = 0.0f;
-	float m_Roughness = 0.0f;
+	//Lights
+	Light m_Light;
 
 	//Scene
 	Scene* m_Scene = nullptr;

@@ -35,6 +35,7 @@ namespace Nyx {
 		void SetUniform2f(const String& name, const glm::vec2& vec);
 		void SetUniform3f(const String& name, const glm::vec3& vec);
 		void SetUniformVec4(const String& name, const glm::vec4& vec);
+		void SetUniformBool(const String& name, bool value);
 
 		void SetUniform4f(const String& name, float x, float y, float z, float w);
 		void SetUniformMat4(const String& name, const glm::mat4& matrix);

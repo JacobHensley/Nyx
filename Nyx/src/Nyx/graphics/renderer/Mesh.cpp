@@ -78,6 +78,7 @@ namespace Nyx {
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
 			processNode(node->mChildren[i], scene);
+
 		}
 	}
 
