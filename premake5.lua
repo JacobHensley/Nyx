@@ -116,17 +116,10 @@ project "Sandbox"
 	{ 
 		"GLFW",
 		"glad",
-		"Nyx/vendor/assimp/lib64/assimp-vc141-mtd.lib",
 		"imgui",
 		"Nyx",
 		"opengl32.lib"
 	}
-
-	postbuildcommands
-	{
-		("{COPY} ../Nyx/vendor/assimp/bin64/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
-	}
-
 
 	filter "system:windows"
 		cppdialect "C++17"
@@ -136,6 +129,26 @@ project "Sandbox"
 		runtime "Debug"
 		symbols "On"
 
+		links 
+		{ 
+			"Nyx/vendor/assimp/Debug/assimp-vc142-mtd.lib"
+		}
+
+		postbuildcommands
+		{
+			("{COPY} ../Nyx/vendor/assimp/Debug/assimp-vc142-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+		}
+
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "On"
+
+		links 
+		{ 
+			"Nyx/vendor/assimp/Release/assimp-vc142-mt.lib"
+		}
+
+		postbuildcommands
+		{
+			("{COPY} ../Nyx/vendor/assimp/Release/assimp-vc142-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+		}

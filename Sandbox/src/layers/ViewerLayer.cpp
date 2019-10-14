@@ -56,17 +56,12 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	//Model node graph
-	//Fix ImGui Scroll
-	//Add uniforms for grid
-	//Build demo scene
+
 	//Fix assimp release build
-	//Traverse nodes in Mesh class
-	//Delete GameLayer
-	//Fix Grid shader
-	//Add light controls
+	//Traverse nodes in Mesh class and show it in ImGui
 	//stop using raw pointers in Viewer
-	//Fix assimp using debug dll in release
+	//Add light controls
+	//Build demo scene
 }
 
 ViewerLayer::~ViewerLayer()
@@ -78,7 +73,7 @@ ViewerLayer::~ViewerLayer()
 	delete m_SkyboxVertexBuffer;
 	delete m_SkyboxVertexArray;
 	delete m_SkyboxIndexBuffer;
-	delete m_CerberusMesh;
+//	delete m_CerberusMesh;
 	delete m_PBRShader;
 	delete m_AlbedoMap;
 	delete m_MetalnessMap;
@@ -220,9 +215,18 @@ void ViewerLayer::Render()
 	//Upload uniforms for PBR shader
 	m_PBRShader->Bind();
 
-	m_PBRShader->SetUniformMat4("u_ModelMatrix", m_CerberusTransformComponent->m_Transform);
 	m_PBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
-	m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_CerberusTransformComponent->m_Transform);
+	
+	if (m_SceneMode == 0)
+	{
+		m_PBRShader->SetUniformMat4("u_ModelMatrix", m_CerberusTransformComponent->m_Transform);
+		m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_CerberusTransformComponent->m_Transform);
+	}
+	else if (m_SceneMode == 1)
+	{
+		m_PBRShader->SetUniformMat4("u_ModelMatrix", m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
+		m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
+	}
 
 	m_PBRShader->SetUniform3f("u_Light.direction", m_Light.direction);
 	m_PBRShader->SetUniform3f("u_Light.radiance", m_Light.radiance);
@@ -281,6 +285,9 @@ void ViewerLayer::Render()
 
 	m_GridShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_GridTransform);
 
+	m_GridShader->SetUniform1f("u_Scale", m_GridScale);
+	m_GridShader->SetUniform1f("u_Resolution", m_GridResolution);
+
 	m_GridVertexArray->Bind();
 	m_GridIndexBuffer->Bind();
 	m_GridIndexBuffer->Draw(true);
@@ -317,15 +324,21 @@ void ViewerLayer::ImGUIRender()
 
 	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_Light.radiance));
 	ImGui::SliderFloat4("Light Direction", glm::value_ptr(m_Light.direction), -10.0f, 10.0f);
-
 	ImGui::Separator();
+
+	ImGui::InputFloat("Grid scale", &m_GridScale, 0.0f, 1000.0f);
+	ImGui::InputFloat("Grid resolution", &m_GridResolution, 0.0f, 1.0f);
+	ImGui::Separator();
+
+	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiNodeTree(false);
+	m_CerberusMesh->RenderImGuiNodeTree(false);
 
 	ImGui::End();
 
 	ImGuiIO& io = ImGui::GetIO();
 
 	bool open = true;
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar;
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));

@@ -79,6 +79,8 @@ private:
 	VertexArray* m_GridVertexArray = nullptr;
 	IndexBuffer* m_GridIndexBuffer = nullptr;
 	glm::mat4 m_GridTransform;
+	float m_GridScale = 501.0f;
+	float m_GridResolution = 0.02f;
 
 	//PBR shader and textures
 	Shader* m_PBRShader = nullptr;

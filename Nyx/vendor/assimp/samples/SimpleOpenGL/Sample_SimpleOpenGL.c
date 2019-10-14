@@ -1,37 +1,42 @@
-// ----------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------
 // Simple sample to prove that Assimp is easy to use with OpenGL.
 // It takes a file name as command line parameter, loads it using standard
 // settings and displays it.
 //
-// If you intend to _use_ this code sample in your app, do yourself a favour 
+// If you intend to _use_ this code sample in your app, do yourself a favour
 // and replace immediate mode calls with VBOs ...
 //
 // The vc8 solution links against assimp-release-dll_win32 - be sure to
 // have this configuration built.
 // ----------------------------------------------------------------------------
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef __APPLE__
+#include <glut.h>
+#else
 #include <GL/glut.h>
+#endif
 
-// assimp include files. These three are usually needed.
+/* assimp include files. These three are usually needed. */
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-// the global Assimp scene object
-const struct aiScene* scene = NULL;
+/* the global Assimp scene object */
+const C_STRUCT aiScene* scene = NULL;
 GLuint scene_list = 0;
-struct aiVector3D scene_min, scene_max, scene_center;
+C_STRUCT aiVector3D scene_min, scene_max, scene_center;
 
-// current rotation angle
+/* current rotation angle */
 static float angle = 0.f;
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 void reshape(int width, int height)
 {
 	const double aspectRatio = (float) width / height, fieldOfView = 45.0;
@@ -43,23 +48,23 @@ void reshape(int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-// ----------------------------------------------------------------------------
-void get_bounding_box_for_node (const struct aiNode* nd, 
-	struct aiVector3D* min, 
-	struct aiVector3D* max, 
-	struct aiMatrix4x4* trafo
+/* ---------------------------------------------------------------------------- */
+void get_bounding_box_for_node (const C_STRUCT aiNode* nd,
+	C_STRUCT aiVector3D* min,
+	C_STRUCT aiVector3D* max,
+	C_STRUCT aiMatrix4x4* trafo
 ){
-	struct aiMatrix4x4 prev;
+	C_STRUCT aiMatrix4x4 prev;
 	unsigned int n = 0, t;
 
 	prev = *trafo;
 	aiMultiplyMatrix4(trafo,&nd->mTransformation);
 
 	for (; n < nd->mNumMeshes; ++n) {
-		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
+		const C_STRUCT aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 		for (t = 0; t < mesh->mNumVertices; ++t) {
 
-			struct aiVector3D tmp = mesh->mVertices[t];
+			C_STRUCT aiVector3D tmp = mesh->mVertices[t];
 			aiTransformVecByMatrix4(&tmp,trafo);
 
 			min->x = aisgl_min(min->x,tmp.x);
@@ -78,10 +83,10 @@ void get_bounding_box_for_node (const struct aiNode* nd,
 	*trafo = prev;
 }
 
-// ----------------------------------------------------------------------------
-void get_bounding_box (struct aiVector3D* min, struct aiVector3D* max)
+/* ---------------------------------------------------------------------------- */
+void get_bounding_box(C_STRUCT aiVector3D* min, C_STRUCT aiVector3D* max)
 {
-	struct aiMatrix4x4 trafo;
+	C_STRUCT aiMatrix4x4 trafo;
 	aiIdentityMatrix4(&trafo);
 
 	min->x = min->y = min->z =  1e10f;
@@ -89,8 +94,8 @@ void get_bounding_box (struct aiVector3D* min, struct aiVector3D* max)
 	get_bounding_box_for_node(scene->mRootNode,min,max,&trafo);
 }
 
-// ----------------------------------------------------------------------------
-void color4_to_float4(const struct aiColor4D *c, float f[4])
+/* ---------------------------------------------------------------------------- */
+void color4_to_float4(const C_STRUCT aiColor4D *c, float f[4])
 {
 	f[0] = c->r;
 	f[1] = c->g;
@@ -98,7 +103,7 @@ void color4_to_float4(const struct aiColor4D *c, float f[4])
 	f[3] = c->a;
 }
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 void set_float4(float f[4], float a, float b, float c, float d)
 {
 	f[0] = a;
@@ -107,18 +112,18 @@ void set_float4(float f[4], float a, float b, float c, float d)
 	f[3] = d;
 }
 
-// ----------------------------------------------------------------------------
-void apply_material(const struct aiMaterial *mtl)
+/* ---------------------------------------------------------------------------- */
+void apply_material(const C_STRUCT aiMaterial *mtl)
 {
 	float c[4];
 
 	GLenum fill_mode;
 	int ret1, ret2;
-	struct aiColor4D diffuse;
-	struct aiColor4D specular;
-	struct aiColor4D ambient;
-	struct aiColor4D emission;
-	float shininess, strength;
+	C_STRUCT aiColor4D diffuse;
+	C_STRUCT aiColor4D specular;
+	C_STRUCT aiColor4D ambient;
+	C_STRUCT aiColor4D emission;
+	ai_real shininess, strength;
 	int two_sided;
 	int wireframe;
 	unsigned int max;
@@ -169,25 +174,25 @@ void apply_material(const struct aiMaterial *mtl)
 	max = 1;
 	if((AI_SUCCESS == aiGetMaterialIntegerArray(mtl, AI_MATKEY_TWOSIDED, &two_sided, &max)) && two_sided)
 		glDisable(GL_CULL_FACE);
-	else 
+	else
 		glEnable(GL_CULL_FACE);
 }
 
-// ----------------------------------------------------------------------------
-void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
+/* ---------------------------------------------------------------------------- */
+void recursive_render (const C_STRUCT aiScene *sc, const C_STRUCT aiNode* nd)
 {
 	unsigned int i;
 	unsigned int n = 0, t;
-	struct aiMatrix4x4 m = nd->mTransformation;
+	C_STRUCT aiMatrix4x4 m = nd->mTransformation;
 
-	// update transform
+	/* update transform */
 	aiTransposeMatrix4(&m);
 	glPushMatrix();
 	glMultMatrixf((float*)&m);
 
-	// draw all meshes assigned to this node
+	/* draw all meshes assigned to this node */
 	for (; n < nd->mNumMeshes; ++n) {
-		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
+		const C_STRUCT aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
 		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
@@ -198,7 +203,7 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 		}
 
 		for (t = 0; t < mesh->mNumFaces; ++t) {
-			const struct aiFace* face = &mesh->mFaces[t];
+			const C_STRUCT aiFace* face = &mesh->mFaces[t];
 			GLenum face_mode;
 
 			switch(face->mNumIndices) {
@@ -214,7 +219,7 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 				int index = face->mIndices[i];
 				if(mesh->mColors[0] != NULL)
 					glColor4fv((GLfloat*)&mesh->mColors[0][index]);
-				if(mesh->mNormals != NULL) 
+				if(mesh->mNormals != NULL)
 					glNormal3fv(&mesh->mNormals[index].x);
 				glVertex3fv(&mesh->mVertices[index].x);
 			}
@@ -224,7 +229,7 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 
 	}
 
-	// draw all children
+	/* draw all children */
 	for (n = 0; n < nd->mNumChildren; ++n) {
 		recursive_render(sc, nd->mChildren[n]);
 	}
@@ -232,7 +237,7 @@ void recursive_render (const struct aiScene *sc, const struct aiNode* nd)
 	glPopMatrix();
 }
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 void do_motion (void)
 {
 	static GLint prev_time = 0;
@@ -244,7 +249,7 @@ void do_motion (void)
 	prev_time = time;
 
 	frames += 1;
-	if ((time - prev_fps_time) > 1000) // update every seconds
+	if ((time - prev_fps_time) > 1000) /* update every seconds */
     {
         int current_fps = frames * 1000 / (time - prev_fps_time);
         printf("%d fps\n", current_fps);
@@ -256,7 +261,7 @@ void do_motion (void)
 	glutPostRedisplay ();
 }
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 void display(void)
 {
 	float tmp;
@@ -267,27 +272,27 @@ void display(void)
 	glLoadIdentity();
 	gluLookAt(0.f,0.f,3.f,0.f,0.f,-5.f,0.f,1.f,0.f);
 
-	// rotate it around the y axis
+	/* rotate it around the y axis */
 	glRotatef(angle,0.f,1.f,0.f);
 
-	// scale the whole asset to fit into our view frustum 
+	/* scale the whole asset to fit into our view frustum */
 	tmp = scene_max.x-scene_min.x;
 	tmp = aisgl_max(scene_max.y - scene_min.y,tmp);
 	tmp = aisgl_max(scene_max.z - scene_min.z,tmp);
 	tmp = 1.f / tmp;
 	glScalef(tmp, tmp, tmp);
 
-        // center the model
+        /* center the model */
 	glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
 
-        // if the display list has not been made yet, create a new one and
-        // fill it with scene contents
+        /* if the display list has not been made yet, create a new one and
+           fill it with scene contents */
 	if(scene_list == 0) {
 	    scene_list = glGenLists(1);
 	    glNewList(scene_list, GL_COMPILE);
-            // now begin at the root node of the imported data and traverse
-            // the scenegraph by multiplying subsequent local transforms
-            // together on GL's matrix stack.
+            /* now begin at the root node of the imported data and traverse
+               the scenegraph by multiplying subsequent local transforms
+               together on GL's matrix stack. */
 	    recursive_render(scene, scene->mRootNode);
 	    glEndList();
 	}
@@ -299,11 +304,11 @@ void display(void)
 	do_motion();
 }
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 int loadasset (const char* path)
 {
-	// we are taking one of the postprocessing presets to avoid
-	// spelling out 20+ single postprocessing flags here.
+	/* we are taking one of the postprocessing presets to avoid
+	   spelling out 20+ single postprocessing flags here. */
 	scene = aiImportFile(path,aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene) {
@@ -316,10 +321,10 @@ int loadasset (const char* path)
 	return 1;
 }
 
-// ----------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
-	struct aiLogStream stream;
+	C_STRUCT aiLogStream stream;
 
 	glutInitWindowSize(900,600);
 	glutInitWindowPosition(100,100);
@@ -330,23 +335,23 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 
-	// get a handle to the predefined STDOUT log stream and attach
-	// it to the logging system. It remains active for all further
-	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
+	/* get a handle to the predefined STDOUT log stream and attach
+	   it to the logging system. It remains active for all further
+	   calls to aiImportFile(Ex) and aiApplyPostProcessing. */
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
 	aiAttachLogStream(&stream);
 
-	// ... same procedure, but this stream now writes the
-	// log messages to assimp_log.txt
+	/* ... same procedure, but this stream now writes the
+	   log messages to assimp_log.txt */
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
 	aiAttachLogStream(&stream);
 
-	// the model name can be specified on the command line. If none
-	// is specified, we try to locate one of the more expressive test 
-	// models from the repository (/models-nonbsd may be missing in 
-	// some distributions so we need a fallback from /models!).
+	/* the model name can be specified on the command line. If none
+	  is specified, we try to locate one of the more expressive test
+	  models from the repository (/models-nonbsd may be missing in
+	  some distributions so we need a fallback from /models!). */
 	if( 0 != loadasset( argc >= 2 ? argv[1] : "../../test/models-nonbsd/X/dwarf.x")) {
-		if( argc != 1 || (0 != loadasset( "../../../../test/models-nonbsd/X/dwarf.x") && 0 != loadasset( "../../test/models/X/Testwuson.X"))) { 
+		if( argc != 1 || (0 != loadasset( "../../../../test/models-nonbsd/X/dwarf.x") && 0 != loadasset( "../../test/models/X/Testwuson.X"))) {
 			return -1;
 		}
 	}
@@ -354,15 +359,15 @@ int main(int argc, char **argv)
 	glClearColor(0.1f,0.1f,0.1f,1.f);
 
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);    // Uses default lighting parameters
+	glEnable(GL_LIGHT0);    /* Uses default lighting parameters */
 
 	glEnable(GL_DEPTH_TEST);
 
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_NORMALIZE);
 
-	// XXX docs say all polygons are emitted CCW, but tests show that some aren't.
-	if(getenv("MODEL_IS_BROKEN"))  
+	/* XXX docs say all polygons are emitted CCW, but tests show that some aren't. */
+	if(getenv("MODEL_IS_BROKEN"))
 		glFrontFace(GL_CW);
 
 	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -370,14 +375,14 @@ int main(int argc, char **argv)
 	glutGet(GLUT_ELAPSED_TIME);
 	glutMainLoop();
 
-	// cleanup - calling 'aiReleaseImport' is important, as the library 
-	// keeps internal resources until the scene is freed again. Not 
-	// doing so can cause severe resource leaking.
+	/* cleanup - calling 'aiReleaseImport' is important, as the library
+	   keeps internal resources until the scene is freed again. Not
+	   doing so can cause severe resource leaking. */
 	aiReleaseImport(scene);
 
-	// We added a log stream to the library, it's our job to disable it
-	// again. This will definitely release the last resources allocated
-	// by Assimp.
+	/* We added a log stream to the library, it's our job to disable it
+	   again. This will definitely release the last resources allocated
+	   by Assimp.*/
 	aiDetachAllLogStreams();
 	return 0;
 }

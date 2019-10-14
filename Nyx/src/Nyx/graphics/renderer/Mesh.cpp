@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "glad/glad.h"
 #include "Nyx/graphics/DebugRenderer.h"
+#include "imgui/imgui.h"
 
 namespace Nyx {
 
@@ -32,12 +33,45 @@ namespace Nyx {
 		DebugRenderer::DrawAABB(m_BoundingBox, transform);
 	}
 
+	void Mesh::RenderImGuiNodeTree(bool isOwnWindow) const
+	{
+		aiNode* rootNode = m_Scene->mRootNode;
+		String id = "##" + std::to_string((int)rootNode);
+		String name = rootNode->mName.C_Str() + id;
+		if (ImGui::TreeNode(name.c_str()))
+		{
+			for (int i = 0; i < rootNode->mNumChildren; i++) {
+				if (ImGui::TreeNode((void*)(intptr_t)i, rootNode->mChildren[i]->mName.C_Str(), i))
+				{	
+					//Node info here
+					DrawImGuiNode(rootNode->mChildren[i]);
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+	}
+
+	void Mesh::DrawImGuiNode(aiNode* node) const
+	{
+		for (int i = 0; i < node->mNumChildren; i++) {
+			if (ImGui::TreeNode((void*)(intptr_t)i, node->mChildren[i]->mName.C_Str(), i))
+			{
+				//Node info here
+				DrawImGuiNode(node->mChildren[i]);
+				ImGui::TreePop();
+			}
+		}
+	}
+
 	void Mesh::Load()
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-		
+
+		m_Scene = importer.GetOrphanedScene();
+
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			NX_CORE_ASSERT(false, importer.GetErrorString());
@@ -55,7 +89,7 @@ namespace Nyx {
 			{ShaderDataType::Vec3, "a_Tangent"},
 			{ShaderDataType::Vec3, "a_Binormal"},
 			{ShaderDataType::Vec2, "a_TextureCoords"}
-		});
+			});
 
 		m_VertexArray->PushVertexBuffer(m_VertexBuffer);
 

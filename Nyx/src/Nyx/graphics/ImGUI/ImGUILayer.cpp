@@ -65,8 +65,6 @@ namespace Nyx {
 		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
 
-	//	ImGui::ShowDemoWindow();
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("DockSpace Demo", &p_open, window_flags);
 		ImGui::PopStyleVar();
@@ -78,6 +76,8 @@ namespace Nyx {
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
 		ImGui::End();
+
+		//	ImGui::ShowDemoWindow();
 	}
 
 	void ImGUILayer::OnDetach()
