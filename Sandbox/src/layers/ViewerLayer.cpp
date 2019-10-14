@@ -10,6 +10,11 @@ ViewerLayer::ViewerLayer(const String& name)
 	
 	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
+	//Load Shaders
+	m_SkyboxShader = new Shader("assets/shaders/Skybox.shader");
+	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
+	m_GridShader = new Shader("assets/shaders/Grid.shader");
+
 	//Load Textures
 	m_BRDFLutTexture = new Texture("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 	m_AlbedoMap = new Texture("assets/textures/Cerberus_Albedo.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
@@ -23,11 +28,6 @@ ViewerLayer::ViewerLayer(const String& name)
 
 	//Load Models
 	m_CerberusMesh = new Mesh("assets/models/Cerberus.FBX");
-
-	//Load Shaders
-	m_SkyboxShader = new Shader("assets/shaders/Skybox.shader");
-	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
-	m_GridShader = new Shader("assets/shaders/Grid.shader");
 
 	//Init Lights
 	m_Light = Light();
@@ -56,11 +56,9 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-
-	//Fix assimp release build
-	//Traverse nodes in Mesh class and show it in ImGui
 	//stop using raw pointers in Viewer
 	//Add light controls
+	//Pause Camera controls when using gizmo
 	//Build demo scene
 }
 
@@ -73,7 +71,7 @@ ViewerLayer::~ViewerLayer()
 	delete m_SkyboxVertexBuffer;
 	delete m_SkyboxVertexArray;
 	delete m_SkyboxIndexBuffer;
-//	delete m_CerberusMesh;
+	delete m_CerberusMesh;
 	delete m_PBRShader;
 	delete m_AlbedoMap;
 	delete m_MetalnessMap;
@@ -230,6 +228,8 @@ void ViewerLayer::Render()
 
 	m_PBRShader->SetUniform3f("u_Light.direction", m_Light.direction);
 	m_PBRShader->SetUniform3f("u_Light.radiance", m_Light.radiance);
+	m_PBRShader->SetUniform1f("u_UsingIBL", m_UsingIBL);
+	m_PBRShader->SetUniform1f("u_UsingLighting", m_UsingLighting);
 
 	m_PBRShader->SetUniform1i("u_BRDFLutTexture", 0);
 	m_BRDFLutTexture->Bind(0);
@@ -243,22 +243,25 @@ void ViewerLayer::Render()
 	// Albedo uniforms
 	m_PBRShader->SetUniform1i("u_AlbedoMap", 3);
 	m_AlbedoMap->Bind(3);
-	m_PBRShader->SetUniformBool("u_UsingAlbedoMap", true);
+	m_PBRShader->SetUniformBool("u_UsingAlbedoMap", m_UsingAlbedoMap);
+	m_PBRShader->SetUniform3f("u_AlbedoValue", m_Albedo);
 
 	// Metalness uniforms
 	m_PBRShader->SetUniform1i("u_MetalnessMap", 4);
 	m_MetalnessMap->Bind(4);
-	m_PBRShader->SetUniformBool("u_UsingMetalnessMap", true);
+	m_PBRShader->SetUniformBool("u_UsingMetalnessMap", m_UsingMetalnessMap);
+	m_PBRShader->SetUniform1f("u_MetalnessValue", m_Metalness);
 
 	// Normal uniforms
 	m_PBRShader->SetUniform1i("u_NormalMap", 5);
 	m_NormalMap->Bind(5);
-	m_PBRShader->SetUniformBool("u_UsingNormalMap", true);
+	m_PBRShader->SetUniformBool("u_UsingNormalMap", m_UsingNormalMap);
 
 	// Roughness uniforms
 	m_PBRShader->SetUniform1i("u_RoughnessMap", 6);
 	m_RoughnessMap->Bind(6);
-	m_PBRShader->SetUniformBool("u_UsingRoughnessMap", true);
+	m_PBRShader->SetUniformBool("u_UsingRoughnessMap", m_UsingRoughnessMap);
+	m_PBRShader->SetUniform1f("u_RoughnessValue", m_Roughness);
 
 	m_PBRShader->Bind();
 
@@ -323,7 +326,25 @@ void ViewerLayer::ImGUIRender()
 	ImGui::Separator();
 
 	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_Light.radiance));
-	ImGui::SliderFloat4("Light Direction", glm::value_ptr(m_Light.direction), -10.0f, 10.0f);
+	ImGui::SliderFloat3("Light Direction", glm::value_ptr(m_Light.direction), -10.0f, 10.0f);
+	ImGui::Separator();
+
+	ImGui::Checkbox("Using Albedo Map", &m_UsingAlbedoMap);
+	if (!m_UsingAlbedoMap)
+		ImGui::ColorEdit3("Albedo", glm::value_ptr(m_Albedo));
+
+	ImGui::Checkbox("Using Metalness Map", &m_UsingMetalnessMap);
+	if (!m_UsingMetalnessMap)
+		ImGui::SliderFloat("Metalness", &m_Metalness, 0.0f, 1.0f);
+
+	ImGui::Checkbox("Using Roughness Map", &m_UsingRoughnessMap);
+	if (!m_UsingRoughnessMap)
+		ImGui::SliderFloat("Roughness", &m_Roughness, 0.0f, 1.0f);
+
+	ImGui::Checkbox("Using Normal Map", &m_UsingNormalMap);
+
+	ImGui::Checkbox("IBL", &m_UsingIBL);
+	ImGui::Checkbox("Lighting", &m_UsingLighting);
 	ImGui::Separator();
 
 	ImGui::InputFloat("Grid scale", &m_GridScale, 0.0f, 1000.0f);
@@ -332,6 +353,7 @@ void ViewerLayer::ImGUIRender()
 
 	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiNodeTree(false);
 	m_CerberusMesh->RenderImGuiNodeTree(false);
+	ImGui::Separator();
 
 	ImGui::End();
 

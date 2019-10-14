@@ -29,13 +29,19 @@ void main()
 
 layout(location = 0) out vec4 color;
 
-struct Light 
+const float Epsilon = 0.00001;
+const float PI = 3.141592;
+
+struct Light
 {
 	vec3 radiance;
 	vec3 direction;
 };
 
 uniform Light u_Light;
+
+uniform float u_UsingIBL;
+uniform float u_UsingLighting;
 
 uniform vec3 u_CameraPosition;
 
@@ -90,34 +96,88 @@ float GetRoughness(vec2 texCoords)
 	return u_UsingRoughnessMap ? texture(u_RoughnessMap, texCoords).r : u_RoughnessValue;
 }
 
+// Shlick's approximation of the Fresnel factor.
+vec3 fresnelSchlick(vec3 F0, float cosTheta)
+{
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+// GGX/Towbridge-Reitz normal distribution function.
+// Uses Disney's reparametrization of alpha = roughness^2
+float ndfGGX(float cosLh, float roughness)
+{
+	float alpha = roughness * roughness;
+	float alphaSq = alpha * alpha;
+
+	float denom = (cosLh * cosLh) * (alphaSq - 1.0) + 1.0;
+	return alphaSq / (PI * denom * denom);
+}
+
+// Single term for separable Schlick-GGX below.
+float gaSchlickG1(float cosTheta, float k)
+{
+	return cosTheta / (cosTheta * (1.0 - k) + k);
+}
+
+// Schlick-GGX approximation of geometric attenuation function using Smith's method.
+float gaSchlickGGX(float cosLi, float NdotV, float roughness)
+{
+	float r = roughness + 1.0;
+	float k = (r * r) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
+	return gaSchlickG1(cosLi, k) * gaSchlickG1(NdotV, k);
+}
+
+vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
+{
+	vec3 Li = -u_Light.direction;
+	vec3 Lradiance = u_Light.radiance;
+	vec3 Lh = normalize(Li + V);
+
+	float cosLi = max(0.0, dot(N, Li));
+	float cosLh = max(0.0, dot(N, Lh));
+
+	vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, V)));
+	float D = ndfGGX(cosLh, R);
+	float G = gaSchlickGGX(cosLi, NdotV, R);
+
+	vec3 kd = (1.0 - F) * (1.0 - M);
+	vec3 diffuseBRDF = kd * albedo;
+
+	vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * NdotV);
+
+	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+}
+
+vec3 IBL(vec3 V, vec3 albedo, float R, vec3 N)
+{
+	int mipLevels = textureQueryLevels(u_RadianceTexture);
+	float roughness = sqrt(R) * mipLevels;
+	vec3 tc = reflect(V, N);
+
+	return textureLod(u_RadianceTexture, tc, roughness).rgb * albedo;
+}
+
 void main()
 {
-
-	// Process inputs (extract everything we need): albedo, normals, metalness, roughness
 	vec3 albedo = GetAlbedo(v_TexCoords);
-	vec3 normal = GetNormal(v_TexCoords, v_Normal);
+	vec3 normal = normalize(v_Normal);
 	float metalness = GetMetalness(v_TexCoords);
-	float roughness = GetRoughness(v_TexCoords); // Note: maybe set min to ~0.05
+	float roughness = GetRoughness(v_TexCoords);
 
-	vec3 view = -normalize(u_CameraPosition - v_WorldPosition);
+	vec3 view = normalize(u_CameraPosition - v_WorldPosition);
 	float NdotV = max(dot(normal, view), 0.0);
 
 	// I - 2.0 * dot(N, I) * N.
 	vec3 Lr = view - 2.0 * NdotV * normal;
 
-	//  Constant normal incidence Fresnel factor for all dielectrics.
+	// Constant normal incidence Fresnel factor for all dielectrics.
 	const vec3 Fdielectric = vec3(0.04);
 
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
-	int mipLevels = textureQueryLevels(u_RadianceTexture);
+	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
+	vec3 iblContribution = IBL(view, albedo, roughness, normal) * u_UsingIBL;
 
-//	float roughness = sqrt(texture(u_RoughnessMap, v_TexCoords).x) * mipLevels;
-
-//	color = texture(u_MetalnessMap, v_TexCoords);
-    color = vec4(1.0f, 0.0f, 1.0f, 1.0f) * vec4(u_Light.radiance.xyz, 1.0f);
-//  color = textureLod(u_RadianceTexture, tc, roughness);
-	vec3 tc = reflect(view, normal);
-//	color = textureLod(u_RadianceTexture, tc, roughness) * texture(u_AlbedoMap, v_TexCoords);
+	color = vec4(lightContribution + iblContribution, 1.0);
 }

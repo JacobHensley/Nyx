@@ -90,6 +90,18 @@ private:
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
 
+	glm::vec3 m_Albedo;
+	float m_Metalness;
+	float m_Roughness;
+
+	bool m_UsingAlbedoMap = true;
+	bool m_UsingMetalnessMap = true;
+	bool m_UsingNormalMap = true;
+	bool m_UsingRoughnessMap = true;
+
+	bool m_UsingIBL = true;
+	bool m_UsingLighting = true;
+
 	//Lights
 	Light m_Light;
 
