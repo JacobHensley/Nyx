@@ -102,6 +102,11 @@ vec3 fresnelSchlick(vec3 F0, float cosTheta)
 	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 fresnelSchlickRoughness(vec3 F0, float cosTheta, float roughness)
+{
+	return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
 // GGX/Towbridge-Reitz normal distribution function.
 // Uses Disney's reparametrization of alpha = roughness^2
 float ndfGGX(float cosLh, float roughness)
@@ -148,13 +153,20 @@ vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float Ndot
 	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 }
 
-vec3 IBL(vec3 V, vec3 albedo, float R, vec3 N)
+vec3 IBL(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, float NdotV, vec3 F0)
 {
+	vec3 irradiance = texture(u_IrradianceTexture, N).rgb;
+	vec3 F = fresnelSchlickRoughness(F0, NdotV, R);
+	vec3 kd = (1.0 - F) * (1.0 - M);
+	vec3 diffuseIBL = albedo * irradiance;
+
 	int mipLevels = textureQueryLevels(u_RadianceTexture);
 	float roughness = sqrt(R) * mipLevels;
-	vec3 tc = reflect(V, N);
+	vec3 specularIrradiance = textureLod(u_RadianceTexture, Lr, roughness).rgb * albedo;
 
-	return textureLod(u_RadianceTexture, tc, roughness).rgb * albedo;
+	vec2 specularBRDF = texture(u_BRDFLutTexture, vec2(NdotV, 1.0 - R)).rg;
+	vec3 specularIBL = specularIrradiance * (F * specularBRDF.x + specularBRDF.y);
+	return kd * diffuseIBL + specularIBL;
 }
 
 void main()
@@ -168,7 +180,8 @@ void main()
 	float NdotV = max(dot(normal, view), 0.0);
 
 	// I - 2.0 * dot(N, I) * N.
-	vec3 Lr = view - 2.0 * NdotV * normal;
+	// vec3 Lr = view - 2.0 * NdotV * normal;
+	vec3 Lr = 2.0 * NdotV * normal - view;
 
 	// Constant normal incidence Fresnel factor for all dielectrics.
 	const vec3 Fdielectric = vec3(0.04);
@@ -177,7 +190,7 @@ void main()
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
-	vec3 iblContribution = IBL(view, albedo, roughness, normal) * u_UsingIBL;
+	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * u_UsingIBL;
 
 	color = vec4(lightContribution + iblContribution, 1.0);
 }

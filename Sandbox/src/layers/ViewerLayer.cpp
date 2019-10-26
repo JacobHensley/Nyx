@@ -55,11 +55,6 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-	//stop using raw pointers in Viewer
-	//Add light controls
-	//Pause Camera controls when using gizmo
-	//Build demo scene
 }
 
 ViewerLayer::~ViewerLayer()
@@ -326,7 +321,7 @@ void ViewerLayer::ImGUIRender()
 	ImGui::Separator();
 
 	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_Light.radiance));
-	ImGui::SliderFloat3("Light Direction", glm::value_ptr(m_Light.direction), -10.0f, 10.0f);
+	ImGui::SliderFloat3("Light Direction", glm::value_ptr(m_Light.direction), -1.0f, 1.0f);
 	ImGui::Separator();
 
 	ImGui::Checkbox("Using Albedo Map", &m_UsingAlbedoMap);
@@ -366,8 +361,8 @@ void ViewerLayer::ImGUIRender()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::Begin("Viewer", &open, flags);
 
-	m_RenderSpaceWidth = ImGui::GetWindowWidth();
-	m_RenderSpaceHeight = ImGui::GetWindowHeight();
+	m_RenderSpaceWidth = (float)ImGui::GetWindowWidth();
+	m_RenderSpaceHeight = (float)ImGui::GetWindowHeight();
 
 	glm::vec2 WindowPosition = Application::GetApp().GetWindow().GetWindowPos();
 
@@ -375,10 +370,10 @@ void ViewerLayer::ImGUIRender()
 	m_RenderSpacePosition.y = ImGui::GetCursorScreenPos().y - WindowPosition.y;
 
 	m_RenderSpaceFrameBuffer->SetViewPortSize(0, 0, m_RenderSpaceWidth, m_RenderSpaceHeight);
-	ImGui::Image((void*)(uint64_t)m_RenderSpaceFrameBuffer->GetTexture()->GetTextureID(), ImVec2(m_RenderSpaceWidth, m_RenderSpaceHeight), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
+	ImGui::Image((void*)(uint64_t)m_RenderSpaceFrameBuffer->GetTexture()->GetTextureID(), ImVec2((float)m_RenderSpaceWidth, (float)m_RenderSpaceHeight), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_RenderSpaceWidth, m_RenderSpaceHeight);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float)m_RenderSpaceWidth, (float)m_RenderSpaceHeight);
 
 	m_Camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), (float)m_RenderSpaceWidth, (float)m_RenderSpaceHeight, 0.01f, 1000.0f));
 

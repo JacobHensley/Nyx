@@ -40,7 +40,7 @@ namespace Nyx {
 		String name = rootNode->mName.C_Str() + id;
 		if (ImGui::TreeNode(name.c_str()))
 		{
-			for (int i = 0; i < rootNode->mNumChildren; i++) {
+			for (uint i = 0; i < rootNode->mNumChildren; i++) {
 				if (ImGui::TreeNode((void*)(intptr_t)i, rootNode->mChildren[i]->mName.C_Str(), i))
 				{	
 					//Node info here
@@ -54,7 +54,7 @@ namespace Nyx {
 
 	void Mesh::DrawImGuiNode(aiNode* node) const
 	{
-		for (int i = 0; i < node->mNumChildren; i++) {
+		for (uint i = 0; i < node->mNumChildren; i++) {
 			if (ImGui::TreeNode((void*)(intptr_t)i, node->mChildren[i]->mName.C_Str(), i))
 			{
 				//Node info here
@@ -80,8 +80,8 @@ namespace Nyx {
 		processNode(scene->mRootNode, scene);
 		m_BoundingBox = AABB(m_bbMin, m_bbMax);
 
-		m_VertexBuffer = new VertexBuffer(m_Vertices.data(), sizeof(Vertex) * m_Vertices.size());
-		m_IndexBuffer = new IndexBuffer(m_Indices.data(), m_Indices.size());
+		m_VertexBuffer = new VertexBuffer(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
+		m_IndexBuffer = new IndexBuffer(m_Indices.data(), (int)m_Indices.size());
 		m_VertexArray = new VertexArray();
 		m_VertexBuffer->SetLayout({
 			{ShaderDataType::Vec3, "a_Position"},

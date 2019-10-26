@@ -90,9 +90,9 @@ private:
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
 
-	glm::vec3 m_Albedo;
-	float m_Metalness;
-	float m_Roughness;
+	glm::vec3 m_Albedo = glm::vec3(1.0f, 1.0f, 1.0f);
+	float m_Metalness = 0.5f;
+	float m_Roughness = 0.5f;
 
 	bool m_UsingAlbedoMap = true;
 	bool m_UsingMetalnessMap = true;
