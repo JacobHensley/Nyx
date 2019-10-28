@@ -31,6 +31,7 @@ ViewerLayer::ViewerLayer(const String& name)
 
 	//Init Lights
 	m_Light = Light();
+	m_Light.direction = glm::vec3(1.0f, -0.5f, -0.7f);
 
 	//Setup quads for skybox and grid
 	InitSkyboxQuad();
@@ -298,6 +299,9 @@ void ViewerLayer::Render()
 
 void ViewerLayer::ImGUIRender()
 {
+	m_CerberusMesh->RenderImGuiVertexData();
+//	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiVertexData();
+
 	ImGui::Begin("Settings");
 
 	if (ImGui::Button("Refresh PBR Shader"))

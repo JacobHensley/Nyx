@@ -11,7 +11,7 @@ namespace Nyx {
 	public:
 		MeshComponent(const Mesh& mesh);
 
-		const Mesh& GetMesh() { return m_Mesh; }
+		Mesh& GetMesh() { return m_Mesh; }
 		void RenderMesh(const glm::mat4& transform);
 
 		static Component::Type* GetStaticType()

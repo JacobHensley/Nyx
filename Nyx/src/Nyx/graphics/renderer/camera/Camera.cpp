@@ -4,6 +4,7 @@
 #include "Nyx/input/Input.h"
 #include "Nyx/input/KeyCodes.h"
 #include "Nyx/Application.h"
+#include "imgui/ImGuizmo.h"
 
 #include <glfw/glfw3.h>
 #include <glm/gtc/quaternion.hpp>
@@ -40,7 +41,7 @@ namespace Nyx {
 	void Camera::Update()
 	{
 
-		if (Input::IsKeyPressed(NX_KEY_LEFT_ALT))
+		if (Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing())
 		{
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = mouse - m_InitialMousePosition;

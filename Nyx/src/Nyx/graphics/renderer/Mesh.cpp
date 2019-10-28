@@ -33,6 +33,62 @@ namespace Nyx {
 		DebugRenderer::DrawAABB(m_BoundingBox, transform);
 	}
 
+	void Mesh::RenderImGuiVertexData()
+	{
+		aiNode* rootNode = m_Scene->mRootNode;
+		String id = "##" + std::to_string((int)rootNode);
+		String name = rootNode->mName.C_Str() + id;
+
+		ImGui::Begin(name.c_str());
+		
+		ImGui::Checkbox("Show Position", &m_ViewerShowPosition);
+		ImGui::Checkbox("Show Normal", &m_ViewerShowNormal);
+		ImGui::Checkbox("Show Tangent", &m_ViewerShowTangent);
+		ImGui::Checkbox("Show Binormal", &m_ViewerShowBinormal);
+		ImGui::Checkbox("Show TextureCoords", &m_ViewerShowTextureCoords);
+
+		ImGui::Text("Number of Vertices: %i", m_Vertices.size());
+
+		if (ImGui::ArrowButton("Previous Page", ImGuiDir_Left)) 
+		{
+			m_VertexViewerStart -= 25;
+			m_VertexViewerEnd -= 25;
+		}
+		ImGui::SameLine();
+		if (ImGui::ArrowButton("Next Page", ImGuiDir_Right))
+		{
+			m_VertexViewerStart += 25;
+			m_VertexViewerEnd += 25;
+		}
+
+		if (m_VertexViewerEnd >= m_Vertices.size())
+			m_VertexViewerStart = m_Vertices.size();
+
+		if (m_VertexViewerEnd < 25)
+			m_VertexViewerEnd = 25;
+
+		if (m_VertexViewerStart < 0)
+			m_VertexViewerStart = 0;
+
+		for (int i = m_VertexViewerStart; i < m_VertexViewerEnd; i++)
+		{
+			Vertex vertex = m_Vertices[i];
+			ImGui::Text("Vertex Number #%i", i);
+			if (m_ViewerShowPosition)
+				ImGui::Text("Position:      X: %.2f, Y: %.2f, Z: %.2f", vertex.position.x, vertex.position.y, vertex.position.z);
+			if (m_ViewerShowNormal)
+				ImGui::Text("Normal:        X: %.2f, Y: %.2f, Z: %.2f", vertex.normal.x, vertex.normal.y, vertex.normal.z);
+			if (m_ViewerShowTangent)
+				ImGui::Text("Tangent:       X: %.2f, Y: %.2f, Z: %.2f", vertex.tangent.x, vertex.tangent.y, vertex.tangent.z);
+			if (m_ViewerShowBinormal)
+				ImGui::Text("Binormal:      X: %.2f, Y: %.2f, Z: %.2f", vertex.binormal.x, vertex.binormal.y, vertex.binormal.z);
+			if (m_ViewerShowTextureCoords)
+				ImGui::Text("TextureCoords: X: %.2f, Y: %.2f", vertex.textureCoords.x, vertex.textureCoords.y);
+			ImGui::Separator();
+		}
+		ImGui::End();
+	}
+
 	void Mesh::RenderImGuiNodeTree(bool isOwnWindow) const
 	{
 		aiNode* rootNode = m_Scene->mRootNode;
@@ -40,7 +96,8 @@ namespace Nyx {
 		String name = rootNode->mName.C_Str() + id;
 		if (ImGui::TreeNode(name.c_str()))
 		{
-			for (uint i = 0; i < rootNode->mNumChildren; i++) {
+			for (uint i = 0; i < rootNode->mNumChildren; i++) 
+			{
 				if (ImGui::TreeNode((void*)(intptr_t)i, rootNode->mChildren[i]->mName.C_Str(), i))
 				{	
 					//Node info here
@@ -54,7 +111,8 @@ namespace Nyx {
 
 	void Mesh::DrawImGuiNode(aiNode* node) const
 	{
-		for (uint i = 0; i < node->mNumChildren; i++) {
+		for (uint i = 0; i < node->mNumChildren; i++) 
+		{
 			if (ImGui::TreeNode((void*)(intptr_t)i, node->mChildren[i]->mName.C_Str(), i))
 			{
 				//Node info here

@@ -44,6 +44,7 @@ namespace Nyx {
 
 		void Render();
 		void DebugDrawBoundingBox(const glm::mat4& transform) const;
+		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;
 	private:
 		void Load();
@@ -64,6 +65,15 @@ namespace Nyx {
 
 		glm::vec3 m_bbMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };
 		glm::vec3 m_bbMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+
+		int m_VertexViewerEnd = 25;
+		int m_VertexViewerStart = 0;
+		bool m_ViewerShowPosition = true;
+		bool m_ViewerShowNormal = true;
+		bool m_ViewerShowTangent = true;
+		bool m_ViewerShowBinormal = true;
+		bool m_ViewerShowTextureCoords = true;
+
 
 		IndexBuffer* m_IndexBuffer;
 		VertexArray* m_VertexArray;
