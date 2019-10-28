@@ -1,3 +1,4 @@
+#include "Nyx/Common.h"
 #include "ViewerLayer.h"
 #include "imgui/imgui.h"
 
@@ -6,6 +7,9 @@
 ViewerLayer::ViewerLayer(const String& name)
 	:	Layer(name)
 {
+
+///	String path = OpenFileExplorer();
+
 	m_RenderSpaceFrameBuffer = new FrameBuffer(1280, 720);
 	
 	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
@@ -45,10 +49,11 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_Scene = new Scene();
 
 	//Setup Sphere components and add object to scene
-	m_SphereObject = m_Scene->CreateObject({ new MeshComponent(Mesh("assets/models/Sphere.FBX")) , new TransformComponent(glm::mat4(1.0f)) });
+	Mesh* sphereMesh = new Mesh("assets/models/Sphere.FBX");
+	m_SphereObject = m_Scene->CreateObject({ new MeshComponent(sphereMesh) , new TransformComponent(glm::mat4(1.0f)) });
 
 	//Setup Cerberus components and add object to scene
-	m_CerberusMeshComponent = new MeshComponent(*m_CerberusMesh);
+	m_CerberusMeshComponent = new MeshComponent(m_CerberusMesh);
 	m_CerberusTransformComponent = new TransformComponent(m_CerberusTransform);
 	m_CerberusObject = m_Scene->CreateObject({ m_CerberusMeshComponent , m_CerberusTransformComponent });
 
@@ -299,8 +304,10 @@ void ViewerLayer::Render()
 
 void ViewerLayer::ImGUIRender()
 {
-	m_CerberusMesh->RenderImGuiVertexData();
+//	m_CerberusMesh->RenderImGuiVertexData();
 //	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiVertexData();
+
+	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Begin("Settings");
 
@@ -346,17 +353,76 @@ void ViewerLayer::ImGUIRender()
 	ImGui::Checkbox("Lighting", &m_UsingLighting);
 	ImGui::Separator();
 
+
+	ImGui::Image((void*)(uint64_t)m_AlbedoMap->GetTextureID(), ImVec2(20.0f, 20.0f));
+
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::Image((void*)(uint64_t)m_AlbedoMap->GetTextureID(), ImVec2(150, 150));
+		ImGui::EndTooltip();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Load Albedo Map")) 
+	{
+		const String& path = OpenFileExplorer();
+		if (path != "" && path.find(".tga") != String::npos)
+			m_AlbedoMap->Reload(path);
+	}
+
+	ImGui::Image((void*)(uint64_t)m_MetalnessMap->GetTextureID(), ImVec2(20.0f, 20.0f));
+
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::Image((void*)(uint64_t)m_MetalnessMap->GetTextureID(), ImVec2(150, 150));
+		ImGui::EndTooltip();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Load Metalness Map"))
+	{
+		const String& path = OpenFileExplorer();
+		if (path != "" && path.find(".tga") != String::npos)
+			m_MetalnessMap->Reload(path);
+	}
+
+	ImGui::Image((void*)(uint64_t)m_RoughnessMap->GetTextureID(), ImVec2(20.0f, 20.0f));
+
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::Image((void*)(uint64_t)m_RoughnessMap->GetTextureID(), ImVec2(150, 150));
+		ImGui::EndTooltip();
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Load Roughness Map"))
+	{
+		const String& path = OpenFileExplorer();
+		if (path != "" && path.find(".tga") != String::npos)
+			m_RoughnessMap->Reload(path);
+	}
+
+	if (ImGui::Button("Load Mesh")) 
+	{
+		const String& path = OpenFileExplorer();
+		if (path != "" && path.find(".fbx") != String::npos)
+			m_CerberusMesh->Reload(path);
+	}
+
+	ImGui::Separator();
+
 	ImGui::InputFloat("Grid scale", &m_GridScale, 0.0f, 1000.0f);
 	ImGui::InputFloat("Grid resolution", &m_GridResolution, 0.0f, 1.0f);
 	ImGui::Separator();
 
-	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiNodeTree(false);
+	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh()->RenderImGuiNodeTree(false);
 	m_CerberusMesh->RenderImGuiNodeTree(false);
 	ImGui::Separator();
 
 	ImGui::End();
-
-	ImGuiIO& io = ImGui::GetIO();
 
 	bool open = true;
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
@@ -388,6 +454,22 @@ void ViewerLayer::ImGUIRender()
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+}
+
+String ViewerLayer::OpenFileExplorer()
+{
+	OPENFILENAMEA ofn;
+	char szFile[100];
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0FBX\0*.FBX\0";
+	GetOpenFileNameA(&ofn);
+	;
+	return (String)(ofn.lpstrFile);
 }
 
 void ViewerLayer::OnEvent(Event& e)

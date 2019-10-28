@@ -7,11 +7,11 @@ namespace Nyx {
 	class MeshComponent : public Component
 	{
 	public:
-		Mesh m_Mesh;
+		Mesh* m_Mesh;
 	public:
-		MeshComponent(const Mesh& mesh);
+		MeshComponent(Mesh* mesh);
 
-		Mesh& GetMesh() { return m_Mesh; }
+		Mesh* GetMesh() { return m_Mesh; }
 		void RenderMesh(const glm::mat4& transform);
 
 		static Component::Type* GetStaticType()

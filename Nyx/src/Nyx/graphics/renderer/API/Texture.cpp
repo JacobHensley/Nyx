@@ -9,6 +9,7 @@ namespace Nyx {
 		:	m_Path(path), m_Parameters(parameters)
 	{
 		m_TextureID = LoadFromFile(path);
+		NX_CORE_ASSERT(m_TextureID != -1, "Image Data is Null");
 	}
 
 	Texture::Texture(int width, int height, TextureParameters parameters /*= TextureParameters()*/)
@@ -37,6 +38,20 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	bool Texture::Reload(const String& path)
+	{
+		uint reloadedTextureID = LoadFromFile(path);
+		if (reloadedTextureID == -1) 
+		{
+			NX_CORE_WARN("Failed to reload texture at path {0}", path);
+			return false;
+		}
+
+		m_TextureID = reloadedTextureID;
+		m_Path = path;
+		return true;
+	}
+
 	static byte* buffer;
 	static byte* AlignData(byte* data, uint size)
 	{
@@ -63,7 +78,8 @@ namespace Nyx {
 	{
 		int bpp;
 		byte* imageData = stbi_load(path.c_str(), &m_Width, &m_Height, &bpp, 0);
-		NX_CORE_ASSERT(imageData, "Image Data is Null");
+		if (!imageData)
+			return -1;
 
 		uint TextureID = Init(imageData, m_Width, m_Height);
 

@@ -125,6 +125,11 @@ project "Sandbox"
 		cppdialect "C++17"
 		systemversion "latest"
 
+		defines 
+		{
+			"NX_PLATFORM_WINDOWS"
+		}
+
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "On"

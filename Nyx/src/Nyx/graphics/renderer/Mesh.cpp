@@ -9,7 +9,7 @@ namespace Nyx {
 	Mesh::Mesh(const String& path)
 		:	m_Path(path)
 	{
-		Load();
+		NX_CORE_ASSERT(Load(path), "Failed to load model");
 	}
 
 	Mesh::~Mesh()
@@ -109,6 +109,21 @@ namespace Nyx {
 		}
 	}
 
+	bool Mesh::Reload(const String& path)
+	{
+		m_Vertices.clear();
+		m_Indices.clear();
+		if (!Load(path)) 
+		{
+			Load(m_Path);
+			NX_CORE_WARN("Failed to reload model: {0}, aborting", path);
+			return false;
+		}
+
+		m_Path = path;
+		return true;
+	}
+
 	void Mesh::DrawImGuiNode(aiNode* node) const
 	{
 		for (uint i = 0; i < node->mNumChildren; i++) 
@@ -122,19 +137,20 @@ namespace Nyx {
 		}
 	}
 
-	void Mesh::Load()
+	bool Mesh::Load(const String& path)
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(m_Path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
-		m_Scene = importer.GetOrphanedScene();
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-			NX_CORE_ASSERT(false, importer.GetErrorString());
+			return false;
+			
+		m_Scene = importer.GetOrphanedScene();
 
 		// Process ASSIMP's root node recursively
+
 		processNode(scene->mRootNode, scene);
 		m_BoundingBox = AABB(m_bbMin, m_bbMax);
 
@@ -150,7 +166,7 @@ namespace Nyx {
 			});
 
 		m_VertexArray->PushVertexBuffer(m_VertexBuffer);
-
+		return true;
 	}
 
 	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).

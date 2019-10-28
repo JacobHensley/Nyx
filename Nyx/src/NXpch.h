@@ -16,9 +16,10 @@
 #include <unordered_set>
 #include <initializer_list>
 
-#include "Nyx/Common.h"
 #include "Nyx/Log.h"
+#include "Nyx/Common.h"
 
 #ifdef NX_PLATFORM_WINDOWS
-	#include <Windows.h>
+	#include <Commdlg.h>
+	#include <windows.h>
 #endif

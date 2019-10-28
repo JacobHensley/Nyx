@@ -53,6 +53,8 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
+		bool Reload(const String& path);
+
 		void SetData(byte* imageData, uint size);
 
 		inline const int GetWidth() const { return m_Width; }

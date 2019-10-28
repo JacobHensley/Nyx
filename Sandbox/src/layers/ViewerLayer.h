@@ -47,6 +47,8 @@ private:
 	void InitGridQuad();
 	void MousePick();
 
+	String OpenFileExplorer();
+
 private:
 	//Renderspace info
 	FrameBuffer* m_RenderSpaceFrameBuffer = nullptr;

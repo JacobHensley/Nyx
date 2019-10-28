@@ -46,14 +46,16 @@ namespace Nyx {
 		void DebugDrawBoundingBox(const glm::mat4& transform) const;
 		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;
+
+		bool Reload(const String& path);
 	private:
-		void Load();
+		bool Load(const String& path);
 		void processNode(aiNode* node, const aiScene* scene);
 		SubMesh processMesh(aiMesh* mesh, const aiScene* scene);
 		std::vector<Texture> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName);
 
 		void DrawImGuiNode(aiNode* node) const;
-		const String m_Path;
+		String m_Path;
 		std::vector<SubMesh> m_SubMeshes;
 		std::vector<Texture> m_TexturesLoaded;
 		AABB m_BoundingBox;
