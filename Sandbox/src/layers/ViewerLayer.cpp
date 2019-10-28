@@ -26,6 +26,9 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_NormalMap = new Texture("assets/textures/Cerberus_Normals.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 	m_RoughnessMap = new Texture("assets/textures/Cerberus_Roughness.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 
+	m_HDRBuffer = new FrameBuffer(1280, 720, TextureParameters(TextureFormat::RGBA16F, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+	m_HDRShader = new Shader("assets/shaders/HDR.shader");
+
 	//Load TextureCubes
 	m_IrradianceTexture = new TextureCube("assets/textures/canyon_irradiance.png");
 	m_RadianceTexture = new TextureCube("assets/textures/canyon_Radiance.png");
@@ -36,6 +39,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	//Init Lights
 	m_Light = Light();
 	m_Light.direction = glm::vec3(1.0f, -0.5f, -0.7f);
+	m_LightColor = m_Light.radiance;
 
 	//Init Transforms
 	m_CerberusTransform = glm::mat4(1.0f);
@@ -60,7 +64,7 @@ ViewerLayer::ViewerLayer(const String& name)
 
 	m_SkyboxMesh = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
 	m_GridMesh = MeshFactory::GenQuad(-5.0f, -5.0f, 0.0f, 10.0f, 10.0f);
-	
+	m_HDRQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
 }
 
 ViewerLayer::~ViewerLayer()
@@ -109,10 +113,9 @@ void ViewerLayer::Update()
 
 void ViewerLayer::Render()
 {
-	m_RenderSpaceFrameBuffer->Clear();
-	m_RenderSpaceFrameBuffer->Bind();
-
-	DebugRenderer::Begin(*m_Camera);
+	//Upload uniforms for PBR shader
+	m_HDRBuffer->Clear();
+	m_HDRBuffer->Bind();
 
 	//Render Skybox
 	m_SkyboxShader->Bind();
@@ -124,7 +127,24 @@ void ViewerLayer::Render()
 
 	m_SkyboxMesh->Render(false);
 
-	//Upload uniforms for PBR shader
+	DebugRenderer::Begin(*m_Camera);
+
+	//Render mouse ray
+	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
+
+	DebugRenderer::End();
+	DebugRenderer::Flush();
+
+	//Render Grid
+	m_GridShader->Bind();
+
+	m_GridShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_GridTransform);
+
+	m_GridShader->SetUniform1f("u_Scale", m_GridScale);
+	m_GridShader->SetUniform1f("u_Resolution", m_GridResolution);
+
+	m_GridMesh->Render(true);
+
 	m_PBRShader->Bind();
 
 	m_PBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
@@ -194,21 +214,17 @@ void ViewerLayer::Render()
 	//Render Scene
 	m_Scene->Render();
 
-	//Render mouse ray
-	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
+	m_HDRBuffer->Unbind();
 
-	//Render Grid
-	m_GridShader->Bind();
+	m_RenderSpaceFrameBuffer->Clear();
+	m_RenderSpaceFrameBuffer->Bind();
 
-	m_GridShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_GridTransform);
+	m_HDRShader->Bind();
+	m_HDRShader->SetUniform1i("u_InputTexture", 0);
+	m_HDRShader->SetUniform1f("u_Exposure", ex);
+	m_HDRBuffer->GetTexture()->Bind(0);
 
-	m_GridShader->SetUniform1f("u_Scale", m_GridScale);
-	m_GridShader->SetUniform1f("u_Resolution", m_GridResolution);
-
-	m_GridMesh->Render(true);
-
-	DebugRenderer::End();
-	DebugRenderer::Flush();
+	m_HDRQuad->Render(true);
 
 	m_RenderSpaceFrameBuffer->Unbind();
 }
@@ -230,6 +246,8 @@ void ViewerLayer::ImGUIRender()
 		m_GridShader->Reload();
 	ImGui::Separator();
 
+	ImGui::SliderFloat("ex", &ex, 0.0f, 10.f);
+
 	ImGui::RadioButton("Cerberus", &m_SceneMode, 0); ImGui::SameLine();
 	ImGui::RadioButton("Sphere", &m_SceneMode, 1);
 	ImGui::Separator();
@@ -242,8 +260,11 @@ void ViewerLayer::ImGUIRender()
 	ImGui::Checkbox("Toggle Ray Hold", &m_HoldRay);
 	ImGui::Separator();
 
-	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_Light.radiance));
+	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_LightColor));
+	ImGui::SliderFloat("Light multiply", &m_LightMultiplier, 0.0f, 10.f);
 	ImGui::SliderFloat3("Light Direction", glm::value_ptr(m_Light.direction), -1.0f, 1.0f);
+
+	m_Light.radiance = m_LightColor * m_LightMultiplier;
 	ImGui::Separator();
 
 	ImGui::Checkbox("Using Albedo Map", &m_UsingAlbedoMap);

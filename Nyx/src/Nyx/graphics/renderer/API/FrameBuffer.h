@@ -16,7 +16,7 @@ namespace Nyx {
 
 		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
 		inline uint GetRenderBufferID() const { return m_RenderBufferID; }
-		inline const Texture* GetTexture() const { return m_Texture; }
+		inline Texture* GetTexture() const { return m_Texture; }
 	private:
 		uint m_FrameBufferID;
 		uint m_RenderBufferID;

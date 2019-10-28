@@ -95,7 +95,11 @@ namespace Nyx {
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
+
+		if (m_Parameters.format == TextureFormat::RGBA16F || m_Parameters.format == TextureFormat::RGBA32F)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGL(m_Parameters.filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGL(m_Parameters.filter));
@@ -124,6 +128,8 @@ namespace Nyx {
 		switch (format)
 		{
 			case TextureFormat::RGBA:				return GL_RGBA;
+			case TextureFormat::RGBA16F:			return GL_RGBA16F;
+			case TextureFormat::RGBA32F:			return GL_RGBA32F;
 			case TextureFormat::RGB:				return GL_RGB;
 			case TextureFormat::RED:				return GL_RED;
 			case TextureFormat::LUMINANCE:			return GL_LUMINANCE;

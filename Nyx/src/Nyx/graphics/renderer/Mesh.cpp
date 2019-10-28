@@ -37,7 +37,8 @@ namespace Nyx {
 			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
 		}
 
-		glEnable(GL_DEPTH_TEST);
+		if (!depthTesting)
+			glEnable(GL_DEPTH_TEST);
 	}
 
 	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const

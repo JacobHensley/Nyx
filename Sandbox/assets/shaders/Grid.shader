@@ -47,6 +47,7 @@ void main()
 	float value = step(resolution, fract.x) * step(resolution, fract.y);
 
 	value = 1.0f - value;
-
+	if (value < 0.5f)
+		discard;
 	color = vec4(vec3(0.2f, 0.2f, 0.2f) * value, value);
 }

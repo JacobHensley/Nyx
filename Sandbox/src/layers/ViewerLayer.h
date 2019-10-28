@@ -16,7 +16,7 @@ class ViewerLayer : public Layer
 	{
 		glm::vec3 radiance;
 		glm::vec3 direction;
-	
+
 
 		Light(glm::vec3 radiance, glm::vec3 direction)
 			: radiance(radiance), direction(direction)
@@ -53,7 +53,7 @@ private:
 	glm::vec2 m_RenderSpacePosition = glm::vec2();
 	int m_RenderSpaceHeight = 0;
 	int m_RenderSpaceWidth = 0;
-	
+
 	//Ray Info
 	Ray m_MouseRay = Ray();
 	bool m_HoldRay = true;
@@ -98,8 +98,16 @@ private:
 	bool m_UsingIBL = true;
 	bool m_UsingLighting = true;
 
+	float ex = 1.0f;
+	float m_LightMultiplier = 1.0f;
+	glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
+
 	//Lights
 	Light m_Light;
+
+	FrameBuffer* m_HDRBuffer = nullptr;
+	Shader* m_HDRShader = nullptr;
+	Mesh* m_HDRQuad = nullptr;
 
 	//Scene
 	Scene* m_Scene = nullptr;

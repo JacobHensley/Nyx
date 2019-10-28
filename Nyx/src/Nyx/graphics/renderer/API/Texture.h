@@ -26,6 +26,8 @@ namespace Nyx {
 		RED,
 		RGB,
 		RGBA,
+		RGBA16F,
+		RGBA32F,
 		LUMINANCE,
 		LUMINANCE_ALPHA
 	};
