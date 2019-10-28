@@ -77,7 +77,7 @@ namespace Nyx {
 
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
+	//	ImGui::ShowDemoWindow();
 	}
 
 	void ImGUILayer::OnDetach()

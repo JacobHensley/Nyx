@@ -40,9 +40,10 @@ namespace Nyx {
 	{
 	public:
 		Mesh(const String& path);
+		Mesh(IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, VertexArray* vertexArray);
 		~Mesh();
 
-		void Render();
+		void Render(bool depthTesting);
 		void DebugDrawBoundingBox(const glm::mat4& transform) const;
 		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;

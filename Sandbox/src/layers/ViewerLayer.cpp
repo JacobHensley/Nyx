@@ -1,17 +1,17 @@
 #include "Nyx/Common.h"
 #include "ViewerLayer.h"
 #include "imgui/imgui.h"
-
 #include "Nyx/graphics/DebugRenderer.h"
+#include "Nyx/graphics/MeshFactory.h"
 
 ViewerLayer::ViewerLayer(const String& name)
-	:	Layer(name)
+	: Layer(name)
 {
 
-///	String path = OpenFileExplorer();
+	///	String path = OpenFileExplorer();
 
 	m_RenderSpaceFrameBuffer = new FrameBuffer(1280, 720);
-	
+
 	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
 	//Load Shaders
@@ -37,10 +37,6 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_Light = Light();
 	m_Light.direction = glm::vec3(1.0f, -0.5f, -0.7f);
 
-	//Setup quads for skybox and grid
-	InitSkyboxQuad();
-	InitGridQuad();
-
 	//Init Transforms
 	m_CerberusTransform = glm::mat4(1.0f);
 	m_GridTransform = glm::mat4(1.0f);
@@ -61,6 +57,10 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_CerberusTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 	m_CerberusTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
 	m_GridTransform = glm::rotate(m_GridTransform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	m_SkyboxMesh = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
+	m_GridMesh = MeshFactory::GenQuad(-5.0f, -5.0f, 0.0f, 10.0f, 10.0f);
+	
 }
 
 ViewerLayer::~ViewerLayer()
@@ -69,9 +69,6 @@ ViewerLayer::~ViewerLayer()
 	delete m_Camera;
 	delete m_IrradianceTexture;
 	delete m_SkyboxShader;
-	delete m_SkyboxVertexBuffer;
-	delete m_SkyboxVertexArray;
-	delete m_SkyboxIndexBuffer;
 	delete m_CerberusMesh;
 	delete m_PBRShader;
 	delete m_AlbedoMap;
@@ -81,88 +78,6 @@ ViewerLayer::~ViewerLayer()
 	delete m_Scene;
 	delete m_CerberusMeshComponent;
 	delete m_CerberusTransformComponent;
-}
-
-void ViewerLayer::InitSkyboxQuad()
-{
-	float x = -1.0f, y = -1.0f;
-	float width = 2.0f, height = 2.0f;
-
-	struct QuadVertex
-	{
-		glm::vec3 Position;
-		glm::vec2 TexCoord;
-	};
-
-	std::array<QuadVertex, 4> vertices;
-
-	vertices[0].Position = { x, y, 0.0f };
-	vertices[0].TexCoord = { 0.0f, 0.0f };
-
-	vertices[1].Position = { x + width, y, 0.0f };
-	vertices[1].TexCoord = { 1.0f, 0.0f };
-
-	vertices[2].Position = { x + width, y + height, 0.0f };
-	vertices[2].TexCoord = { 1.0f, 1.0f };
-
-	vertices[3].Position = { x, y + height, 0.0f };
-	vertices[3].TexCoord = { 0.0f, 1.0f };
-
-	std::array<uint32_t, 6> indices = { 0, 1, 2, 2, 3, 0 };
-
-	m_SkyboxVertexBuffer = new VertexBuffer(&vertices[0], (int)(sizeof(QuadVertex) * vertices.size()));
-
-	BufferLayout layout = {
-		{ShaderDataType::Vec3, "a_Position"},
-		{ShaderDataType::Vec2, "a_TexCoord"}
-	};
-
-	m_SkyboxVertexBuffer->SetLayout(layout);
-
-	m_SkyboxIndexBuffer = new IndexBuffer(&indices[0], (uint)indices.size());
-	m_SkyboxVertexArray = new VertexArray();
-	m_SkyboxVertexArray->PushVertexBuffer(m_SkyboxVertexBuffer);
-}
-
-void ViewerLayer::InitGridQuad()
-{
-	float x = -5.0f, y = -5.0f, z = 0.0f;
-	float width = 10.0f, height = 10.0f;
-
-	struct QuadVertex
-	{
-		glm::vec3 Position;
-		glm::vec2 TexCoord;
-	};
-
-	std::array<QuadVertex, 4> vertices;
-
-	vertices[0].Position = { x, y, z };
-	vertices[0].TexCoord = { 0.0f, 0.0f };
-
-	vertices[1].Position = { x + width, y, z };
-	vertices[1].TexCoord = { 1.0f, 0.0f };
-
-	vertices[2].Position = { x + width, y + height, z };
-	vertices[2].TexCoord = { 1.0f, 1.0f };
-
-	vertices[3].Position = { x, y + height, z };
-	vertices[3].TexCoord = { 0.0f, 1.0f };
-
-	std::array<uint32_t, 6> indices = { 0, 1, 2, 2, 3, 0 };
-
-	m_GridVertexBuffer = new VertexBuffer(&vertices[0], (int)(sizeof(QuadVertex) * vertices.size()));
-
-	BufferLayout layout = {
-		{ShaderDataType::Vec3, "a_Position"},
-		{ShaderDataType::Vec2, "a_TexCoord"}
-	};
-
-	m_GridVertexBuffer->SetLayout(layout);
-
-	m_GridIndexBuffer = new IndexBuffer(&indices[0], (uint)indices.size());
-	m_GridVertexArray = new VertexArray();
-	m_GridVertexArray->PushVertexBuffer(m_GridVertexBuffer);
 }
 
 void ViewerLayer::MousePick()
@@ -207,9 +122,7 @@ void ViewerLayer::Render()
 	m_SkyboxShader->SetUniform1i("u_SkyboxTexture", 0);
 	m_IrradianceTexture->Bind(0);
 
-	m_SkyboxVertexArray->Bind();
-	m_SkyboxIndexBuffer->Bind();
-	m_SkyboxIndexBuffer->Draw(false);
+	m_SkyboxMesh->Render(false);
 
 	//Upload uniforms for PBR shader
 	m_PBRShader->Bind();
@@ -292,9 +205,7 @@ void ViewerLayer::Render()
 	m_GridShader->SetUniform1f("u_Scale", m_GridScale);
 	m_GridShader->SetUniform1f("u_Resolution", m_GridResolution);
 
-	m_GridVertexArray->Bind();
-	m_GridIndexBuffer->Bind();
-	m_GridIndexBuffer->Draw(true);
+	m_GridMesh->Render(true);
 
 	DebugRenderer::End();
 	DebugRenderer::Flush();
@@ -303,9 +214,9 @@ void ViewerLayer::Render()
 }
 
 void ViewerLayer::ImGUIRender()
-{
-//	m_CerberusMesh->RenderImGuiVertexData();
-//	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh().RenderImGuiVertexData();
+{	
+	m_CerberusMesh->RenderImGuiVertexData();
+	m_Scene->GetComponent<MeshComponent>(m_SphereObject)->GetMesh()->RenderImGuiVertexData();
 
 	ImGuiIO& io = ImGui::GetIO();
 

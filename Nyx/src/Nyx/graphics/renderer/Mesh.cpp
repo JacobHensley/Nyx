@@ -12,20 +12,32 @@ namespace Nyx {
 		NX_CORE_ASSERT(Load(path), "Failed to load model");
 	}
 
+	Mesh::Mesh(IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, VertexArray* vertexArray)
+		:	m_IndexBuffer(indexBuffer), m_VertexBuffer(vertexBuffer), m_VertexArray(vertexArray), m_Path("GenMesh")
+	{
+		m_SubMeshes.push_back(SubMesh(0, 0, indexBuffer->GetBufferID()));
+	}
+
 	Mesh::~Mesh()
 	{
 	}
 
-	void Mesh::Render()
+	void Mesh::Render(bool depthTesting)
 	{
+		if (!depthTesting)
+			glDisable(GL_DEPTH_TEST);
+
 		m_VertexArray->Bind();
 		m_IndexBuffer->Bind();
 		glEnable(GL_BLEND);
+
 		for (SubMesh& mesh : m_SubMeshes)
 		{
 			//renderer.submit(vertexarray)
 			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
 		}
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const
@@ -35,9 +47,12 @@ namespace Nyx {
 
 	void Mesh::RenderImGuiVertexData()
 	{
-		aiNode* rootNode = m_Scene->mRootNode;
-		String id = "##" + std::to_string((int)rootNode);
-		String name = rootNode->mName.C_Str() + id;
+		if (m_Vertices.size() == 0)
+			NX_CORE_ASSERT(false, "Failed to display vertex data");
+
+			aiNode* rootNode = m_Scene->mRootNode;
+			String id = "##" + std::to_string((int)rootNode);
+			String name = rootNode->mName.C_Str() + id;
 
 		ImGui::Begin(name.c_str());
 		
@@ -46,6 +61,9 @@ namespace Nyx {
 		ImGui::Checkbox("Show Tangent", &m_ViewerShowTangent);
 		ImGui::Checkbox("Show Binormal", &m_ViewerShowBinormal);
 		ImGui::Checkbox("Show TextureCoords", &m_ViewerShowTextureCoords);
+
+		ImGui::Text("Min X: %f.1, Y: %f.1, Z: %f.1,", m_bbMin.x, m_bbMin.y, m_bbMin.z);
+		ImGui::Text("Max X: %f.1, Y: %f.1, Z: %f.1,", m_bbMax.x, m_bbMax.y, m_bbMax.z);
 
 		ImGui::Text("Number of Vertices: %i", m_Vertices.size());
 
@@ -91,9 +109,16 @@ namespace Nyx {
 
 	void Mesh::RenderImGuiNodeTree(bool isOwnWindow) const
 	{
+		if (m_Path == "GenMesh")
+			NX_CORE_ASSERT(false, "Cannot Render node graph of generated mesh");
+
 		aiNode* rootNode = m_Scene->mRootNode;
 		String id = "##" + std::to_string((int)rootNode);
 		String name = rootNode->mName.C_Str() + id;
+		String windowName = "Node Graph" + id;
+		if (isOwnWindow)
+			ImGui::Begin(windowName.c_str());
+
 		if (ImGui::TreeNode(name.c_str()))
 		{
 			for (uint i = 0; i < rootNode->mNumChildren; i++) 
@@ -107,6 +132,9 @@ namespace Nyx {
 			}
 			ImGui::TreePop();
 		}
+
+		if (isOwnWindow)
+			ImGui::End();
 	}
 
 	bool Mesh::Reload(const String& path)

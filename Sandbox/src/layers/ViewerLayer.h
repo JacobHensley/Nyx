@@ -43,8 +43,6 @@ public:
 	bool OnMouseClick(MouseButtonPressedEvent& e);
 
 private:
-	void InitSkyboxQuad();
-	void InitGridQuad();
 	void MousePick();
 
 	String OpenFileExplorer();
@@ -71,15 +69,11 @@ private:
 
 	//Skybox
 	Shader* m_SkyboxShader = nullptr;
-	VertexBuffer* m_SkyboxVertexBuffer = nullptr;
-	VertexArray* m_SkyboxVertexArray = nullptr;
-	IndexBuffer* m_SkyboxIndexBuffer = nullptr;
+	Mesh* m_SkyboxMesh = nullptr;
 
 	//Grid
 	Shader* m_GridShader = nullptr;
-	VertexBuffer* m_GridVertexBuffer = nullptr;
-	VertexArray* m_GridVertexArray = nullptr;
-	IndexBuffer* m_GridIndexBuffer = nullptr;
+	Mesh* m_GridMesh = nullptr;
 	glm::mat4 m_GridTransform;
 	float m_GridScale = 501.0f;
 	float m_GridResolution = 0.02f;
