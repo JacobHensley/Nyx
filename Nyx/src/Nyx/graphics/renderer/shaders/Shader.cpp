@@ -117,77 +117,189 @@ namespace Nyx {
 		return 1;
 	}
 
-	void Shader::ParseUniforms()
+	void Shader::ParseUniformStructs()
 	{
 		std::ifstream stream(m_FilePath);
-
 		String line;
+
+		bool inStuct = false;
+		bool foundStruct = false;
+
 		while (getline(stream, line))
 		{
-			if (line.find("uniform") != String::npos)
+			if (line.find("}") != String::npos)
 			{
-				std::vector<String> tokens;
-				String token;
-				for (uint i = 0; i < line.length(); i++)
-				{
-					if (line[i] == '[')
-					{
-						tokens.push_back(token);
-						token = "";
-						uint last = (uint)line.find("]");
-						token = line.substr(i + 1, last - i - 1);
-						tokens.push_back(token);
-						break;
-					}
+				foundStruct = false;
+				inStuct = false;
+			}
 
-					if (line[i] == ';')
-					{
-						break;
-					}
+			if (line.find("struct") != String::npos && line.find("//") == String::npos && line.empty() == false)
+			{
+				std::vector<String> tokens = Tokenize(line, ' ');
+				m_UniformStructs.push_back(UniformStruct(tokens[1]));
+				foundStruct = true;
+			}
 
-					if (line[i] == ' ')
-					{
-						tokens.push_back(token);
-						token = "";
-						continue;
-					}
-					token += line[i];
-				}
+			if (inStuct == true)
+			{
+				std::vector<String> type = Tokenize(line, ' ');
+				String name = type[1];
+				name.pop_back();
+				m_UniformStructs.back().AddType(type[0], name);
+			}
 
-				tokens.push_back(token);
-				if (tokens.size() == 3)
-					tokens.push_back("1");
-
-				String& name = tokens[1];
-				String& type = tokens[2];
-				int count = std::stoi(tokens[3]);
-
-				PushUniform(new ShaderUniform(type, name, count));
+			if (line.find("{") != String::npos && foundStruct == true)
+			{
+				inStuct = true;
+				continue;
 			}
 		}
 	}
 
-	void Shader::PushUniform(ShaderUniform* uniform)
+	void Shader::ParseUniformBlock(int startingLineNumber)
 	{
+		std::ifstream stream(m_FilePath);
+		String line;
+		int lineNum = 0;
+
+		while (getline(stream, line))
+		{
+			if (lineNum == startingLineNumber)
+			{
+				std::vector<String> tokens = Tokenize(line, ' ');
+				m_UniformStructs.push_back(UniformStruct(tokens[1]));
+			}
+
+			if (lineNum - 2 >= startingLineNumber && line.find("//") == String::npos && line.empty() == false)
+			{
+				if (line.find("}") != String::npos)
+				{
+					return;
+				}
+
+				std::vector<String> type = Tokenize(line, ' ');
+				String name = type[1];
+				name.pop_back();
+
+				String typeToken = type[0];
+				typeToken.erase(std::remove(typeToken.begin(), typeToken.end(), '\t'), typeToken.end());
+
+				m_UniformStructs.back().AddType(typeToken, name);
+				PushUniform(ShaderType(m_UniformStructs.back().name + "." + name, typeToken));
+			}
+			lineNum++;
+		}
+	}
+
+	void Shader::ParseUniforms()
+	{
+		std::ifstream stream(m_FilePath);
+		String line;
+		int lineNum = 0;
+
+		std::vector<ShaderType> rawUniforms;
+
+		int sampler;
+
+		while (getline(stream, line))
+		{
+			if (line.find("uniform") != String::npos && line.find("//") == String::npos)
+			{
+				std::vector<String> tokens = Tokenize(line, ' ');
+
+				if (tokens.size() == 2)
+				{
+					ParseUniformBlock(lineNum);
+					continue;
+				}
+
+				String name = tokens[2];
+				name.pop_back();
+				rawUniforms.push_back(ShaderType(name, tokens[1]));
+			}
+			lineNum++;
+		}
+
+		for (int i = 0; i < rawUniforms.size(); i++)
+		{
+			ShaderType uniform = rawUniforms[i];
+			bool isInStruct = false;
+			for (int j = 0; j < m_UniformStructs.size(); j++)
+			{
+				if (uniform.type == m_UniformStructs[j].name)
+				{
+					isInStruct = true;
+					for (int k = 0; k < m_UniformStructs[j].types.size(); k++)
+					{
+						String type = m_UniformStructs[j].types[k].first;
+						type.erase(std::remove(type.begin(), type.end(), '\t'), type.end());
+						PushUniform(ShaderType(m_UniformStructs[j].name + "." + m_UniformStructs[j].types[k].second, type));
+					}
+				}
+			}
+			if (isInStruct == false)
+			{
+				PushUniform(rawUniforms[i]);
+			}
+			isInStruct = false;
+		}
+	}
+
+	void Shader::PushUniform(ShaderType uniform)
+	{
+		ShaderUniform* shaderUniform;
+		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") {
+			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, m_Sampler);
+			//upload texture slot
+			m_Sampler++;
+		}
+		else 
+			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, -1);
+
 		int offset = 0;
 		if (m_Uniforms.size() > 0)
 		{
 			ShaderUniform* lastUniform = m_Uniforms[m_Uniforms.size() - 1];
 			offset = lastUniform->GetOffset() + lastUniform->GetSize();
-			uniform->SetOffset(offset);
+			shaderUniform->SetOffset(offset);
 		}
 
-		m_Uniforms.push_back(uniform);
+		m_Uniforms.push_back(shaderUniform);
 	}
 
-	void Shader::PrintUniforms()
+	void Shader::SetUniformBuffer(byte* buffer, uint size)
 	{
-		std::vector<ShaderUniform*> uniforms = GetUniforms();
 
-		for (uint i = 0; i < uniforms.size(); i++)
+	}
+
+	std::vector<String> Shader::Tokenize(const String& str, const char delimiter)
+	{
+		std::vector<String> tokens;
+		String token;
+
+		for (int i = 0; i < str.length(); i++)
 		{
-			std::cout << uniforms[i]->StringFromType(uniforms[i]->GetType()) << " " << uniforms[i]->GetName() << " " << uniforms[i]->GetCount() << " " << uniforms[i]->GetSize() << std::endl;
+			if (str[i] == ' ')
+			{
+				tokens.push_back(token);
+				token = "";
+				continue;
+			}
+			token += str[i];
 		}
+		tokens.push_back(token);
+		return tokens;
+	}
+
+	ShaderUniform* Shader::FindUniform(const String & name)
+	{
+		for (int i = 0;i < m_Uniforms.size();i++)
+		{
+			if (m_Uniforms[i]->GetName() == name)
+				return m_Uniforms[i];
+		}
+		return nullptr;
+				
 	}
 
 	void Shader::Bind()

@@ -7,6 +7,7 @@
 
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
+#include "Nyx/graphics/renderer/Material.h"
 
 using namespace Nyx;
 
@@ -120,6 +121,8 @@ private:
 	SceneObject* m_CerberusObject = nullptr;
 	MeshComponent* m_CerberusMeshComponent = nullptr;
 	TransformComponent* m_CerberusTransformComponent = nullptr;
+
+	Material* m_Material = nullptr;
 
 	//Sphere object
 	SceneObject* m_SphereObject = nullptr;

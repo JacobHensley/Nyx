@@ -8,6 +8,37 @@ namespace Nyx {
 
 	struct ShaderSource;
 
+	struct UniformStruct
+	{
+		String name;
+		std::vector<std::pair<String, String>> types;
+
+		UniformStruct()
+		{
+		}
+
+		UniformStruct(const String& name)
+			: name(name)
+		{
+		}
+
+		void AddType(const String& type, const String& name)
+		{
+			types.push_back(std::make_pair(type, name));
+		}
+	};
+
+	struct ShaderType
+	{
+		String name;
+		String type;
+
+		ShaderType(const String& name, const String& type)
+			: name(name), type(type)
+		{
+		}
+	};
+
 	class Shader
 	{
 	public:
@@ -19,15 +50,21 @@ namespace Nyx {
 
 		void Reload();
 
+		void ParseUniformStructs();
 		void ParseUniforms();
-		void PushUniform(ShaderUniform* uniform);
-		void PrintUniforms();
+		void ParseUniformBlock(int startingLineNumber);
+
+		void Shader::PushUniform(ShaderType uniform);
+
+		void SetUniformBuffer(byte* buffer, uint size);
+		ShaderUniform* FindUniform(const String& name);
 
 		void SetTextureIDs(const String& name);
 		int GetUniformLocation(const String& name);
 
-		inline std::vector<ShaderUniform*>& GetUniforms() { return m_Uniforms; };
 		inline uint GetID() const { return m_ShaderID; }
+
+		std::vector<String> Tokenize(const String& str, const char delimiter);
 
 		void SetUniform1i(const String& name, int value);
 		void SetUniform1iv(const String& name, int* value, int count);
@@ -47,7 +84,10 @@ namespace Nyx {
 		ShaderSource SplitShader(const String& filePath);
 		int CompileShader(uint shader, const String& shaderSrc);
 
+		int m_Sampler = 0;
+		std::vector<UniformStruct> m_UniformStructs;
 		std::vector<ShaderUniform*> m_Uniforms;
+
 		std::unordered_map<String, int> m_UniformLocationCache;
 	};
 

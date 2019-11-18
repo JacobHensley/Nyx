@@ -93,6 +93,9 @@
     <ClInclude Include="src\Nyx\graphics\Layers\LayerStack.h">
       <Filter>src\Nyx\graphics\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\MeshFactory.h">
+      <Filter>src\Nyx\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\Window.h">
       <Filter>src\Nyx\graphics</Filter>
     </ClInclude>
@@ -119,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\API\VertexBuffer.h">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\Material.h">
+      <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
@@ -165,7 +171,6 @@
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\MeshFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
@@ -191,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Layers\LayerStack.cpp">
       <Filter>src\Nyx\graphics\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\MeshFactory.cpp">
+      <Filter>src\Nyx\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\Window.cpp">
       <Filter>src\Nyx\graphics</Filter>
@@ -218,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\API\VertexBuffer.cpp">
       <Filter>src\Nyx\graphics\renderer\API</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\Material.cpp">
+      <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp">
       <Filter>src\Nyx\graphics\renderer</Filter>
@@ -249,6 +260,5 @@
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\MeshFactory.cpp" />
   </ItemGroup>
 </Project>
