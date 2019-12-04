@@ -1,7 +1,7 @@
 project "ImGui"
     kind "StaticLib"
     language "C++"
-    
+
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin/intermediates/" .. outputdir .. "/%{prj.name}")
 
@@ -17,35 +17,31 @@ project "ImGui"
         "imstb_textedit.h",
         "imstb_truetype.h",
         "imgui_demo.cpp",
-        "ImCurveEdit.cpp",
-        "ImCurveEdit.h",
-        "ImGradient.cpp",
-        "ImGradient.h",
-        "ImGuizmo.cpp",
-        "ImGuizmo.h",
+        --  ImGuizmo
+        "ImSequencer.h",
         "ImSequencer.cpp",
-        "ImSequencer.h"
+        "ImGuizmo.h",
+        "ImGuizmo.cpp",
+        "ImGradient.h",
+        "ImGradient.cpp",
+        "ImCurveEdit.h",
+        "ImCurveEdit.cpp"
     }
 
-    defines
+    defines 
     {
-        "IMGUI_DEFINE_MATH_OPERATORS",
-        "IMGUI_IMPL_OPENGL_LOADER_GLAD",
-        "_CRT_SECURE_NO_WARNINGS"
+        "IMGUI_IMPL_OPENGL_LOADER_GLAD"
     }
 
-	filter "system:windows"
+    filter "system:windows"
         systemversion "latest"
         cppdialect "C++17"
         staticruntime "On"
 
     filter "configurations:Debug"
         runtime "Debug"
-        symbols "On"
+        symbols "on"
 
     filter "configurations:Release"
         runtime "Release"
-        optimize "On"
-
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
+        optimize "on"

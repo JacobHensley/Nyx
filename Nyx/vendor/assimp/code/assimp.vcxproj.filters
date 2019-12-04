@@ -1,0 +1,1886 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Assimp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CApi\CInterfaceIOWrapper.cpp">
+      <Filter>CApi</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\BaseImporter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\BaseProcess.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\PostStepRegistry.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\ImporterRegistry.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\DefaultIOStream.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\DefaultIOSystem.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\ZipArchiveIOSystem.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Importer.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SGSpatialSort.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\VertexTriangleAdjacency.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SpatialSort.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SceneCombiner.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\ScenePreprocessor.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SkeletonMeshBuilder.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SplitByBoneCountProcess.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\StandardShapes.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\TargetAnimation.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\RemoveComments.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Subdivision.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\scene.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Bitmap.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Version.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\CreateAnimMesh.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\simd.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\DefaultLogger.cpp">
+      <Filter>Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Exporter.cpp">
+      <Filter>Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CApi\AssimpCExport.cpp">
+      <Filter>Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\CalcTangentsProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ComputeUVMappingProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ConvertToLHProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\EmbedTexturesProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindDegenerates.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindInstancesProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindInvalidDataProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FixNormalsStep.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\DropFaceNormalsProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenFaceNormalsProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenVertexNormalsProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\PretransformVertices.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ImproveCacheLocality.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\JoinVerticesProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\LimitBoneWeightsProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\RemoveRedundantMaterials.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\RemoveVCProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\SortByPTypeProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\SplitLargeMeshes.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\TextureTransform.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\TriangulateProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ValidateDataStructure.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\OptimizeGraph.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\OptimizeMeshes.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\DeboneProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ProcessHelper.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\MakeVerboseFormat.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ScaleProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ArmaturePopulate.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenBoundingBoxesProcess.cpp">
+      <Filter>PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Material\MaterialSystem.cpp">
+      <Filter>MaterialSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\STEPParser\STEPFileReader.cpp">
+      <Filter>STEPParser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\STEPParser\STEPFileEncoding.cpp">
+      <Filter>STEPParser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter.cpp">
+      <Filter>AMF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter_Geometry.cpp">
+      <Filter>AMF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter_Material.cpp">
+      <Filter>AMF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter_Postprocess.cpp">
+      <Filter>AMF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSConverter.cpp">
+      <Filter>3DS</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSLoader.cpp">
+      <Filter>3DS</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AC\ACLoader.cpp">
+      <Filter>AC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\ASE\ASELoader.cpp">
+      <Filter>ASE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\ASE\ASEParser.cpp">
+      <Filter>ASE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assbin\AssbinLoader.cpp">
+      <Filter>ASSBIN</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\B3D\B3DImporter.cpp">
+      <Filter>B3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\BVH\BVHLoader.cpp">
+      <Filter>BVH</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaLoader.cpp">
+      <Filter>COLLADA</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaParser.cpp">
+      <Filter>COLLADA</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\DXF\DXFLoader.cpp">
+      <Filter>DXF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CSM\CSMLoader.cpp">
+      <Filter>CSM</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\HMP\HMPLoader.cpp">
+      <Filter>HMP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRMeshLoader.cpp">
+      <Filter>IRRMESH</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRShared.cpp">
+      <Filter>IRR</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRLoader.cpp">
+      <Filter>IRR</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOAnimation.cpp">
+      <Filter>LWO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOBLoader.cpp">
+      <Filter>LWO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOLoader.cpp">
+      <Filter>LWO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOMaterial.cpp">
+      <Filter>LWO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWS\LWSLoader.cpp">
+      <Filter>LWS</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\M3DImporter.cpp">
+      <Filter>M3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD2\MD2Loader.cpp">
+      <Filter>MD2</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD3\MD3Loader.cpp">
+      <Filter>MD3</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD5\MD5Loader.cpp">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD5\MD5Parser.cpp">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDC\MDCLoader.cpp">
+      <Filter>MDC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDL\MDLLoader.cpp">
+      <Filter>MDL</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDL\MDLMaterialLoader.cpp">
+      <Filter>MDL</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\NFF\NFFLoader.cpp">
+      <Filter>NFF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\NDO\NDOLoader.cpp">
+      <Filter>NDO</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OFF\OFFLoader.cpp">
+      <Filter>OFF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileImporter.cpp">
+      <Filter>OBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileMtlImporter.cpp">
+      <Filter>OBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileParser.cpp">
+      <Filter>OBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreImporter.cpp">
+      <Filter>OGRE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreStructs.cpp">
+      <Filter>OGRE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreBinarySerializer.cpp">
+      <Filter>OGRE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreXmlSerializer.cpp">
+      <Filter>OGRE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreMaterial.cpp">
+      <Filter>OGRE</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OpenGEX\OpenGEXImporter.cpp">
+      <Filter>OPENGEX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyLoader.cpp">
+      <Filter>PLY</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyParser.cpp">
+      <Filter>PLY</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MS3D\MS3DLoader.cpp">
+      <Filter>MS3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\COB\COBLoader.cpp">
+      <Filter>COB</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderLoader.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderDNA.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderScene.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderModifier.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderBMesh.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderTessellator.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderCustomData.cpp">
+      <Filter>BLEND</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCLoader.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCReaderGen1_2x3.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCReaderGen2_2x3.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCUtil.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCGeometry.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCMaterial.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCProfile.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCCurve.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCBoolean.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCOpenings.cpp">
+      <Filter>IFC</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\XGL\XGLLoader.cpp">
+      <Filter>XGL</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXImporter.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXParser.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXTokenizer.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXConverter.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXUtil.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXDocument.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXProperties.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXMeshGeometry.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXMaterial.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXModel.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXAnimation.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXNodeAttribute.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXDeformer.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXBinaryTokenizer.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXDocumentUtil.cpp">
+      <Filter>FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3D\Q3DLoader.cpp">
+      <Filter>Q3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3BSP\Q3BSPFileParser.cpp">
+      <Filter>Q3BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3BSP\Q3BSPFileImporter.cpp">
+      <Filter>Q3BSP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Raw\RawLoader.cpp">
+      <Filter>RAW</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\SIB\SIBImporter.cpp">
+      <Filter>SIB</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\SMD\SMDLoader.cpp">
+      <Filter>SMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\STL\STLLoader.cpp">
+      <Filter>STL</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Terragen\TerragenLoader.cpp">
+      <Filter>TERRAGEN</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Unreal\UnrealLoader.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileImporter.cpp">
+      <Filter>X</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileParser.cpp">
+      <Filter>X</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Geometry2D.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Geometry3D.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Group.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Light.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Metadata.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Networking.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Postprocess.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Rendering.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Shape.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Texturing.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\FIReader.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DVocabulary.cpp">
+      <Filter>X3D</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFCommon.cpp">
+      <Filter>GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFImporter.cpp">
+      <Filter>GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Importer.cpp">
+      <Filter>GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFImporter.cpp">
+      <Filter>3MF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFOpcPackage.cpp">
+      <Filter>3MF</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDImporter.cpp">
+      <Filter>MMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDPmxParser.cpp">
+      <Filter>MMD</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepFileImporter.cpp">
+      <Filter>STEP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepFileGen1.cpp">
+      <Filter>STEP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepFileGen2.cpp">
+      <Filter>STEP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepFileGen3.cpp">
+      <Filter>STEP</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSExporter.cpp">
+      <Filter>3DS_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assbin\AssbinExporter.cpp">
+      <Filter>ASSBIN_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assxml\AssxmlExporter.cpp">
+      <Filter>ASSXML_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaExporter.cpp">
+      <Filter>COLLADA_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\M3DExporter.cpp">
+      <Filter>M3D_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjExporter.cpp">
+      <Filter>OBJ_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OpenGEX\OpenGEXExporter.cpp">
+      <Filter>OPENGEX_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyExporter.cpp">
+      <Filter>PLY_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExporter.cpp">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExportNode.cpp">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExportProperty.cpp">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\STL\STLExporter.cpp">
+      <Filter>STL_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileExporter.cpp">
+      <Filter>X_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DExporter.cpp">
+      <Filter>X3D_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFExporter.cpp">
+      <Filter>GLTF_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Exporter.cpp">
+      <Filter>GLTF_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFExporter.cpp">
+      <Filter>3MF_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assjson\cencode.c">
+      <Filter>ASSJSON_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assjson\json_exporter.cpp">
+      <Filter>ASSJSON_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assjson\mesh_splitter.cpp">
+      <Filter>ASSJSON_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Step\StepExporter.cpp">
+      <Filter>STEP_EXPORTER</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\unzip\ioapi.c">
+      <Filter>Contrib\unzip</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\unzip\unzip.c">
+      <Filter>Contrib\unzip</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\common\shapes.cc">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\advancing_front.cc">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\cdt.cc">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\sweep.cc">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\sweep_context.cc">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\clipper\clipper.cpp">
+      <Filter>Contrib\Clipper</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\OpenDDLParser.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\DDLNode.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\OpenDDLCommon.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\OpenDDLExport.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\Value.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\code\OpenDDLStream.cpp">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcArithmeticCodec.cpp">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDynamicVectorDecoder.cpp">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDynamicVectorEncoder.cpp">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTools.cpp">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleFans.cpp">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\zip\src\zip.c">
+      <Filter>ziplib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CApi\CInterfaceIOWrapper.h">
+      <Filter>CApi</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\BaseProcess.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Importer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\ScenePrivate.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\DefaultProgressHandler.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\PolyTools.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\IFF.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\VertexTriangleAdjacency.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\ScenePreprocessor.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\SplitByBoneCountProcess.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\TargetAnimation.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\simd.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\DefaultLogger.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\LogStream.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Logger.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\NullLogger.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\Win32DebugLogStream.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\FileLogStream.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Common\StdOStreamLogStream.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\BlobIOSystem.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\CalcTangentsProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ComputeUVMappingProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ConvertToLHProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\EmbedTexturesProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindDegenerates.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindInstancesProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FindInvalidDataProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\FixNormalsStep.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\DropFaceNormalsProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenFaceNormalsProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenVertexNormalsProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\PretransformVertices.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ImproveCacheLocality.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\JoinVerticesProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\LimitBoneWeightsProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\RemoveRedundantMaterials.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\RemoveVCProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\SortByPTypeProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\SplitLargeMeshes.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\TextureTransform.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\TriangulateProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ValidateDataStructure.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\OptimizeGraph.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\OptimizeMeshes.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\DeboneProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ProcessHelper.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\MakeVerboseFormat.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ScaleProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\ArmaturePopulate.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\PostProcessing\GenBoundingBoxesProcess.h">
+      <Filter>PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Material\MaterialSystem.h">
+      <Filter>MaterialSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\STEPParser\STEPFileReader.h">
+      <Filter>STEPParser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\STEPParser\STEPFileEncoding.h">
+      <Filter>STEPParser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter.hpp">
+      <Filter>AMF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter_Macro.hpp">
+      <Filter>AMF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AMF\AMFImporter_Node.hpp">
+      <Filter>AMF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSHelper.h">
+      <Filter>3DS</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSLoader.h">
+      <Filter>3DS</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\AC\ACLoader.h">
+      <Filter>AC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\ASE\ASELoader.h">
+      <Filter>ASE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\ASE\ASEParser.h">
+      <Filter>ASE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assbin\AssbinLoader.h">
+      <Filter>ASSBIN</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\B3D\B3DImporter.h">
+      <Filter>B3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\BVH\BVHLoader.h">
+      <Filter>BVH</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaHelper.h">
+      <Filter>COLLADA</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaLoader.h">
+      <Filter>COLLADA</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaParser.h">
+      <Filter>COLLADA</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\DXF\DXFLoader.h">
+      <Filter>DXF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\DXF\DXFHelper.h">
+      <Filter>DXF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CSM\CSMLoader.h">
+      <Filter>CSM</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\HMP\HMPFileData.h">
+      <Filter>HMP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\HMP\HMPLoader.h">
+      <Filter>HMP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\HMP\HalfLifeFileData.h">
+      <Filter>HMP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRMeshLoader.h">
+      <Filter>IRRMESH</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRShared.h">
+      <Filter>IRR</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Irr\IRRLoader.h">
+      <Filter>IRR</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOAnimation.h">
+      <Filter>LWO</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOFileData.h">
+      <Filter>LWO</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWO\LWOLoader.h">
+      <Filter>LWO</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\LWS\LWSLoader.h">
+      <Filter>LWS</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\M3DMaterials.h">
+      <Filter>M3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\M3DImporter.h">
+      <Filter>M3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\m3d.h">
+      <Filter>M3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD2\MD2FileData.h">
+      <Filter>MD2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD2\MD2Loader.h">
+      <Filter>MD2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD2\MD2NormalTable.h">
+      <Filter>MD2</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD3\MD3FileData.h">
+      <Filter>MD3</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD3\MD3Loader.h">
+      <Filter>MD3</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD5\MD5Loader.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MD5\MD5Parser.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDC\MDCFileData.h">
+      <Filter>MDC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDC\MDCLoader.h">
+      <Filter>MDC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDC\MDCNormalTable.h">
+      <Filter>MDC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDL\MDLDefaultColorMap.h">
+      <Filter>MDL</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDL\MDLFileData.h">
+      <Filter>MDL</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MDL\MDLLoader.h">
+      <Filter>MDL</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\NFF\NFFLoader.h">
+      <Filter>NFF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\NDO\NDOLoader.h">
+      <Filter>NDO</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OFF\OFFLoader.h">
+      <Filter>OFF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileData.h">
+      <Filter>OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileImporter.h">
+      <Filter>OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileMtlImporter.h">
+      <Filter>OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjFileParser.h">
+      <Filter>OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjTools.h">
+      <Filter>OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreImporter.h">
+      <Filter>OGRE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreStructs.h">
+      <Filter>OGRE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreParsingUtils.h">
+      <Filter>OGRE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreBinarySerializer.h">
+      <Filter>OGRE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ogre\OgreXmlSerializer.h">
+      <Filter>OGRE</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OpenGEX\OpenGEXImporter.h">
+      <Filter>OPENGEX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OpenGEX\OpenGEXStructs.h">
+      <Filter>OPENGEX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyLoader.h">
+      <Filter>PLY</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyParser.h">
+      <Filter>PLY</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MS3D\MS3DLoader.h">
+      <Filter>MS3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\COB\COBLoader.h">
+      <Filter>COB</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\COB\COBScene.h">
+      <Filter>COB</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderLoader.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderDNA.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderDNA.inl">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderScene.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderSceneGen.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderIntermediate.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderModifier.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderBMesh.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderTessellator.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Blender\BlenderCustomData.h">
+      <Filter>BLEND</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCLoader.h">
+      <Filter>IFC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCReaderGen_2x3.h">
+      <Filter>IFC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\IFC\IFCUtil.h">
+      <Filter>IFC</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\XGL\XGLLoader.h">
+      <Filter>XGL</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXCompileConfig.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXImporter.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXParser.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXTokenizer.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXImportSettings.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXConverter.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXUtil.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXDocument.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXProperties.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXMeshGeometry.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXCommon.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3D\Q3DLoader.h">
+      <Filter>Q3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3BSP\Q3BSPFileData.h">
+      <Filter>Q3BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3BSP\Q3BSPFileParser.h">
+      <Filter>Q3BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Q3BSP\Q3BSPFileImporter.h">
+      <Filter>Q3BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Raw\RawLoader.h">
+      <Filter>RAW</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\SIB\SIBImporter.h">
+      <Filter>SIB</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\SMD\SMDLoader.h">
+      <Filter>SMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\STL\STLLoader.h">
+      <Filter>STL</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Terragen\TerragenLoader.h">
+      <Filter>TERRAGEN</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Unreal\UnrealLoader.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileHelper.h">
+      <Filter>X</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileImporter.h">
+      <Filter>X</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileParser.h">
+      <Filter>X</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter.hpp">
+      <Filter>X3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Macro.hpp">
+      <Filter>X3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DImporter_Node.hpp">
+      <Filter>X3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\FIReader.hpp">
+      <Filter>X3D</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFCommon.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFAsset.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFAsset.inl">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFAssetWriter.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFAssetWriter.inl">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFImporter.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Asset.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Asset.inl">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2AssetWriter.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2AssetWriter.inl">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Importer.h">
+      <Filter>GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFImporter.h">
+      <Filter>3MF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFOpcPackage.h">
+      <Filter>3MF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\3MFXmlTags.h">
+      <Filter>3MF</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDCpp14.h">
+      <Filter>MMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDImporter.h">
+      <Filter>MMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDPmdParser.h">
+      <Filter>MMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDPmxParser.h">
+      <Filter>MMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\MMD\MMDVmdParser.h">
+      <Filter>MMD</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Step\STEPFile.h">
+      <Filter>STEP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepFileImporter.h">
+      <Filter>STEP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Importer\StepFile\StepReaderGen.h">
+      <Filter>STEP</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3DS\3DSExporter.h">
+      <Filter>3DS_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assbin\AssbinExporter.h">
+      <Filter>ASSBIN_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assxml\AssxmlExporter.h">
+      <Filter>ASSXML_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Collada\ColladaExporter.h">
+      <Filter>COLLADA_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\M3D\M3DExporter.h">
+      <Filter>M3D_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Obj\ObjExporter.h">
+      <Filter>OBJ_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\OpenGEX\OpenGEXExporter.h">
+      <Filter>OPENGEX_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Ply\PlyExporter.h">
+      <Filter>PLY_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExporter.h">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExportNode.h">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\FBX\FBXExportProperty.h">
+      <Filter>FBX_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\STL\STLExporter.h">
+      <Filter>STL_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X\XFileExporter.h">
+      <Filter>X_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\X3D\X3DExporter.hpp">
+      <Filter>X3D_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF\glTFExporter.h">
+      <Filter>GLTF_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\glTF2\glTF2Exporter.h">
+      <Filter>GLTF_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\3MF\D3MFExporter.h">
+      <Filter>3MF_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assjson\cencode.h">
+      <Filter>ASSJSON_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Assjson\mesh_splitter.h">
+      <Filter>ASSJSON_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\Step\StepExporter.h">
+      <Filter>STEP_EXPORTER</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\irrXMLWrapper.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\unzip\crypt.h">
+      <Filter>Contrib\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\unzip\ioapi.h">
+      <Filter>Contrib\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\unzip\unzip.h">
+      <Filter>Contrib\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\common\shapes.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\common\utils.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\advancing_front.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\cdt.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\sweep.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\poly2tri\poly2tri\sweep\sweep_context.h">
+      <Filter>Contrib\Poly2Tri</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\clipper\clipper.hpp">
+      <Filter>Contrib\Clipper</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\OpenDDLParser.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\OpenDDLParserUtils.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\OpenDDLCommon.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\OpenDDLExport.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\OpenDDLStream.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\DDLNode.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\openddlparser\include\openddlparser\Value.h">
+      <Filter>Contrib\openddl_parser</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcAdjacencyInfo.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcArithmeticCodec.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcBinaryStream.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcCommon.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDVEncodeParams.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDynamicVectorDecoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDynamicVectorEncoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcDynamicVector.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcFIFO.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcIndexedFaceSet.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcIndexedFaceSet.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcSC3DMCDecoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcSC3DMCDecoder.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcSC3DMCEncodeParams.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcSC3DMCEncoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcSC3DMCEncoder.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTimer.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleFans.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleListDecoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleListDecoder.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleListEncoder.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcTriangleListEncoder.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcVector.h">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\Open3DGC\o3dgcVector.inl">
+      <Filter>Contrib\open3dgc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\zip\src\miniz.h">
+      <Filter>ziplib</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\contrib\zip\src\zip.h">
+      <Filter>ziplib</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\anim.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\aabb.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\ai_assert.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\camera.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\color4.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\color4.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\config.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\defs.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Defines.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\cfileio.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\light.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\material.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\material.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\matrix3x3.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\matrix3x3.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\matrix4x4.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\matrix4x4.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\mesh.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\pbrmaterial.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\postprocess.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\quaternion.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\quaternion.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\scene.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\metadata.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\texture.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\types.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\vector2.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\vector2.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\vector3.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\vector3.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\version.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\cimport.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\importerdesc.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Importer.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\ProgressHandler.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\IOStream.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\IOSystem.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\cexport.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Exporter.hpp">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\DefaultIOStream.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\DefaultIOSystem.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\ZipArchiveIOSystem.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SceneCombiner.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\fast_atof.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\qnan.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\BaseImporter.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Hash.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\MemoryIOWrapper.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\ParsingUtils.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\StreamReader.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\StreamWriter.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\StringComparison.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\StringUtils.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SGSpatialSort.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\GenericProperty.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SpatialSort.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SkeletonMeshBuilder.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SmoothingGroups.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\SmoothingGroups.inl">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\StandardShapes.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\RemoveComments.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Subdivision.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Vertex.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\LineSplitter.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\TinyFormatter.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Profiler.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\LogAux.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Bitmap.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\XMLTools.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\IOStreamBuffer.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\CreateAnimMesh.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\MathFunctions.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Exceptional.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\ByteSwapper.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Compiler\pushpack1.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Compiler\poppack1.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\include\assimp\Compiler\pstdint.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\code\res\assimp.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="3D">
+      <UniqueIdentifier>{E28547C8-FB2F-3D00-9A67-3ABB499AAE66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3DS">
+      <UniqueIdentifier>{460F5D9C-7AE2-3273-B567-47BCF1E0D2CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3DS_EXPORTER">
+      <UniqueIdentifier>{12ABE426-6E81-39B1-BCBC-BCE3BF016144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3MF">
+      <UniqueIdentifier>{831F69A2-8243-37FA-8E49-37D35D2B1E02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3MF_EXPORTER">
+      <UniqueIdentifier>{E6B1463E-49CA-39BA-99B7-775D498322CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AC">
+      <UniqueIdentifier>{E077C8EC-AF96-3707-B68E-C590AA14C87C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AMF">
+      <UniqueIdentifier>{B94D8233-3D35-360B-B34F-3622FF7F667A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASE">
+      <UniqueIdentifier>{69285163-3225-34C6-A513-AFD2D4E09797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASSBIN">
+      <UniqueIdentifier>{5DF3A15A-9B8A-3155-A970-85025B843CD8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASSBIN_EXPORTER">
+      <UniqueIdentifier>{97D5D356-7645-3CFA-BD9C-5CE13417B42D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASSJSON_EXPORTER">
+      <UniqueIdentifier>{3548E768-1500-3785-85B2-90DD11EA0C6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASSXML_EXPORTER">
+      <UniqueIdentifier>{B2C53651-054D-3989-B012-F563EB299000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="B3D">
+      <UniqueIdentifier>{28ACD71C-83B0-3633-AC48-000B858CF1AF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BLEND">
+      <UniqueIdentifier>{4A197610-1FC8-3777-8AA7-A4E6FBA21505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BVH">
+      <UniqueIdentifier>{5D5A3FE4-C87A-392E-9D89-60F98E508175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CApi">
+      <UniqueIdentifier>{9F5EE6C3-A88B-3113-B103-BB938FCBF402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COB">
+      <UniqueIdentifier>{78A316A0-FAC1-35C7-AB07-6FCA906BB73C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COLLADA">
+      <UniqueIdentifier>{59B8BC7F-E62A-386D-8685-984CE047CDD9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COLLADA_EXPORTER">
+      <UniqueIdentifier>{8891158B-2C51-350B-BD93-3E81C72E3E19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CSM">
+      <UniqueIdentifier>{6180DCAF-85BC-3A7C-A8F2-F49C70406C22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{F675D0F9-80A5-3035-BDE1-DDFE1CC68AB8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compiler">
+      <UniqueIdentifier>{11C99E3C-3607-3D5A-803F-3C8807A50800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib">
+      <UniqueIdentifier>{58E19C18-2E76-3423-BA21-4010B2143F5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib\Clipper">
+      <UniqueIdentifier>{FFBD74EE-A07E-3436-AD93-F2708CBDB7B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib\Poly2Tri">
+      <UniqueIdentifier>{5A61F9F0-1618-38F9-BB61-CFE3CD2C6709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib\open3dgc">
+      <UniqueIdentifier>{A66C1C03-9A53-3B12-8C9F-D749A0522C4A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib\openddl_parser">
+      <UniqueIdentifier>{0A5A693B-D554-3310-A7EC-A842EF8A1B5D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contrib\unzip">
+      <UniqueIdentifier>{271364EB-072F-3D82-B7A2-96C954A04055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DXF">
+      <UniqueIdentifier>{2417A891-040B-3B41-B7F1-DCA318BA23D7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exporter">
+      <UniqueIdentifier>{6E7CF1FC-2DD6-39EB-B2BB-B2534325EFC0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FBX">
+      <UniqueIdentifier>{6AB4F852-E516-3005-93EB-D673BAB26453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FBX_EXPORTER">
+      <UniqueIdentifier>{84160C0F-BA60-3EC6-9CDD-3FF4680D2AB0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLTF">
+      <UniqueIdentifier>{67EE869A-0E3B-3EB0-8E9E-0EB1D0353ACC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GLTF_EXPORTER">
+      <UniqueIdentifier>{3637D9A8-465A-3735-88E8-E297D8909788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HMP">
+      <UniqueIdentifier>{9C861583-FF88-3F80-B0D5-0C02F2D2CB49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IFC">
+      <UniqueIdentifier>{51DD71E5-5159-33B1-AA4E-A124742F7FC0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IRR">
+      <UniqueIdentifier>{C2956531-2DB2-33A0-BF0A-BFCE02BFB706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IRRMESH">
+      <UniqueIdentifier>{D379641E-922E-3A12-834C-101029C135AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWO">
+      <UniqueIdentifier>{07B42A79-0020-3D70-AA72-BABBDAC78973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LWS">
+      <UniqueIdentifier>{DE6B29A3-07A7-3945-9409-E135B47516D0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{70015931-52EE-354C-B3A3-7217D6E398B0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M3D">
+      <UniqueIdentifier>{ED89ECB1-26EF-3BEA-B0A0-F0E86D9738B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M3D_EXPORTER">
+      <UniqueIdentifier>{9B289F8E-2480-3C53-BA80-80B39DC8B972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MD2">
+      <UniqueIdentifier>{665DEF17-B00C-338F-84E0-1EA61EDE948B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MD3">
+      <UniqueIdentifier>{16D97338-C74F-3143-B26F-359A67A71100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MD5">
+      <UniqueIdentifier>{68F4C92C-35A3-3E01-8133-400B7FB0ECCC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MDC">
+      <UniqueIdentifier>{CF53F168-25AC-3F24-9B35-88D2EED13219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MDL">
+      <UniqueIdentifier>{088594A3-9C1B-3F18-B042-02BC00CF8DBA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MMD">
+      <UniqueIdentifier>{7F8B2070-595C-34A5-A56C-88F48FF8389E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MS3D">
+      <UniqueIdentifier>{B293FFA3-2E25-3ABF-97CB-B40B69A1FE78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MaterialSystem">
+      <UniqueIdentifier>{9BC6B4B4-142C-3E3D-A031-0EDC934DB6BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NDO">
+      <UniqueIdentifier>{2E4B9B71-0152-3A8C-9EEE-BAF72EB104E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NFF">
+      <UniqueIdentifier>{33EC2D24-7BC5-3BD4-9EFF-D6CB9010741C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OBJ">
+      <UniqueIdentifier>{15C0A1B9-7603-3E10-A573-E727CF82636B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OBJ_EXPORTER">
+      <UniqueIdentifier>{9E0FDA07-5C2B-3C17-88CA-1B9764F99933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OFF">
+      <UniqueIdentifier>{D70D99C5-55B9-377D-8DE6-EB639EB99B9D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OGRE">
+      <UniqueIdentifier>{2A6A3668-27B1-39D2-A476-B44BC8AD11A5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPENGEX">
+      <UniqueIdentifier>{034AE359-AFEF-3AFD-80F4-BF14AE79325C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OPENGEX_EXPORTER">
+      <UniqueIdentifier>{A2FB8EF6-ED2E-3CD2-BF6F-E813B50920BF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PLY">
+      <UniqueIdentifier>{43415A99-7CE0-3639-9915-D0A703729134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PLY_EXPORTER">
+      <UniqueIdentifier>{70216809-D0A6-3949-A617-E5B7B6A08FC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostProcessing">
+      <UniqueIdentifier>{9A895D32-B951-34B0-8114-6362549D5181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Q3BSP">
+      <UniqueIdentifier>{1843453D-FA96-345F-8AB3-3034F89E557E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Q3D">
+      <UniqueIdentifier>{077AA848-07AB-3276-A4D6-030FEE374E6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RAW">
+      <UniqueIdentifier>{BA6CB7E8-A3F7-386C-A5DB-FE97B424C59C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SIB">
+      <UniqueIdentifier>{79EFBE92-300B-3370-9DB2-48B693C31188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SMD">
+      <UniqueIdentifier>{9BB5FC25-97BE-35F2-A7FB-400C310E603B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STEP">
+      <UniqueIdentifier>{AC8FF71D-8FDC-35CC-A5D8-BA90266F7A08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STEPParser">
+      <UniqueIdentifier>{54FB39A8-BF99-34F8-AC79-D901BB8EF4AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STEP_EXPORTER">
+      <UniqueIdentifier>{0EF000FF-1D4C-3888-AADF-99A6E23ED57F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL">
+      <UniqueIdentifier>{0D879DDF-4D99-3BF7-9FC3-19EDDF74FBF7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="STL_EXPORTER">
+      <UniqueIdentifier>{7391CC03-1F85-3DEE-955A-A8D39A7AE2E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{3735AA6E-FB1C-365C-8293-BB318AEE9079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TERRAGEN">
+      <UniqueIdentifier>{4D257EB8-AA4E-32F9-8E3D-C22294B99B24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X">
+      <UniqueIdentifier>{BF642A52-3ED9-319E-A723-18F7D15C724A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X3D">
+      <UniqueIdentifier>{E2BC75AE-23B4-33EB-9DA9-1A8D565860CD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X3D_EXPORTER">
+      <UniqueIdentifier>{D1E017AF-2AC7-3A69-B6C7-D9039F7DECF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XGL">
+      <UniqueIdentifier>{312E90B7-59EE-3F82-94A8-38A6D374525B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X_EXPORTER">
+      <UniqueIdentifier>{124CB49A-8D5E-3FDC-B1EC-11FF699596BE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{0390E0E8-53C0-34F8-97D1-14C2EC99D8F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\assimp">
+      <UniqueIdentifier>{B873E7F7-BB49-35AD-AD50-50DFDCFF2E95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ziplib">
+      <UniqueIdentifier>{6470002A-789C-3E19-B583-7C3639A10818}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

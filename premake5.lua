@@ -48,8 +48,8 @@ project "Nyx"
 		"%{prj.name}/vendor",
 		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}"
 	}
@@ -114,10 +114,10 @@ project "Sandbox"
 
 	links 
 	{ 
+		"Nyx",
 		"GLFW",
 		"glad",
 		"imgui",
-		"Nyx",
 		"opengl32.lib"
 	}
 
@@ -136,12 +136,12 @@ project "Sandbox"
 
 		links 
 		{ 
-			"Nyx/vendor/assimp/Debug/assimp-vc142-mtd.lib"
+			"Nyx/vendor/assimp/lib/assimp-vc141-mtd.lib"
 		}
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/Debug/assimp-vc142-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Release"
@@ -150,10 +150,10 @@ project "Sandbox"
 
 		links 
 		{ 
-			"Nyx/vendor/assimp/Release/assimp-vc142-mt.lib"
+			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib"
 		}
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/Release/assimp-vc142-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}

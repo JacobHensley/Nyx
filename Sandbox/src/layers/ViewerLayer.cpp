@@ -1,6 +1,7 @@
 #include "Nyx/Common.h"
 #include "ViewerLayer.h"
 #include "imgui/imgui.h"
+#include "imgui/ImGuizmo.h"
 #include "Nyx/graphics/DebugRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 
@@ -407,8 +408,7 @@ void ViewerLayer::ImGUIRender()
 	m_Camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), (float)m_RenderSpaceWidth, (float)m_RenderSpaceHeight, 0.01f, 1000.0f));
 
 	if (m_SceneMode == 0)
-		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoMode, ImGuizmo::LOCAL, &m_CerberusTransformComponent->m_Transform[0][0]);
-	if (m_SceneMode == 1)
+		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoMode, ImGuizmo::LOCAL, &m_CerberusTransformComponent->m_Transform[0][0]);	if (m_SceneMode == 1)
 		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoMode, ImGuizmo::LOCAL, &m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform[0][0]);
 
 	ImGui::End();

@@ -4,6 +4,7 @@
 #include "Nyx/input/Input.h"
 #include "Nyx/input/KeyCodes.h"
 #include "Nyx/Application.h"
+#include "imgui.h"
 #include "imgui/ImGuizmo.h"
 
 #include <glfw/glfw3.h>

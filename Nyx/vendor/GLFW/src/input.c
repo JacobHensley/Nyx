@@ -1,8 +1,8 @@
 //========================================================================
-// GLFW 3.3 - www.glfw.org
+// GLFW 3.4 - www.glfw.org
 //------------------------------------------------------------------------
 // Copyright (c) 2002-2006 Marcus Geelnard
-// Copyright (c) 2006-2016 Camilla Löwy <elmindreda@glfw.org>
+// Copyright (c) 2006-2019 Camilla Löwy <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -23,6 +23,8 @@
 // 3. This notice may not be removed or altered from any source
 //    distribution.
 //
+//========================================================================
+// Please use C89 style variable declarations in this file because VS 2010
 //========================================================================
 
 #include "internal.h"
@@ -430,7 +432,7 @@ _GLFWjoystick* _glfwAllocJoystick(const char* name,
     js->present     = GLFW_TRUE;
     js->name        = _glfw_strdup(name);
     js->axes        = calloc(axisCount, sizeof(float));
-    js->buttons     = calloc(buttonCount + hatCount * 4, 1);
+    js->buttons     = calloc(buttonCount + (size_t) hatCount * 4, 1);
     js->hats        = calloc(hatCount, 1);
     js->axisCount   = axisCount;
     js->buttonCount = buttonCount;
@@ -755,9 +757,13 @@ GLFWAPI GLFWcursor* glfwCreateStandardCursor(int shape)
     if (shape != GLFW_ARROW_CURSOR &&
         shape != GLFW_IBEAM_CURSOR &&
         shape != GLFW_CROSSHAIR_CURSOR &&
-        shape != GLFW_HAND_CURSOR &&
-        shape != GLFW_HRESIZE_CURSOR &&
-        shape != GLFW_VRESIZE_CURSOR)
+        shape != GLFW_POINTING_HAND_CURSOR &&
+        shape != GLFW_RESIZE_EW_CURSOR &&
+        shape != GLFW_RESIZE_NS_CURSOR &&
+        shape != GLFW_RESIZE_NWSE_CURSOR &&
+        shape != GLFW_RESIZE_NESW_CURSOR &&
+        shape != GLFW_RESIZE_ALL_CURSOR &&
+        shape != GLFW_NOT_ALLOWED_CURSOR)
     {
         _glfwInputError(GLFW_INVALID_ENUM, "Invalid standard cursor 0x%08X", shape);
         return NULL;

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\CMakeFiles\4619d54d3a58dc6e0f1fba3934a91bf2\uninstall.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\j\Dropbox\Dev\Nyx\Nyx\vendor\assimp-master\CMakeFiles\uninstall" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{193E6D6B-B730-3C73-B4DA-35DD2C8F3C8C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -3,7 +3,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
-#include "imgui/ImGuizmo.h"
 
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"

@@ -1,7 +1,7 @@
 //========================================================================
-// GLFW 3.3 macOS - www.glfw.org
+// GLFW 3.4 macOS - www.glfw.org
 //------------------------------------------------------------------------
-// Copyright (c) 2009-2016 Camilla Löwy <elmindreda@glfw.org>
+// Copyright (c) 2009-2019 Camilla Löwy <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -22,6 +22,8 @@
 // 3. This notice may not be removed or altered from any source
 //    distribution.
 //
+//========================================================================
+// It is fine to use C99 in this file because it will not be built with VS
 //========================================================================
 
 #include "internal.h"
@@ -117,8 +119,6 @@ static GLFWglproc getProcAddressNSGL(const char* procname)
     return symbol;
 }
 
-// Destroy the OpenGL context
-//
 static void destroyContextNSGL(_GLFWwindow* window)
 {
     @autoreleasepool {
@@ -192,13 +192,6 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
         {
             _glfwInputError(GLFW_VERSION_UNAVAILABLE,
                             "NSGL: The targeted version of macOS does not support OpenGL 3.0 or 3.1 but may support 3.2 and above");
-            return GLFW_FALSE;
-        }
-
-        if (!ctxconfig->forward || ctxconfig->profile != GLFW_OPENGL_CORE_PROFILE)
-        {
-            _glfwInputError(GLFW_VERSION_UNAVAILABLE,
-                            "NSGL: The targeted version of macOS only supports forward-compatible core profile contexts for OpenGL 3.2 and above");
             return GLFW_FALSE;
         }
     }
@@ -339,7 +332,7 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
         return GLFW_FALSE;
     }
 
-    NSOpenGLContext* share = NULL;
+    NSOpenGLContext* share = nil;
 
     if (ctxconfig->share)
         share = ctxconfig->share->context.nsgl.object;
@@ -363,6 +356,10 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
 
     if (window->ns.retina)
         [window->ns.view setWantsBestResolutionOpenGLSurface:YES];
+
+    GLint interval = 0;
+    [window->context.nsgl.object setValues:&interval
+                              forParameter:NSOpenGLContextParameterSwapInterval];
 
     [window->context.nsgl.object setView:window->ns.view];
 
@@ -408,7 +405,7 @@ GLFWAPI id glfwGetNSGLContext(GLFWwindow* handle)
     if (window->context.client == GLFW_NO_API)
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
-        return NULL;
+        return nil;
     }
 
     return window->context.nsgl.object;
