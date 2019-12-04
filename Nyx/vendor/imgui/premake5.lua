@@ -28,11 +28,6 @@ project "ImGui"
         "ImCurveEdit.cpp"
     }
 
-    defines 
-    {
-        "IMGUI_IMPL_OPENGL_LOADER_GLAD"
-    }
-
     filter "system:windows"
         systemversion "latest"
         cppdialect "C++17"
