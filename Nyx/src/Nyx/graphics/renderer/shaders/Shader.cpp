@@ -247,10 +247,11 @@ namespace Nyx {
 
 	void Shader::PushUniform(ShaderType uniform)
 	{
+		Bind();
 		ShaderUniform* shaderUniform;
 		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") {
 			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, m_Sampler);
-			//upload texture slot
+			SetUniform1i(shaderUniform->GetName(), shaderUniform->GetSampler());
 			m_Sampler++;
 		}
 		else 
@@ -263,7 +264,7 @@ namespace Nyx {
 			offset = lastUniform->GetOffset() + lastUniform->GetSize();
 			shaderUniform->SetOffset(offset);
 		}
-
+		m_UniformSize += shaderUniform->GetSize();
 		m_Uniforms.push_back(shaderUniform);
 	}
 
@@ -340,6 +341,14 @@ namespace Nyx {
 		Bind();
 		SetUniform1iv(name, textureIDs, 32);
 		Unbind();
+	}
+
+	void Shader::PrintUniforms()
+	{
+		for each (ShaderUniform* uniform in m_Uniforms)
+		{
+			NX_CORE_DEBUG("{0} {1}, {2} {3} {4}", uniform->StringFromType(uniform->GetType()), uniform->GetName(), uniform->GetSize(), uniform->GetOffset(), uniform->GetSampler());
+		}
 	}
 
 	int Shader::GetUniformLocation(const String& name)

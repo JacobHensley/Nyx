@@ -39,8 +39,8 @@ uniform vec3 u_Direction;
 
 uniform vec3 u_CameraPosition;
 
-uniform float u_UsingIBL;
-uniform float u_UsingLighting;
+uniform bool u_UsingIBL;
+uniform bool u_UsingLighting;
 
 // Albedo uniforms
 uniform vec3 u_AlbedoValue;
@@ -77,8 +77,8 @@ vec3 GetAlbedo(vec2 texCoords)
 
 vec3 GetNormal(vec2 texCoords, vec3 normal)
 {
-	if (u_UsingNormalMap)
-		return texture(u_NormalMap, texCoords).rgb * 2.0 - 1.0;
+	if (u_UsingNormalMap) 
+		return normalize(v_WorldNormals * (texture(u_NormalMap, texCoords).rgb * 2.0 - 1.0));
 
 	return normalize(normal);
 }
@@ -170,7 +170,6 @@ void main()
 {
 	vec3 albedo = GetAlbedo(v_TexCoords);
 	vec3 normal = GetNormal(v_TexCoords, v_Normal);
-	normal = normalize(v_WorldNormals * normal);
 	float metalness = GetMetalness(v_TexCoords);
 	float roughness = GetRoughness(v_TexCoords);
 
@@ -187,9 +186,9 @@ void main()
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
-	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
-	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * u_UsingIBL;
+	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV);
+	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
-//	color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	//	color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

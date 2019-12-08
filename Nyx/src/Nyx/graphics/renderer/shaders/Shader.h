@@ -60,8 +60,10 @@ namespace Nyx {
 		ShaderUniform* FindUniform(const String& name);
 
 		void SetTextureIDs(const String& name);
+		void PrintUniforms();
 		int GetUniformLocation(const String& name);
-
+		inline int GetUniformSize() const { return m_UniformSize; }
+		inline std::vector<ShaderUniform*> GetUniforms() const { return m_Uniforms; }
 		inline uint GetID() const { return m_ShaderID; }
 
 		std::vector<String> Tokenize(const String& str, const char delimiter);
@@ -87,6 +89,7 @@ namespace Nyx {
 		int m_Sampler = 0;
 		std::vector<UniformStruct> m_UniformStructs;
 		std::vector<ShaderUniform*> m_Uniforms;
+		int m_UniformSize = 0;
 
 		std::unordered_map<String, int> m_UniformLocationCache;
 	};

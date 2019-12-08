@@ -66,6 +66,8 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_SkyboxMesh = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
 	m_GridMesh = MeshFactory::GenQuad(-5.0f, -5.0f, 0.0f, 10.0f, 10.0f);
 	m_HDRQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
+
+	m_Material->SetTexture("u_AlbedoMap", m_AlbedoMap);
 }
 
 ViewerLayer::~ViewerLayer()
@@ -101,6 +103,8 @@ void ViewerLayer::MousePick()
 
 	glm::vec3 origin = m_Camera->GetPosition();
 	m_MouseRay = Ray(origin, dir);
+	m_Material->Bind();
+	m_Material->SetUniform("u_AlbedoMap", *m_AlbedoMap);
 }
 
 void ViewerLayer::Update()
@@ -146,47 +150,45 @@ void ViewerLayer::Render()
 
 	m_GridMesh->Render(true);
 
-	m_PBRShader->Bind();
+	m_Material->Bind();
 
-	m_PBRShader->SetUniform3f("u_CameraPosition", m_Camera->GetPosition());
+	m_Material->SetUniform("u_CameraPosition", m_Camera->GetPosition());
 
 	if (m_SceneMode == 0)
 	{
-		m_PBRShader->SetUniformMat4("u_ModelMatrix", m_CerberusTransformComponent->m_Transform);
-		m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_CerberusTransformComponent->m_Transform);
+		m_Material->SetUniform("u_ModelMatrix", m_CerberusTransformComponent->m_Transform);
+		m_Material->SetUniform("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_CerberusTransformComponent->m_Transform);
 	}
 	else if (m_SceneMode == 1)
 	{
-		m_PBRShader->SetUniformMat4("u_ModelMatrix", m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
-		m_PBRShader->SetUniformMat4("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
+		m_Material->SetUniform("u_ModelMatrix", m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
+		m_Material->SetUniform("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_Scene->GetComponent<TransformComponent>(m_SphereObject)->m_Transform);
 	}
 
-	m_PBRShader->SetUniform3f("u_Direction", m_Light.direction);
-	m_PBRShader->SetUniform3f("u_Radiance", m_Light.radiance);
-	m_PBRShader->SetUniform1f("u_UsingIBL", m_UsingIBL);
-	m_PBRShader->SetUniform1f("u_UsingLighting", m_UsingLighting);
+	m_Material->SetUniform("u_Direction", m_Light.direction);
+	m_Material->SetUniform("u_Radiance", m_Light.radiance);
+	m_Material->SetUniform("u_UsingIBL", m_UsingIBL);
+	m_Material->SetUniform("u_UsingLighting", m_UsingLighting);
 
 	NX_CORE_DEBUG("{0}", m_UsingAlbedoMap);
 
 	//--------------------------------------------------------------------------------
 	m_Material->Bind();
 
-	m_Material->SetUniform("u_AlbedoMap", *m_AlbedoMap);
-
 	//m_PBRShader->SetUniform1i("u_BRDFLutTexture", 0);
 	//m_BRDFLutTexture->Bind(0);
 
-	m_Material->SetUniform("u_BRDFLutTexture", *m_BRDFLutTexture);
+	m_Material->SetTexture("u_BRDFLutTexture", m_BRDFLutTexture);
 
 	//m_PBRShader->SetUniform1i("u_IrradianceTexture", 1);
 	//m_IrradianceTexture->Bind(1);
 
-	m_Material->SetUniform("u_IrradianceTexture", *m_IrradianceTexture);
+	m_Material->SetTexture("u_IrradianceTexture", m_IrradianceTexture);
 
 	//m_PBRShader->SetUniform1i("u_RadianceTexture", 2);
 	//m_RadianceTexture->Bind(2);
 
-	m_Material->SetUniform("u_RadianceTexture", *m_RadianceTexture);
+	m_Material->SetTexture("u_RadianceTexture", m_RadianceTexture);
 
 	// Albedo uniforms
 	//m_PBRShader->SetUniform1i("u_AlbedoMap", 3);
@@ -194,7 +196,6 @@ void ViewerLayer::Render()
 	//m_PBRShader->SetUniformBool("u_UsingAlbedoMap", m_UsingAlbedoMap);
 	//m_PBRShader->SetUniform3f("u_AlbedoValue", m_Albedo);
 
-	
 	m_Material->SetUniform("u_UsingAlbedoMap", m_UsingAlbedoMap);
 	m_Material->SetUniform("u_AlbedoValue", m_Albedo);
 
@@ -204,7 +205,7 @@ void ViewerLayer::Render()
 	//m_PBRShader->SetUniformBool("u_UsingMetalnessMap", m_UsingMetalnessMap);
 	//m_PBRShader->SetUniform1f("u_MetalnessValue", m_Metalness);
 
-	m_Material->SetUniform("u_MetalnessMap", *m_MetalnessMap);
+	m_Material->SetTexture("u_MetalnessMap", m_MetalnessMap);
 	m_Material->SetUniform("u_UsingMetalnessMap", m_UsingMetalnessMap);
 	m_Material->SetUniform("u_MetalnessValue", m_Metalness);
 
@@ -213,7 +214,7 @@ void ViewerLayer::Render()
 	//m_NormalMap->Bind(5);
 	//m_PBRShader->SetUniformBool("u_UsingNormalMap", m_UsingNormalMap);
 
-	m_Material->SetUniform("u_NormalMap", *m_NormalMap);
+	m_Material->SetTexture("u_NormalMap", m_NormalMap);
 	m_Material->SetUniform("u_UsingNormalMap", m_UsingNormalMap);
 
 	// Roughness uniforms
@@ -222,12 +223,13 @@ void ViewerLayer::Render()
 	//m_PBRShader->SetUniformBool("u_UsingRoughnessMap", m_UsingRoughnessMap);
 	//m_PBRShader->SetUniform1f("u_RoughnessValue", m_Roughness);
 
-	m_Material->SetUniform("u_RoughnessMap", *m_RoughnessMap);
+	m_Material->SetTexture("u_RoughnessMap", m_RoughnessMap);
 	m_Material->SetUniform("u_UsingRoughnessMap", m_UsingRoughnessMap);
 	m_Material->SetUniform("u_RoughnessValue", m_Roughness);
 
 	//--------------------------------------------------------------------------------
 
+	m_Material->UploadUniformBuffer();
 	m_Material->Bind();
 
 	if (m_SceneMode == 0) 
