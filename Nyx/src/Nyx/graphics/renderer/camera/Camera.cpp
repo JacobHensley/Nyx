@@ -20,7 +20,6 @@ namespace Nyx {
 	Camera::Camera(const glm::mat4& projectionMatrix)
 		: m_ProjectionMatrix(projectionMatrix)
 	{
-		// Sensible defaults
 		m_PanSpeed = 0.001f;
 		m_RotationSpeed = 0.001f;
 		m_ZoomSpeed = 0.05f;
@@ -35,13 +34,8 @@ namespace Nyx {
 		m_Pitch = M_PI / 4.0f;
 	}
 
-	void Camera::Focus()
-	{
-	}
-
 	void Camera::Update()
 	{
-
 		if (Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing())
 		{
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };

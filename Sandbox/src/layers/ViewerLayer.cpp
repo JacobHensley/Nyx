@@ -103,7 +103,7 @@ void ViewerLayer::MousePick()
 
 	glm::vec3 origin = m_Camera->GetPosition();
 	m_MouseRay = Ray(origin, dir);
-	m_Material->Bind();
+
 	m_Material->SetUniform("u_AlbedoMap", *m_AlbedoMap);
 }
 
@@ -150,8 +150,6 @@ void ViewerLayer::Render()
 
 	m_GridMesh->Render(true);
 
-	m_Material->Bind();
-
 	m_Material->SetUniform("u_CameraPosition", m_Camera->GetPosition());
 
 	if (m_SceneMode == 0)
@@ -173,7 +171,6 @@ void ViewerLayer::Render()
 	NX_CORE_DEBUG("{0}", m_UsingAlbedoMap);
 
 	//--------------------------------------------------------------------------------
-	m_Material->Bind();
 
 	//m_PBRShader->SetUniform1i("u_BRDFLutTexture", 0);
 	//m_BRDFLutTexture->Bind(0);
@@ -229,7 +226,6 @@ void ViewerLayer::Render()
 
 	//--------------------------------------------------------------------------------
 
-	m_Material->UploadUniformBuffer();
 	m_Material->Bind();
 
 	if (m_SceneMode == 0) 

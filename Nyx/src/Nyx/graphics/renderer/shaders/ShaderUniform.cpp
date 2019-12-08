@@ -30,37 +30,20 @@ namespace Nyx  {
 		if (type == Type::SHADER_BOOL) return 1;
 		if (type == Type::SHADER_SAMPLERCUBE) return 4;
 
-	//	NX_CORE_ASSERT(false, "Could not find type");
 		return NULL;
-	}
-
-	Type ShaderUniform::GLToType(int GLType)
-	{
-		if (GLType == GL_INT) return Type::SHADER_INT;
-		if (GLType == GL_FLOAT) return Type::SHADER_FLOAT;
-		if (GLType == GL_SAMPLER_2D) return Type::SHADER_SAMPLER2D;
-		if (GLType == GL_FLOAT_MAT4) return Type::SHADER_MAT4;
-		if (GLType == GL_FLOAT_VEC2) return Type::SHADER_VEC2;
-		if (GLType == GL_FLOAT_VEC3) return Type::SHADER_VEC3;
-		if (GLType == GL_FLOAT_VEC4) return Type::SHADER_VEC4;
-		if (GLType == GL_BOOL) return Type::SHADER_BOOL;
-		if (GLType == GL_SAMPLER_CUBE) return Type::SHADER_SAMPLERCUBE;
-
-	//	NX_CORE_ASSERT(false, "Could not find type with name: {0}", name);
-		return Type::NONE;
 	}
 
 	Type ShaderUniform::StringToType(const String& type)
 	{
-		if (type == "int") return Type::SHADER_INT;
-		if (type == "float") return Type::SHADER_FLOAT;
-		if (type == "sampler2D") return Type::SHADER_SAMPLER2D;
-		if (type == "mat4") return Type::SHADER_MAT4;
-		if (type == "vec2") return Type::SHADER_VEC2;
-		if (type == "vec3") return Type::SHADER_VEC3;
-		if (type == "vec4") return Type::SHADER_VEC4;
-		if (type == "bool") return Type::SHADER_BOOL;
-		if (type == "samplerCube") return Type::SHADER_SAMPLERCUBE;
+		if (type == "int")			return Type::SHADER_INT;
+		if (type == "float")		return Type::SHADER_FLOAT;
+		if (type == "sampler2D")	return Type::SHADER_SAMPLER2D;
+		if (type == "mat4")			return Type::SHADER_MAT4;
+		if (type == "vec2")			return Type::SHADER_VEC2;
+		if (type == "vec3")			return Type::SHADER_VEC3;
+		if (type == "vec4")			return Type::SHADER_VEC4;
+		if (type == "bool")			return Type::SHADER_BOOL;
+		if (type == "samplerCube")	return Type::SHADER_SAMPLERCUBE;
 	}
 
 	String ShaderUniform::StringFromType(Type type)
@@ -75,7 +58,6 @@ namespace Nyx  {
 		if (type == Type::SHADER_BOOL)			return "bool";
 		if (type == Type::SHADER_SAMPLERCUBE)	return "samplerCube";
 
-	//	NX_CORE_ASSERT(false, "Could not find type");
 		return "";
 	}
 

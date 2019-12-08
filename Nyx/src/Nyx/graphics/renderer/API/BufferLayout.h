@@ -76,6 +76,7 @@ namespace Nyx {
 			CalculateOffsetsAndStride();
 		}
 
+	public:
 		inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
 		inline uint GetStride() const { return m_Stride; }
 

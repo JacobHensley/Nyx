@@ -9,6 +9,7 @@ namespace Nyx {
 	public:
 		GraphicsContext(GLFWwindow* window);
 
+	public:
 		void Init();
 		void SwapBuffers();
 		void Clear();

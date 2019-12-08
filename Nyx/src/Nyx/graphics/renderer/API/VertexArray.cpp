@@ -14,21 +14,23 @@ namespace Nyx {
 		glDeleteVertexArrays(1, &m_VertexArray);
 	}
 
-	void VertexArray::PushVertexBuffer(VertexBuffer* VB)
+	void VertexArray::PushVertexBuffer(VertexBuffer* vertexBuffer)
 	{
 		glBindVertexArray(m_VertexArray);
-		VB->Bind();
+		vertexBuffer->Bind();
 
-		const BufferLayout& layout = VB->GetLayout();
+		const BufferLayout& layout = vertexBuffer->GetLayout();
 
 		const auto& elements = layout.GetElements();
 		uint stride = layout.GetStride();
+
 		for (uint i = 0; i < elements.size(); i++)
 		{
 			glEnableVertexAttribArray(i);
 			glVertexAttribPointer(i, elements[i].GetComponentCount(), ShaderDataTypeToOpenGLBaseType(elements[i].type), GL_FALSE, stride, (const void*)(uint64_t)elements[i].offset);
 		}
 
+		vertexBuffer->Unbind();
 		glBindVertexArray(0);
 	}
 

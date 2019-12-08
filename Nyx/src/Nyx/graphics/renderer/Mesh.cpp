@@ -29,11 +29,11 @@ namespace Nyx {
 
 		m_VertexArray->Bind();
 		m_IndexBuffer->Bind();
+
 		glEnable(GL_BLEND);
 
 		for (SubMesh& mesh : m_SubMeshes)
 		{
-			//renderer.submit(vertexarray)
 			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
 		}
 
@@ -49,14 +49,16 @@ namespace Nyx {
 	void Mesh::RenderImGuiVertexData()
 	{
 		if (m_Vertices.size() == 0)
+		{
 			NX_CORE_ASSERT(false, "Failed to display vertex data");
+		}
 
-			aiNode* rootNode = m_Scene->mRootNode;
-			String id = "##" + std::to_string((int)rootNode);
-			String name = rootNode->mName.C_Str() + id;
+		aiNode* rootNode = m_Scene->mRootNode;
+		String id = "##" + std::to_string((int)rootNode);
+		String name = rootNode->mName.C_Str() + id;
 
 		ImGui::Begin(name.c_str());
-		
+
 		ImGui::Checkbox("Show Position", &m_ViewerShowPosition);
 		ImGui::Checkbox("Show Normal", &m_ViewerShowNormal);
 		ImGui::Checkbox("Show Tangent", &m_ViewerShowTangent);
@@ -68,7 +70,7 @@ namespace Nyx {
 
 		ImGui::Text("Number of Vertices: %i", m_Vertices.size());
 
-		if (ImGui::ArrowButton("Previous Page", ImGuiDir_Left)) 
+		if (ImGui::ArrowButton("Previous Page", ImGuiDir_Left))
 		{
 			m_VertexViewerStart -= 25;
 			m_VertexViewerEnd -= 25;
@@ -81,13 +83,19 @@ namespace Nyx {
 		}
 
 		if (m_VertexViewerEnd >= m_Vertices.size())
+		{
 			m_VertexViewerStart = m_Vertices.size();
+		}
 
 		if (m_VertexViewerEnd < 25)
+		{
 			m_VertexViewerEnd = 25;
+		}
 
 		if (m_VertexViewerStart < 0)
+		{
 			m_VertexViewerStart = 0;
+		}
 
 		for (int i = m_VertexViewerStart; i < m_VertexViewerEnd; i++)
 		{
@@ -105,27 +113,33 @@ namespace Nyx {
 				ImGui::Text("TextureCoords: X: %.2f, Y: %.2f", vertex.textureCoords.x, vertex.textureCoords.y);
 			ImGui::Separator();
 		}
+
 		ImGui::End();
 	}
 
 	void Mesh::RenderImGuiNodeTree(bool isOwnWindow) const
 	{
 		if (m_Path == "GenMesh")
+		{
 			NX_CORE_ASSERT(false, "Cannot Render node graph of generated mesh");
+		}
 
 		aiNode* rootNode = m_Scene->mRootNode;
 		String id = "##" + std::to_string((int)rootNode);
 		String name = rootNode->mName.C_Str() + id;
 		String windowName = "Node Graph" + id;
+
 		if (isOwnWindow)
+		{
 			ImGui::Begin(windowName.c_str());
+		}
 
 		if (ImGui::TreeNode(name.c_str()))
 		{
-			for (uint i = 0; i < rootNode->mNumChildren; i++) 
+			for (uint i = 0; i < rootNode->mNumChildren; i++)
 			{
 				if (ImGui::TreeNode((void*)(intptr_t)i, rootNode->mChildren[i]->mName.C_Str(), i))
-				{	
+				{
 					//Node info here
 					DrawImGuiNode(rootNode->mChildren[i]);
 					ImGui::TreePop();
@@ -135,27 +149,14 @@ namespace Nyx {
 		}
 
 		if (isOwnWindow)
-			ImGui::End();
-	}
-
-	bool Mesh::Reload(const String& path)
-	{
-		m_Vertices.clear();
-		m_Indices.clear();
-		if (!Load(path)) 
 		{
-			Load(m_Path);
-			NX_CORE_WARN("Failed to reload model: {0}, aborting", path);
-			return false;
+			ImGui::End();
 		}
-
-		m_Path = path;
-		return true;
 	}
 
 	void Mesh::DrawImGuiNode(aiNode* node) const
 	{
-		for (uint i = 0; i < node->mNumChildren; i++) 
+		for (uint i = 0; i < node->mNumChildren; i++)
 		{
 			if (ImGui::TreeNode((void*)(intptr_t)i, node->mChildren[i]->mName.C_Str(), i))
 			{
@@ -166,6 +167,23 @@ namespace Nyx {
 		}
 	}
 
+	bool Mesh::Reload(const String& path)
+	{
+		m_Vertices.clear();
+		m_Indices.clear();
+
+		if (!Load(path)) 
+		{
+			Load(m_Path);
+			NX_CORE_WARN("Failed to reload model: {0}, aborting", path);
+
+			return false;
+		}
+
+		m_Path = path;
+		return true;
+	}
+
 	bool Mesh::Load(const String& path)
 	{
 		// Read file via ASSIMP
@@ -174,13 +192,15 @@ namespace Nyx {
 
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
 			return false;
+		}
 			
 		m_Scene = importer.GetOrphanedScene();
 
 		// Process ASSIMP's root node recursively
-
 		processNode(scene->mRootNode, scene);
+
 		m_BoundingBox = AABB(m_bbMin, m_bbMax);
 
 		m_VertexBuffer = new VertexBuffer(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
@@ -195,6 +215,7 @@ namespace Nyx {
 			});
 
 		m_VertexArray->PushVertexBuffer(m_VertexBuffer);
+
 		return true;
 	}
 
@@ -215,7 +236,6 @@ namespace Nyx {
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
 			processNode(node->mChildren[i], scene);
-
 		}
 	}
 
@@ -346,11 +366,16 @@ namespace Nyx {
 
 			if (!skip)
 			{
-				// If texture hasn't been loaded already, load it
-			//	String path = str.C_Str();
-			//	Texture texture = Texture(str.C_Str());
+				String path = str.C_Str();
+				std::ifstream file(path);
 
-		//		m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+				if (file)
+				{
+					// If texture hasn't been loaded already, load it
+					Texture texture = Texture(path);
+					m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+				}
+
 			}
 		}
 

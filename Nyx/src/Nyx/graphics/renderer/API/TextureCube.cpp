@@ -98,6 +98,7 @@ namespace Nyx {
 
 		auto format = GL_RGB;
 		auto internalFormat = GL_RGB;
+
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[2]);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[0]);
 

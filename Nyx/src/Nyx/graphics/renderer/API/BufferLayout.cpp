@@ -11,6 +11,7 @@ namespace Nyx {
 	{
 		uint32_t offset = 0;
 		m_Stride = 0;
+
 		for (auto& element : m_Elements)
 		{
 			element.offset = offset;

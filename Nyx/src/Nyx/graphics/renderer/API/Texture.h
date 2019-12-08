@@ -51,19 +51,20 @@ namespace Nyx {
 		Texture(int width, int height, TextureParameters parameters = TextureParameters());
 		~Texture();
 
+	public:
 		void Bind(uint slot);
-		void Bind();
 		void Unbind();
-
-		bool Reload(const String& path);
 
 		void SetData(byte* imageData, uint size);
 
+		bool Reload(const String& path);
+
 		inline const int GetWidth() const { return m_Width; }
 		inline const int GetHeight() const { return m_Height; }
-		
+
 		inline const uint GetTextureID() const { return m_TextureID; }
 		inline const String& GetPath() const { return m_Path; }
+
 	private:
 		String m_Path;
 		int m_Width, m_Height;

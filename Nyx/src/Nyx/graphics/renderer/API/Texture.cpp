@@ -28,11 +28,6 @@ namespace Nyx {
 		glBindTextureUnit(slot, m_TextureID);
 	}
 
-	void Texture::Bind()
-	{
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
-	}
-
 	void Texture::Unbind()
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -66,12 +61,14 @@ namespace Nyx {
 
 	void Texture::SetData(byte* imageData, uint size)
 	{
-		Bind();
+		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+
 		NX_CORE_ASSERT(size == m_Width * m_Height * GetStrideFromFormat(m_Parameters.format), "Size is incorrect");
 		byte* alignedData = AlignData(imageData, size);
 		delete buffer;
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
-		Unbind();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	uint Texture::LoadFromFile(const String& path)

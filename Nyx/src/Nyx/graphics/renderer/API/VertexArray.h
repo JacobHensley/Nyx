@@ -17,17 +17,17 @@ namespace Nyx {
 	{
 		switch (type)
 		{
-		case ShaderDataType::Float:  return GL_FLOAT;
-		case ShaderDataType::Vec2:   return GL_FLOAT;
-		case ShaderDataType::Vec3:   return GL_FLOAT;
-		case ShaderDataType::Vec4:   return GL_FLOAT;
-		case ShaderDataType::Mat3:   return GL_FLOAT;
-		case ShaderDataType::Mat4:   return GL_FLOAT;
-		case ShaderDataType::Int:    return GL_INT;
-		case ShaderDataType::Vec2i:	 return GL_INT;
-		case ShaderDataType::Vec3i:  return GL_INT;
-		case ShaderDataType::Vec4i:  return GL_INT;
-		case ShaderDataType::Bool:   return GL_BOOL;
+			case ShaderDataType::Float:  return GL_FLOAT;
+			case ShaderDataType::Vec2:   return GL_FLOAT;
+			case ShaderDataType::Vec3:   return GL_FLOAT;
+			case ShaderDataType::Vec4:   return GL_FLOAT;
+			case ShaderDataType::Mat3:   return GL_FLOAT;
+			case ShaderDataType::Mat4:   return GL_FLOAT;
+			case ShaderDataType::Int:    return GL_INT;
+			case ShaderDataType::Vec2i:	 return GL_INT;
+			case ShaderDataType::Vec3i:  return GL_INT;
+			case ShaderDataType::Vec4i:  return GL_INT;
+			case ShaderDataType::Bool:   return GL_BOOL;
 		}
 
 		NX_CORE_ASSERT(false, "Unknown ShaderDataType!");
@@ -40,10 +40,12 @@ namespace Nyx {
 		VertexArray();
 		~VertexArray();
 
-		void PushVertexBuffer(VertexBuffer* VB);
+	public:
+		void PushVertexBuffer(VertexBuffer* vertexBuffer);
 
 		void Bind();
 		void Unbind();
+
 	private:
 		uint m_VertexArray;
 	};

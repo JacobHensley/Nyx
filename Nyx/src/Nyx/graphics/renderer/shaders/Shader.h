@@ -44,54 +44,53 @@ namespace Nyx {
 	public:
 		Shader(const String& filePath);
 		~Shader();
-
+	public:
 		void Bind();
 		void Unbind();
 
 		void Reload();
 
-		void ParseUniformStructs();
-		void ParseUniforms();
-		void ParseUniformBlock(int startingLineNumber);
-
-		void Shader::PushUniform(ShaderType uniform);
-
-		void SetUniformBuffer(byte* buffer, uint size);
-		ShaderUniform* FindUniform(const String& name);
-
-		void SetTextureIDs(const String& name);
 		void PrintUniforms();
-		int GetUniformLocation(const String& name);
+		ShaderUniform* FindUniform(const String& name);
 		inline int GetUniformSize() const { return m_UniformSize; }
 		inline std::vector<ShaderUniform*> GetUniforms() const { return m_Uniforms; }
+		
 		inline uint GetID() const { return m_ShaderID; }
 
-		std::vector<String> Tokenize(const String& str, const char delimiter);
-
-		void SetUniform1i(const String& name, int value);
-		void SetUniform1iv(const String& name, int* value, int count);
 		void SetUniform1f(const String& name, float value);
 		void SetUniform2f(const String& name, const glm::vec2& vec);
 		void SetUniform3f(const String& name, const glm::vec3& vec);
-		void SetUniformVec4(const String& name, const glm::vec4& vec);
+		void SetUniform4f(const String& name, const glm::vec4& vec);
+		void SetUniformMat4(const String& name, const glm::mat4& matrix);
+		void SetUniform1i(const String& name, int value);
+		void SetUniform1iv(const String& name, int* value, int count);
 		void SetUniformBool(const String& name, bool value);
 
-		void SetUniform4f(const String& name, float x, float y, float z, float w);
-		void SetUniformMat4(const String& name, const glm::mat4& matrix);
 	private:
-		uint m_ShaderID;
-		String m_FilePath;
-
 		uint Init();
 		ShaderSource SplitShader(const String& filePath);
 		int CompileShader(uint shader, const String& shaderSrc);
 
+		void ParseUniformStructs();
+		void ParseUniformBlock(int startingLineNumber);
+		void ParseUniforms();
+		void PushUniform(ShaderType uniform);
+
+		void SetTextureIDs(const String& name);
+		int GetUniformLocation(const String& name);
+
+		std::vector<String> Tokenize(const String& str, const char delimiter);
+
+	private:
+		uint m_ShaderID;
+		String m_FilePath;
+
 		int m_Sampler = 0;
-		std::vector<UniformStruct> m_UniformStructs;
-		std::vector<ShaderUniform*> m_Uniforms;
 		int m_UniformSize = 0;
 
 		std::unordered_map<String, int> m_UniformLocationCache;
+		std::vector<UniformStruct> m_UniformStructs;
+		std::vector<ShaderUniform*> m_Uniforms;
 	};
 
 }

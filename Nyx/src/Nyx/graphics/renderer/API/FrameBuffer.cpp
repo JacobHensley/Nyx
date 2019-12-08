@@ -36,10 +36,6 @@ namespace Nyx {
 	void FrameBuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
-	//	glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBufferID);
-
-	//	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	//	glDrawBuffers(1, DrawBuffers);
 
 		glViewport(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
 	}
@@ -47,21 +43,20 @@ namespace Nyx {
 	void FrameBuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	void FrameBuffer::Clear()
 	{
-		Bind();
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Unbind();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void FrameBuffer::SetViewPortSize(int x, int y, int width, int height)
 	{
-		Bind();
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
 		glViewport(x, y, width, height);
-		Unbind();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 }

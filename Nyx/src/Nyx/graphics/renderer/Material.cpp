@@ -17,7 +17,7 @@ namespace Nyx {
 	void Material::Bind()
 	{
 		m_Shader->Bind();
-		m_Shader->PrintUniforms();
+		UploadUniformBuffer();
 	}
 
 	void Material::Unbind()
@@ -67,7 +67,7 @@ namespace Nyx {
 				m_Shader->SetUniform3f(name, *(glm::vec3*)&m_UniformBuffer[offset]);
 				break;
 			case Type::SHADER_VEC4:
-				m_Shader->SetUniformVec4(name, *(glm::vec4*)&m_UniformBuffer[offset]);
+				m_Shader->SetUniform4f(name, *(glm::vec4*)&m_UniformBuffer[offset]);
 				break;
 			case Type::SHADER_MAT4:
 				m_Shader->SetUniformMat4(name, *(glm::mat4*)&m_UniformBuffer[offset]);

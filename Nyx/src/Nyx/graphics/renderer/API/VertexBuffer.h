@@ -11,11 +11,7 @@ namespace Nyx {
 		VertexBuffer(void* data, int size);
 		~VertexBuffer();
 
-		void SetData(const void* data, uint size);
-
-		inline void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
-		inline const BufferLayout& GetLayout() const { return m_Layout; }
-
+	public:
 		template<typename T = void>
 		inline T* Map()
 		{
@@ -27,7 +23,12 @@ namespace Nyx {
 		void Bind() const;
 		void Unbind() const;
 
+		void SetData(const void* data, uint size);
+		inline void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
+
 		inline uint GetBufferID() const { return m_BufferID; }
+		inline const BufferLayout& GetLayout() const { return m_Layout; }
+
 	private:
 		void* MapInternal();
 

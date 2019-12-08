@@ -4,11 +4,6 @@
 
 namespace Nyx {
 
-	IndexBuffer::IndexBuffer()
-	{
-		glGenBuffers(1, &m_BufferID);
-	}
-
 	IndexBuffer::IndexBuffer(const uint* data, uint count)
 		: m_Count(count)
 	{
@@ -26,9 +21,10 @@ namespace Nyx {
 	void IndexBuffer::SetData(const uint* data, uint count)
 	{
 		m_Count = count;
-		Bind();
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint), data, GL_STATIC_DRAW);
-		Unbind();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void IndexBuffer::Draw(bool depthTesting) const
@@ -36,7 +32,7 @@ namespace Nyx {
 		if (!depthTesting)
 			glDisable(GL_DEPTH_TEST);
 
-		Draw(m_Count);
+		glDrawElements(GL_TRIANGLES, m_Count, GL_UNSIGNED_INT, NULL);
 
 		glEnable(GL_DEPTH_TEST);
 	}

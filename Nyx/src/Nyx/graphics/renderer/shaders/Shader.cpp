@@ -59,7 +59,7 @@ namespace Nyx {
 		return 0;
 	}
 
-		ShaderSource Shader::SplitShader(const String& filePath)
+	ShaderSource Shader::SplitShader(const String& filePath)
 	{
 		std::ifstream stream(filePath);
 
@@ -249,14 +249,17 @@ namespace Nyx {
 	{
 		Bind();
 		ShaderUniform* shaderUniform;
-		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") {
+		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") 
+		{
 			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, m_Sampler);
 			SetUniform1i(shaderUniform->GetName(), shaderUniform->GetSampler());
 			m_Sampler++;
 		}
 		else 
+		{
 			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, -1);
-
+		}
+			
 		int offset = 0;
 		if (m_Uniforms.size() > 0)
 		{
@@ -264,13 +267,22 @@ namespace Nyx {
 			offset = lastUniform->GetOffset() + lastUniform->GetSize();
 			shaderUniform->SetOffset(offset);
 		}
+
 		m_UniformSize += shaderUniform->GetSize();
 		m_Uniforms.push_back(shaderUniform);
 	}
 
-	void Shader::SetUniformBuffer(byte* buffer, uint size)
+	void Shader::SetTextureIDs(const String& name)
 	{
+		int textureIDs[32];
+		for (int i = 0; i < 32; i++)
+		{
+			textureIDs[i] = i;
+		}
 
+		Bind();
+		SetUniform1iv(name, textureIDs, 32);
+		Unbind();
 	}
 
 	std::vector<String> Shader::Tokenize(const String& str, const char delimiter)
@@ -290,17 +302,6 @@ namespace Nyx {
 		}
 		tokens.push_back(token);
 		return tokens;
-	}
-
-	ShaderUniform* Shader::FindUniform(const String & name)
-	{
-		for (int i = 0;i < m_Uniforms.size();i++)
-		{
-			if (m_Uniforms[i]->GetName() == name)
-				return m_Uniforms[i];
-		}
-		return nullptr;
-				
 	}
 
 	void Shader::Bind()
@@ -327,49 +328,46 @@ namespace Nyx {
 		glDeleteProgram(m_ShaderID);
 		m_UniformLocationCache.clear();
 		m_ShaderID = reloadedShader;
+
 		ParseUniforms();
-	}
-
-	void Shader::SetTextureIDs(const String& name)
-	{
-		int textureIDs[32];
-		for (int i = 0; i < 32; i++)
-		{
-			textureIDs[i] = i;
-		}
-
-		Bind();
-		SetUniform1iv(name, textureIDs, 32);
-		Unbind();
 	}
 
 	void Shader::PrintUniforms()
 	{
 		for each (ShaderUniform* uniform in m_Uniforms)
 		{
-			NX_CORE_DEBUG("{0} {1}, {2} {3} {4}", uniform->StringFromType(uniform->GetType()), uniform->GetName(), uniform->GetSize(), uniform->GetOffset(), uniform->GetSampler());
+			NX_CORE_DEBUG("Name: {0}", uniform->GetName());
+			NX_CORE_DEBUG("	Type:    {0}", uniform->GetTypeString());
+			NX_CORE_DEBUG("	Size:    {0}", uniform->GetSize());
+			NX_CORE_DEBUG("	Offset:  {0}", uniform->GetOffset());
+			NX_CORE_DEBUG("	Sampler: {0}", uniform->GetSampler());
 		}
+	}
+
+	ShaderUniform* Shader::FindUniform(const String & name)
+	{
+		for (int i = 0;i < m_Uniforms.size();i++)
+		{
+			if (m_Uniforms[i]->GetName() == name)
+			{
+				return m_Uniforms[i];
+			}
+		}
+
+		return nullptr;		
 	}
 
 	int Shader::GetUniformLocation(const String& name)
 	{
-		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
+		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end()) 
+		{
 			return m_UniformLocationCache[name];
-
+		}
+			
 		int location = glGetUniformLocation(m_ShaderID, name.c_str());
 
 		m_UniformLocationCache[name] = location;
 		return location;
-	}
-
-	void Shader::SetUniform1i(const String& name, int value)
-	{
-		glUniform1i(GetUniformLocation(name), value);
-	}
-
-	void Shader::SetUniform1iv(const String& name, int* value, int count)
-	{
-		glUniform1iv(GetUniformLocation(name), count, value);
 	}
 
 	void Shader::SetUniform1f(const String& name, float value)
@@ -387,25 +385,29 @@ namespace Nyx {
 		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
 	}
 
-	void Shader::SetUniformVec4(const String& name, const glm::vec4& vec)
+	void Shader::SetUniform4f(const String& name, const glm::vec4& vec)
 	{
-		SetUniform4f(name, vec.x, vec.y, vec.z, vec.w);
-	}
-
-	void Shader::SetUniformBool(const String& name, bool value)
-	{
-		glUniform1i(GetUniformLocation(name), value);
-	}
-
-	void Shader::SetUniform4f(const String& name, float x, float y, float z, float w)
-	{
-		int test = GetUniformLocation(name);
-		glUniform4f(test, x, y, z, w);
+		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
 	}
 
 	void Shader::SetUniformMat4(const String& name, const glm::mat4& matrix)
 	{
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix[0]));
+	}
+
+	void Shader::SetUniform1i(const String& name, int value)
+	{
+		glUniform1i(GetUniformLocation(name), value);
+	}
+
+	void Shader::SetUniform1iv(const String& name, int* value, int count)
+	{
+		glUniform1iv(GetUniformLocation(name), count, value);
+	}
+
+	void Shader::SetUniformBool(const String& name, bool value)
+	{
+		glUniform1i(GetUniformLocation(name), value);
 	}
 
 }
