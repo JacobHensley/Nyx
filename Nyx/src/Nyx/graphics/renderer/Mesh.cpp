@@ -9,7 +9,8 @@ namespace Nyx {
 	Mesh::Mesh(const String& path)
 		:	m_Path(path)
 	{
-		NX_CORE_ASSERT(Load(path), "Failed to load model");
+		NX_CORE_ASSERT(Load(path), "Failed to load model");	
+		NX_CORE_INFO("Created Mesh at Path: {0}", m_Path);
 	}
 
 	Mesh::Mesh(IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, VertexArray* vertexArray)
@@ -54,7 +55,7 @@ namespace Nyx {
 		}
 
 		aiNode* rootNode = m_Scene->mRootNode;
-		String id = "##" + std::to_string((int)rootNode);
+		String id = "##" + std::to_string((UINT64)rootNode);
 		String name = rootNode->mName.C_Str() + id;
 
 		ImGui::Begin(name.c_str());
@@ -84,7 +85,7 @@ namespace Nyx {
 
 		if (m_VertexViewerEnd >= m_Vertices.size())
 		{
-			m_VertexViewerStart = m_Vertices.size();
+			m_VertexViewerStart = (int)m_Vertices.size();
 		}
 
 		if (m_VertexViewerEnd < 25)
@@ -125,7 +126,7 @@ namespace Nyx {
 		}
 
 		aiNode* rootNode = m_Scene->mRootNode;
-		String id = "##" + std::to_string((int)rootNode);
+		String id = "##" + std::to_string((UINT64)rootNode);
 		String name = rootNode->mName.C_Str() + id;
 		String windowName = "Node Graph" + id;
 
@@ -199,7 +200,7 @@ namespace Nyx {
 		m_Scene = importer.GetOrphanedScene();
 
 		// Process ASSIMP's root node recursively
-		processNode(scene->mRootNode, scene);
+		processNode(scene->mRootNode, scene, scene->mRootNode->mTransformation);
 
 		m_BoundingBox = AABB(m_bbMin, m_bbMax);
 
@@ -220,8 +221,10 @@ namespace Nyx {
 	}
 
 	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-	void Mesh::processNode(aiNode* node, const aiScene* scene)
+	void Mesh::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
 	{
+		aiMatrix4x4 transform = aiMatrix4x4();
+
 		// Process each mesh located at the current node
 		for (uint i = 0; i < node->mNumMeshes; i++)
 		{
@@ -232,10 +235,13 @@ namespace Nyx {
 			m_SubMeshes.push_back(processMesh(mesh, scene));
 		}
 
+		transform = node->mTransformation * parentTransform;
+
 		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
-			processNode(node->mChildren[i], scene);
+			node->mChildren[i]->mTransformation *= node->mTransformation;
+			processNode(node->mChildren[i], scene, transform);
 		}
 	}
 
@@ -341,14 +347,14 @@ namespace Nyx {
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
-	std::vector<Texture> Mesh::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName)
+	std::vector<Texture> Mesh::loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName)
 	{
 		std::vector<Texture> textures;
 
-		for (uint i = 0; i < mat->GetTextureCount(type); i++)
+		for (uint i = 0; i < material->GetTextureCount(type); i++)
 		{
 			aiString str;
-			mat->GetTexture(type, i, &str);
+			material->GetTexture(type, i, &str);
 
 			// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;

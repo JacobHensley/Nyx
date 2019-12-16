@@ -8,6 +8,8 @@ namespace Nyx {
 	{
 		m_UniformBuffer = (byte*)malloc(m_Shader->GetUniformSize());
 		memset(m_UniformBuffer, 0, m_Shader->GetUniformSize());
+
+		NX_CORE_INFO("Creating Material with Shader at path: {0}", m_Shader->GetPath());
 	}
 
 	Material::~Material()
@@ -31,7 +33,10 @@ namespace Nyx {
 
 		uint slot = uniform->GetSampler();
 		if (m_Textures.size() <= slot)
+		{
 			m_Textures.resize(slot + 1);
+		}
+
 		m_Textures[slot] = texture;
 	}
 
@@ -41,7 +46,10 @@ namespace Nyx {
 
 		uint slot = uniform->GetSampler();
 		if (m_TextureCubes.size() <= slot)
+		{
 			m_TextureCubes.resize(slot + 1);
+		}
+
 		m_TextureCubes[slot] = texture;
 	}
 
@@ -76,10 +84,12 @@ namespace Nyx {
 				m_Shader->SetUniformBool(name, *(bool*)&m_UniformBuffer[offset]);
 				break;
 			case Type::SHADER_SAMPLER2D:
-				m_Textures[uniform->GetSampler()]->Bind(uniform->GetSampler());
+				if (m_Textures[uniform->GetSampler()])
+					m_Textures[uniform->GetSampler()]->Bind(uniform->GetSampler());
 				break;
 			case Type::SHADER_SAMPLERCUBE:
-				m_TextureCubes[uniform->GetSampler()]->Bind(uniform->GetSampler());
+				if (m_TextureCubes[uniform->GetSampler()])
+					m_TextureCubes[uniform->GetSampler()]->Bind(uniform->GetSampler());
 				break;
 			default:
 				NX_CORE_ASSERT(false, "Unknown type");

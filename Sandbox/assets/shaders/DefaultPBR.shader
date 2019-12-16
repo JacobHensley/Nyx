@@ -26,7 +26,6 @@ void main()
 }
 
 #Shader Fragment
-
 #version 430 core
 
 layout(location = 0) out vec4 color;
@@ -190,5 +189,4 @@ void main()
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
-	//	color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

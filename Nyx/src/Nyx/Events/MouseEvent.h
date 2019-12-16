@@ -20,6 +20,7 @@ namespace Nyx {
 		}
 
 		EVENT_FUNCTIONS(MouseMoved)
+
 	private:
 		float m_X, m_Y;
 	};
@@ -41,6 +42,7 @@ namespace Nyx {
 		}
 
 		EVENT_FUNCTIONS(MouseScrolled)
+
 	private:
 		float m_XOffset, m_YOffset;
 	};
@@ -54,7 +56,6 @@ namespace Nyx {
 		MouseButtonEvent(int button)
 			: m_Button(button) {}
 
-	protected:
 		int m_Button;
 	};
 

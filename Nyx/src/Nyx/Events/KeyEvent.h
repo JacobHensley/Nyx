@@ -12,7 +12,6 @@ namespace Nyx {
 		KeyEvent(int keycode)
 			: m_Keycode(keycode) {}
 
-	protected:
 		int m_Keycode;
 	};
 
@@ -32,6 +31,7 @@ namespace Nyx {
 		}
 
 		EVENT_FUNCTIONS(KeyPressed)
+
 	private:
 		int m_RepeatCount;
 	};

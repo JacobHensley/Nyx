@@ -23,6 +23,7 @@ namespace Nyx {
 	private:
 		uint m_FrameBufferID;
 		uint m_RenderBufferID;
+
 		Texture* m_Texture;
 	};
 

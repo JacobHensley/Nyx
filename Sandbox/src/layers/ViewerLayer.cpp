@@ -18,7 +18,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
 	m_GridShader = new Shader("assets/shaders/Grid.shader");
 
-	m_Material = new Material(m_PBRShader);
+	m_Material = new PBRMaterial(m_PBRShader);
 
 	//Load Textures
 	m_BRDFLutTexture = new Texture("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
@@ -35,7 +35,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_RadianceTexture = new TextureCube("assets/textures/canyon_Radiance.png");
 
 	//Load Models
-	m_CerberusMesh = new Mesh("assets/models/Cerberus.FBX");
+	m_CerberusMesh = new Mesh("assets/models/Node.FBX");
 
 	//Init Lights
 	m_Light = Light();
@@ -66,8 +66,6 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_SkyboxMesh = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
 	m_GridMesh = MeshFactory::GenQuad(-5.0f, -5.0f, 0.0f, 10.0f, 10.0f);
 	m_HDRQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
-
-	m_Material->SetTexture("u_AlbedoMap", m_AlbedoMap);
 }
 
 ViewerLayer::~ViewerLayer()
@@ -111,6 +109,11 @@ void ViewerLayer::Update()
 {
 	m_Camera->Update();
 	m_Scene->Update();
+
+	if (Input::IsKeyPressed(NX_KEY_F))
+	{
+		m_Camera->ResetCamera();
+	}
 
 	if (m_HoldRay && Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT) && Input::IsKeyPressed(NX_KEY_LEFT_CONTROL))
 		MousePick();
@@ -168,61 +171,28 @@ void ViewerLayer::Render()
 	m_Material->SetUniform("u_UsingIBL", m_UsingIBL);
 	m_Material->SetUniform("u_UsingLighting", m_UsingLighting);
 
-	NX_CORE_DEBUG("{0}", m_UsingAlbedoMap);
-
 	//--------------------------------------------------------------------------------
-
-	//m_PBRShader->SetUniform1i("u_BRDFLutTexture", 0);
-	//m_BRDFLutTexture->Bind(0);
 
 	m_Material->SetTexture("u_BRDFLutTexture", m_BRDFLutTexture);
 
-	//m_PBRShader->SetUniform1i("u_IrradianceTexture", 1);
-	//m_IrradianceTexture->Bind(1);
-
 	m_Material->SetTexture("u_IrradianceTexture", m_IrradianceTexture);
-
-	//m_PBRShader->SetUniform1i("u_RadianceTexture", 2);
-	//m_RadianceTexture->Bind(2);
 
 	m_Material->SetTexture("u_RadianceTexture", m_RadianceTexture);
 
-	// Albedo uniforms
-	//m_PBRShader->SetUniform1i("u_AlbedoMap", 3);
-	//m_AlbedoMap->Bind(3);
-	//m_PBRShader->SetUniformBool("u_UsingAlbedoMap", m_UsingAlbedoMap);
-	//m_PBRShader->SetUniform3f("u_AlbedoValue", m_Albedo);
+//	m_Material->SetAlbedo(m_Albedo);
+//	m_Material->SetAlbedoMap(m_AlbedoMap);
+//	m_Material->UsingAlbedoMap(m_UsingAlbedoMap);
 
-	m_Material->SetUniform("u_UsingAlbedoMap", m_UsingAlbedoMap);
-	m_Material->SetUniform("u_AlbedoValue", m_Albedo);
+//	m_Material->SetMetalness(m_Metalness);
+//	m_Material->SetMetalnessMap(m_MetalnessMap);
+//	m_Material->UsingMetalnessMap(m_UsingMetalnessMap);
 
-	// Metalness uniforms
-	//m_PBRShader->SetUniform1i("u_MetalnessMap", 4);
-	//m_MetalnessMap->Bind(4);
-	//m_PBRShader->SetUniformBool("u_UsingMetalnessMap", m_UsingMetalnessMap);
-	//m_PBRShader->SetUniform1f("u_MetalnessValue", m_Metalness);
+//	m_Material->SetNormalMap(m_NormalMap);
+//	m_Material->UsingNormalMap(m_UsingNormalMap);
 
-	m_Material->SetTexture("u_MetalnessMap", m_MetalnessMap);
-	m_Material->SetUniform("u_UsingMetalnessMap", m_UsingMetalnessMap);
-	m_Material->SetUniform("u_MetalnessValue", m_Metalness);
-
-	// Normal uniforms
-	//m_PBRShader->SetUniform1i("u_NormalMap", 5);
-	//m_NormalMap->Bind(5);
-	//m_PBRShader->SetUniformBool("u_UsingNormalMap", m_UsingNormalMap);
-
-	m_Material->SetTexture("u_NormalMap", m_NormalMap);
-	m_Material->SetUniform("u_UsingNormalMap", m_UsingNormalMap);
-
-	// Roughness uniforms
-	//m_PBRShader->SetUniform1i("u_RoughnessMap", 6);
-	//m_RoughnessMap->Bind(6);
-	//m_PBRShader->SetUniformBool("u_UsingRoughnessMap", m_UsingRoughnessMap);
-	//m_PBRShader->SetUniform1f("u_RoughnessValue", m_Roughness);
-
-	m_Material->SetTexture("u_RoughnessMap", m_RoughnessMap);
-	m_Material->SetUniform("u_UsingRoughnessMap", m_UsingRoughnessMap);
-	m_Material->SetUniform("u_RoughnessValue", m_Roughness);
+//	m_Material->SetRoughness(m_Roughness);
+//	m_Material->SetRoughnessMap(m_RoughnessMap);
+//	m_Material->UsingRoughnessMap(m_UsingRoughnessMap);
 
 	//--------------------------------------------------------------------------------
 
@@ -250,7 +220,7 @@ void ViewerLayer::Render()
 
 	m_HDRShader->Bind();
 	m_HDRShader->SetUniform1i("u_InputTexture", 0);
-	m_HDRShader->SetUniform1f("u_Exposure", ex);
+	m_HDRShader->SetUniform1f("u_Exposure", m_Exposure);
 	m_HDRBuffer->GetTexture()->Bind(0);
 
 	m_HDRQuad->Render(true);
@@ -272,7 +242,7 @@ void ViewerLayer::ImGUIRender()
 		m_GridShader->Reload();
 	ImGui::Separator();
 
-	ImGui::SliderFloat("ex", &ex, 0.0f, 10.f);
+	ImGui::SliderFloat("ex", &m_Exposure, 0.0f, 10.f);
 
 	ImGui::RadioButton("Cerberus", &m_SceneMode, 0); ImGui::SameLine();
 	ImGui::RadioButton("Sphere", &m_SceneMode, 1);
@@ -389,8 +359,8 @@ void ViewerLayer::ImGUIRender()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::Begin("Viewer", &open, flags);
 
-	m_RenderSpaceWidth = (float)ImGui::GetWindowWidth();
-	m_RenderSpaceHeight = (float)ImGui::GetWindowHeight();
+	m_RenderSpaceWidth = (int)ImGui::GetWindowWidth();
+	m_RenderSpaceHeight = (int)ImGui::GetWindowHeight();
 
 	glm::vec2 WindowPosition = Application::GetApp().GetWindow().GetWindowPos();
 

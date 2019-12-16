@@ -20,6 +20,7 @@ namespace Nyx {
 		}
 
 		EVENT_FUNCTIONS(WindowResize)
+
 	private:
 		unsigned int m_Width, m_Height;
 	};

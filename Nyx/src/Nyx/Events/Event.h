@@ -22,6 +22,7 @@ namespace Nyx {
 		virtual EventType GetEventType() const = 0;
 		virtual String GetName() const = 0;
 		virtual String ToString() const { return GetName(); }
+
 	public:
 		bool m_Handled = false;
 	};
@@ -30,6 +31,7 @@ namespace Nyx {
 	{
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
+
 	public:
 		EventDispatcher(Event& event)
 			: m_Event(event)
@@ -46,6 +48,7 @@ namespace Nyx {
 			}
 			return false;
 		}
+
 	private:
 		Event& m_Event;
 	};

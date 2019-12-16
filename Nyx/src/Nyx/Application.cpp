@@ -65,6 +65,7 @@ namespace Nyx {
 	{
 		m_ImGUILayer->Begin();
 		m_LayerStack->ImGUIRender();
+		m_Window->ImGuiRender();
 		m_ImGUILayer->End();
 	}
 
@@ -77,7 +78,6 @@ namespace Nyx {
 	{
 		while (!m_Window->IsClosed())
 		{
-
 			Update();
 
 			m_Window->Clear();

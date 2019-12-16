@@ -2,7 +2,7 @@
 
 namespace Nyx {
 
-	enum Type
+	enum class Type
 	{
 		NONE = 0, SHADER_INT = 1, SHADER_FLOAT = 2, SHADER_VEC2 = 3, SHADER_VEC3 = 4, SHADER_VEC4 = 5, SHADER_MAT4 = 6, SHADER_SAMPLER2D = 7, SHADER_SAMPLERCUBE = 8, SHADER_BOOL = 9
 	};
@@ -22,7 +22,7 @@ namespace Nyx {
 		inline const uint GetOffset() { return m_Offset; }
 		inline const int GetSampler() { return m_Sampler; }
 
-		inline const String& GetTypeString() { return StringFromType(m_Type); }
+		inline String GetTypeString() { return StringFromType(m_Type); }
 
 	private:
 		inline void SetOffset(int offset) { m_Offset = offset; }

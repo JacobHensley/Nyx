@@ -11,7 +11,9 @@ namespace Nyx {
 		glm::vec3 Min, Max;
 
 		AABB()
-			: Min(0), Max(0) {}
+			: Min(0), Max(0) 
+		{
+		}
 
 		AABB(const glm::vec3& min, const glm::vec3& max)
 			: Min(min), Max(max)

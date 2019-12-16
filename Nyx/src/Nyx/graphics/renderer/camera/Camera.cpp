@@ -57,6 +57,22 @@ namespace Nyx {
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 1)) * glm::toMat4(glm::conjugate(orientation)) * glm::translate(glm::mat4(1.0f), -m_Position);
 	}
 
+	void Camera::ResetCamera()
+	{
+		m_PanSpeed = 0.001f;
+		m_RotationSpeed = 0.001f;
+		m_ZoomSpeed = 0.05f;
+
+		m_Position = { -10, 10, 10 };
+		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+
+		m_FocalPoint = glm::vec3(0.0f);
+		m_Distance = glm::distance(m_Position, m_FocalPoint);
+
+		m_Yaw = 3.0f * (float)M_PI / 4.0f;
+		m_Pitch = M_PI / 4.0f;
+	}
+
 	void Camera::MousePan(const glm::vec2& delta)
 	{
 		m_FocalPoint += -GetRightDirection() * delta.x * m_PanSpeed * m_Distance;

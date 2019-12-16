@@ -24,6 +24,7 @@ namespace Nyx {
 		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
+
 		return glm::vec2(x, y);
 	}
 

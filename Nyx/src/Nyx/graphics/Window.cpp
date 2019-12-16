@@ -12,7 +12,7 @@ namespace Nyx {
 		: m_Name(name), m_Width(width), m_Height(height)
 	{
 		Init();
-		m_LastTime = (float)glfwGetTime();
+		NX_CORE_INFO("Created Window: {0}", name);
 	}
 
 	Window::~Window()
@@ -36,6 +36,7 @@ namespace Nyx {
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Name.c_str(), NULL, NULL);
+		glfwMakeContextCurrent(m_Window);
 
 		m_Context = new GraphicsContext(m_Window);
 		m_Context->Init();
@@ -135,28 +136,8 @@ namespace Nyx {
 		});
 	}
 
-	void Window::UpdateFPSCounter()
-	{
-		float currentTime = (float)glfwGetTime();
-		m_FrameCount++;
-
-		if (currentTime - m_LastTime >= 1.0)
-		{
-			m_MSFrame = (float)(1000.0 / m_FrameCount);
-			m_FPS = (float)m_FrameCount;
-
-			m_FrameCount = 0;
-			m_LastTime += 1.0f;
-
-			NX_CORE_TRACE(m_MSFrame);
-			NX_CORE_TRACE(m_FPS);
-		}
-	}
-
 	void Window::Update()
 	{
-		UpdateFPSCounter();
-
 		m_Context->SwapBuffers();
 		glfwPollEvents();
 	}
@@ -164,6 +145,11 @@ namespace Nyx {
 	void Window::Clear()
 	{
 		m_Context->Clear();
+	}
+
+	void Window::ImGuiRender()
+	{
+		m_Context->RenderImGuiWindow();
 	}
 
 	bool Window::IsClosed()

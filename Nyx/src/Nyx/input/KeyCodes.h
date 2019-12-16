@@ -2,7 +2,9 @@
 /* From glfw3.h */
 
 /* Key codes */
+
 /* Printable keys */
+
 #define NX_KEY_SPACE              32
 #define NX_KEY_APOSTROPHE         39  /* ' */
 #define NX_KEY_COMMA              44  /* , */
@@ -55,6 +57,7 @@
 #define NX_KEY_WORLD_2            162 /* non-US #2 */
 
 /* Function keys */
+
 #define NX_KEY_ESCAPE             256
 #define NX_KEY_ENTER              257
 #define NX_KEY_TAB                258

@@ -7,7 +7,9 @@ namespace Nyx {
 
 	Scene::Scene()
 	{
+		NX_CORE_INFO("Created Scene");
 	}
+
 	Scene::~Scene()
 	{
 		RemoveAll();
@@ -65,13 +67,19 @@ namespace Nyx {
 	{
 		object.Init(this);
 		m_SceneObjects.push_back(object);
+		NX_CORE_INFO("Added Object to Scene");
 	}
 
 	void Scene::Remove(const SceneObject& sceneObject)
 	{
 		auto e = std::find(m_SceneObjects.begin(), m_SceneObjects.end(), sceneObject);
-		if (e != m_SceneObjects.end())
+		if (e != m_SceneObjects.end()) 
+		{
 			m_SceneObjects.erase(e);
+			NX_CORE_INFO("Removed Object to Scene");
+			return;
+		}
+		NX_CORE_INFO("Failed to Remove Object to Scene");
 	}
 
 	void Scene::RemoveAll()

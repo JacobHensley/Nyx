@@ -16,8 +16,11 @@ namespace Nyx {
 	{
 		m_ShaderID = Init();
 		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL (Shader most likely failed to compile)");
+		NX_CORE_INFO("Created Shader at Path: {0}", m_FilePath);
 
 		ParseUniforms();
+
+		PrintUniforms();
 	}
 
 	Shader::~Shader()
@@ -71,6 +74,9 @@ namespace Nyx {
 		ShaderType type = ShaderType::NONE;
 		std::stringstream ss[2];
 		String line;
+
+		int lineNumber = 1;
+
 		while (getline(stream, line))
 		{
 			if (line.find("#Shader") != String::npos)
@@ -87,16 +93,25 @@ namespace Nyx {
 			else
 			{
 				ss[(int)type] << line << '\n';
+
+				if (line.find("#version") != String::npos)
+				{
+					ss[(int)type] << "#line " + std::to_string(lineNumber + 3) << '\n';
+				}
+
+				lineNumber++;
 			}
 		}
+
 		return { ss[0].str(), ss[1].str() };
+		
 	}
 
 	int Shader::CompileShader(uint shader, const String& shaderSrc)
 	{
-		const char* vs = shaderSrc.c_str();
+		const char* shaderString = shaderSrc.c_str();
 
-		glShaderSource(shader, 1, &vs, NULL);
+		glShaderSource(shader, 1, &shaderString, NULL);
 		glCompileShader(shader);
 
 		int compileResult;
@@ -198,8 +213,6 @@ namespace Nyx {
 		int lineNum = 0;
 
 		std::vector<ShaderType> rawUniforms;
-
-		int sampler;
 
 		while (getline(stream, line))
 		{
@@ -327,6 +340,10 @@ namespace Nyx {
 
 		glDeleteProgram(m_ShaderID);
 		m_UniformLocationCache.clear();
+		m_Sampler = 0;
+		m_UniformSize = 0;
+		m_Uniforms.clear();
+		m_UniformStructs.clear();
 		m_ShaderID = reloadedShader;
 
 		ParseUniforms();

@@ -44,6 +44,7 @@ namespace Nyx {
 	public:
 		Shader(const String& filePath);
 		~Shader();
+
 	public:
 		void Bind();
 		void Unbind();
@@ -56,6 +57,7 @@ namespace Nyx {
 		inline std::vector<ShaderUniform*> GetUniforms() const { return m_Uniforms; }
 		
 		inline uint GetID() const { return m_ShaderID; }
+		inline const String& GetPath() const { return m_FilePath; }
 
 		void SetUniform1f(const String& name, float value);
 		void SetUniform2f(const String& name, const glm::vec2& vec);

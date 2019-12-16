@@ -12,6 +12,8 @@ namespace Nyx {
 	public:
 		void Update();
 
+		void ResetCamera();
+
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4& GetVPMatrix() const { return m_ViewMatrix * m_ProjectionMatrix; }

@@ -5,7 +5,8 @@
 namespace Nyx  {
 
 	ShaderUniform::ShaderUniform(const String & name, const String & type, uint count, int sampler)
-		: m_Name(name), m_Count(count), m_Offset(0), m_Sampler(sampler) {
+		: m_Name(name), m_Count(count), m_Offset(0), m_Sampler(sampler) 
+	{
 		m_Type = StringToType(type);
 		m_Size = SizeFromType(m_Type) * m_Count;
 	}
@@ -44,6 +45,8 @@ namespace Nyx  {
 		if (type == "vec4")			return Type::SHADER_VEC4;
 		if (type == "bool")			return Type::SHADER_BOOL;
 		if (type == "samplerCube")	return Type::SHADER_SAMPLERCUBE;
+
+		return Type::NONE;
 	}
 
 	String ShaderUniform::StringFromType(Type type)

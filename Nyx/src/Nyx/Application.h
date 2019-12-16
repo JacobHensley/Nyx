@@ -11,6 +11,7 @@ namespace Nyx {
 		Application();
 		~Application();
 
+	public:
 		void PushLayer(Layer* layer);
 		void PopLayer(Layer* layer);
 
@@ -33,6 +34,7 @@ namespace Nyx {
 		Window* m_Window;
 		LayerStack* m_LayerStack;
 		ImGUILayer* m_ImGUILayer;
+
 	private:
 		static Application* s_Instance;
 	};

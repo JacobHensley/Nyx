@@ -9,6 +9,7 @@ namespace Nyx {
 		: m_Path(path)
 	{
 		LoadFromFile(path);
+		NX_CORE_INFO("Created TextureCube at Path: {0}", path);
 	}
 
 	TextureCube::~TextureCube()
@@ -113,7 +114,9 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		for (int i = 0; i < faceBuffers.size(); i++)
+		{
 			delete[] faceBuffers[i];
+		}
 
 		stbi_image_free(imageData);
 

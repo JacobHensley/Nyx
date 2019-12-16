@@ -4,7 +4,7 @@
 #include "Nyx/graphics/renderer/API/IndexBuffer.h"
 #include "Nyx/graphics/renderer/API/VertexArray.h"
 #include "Nyx/graphics/renderer/API/VertexBuffer.h"
-#include "Nyx/graphics/renderer/shaders/Shader.h"
+#include "Nyx/graphics/renderer/Shader.h"
 #include "Nyx/math/AABB.h"
 #include "glm/glm.hpp"
 #include <assimp/Importer.hpp>
@@ -53,9 +53,9 @@ namespace Nyx {
 
 	private:
 		bool Load(const String& path);
-		void processNode(aiNode* node, const aiScene* scene);
+		void processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform);
 		SubMesh processMesh(aiMesh* mesh, const aiScene* scene);
-		std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const String& typeName);
+		std::vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName);
 
 		void DrawImGuiNode(aiNode* node) const;
 

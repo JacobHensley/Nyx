@@ -20,6 +20,7 @@
 #include "Nyx/Graphics/layers/Layer.h"
 #include "Nyx/Graphics/layers/LayerStack.h"
 
+//#include "Nyx/graphics/renderer/Material.h"
 //#include "Nyx/graphics/renderer/Mesh.h"
 
 #include "Nyx/graphics/renderer/API/BufferLayout.h"
@@ -33,8 +34,8 @@
 
 #include "Nyx/graphics/renderer/camera/Camera.h"
 
-#include "Nyx/graphics/renderer/shaders/Shader.h"
-#include "Nyx/graphics/renderer/shaders/ShaderUniform.h"
+#include "Nyx/graphics/renderer/Shader.h"
+#include "Nyx/graphics/renderer/ShaderUniform.h"
 
 #include "Nyx/Input/Input.h"
 #include "Nyx/Input/KeyCodes.h"

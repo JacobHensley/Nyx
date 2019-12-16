@@ -69,7 +69,6 @@ namespace Nyx {
 	{
 	public:
 		BufferLayout();
-
 		BufferLayout(const std::initializer_list<BufferElement>& elements)
 			: m_Elements(elements), m_Stride(0)
 		{

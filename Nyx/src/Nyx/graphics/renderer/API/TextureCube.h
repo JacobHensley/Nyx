@@ -9,6 +9,7 @@ namespace Nyx {
 		TextureCube(const String& path);
 		~TextureCube();
 
+	public:
 		void Bind(uint slot);
 		void Unbind();
 

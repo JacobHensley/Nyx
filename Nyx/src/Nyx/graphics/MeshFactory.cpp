@@ -40,6 +40,7 @@ namespace Nyx {
 		vertexBuffer->SetLayout(layout);
 
 		IndexBuffer* indexBuffer = new IndexBuffer(&indices[0], (uint)indices.size());
+
 		VertexArray* vertexArray = new VertexArray();
 		vertexArray->PushVertexBuffer(vertexBuffer);
 

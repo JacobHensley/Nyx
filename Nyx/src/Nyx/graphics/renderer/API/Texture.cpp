@@ -10,6 +10,7 @@ namespace Nyx {
 	{
 		m_TextureID = LoadFromFile(path);
 		NX_CORE_ASSERT(m_TextureID != -1, "Image Data is Null");
+		NX_CORE_INFO("Created Texture at Path: {0}", path);
 	}
 
 	Texture::Texture(int width, int height, TextureParameters parameters /*= TextureParameters()*/)
@@ -94,9 +95,13 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		if (m_Parameters.format == TextureFormat::RGBA16F || m_Parameters.format == TextureFormat::RGBA32F)
+		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-		else
+		}	
+		else 
+		{
 			glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
+		}
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGL(m_Parameters.filter));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGL(m_Parameters.filter));

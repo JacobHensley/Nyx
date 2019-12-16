@@ -23,15 +23,20 @@ namespace Nyx {
 
 		uint* indices = new uint[MAX_INDEX_COUNT];
 		for (uint i = 0; i < MAX_INDEX_COUNT; i++)
+		{
 			indices[i] = i;
+		}
 		
 		m_VertexArray = std::make_unique<VertexArray>();
+
 		m_VertexBuffer = std::make_unique<VertexBuffer>((uint)(MAX_LINE_COUNT * sizeof(LineVertex) * 2));
 		m_VertexBuffer->SetLayout({
 			{ ShaderDataType::Vec3, "a_Position"},
 			{ ShaderDataType::Vec4, "a_Color"}
 		});
+
 		m_VertexArray->PushVertexBuffer(m_VertexBuffer.get());
+
 		m_IndexBuffer = std::make_unique<IndexBuffer>(indices, MAX_INDEX_COUNT);
 		m_IndexBuffer->SetData(indices, MAX_INDEX_COUNT);
 
@@ -67,10 +72,8 @@ namespace Nyx {
 		m_VertexArray->Bind();
 		m_IndexBuffer->Bind();
 		
-		//glDisable(GL_DEPTH_TEST);
 		glLineWidth(3.0f);
 		glDrawElements(GL_LINES, m_LineIndexCount, GL_UNSIGNED_INT, nullptr);
-		//glEnable(GL_DEPTH_TEST);
 	}
 
 	void DebugRenderer::DrawLineInternal(const glm::vec3& v0, const glm::vec3& v1, const glm::vec4& color)

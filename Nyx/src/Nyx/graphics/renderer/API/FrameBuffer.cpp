@@ -30,6 +30,7 @@ namespace Nyx {
 	{
 		glDeleteFramebuffers(1, &m_FrameBufferID);
 		glDeleteRenderbuffers(1, &m_RenderBufferID);
+
 		m_Texture->~Texture();
 	}
 

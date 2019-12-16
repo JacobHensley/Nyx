@@ -6,7 +6,7 @@
 
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
-#include "Nyx/graphics/renderer/Material.h"
+#include "Nyx/graphics/renderer/PRBMaterial.h"
 
 using namespace Nyx;
 
@@ -16,7 +16,6 @@ class ViewerLayer : public Layer
 	{
 		glm::vec3 radiance;
 		glm::vec3 direction;
-
 
 		Light(glm::vec3 radiance, glm::vec3 direction)
 			: radiance(radiance), direction(direction)
@@ -33,6 +32,7 @@ public:
 	ViewerLayer(const String& name);
 	~ViewerLayer();
 
+public:
 	virtual void Update() override;
 	virtual void Render() override;
 
@@ -49,17 +49,19 @@ private:
 
 private:
 	//Renderspace info
-	FrameBuffer* m_RenderSpaceFrameBuffer = nullptr;
-	glm::vec2 m_RenderSpacePosition = glm::vec2();
 	int m_RenderSpaceHeight = 0;
 	int m_RenderSpaceWidth = 0;
+	FrameBuffer* m_RenderSpaceFrameBuffer = nullptr;
+	glm::vec2 m_RenderSpacePosition = glm::vec2();
 
 	//Ray Info
 	Ray m_MouseRay = Ray();
 	bool m_HoldRay = true;
 
+	//Camera
 	Camera* m_Camera = nullptr;
 
+	//Modes
 	int m_GizmoMode = 0;
 	int m_SceneMode = 0;
 
@@ -86,28 +88,30 @@ private:
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
 
+	//PRB values
 	glm::vec3 m_Albedo = glm::vec3(1.0f, 1.0f, 1.0f);
 	float m_Metalness = 0.5f;
 	float m_Roughness = 0.5f;
 
+	//PBR options
 	bool m_UsingAlbedoMap = true;
 	bool m_UsingMetalnessMap = true;
 	bool m_UsingNormalMap = true;
 	bool m_UsingRoughnessMap = true;
-
 	bool m_UsingIBL = true;
 	bool m_UsingLighting = true;
 
-	float ex = 1.0f;
+	//Light and light values
+	Light m_Light;
 	float m_LightMultiplier = 1.0f;
 	glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
 
-	//Lights
-	Light m_Light;
 
+	//HDR
 	FrameBuffer* m_HDRBuffer = nullptr;
 	Shader* m_HDRShader = nullptr;
 	Mesh* m_HDRQuad = nullptr;
+	float m_Exposure = 1.0f;
 
 	//Scene
 	Scene* m_Scene = nullptr;
@@ -121,7 +125,8 @@ private:
 	MeshComponent* m_CerberusMeshComponent = nullptr;
 	TransformComponent* m_CerberusTransformComponent = nullptr;
 
-	Material* m_Material = nullptr;
+	//Testing material
+	PBRMaterial* m_Material = nullptr;
 
 	//Sphere object
 	SceneObject* m_SphereObject = nullptr;
