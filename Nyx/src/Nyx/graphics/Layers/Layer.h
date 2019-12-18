@@ -10,11 +10,13 @@ namespace Nyx {
 		Layer(const String& name);
 		virtual ~Layer();
 
+	public:
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 
 		virtual void Update() {}
 		virtual void Render() {}
+
 		virtual void ImGUIRender() {}
 
 		virtual void OnEvent(Event& e) {}
@@ -23,6 +25,7 @@ namespace Nyx {
 		inline bool IsVisible() const { return m_Visible; }
 
 	protected:
+
 		const String& m_Name;
 		bool m_Visible = true;
 	};

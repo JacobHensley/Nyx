@@ -8,7 +8,8 @@ namespace Nyx {
 	public:
 		Scene();
 		~Scene();
-
+	
+	public:
 		void Update();
 		void Render();
 
@@ -32,6 +33,7 @@ namespace Nyx {
 	private:
 		ComponentCache m_ComponentCache;
 		std::vector<SceneObject> m_SceneObjects;
+
 	};
 
 }

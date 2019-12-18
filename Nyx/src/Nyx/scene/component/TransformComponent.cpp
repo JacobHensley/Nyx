@@ -9,7 +9,6 @@ namespace Nyx {
 	TransformComponent::TransformComponent(const glm::mat4& transform)
 		: m_Transform(transform)
 	{
-
 	}
 
 	void TransformComponent::Rotate(float degrees, glm::vec3 axis)

@@ -81,8 +81,6 @@ namespace Nyx {
 		void SetTextureIDs(const String& name);
 		int GetUniformLocation(const String& name);
 
-		std::vector<String> Tokenize(const String& str, const char delimiter);
-
 	private:
 		uint m_ShaderID;
 		String m_FilePath;

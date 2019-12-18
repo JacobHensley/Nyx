@@ -14,6 +14,7 @@ namespace Nyx {
 		void Unbind();
 
 		void Clear();
+		void Resize(int width, int height);
 		void SetViewPortSize(int x, int y, int width, int height);
 
 		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
@@ -25,6 +26,7 @@ namespace Nyx {
 		uint m_RenderBufferID;
 
 		Texture* m_Texture;
+		TextureParameters m_Parameters;
 	};
 
 }

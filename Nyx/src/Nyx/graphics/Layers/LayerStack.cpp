@@ -10,10 +10,14 @@ namespace Nyx {
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_Layers)
+		{
 			delete layer;
-
-		for (Layer* overlay : m_Overlays)
+		}
+			
+		for (Layer* overlay : m_Overlays) 
+		{
 			delete overlay;
+		}		
 	}
 
 	void LayerStack::PushLayer(Layer* layer)
@@ -51,10 +55,14 @@ namespace Nyx {
 	void LayerStack::Update()
 	{
 		for (Layer* layer : m_Layers)
+		{
 			layer->Update();
-
+		}
+			
 		for (Layer* overlay : m_Overlays)
+		{
 			overlay->Update();
+		}
 	}
 
 	void LayerStack::Render()
@@ -62,13 +70,17 @@ namespace Nyx {
 		for (int i = 0; i < m_Layers.size(); i++)
 		{
 			if (m_Layers[i]->IsVisible())
+			{
 				m_Layers[i]->Render();
+			}
 		}
 
 		for (int i = 0; i < m_Overlays.size(); i++)
 		{
 			if (m_Overlays[i]->IsVisible())
+			{
 				m_Overlays[i]->Render();
+			}
 		}
 	}
 
@@ -91,14 +103,18 @@ namespace Nyx {
 		{
 			(*--it)->OnEvent(e);
 			if (e.IsHandled())
+			{
 				break;
+			}
 		}
 
 		for (auto it = m_Overlays.end(); it != m_Overlays.begin(); )
 		{
 			(*--it)->OnEvent(e);
 			if (e.IsHandled())
+			{
 				break;
+			}	
 		}
 	}
 

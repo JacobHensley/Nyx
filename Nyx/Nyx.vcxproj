@@ -101,6 +101,7 @@
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Common.h" />
+    <ClInclude Include="src\Nyx\Utilities.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
     <ClInclude Include="src\Nyx\events\AppEvent.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="src\Nyx\scene\SceneObject.cpp" />
     <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp" />
+    <ClCompile Include="src\Nyx\Utilities.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

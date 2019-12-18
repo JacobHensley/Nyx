@@ -16,7 +16,7 @@ namespace Nyx {
 	Mesh::Mesh(IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, VertexArray* vertexArray)
 		:	m_IndexBuffer(indexBuffer), m_VertexBuffer(vertexBuffer), m_VertexArray(vertexArray), m_Path("GenMesh")
 	{
-		m_SubMeshes.push_back(SubMesh(0, 0, indexBuffer->GetBufferID()));
+		m_SubMeshes.push_back(SubMesh(0, 0, indexBuffer->GetCount()));
 	}
 
 	Mesh::~Mesh()
@@ -235,12 +235,12 @@ namespace Nyx {
 			m_SubMeshes.push_back(processMesh(mesh, scene));
 		}
 
-		transform = node->mTransformation * parentTransform;
+		transform = parentTransform * node->mTransformation;
 
 		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
-			node->mChildren[i]->mTransformation *= node->mTransformation;
+		//	node->mChildren[i]->mTransformation *= node->mTransformation;
 			processNode(node->mChildren[i], scene, transform);
 		}
 	}

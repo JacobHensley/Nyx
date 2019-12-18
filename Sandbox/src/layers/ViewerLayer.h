@@ -10,8 +10,6 @@
 
 using namespace Nyx;
 
-class ViewerLayer : public Layer
-{
 	struct Light
 	{
 		glm::vec3 radiance;
@@ -23,11 +21,13 @@ class ViewerLayer : public Layer
 		}
 
 		Light()
-			: radiance(1.0f, 1.0f, 1.0f), direction(0.0f, 0.0f, 0.0f)
+			: radiance(glm::vec3()), direction(glm::vec3())
 		{
 		}
 	};
 
+class ViewerLayer : public Layer
+{
 public:
 	ViewerLayer(const String& name);
 	~ViewerLayer();
@@ -40,94 +40,79 @@ public:
 
 	virtual void OnEvent(Event& e) override;
 
+private:
+	void MousePick();
 	bool OnMouseClick(MouseButtonPressedEvent& e);
 
 private:
-	void MousePick();
-
-	String OpenFileExplorer();
-
-private:
-	//Renderspace info
-	int m_RenderSpaceHeight = 0;
-	int m_RenderSpaceWidth = 0;
-	FrameBuffer* m_RenderSpaceFrameBuffer = nullptr;
-	glm::vec2 m_RenderSpacePosition = glm::vec2();
-
-	//Ray Info
-	Ray m_MouseRay = Ray();
-	bool m_HoldRay = true;
-
-	//Camera
-	Camera* m_Camera = nullptr;
-
-	//Modes
-	int m_GizmoMode = 0;
-	int m_SceneMode = 0;
-
-	//Texture Cubes
-	TextureCube* m_IrradianceTexture = nullptr;
-	TextureCube* m_RadianceTexture = nullptr;
-
-	//Skybox
-	Shader* m_SkyboxShader = nullptr;
-	Mesh* m_SkyboxMesh = nullptr;
-
-	//Grid
-	Shader* m_GridShader = nullptr;
-	Mesh* m_GridMesh = nullptr;
-	glm::mat4 m_GridTransform;
-	float m_GridScale = 501.0f;
-	float m_GridResolution = 0.02f;
-
-	//PBR shader and textures
+	//PBR Values
 	Shader* m_PBRShader = nullptr;
+
 	Texture* m_BRDFLutTexture = nullptr;
 	Texture* m_AlbedoMap = nullptr;
 	Texture* m_MetalnessMap = nullptr;
 	Texture* m_NormalMap = nullptr;
 	Texture* m_RoughnessMap = nullptr;
+	TextureCube* m_IrradianceTexture = nullptr;
+	TextureCube* m_RadianceTexture = nullptr;
 
-	//PRB values
 	glm::vec3 m_Albedo = glm::vec3(1.0f, 1.0f, 1.0f);
 	float m_Metalness = 0.5f;
 	float m_Roughness = 0.5f;
 
-	//PBR options
+	//PRB Editor options
 	bool m_UsingAlbedoMap = true;
 	bool m_UsingMetalnessMap = true;
 	bool m_UsingNormalMap = true;
 	bool m_UsingRoughnessMap = true;
+
 	bool m_UsingIBL = true;
 	bool m_UsingLighting = true;
 
-	//Light and light values
-	Light m_Light;
-	float m_LightMultiplier = 1.0f;
-	glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
+	//Scene
+	Camera* m_Camera = nullptr;
+	Scene* m_Scene = nullptr;
+	
+	//Scene Object
+	SceneObject* m_SceneObject = nullptr;
+	MeshComponent* m_ObjectMeshComponent = nullptr;
+	TransformComponent* m_ObjectTransformComponent = nullptr;
 
+	//Scene Object Data
+	Mesh* m_ObjectMesh = nullptr;
+	glm::mat4 m_ObjectTransform = glm::mat4(1.0f);
+	PBRMaterial* m_ObjectMaterial = nullptr;
 
-	//HDR
-	FrameBuffer* m_HDRBuffer = nullptr;
+	//Grid Shader and data
+	Shader* m_GridShader = nullptr;
+	Mesh* m_GridMesh = nullptr;
+	glm::mat4 m_GridTransform = glm::mat4(1.0f);
+	
+	float m_GridScale = 501.0f;
+	float m_GridResolution = 0.02f;
+
+	//Skybox
+	Shader* m_SkyboxShader = nullptr;
+
+	//HDR pass
 	Shader* m_HDRShader = nullptr;
-	Mesh* m_HDRQuad = nullptr;
+	FrameBuffer* m_HDRBuffer = nullptr;
 	float m_Exposure = 1.0f;
 
-	//Scene
-	Scene* m_Scene = nullptr;
+	//Fullscreen quad (For skybox and HDR)
+	Mesh* m_FullscreenQuad = nullptr;
 
-	//Cerberus data
-	Mesh* m_CerberusMesh = nullptr;
-	glm::mat4 m_CerberusTransform;
-	
-	//Cerberus object
-	SceneObject* m_CerberusObject = nullptr;
-	MeshComponent* m_CerberusMeshComponent = nullptr;
-	TransformComponent* m_CerberusTransformComponent = nullptr;
+	//Renderspace info
+	glm::vec2 m_RenderSpaceSize = glm::vec2();
+	glm::vec2 m_RenderSpacePosition = glm::vec2();
+	FrameBuffer* m_RenderSpaceBuffer = nullptr;
 
-	//Testing material
-	PBRMaterial* m_Material = nullptr;
+	//Light data
+	Light m_Light;
+	glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
+	float m_LightMultiplier = 1.0f;
 
-	//Sphere object
-	SceneObject* m_SphereObject = nullptr;
+	//Misc editor info
+	Ray m_MouseRay = Ray();
+	int m_GizmoMode = 0;
 };

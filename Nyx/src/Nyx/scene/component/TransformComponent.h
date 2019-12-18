@@ -7,11 +7,9 @@ namespace Nyx {
 	class TransformComponent : public Component
 	{
 	public:
-		glm::mat4 m_Transform;
-
-	public:
 		TransformComponent(const glm::mat4& transform);
 
+	public:
 		void Rotate(float degrees, glm::vec3 axis);
 		void Translate(glm::vec3 delta);
 		void Scale(glm::vec3 scaler);
@@ -26,6 +24,8 @@ namespace Nyx {
 
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
+	public:
+		glm::mat4 m_Transform;
 	};
 
 }

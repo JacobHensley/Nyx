@@ -9,8 +9,8 @@ namespace Nyx {
 	private:
 		std::unordered_map<Component::Type*, std::vector<Component*>> m_Components;
 		std::unordered_map<SceneObject*, std::unordered_map<Component::Type*, Component*>> m_SceneObjectComponents;
-	public:
 
+	public:
 		template<typename T>
 		const std::vector<Component*>& GetAll()
 		{

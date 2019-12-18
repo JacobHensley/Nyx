@@ -38,8 +38,8 @@ uniform vec3 u_Direction;
 
 uniform vec3 u_CameraPosition;
 
-uniform bool u_UsingIBL;
-uniform bool u_UsingLighting;
+uniform float u_UsingIBL;
+uniform float u_UsingLighting;
 
 // Albedo uniforms
 uniform vec3 u_AlbedoValue;
@@ -185,8 +185,8 @@ void main()
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
-	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV);
-	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
+	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
+	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * u_UsingIBL;
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
 }

@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 #include "component/Component.h"
 #include "component/ComponentCache.h"
 
@@ -12,7 +12,9 @@ namespace Nyx {
 		SceneObject();
 		~SceneObject();
 
+	public:
 		void Init(Scene* Scene);
+
 		void Update();
 		void Render();
 		

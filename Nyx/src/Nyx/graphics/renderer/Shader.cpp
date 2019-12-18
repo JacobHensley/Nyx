@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Nyx/Utilities.h"
 
 namespace Nyx {
 
@@ -296,25 +297,6 @@ namespace Nyx {
 		Bind();
 		SetUniform1iv(name, textureIDs, 32);
 		Unbind();
-	}
-
-	std::vector<String> Shader::Tokenize(const String& str, const char delimiter)
-	{
-		std::vector<String> tokens;
-		String token;
-
-		for (int i = 0; i < str.length(); i++)
-		{
-			if (str[i] == ' ')
-			{
-				tokens.push_back(token);
-				token = "";
-				continue;
-			}
-			token += str[i];
-		}
-		tokens.push_back(token);
-		return tokens;
 	}
 
 	void Shader::Bind()
