@@ -52,9 +52,15 @@ namespace Nyx {
 		void Reload();
 
 		void PrintUniforms();
-		ShaderUniform* FindUniform(const String& name);
-		inline int GetUniformSize() const { return m_UniformSize; }
-		inline std::vector<ShaderUniform*> GetUniforms() const { return m_Uniforms; }
+
+		ShaderUniform* FindRenderUniform(const String& name);
+		ShaderUniform* FindUserUniform(const String& name);
+		
+		inline int GetUserUniformSize() const { return m_UniformUserSize; }
+		inline std::vector<ShaderUniform*> GetRenderUniforms() const { return m_RenderUniforms; }
+
+		inline int GetRenderUniformSize() const { return m_UniformRenderSize; }
+		inline std::vector<ShaderUniform*> GetUserUniforms() const { return m_UserUniforms; }
 		
 		inline uint GetID() const { return m_ShaderID; }
 		inline const String& GetPath() const { return m_FilePath; }
@@ -88,9 +94,13 @@ namespace Nyx {
 		int m_Sampler = 0;
 		int m_UniformSize = 0;
 
+		int m_UniformRenderSize = 0;
+		int m_UniformUserSize = 0;
+
 		std::unordered_map<String, int> m_UniformLocationCache;
 		std::vector<UniformStruct> m_UniformStructs;
-		std::vector<ShaderUniform*> m_Uniforms;
+		std::vector<ShaderUniform*> m_UserUniforms;
+		std::vector<ShaderUniform*> m_RenderUniforms;
 	};
 
 }

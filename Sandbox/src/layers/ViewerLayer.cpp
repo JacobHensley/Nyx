@@ -5,6 +5,7 @@
 #include "Nyx/graphics/DebugRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 #include "Nyx/Utilities.h"
+#include "Nyx/graphics/renderer/Renderer.h"
 
 ViewerLayer::ViewerLayer(const String& name)
 	: Layer(name)
@@ -22,7 +23,7 @@ ViewerLayer::ViewerLayer(const String& name)
 
 	//Scene
 	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-	m_Scene = new Scene();
+	m_Scene = new Scene(m_Camera, m_IrradianceTexture);
 
 	//Scene Object
 	m_ObjectMesh = new Mesh("assets/models/Cerberus.FBX");
@@ -30,7 +31,8 @@ ViewerLayer::ViewerLayer(const String& name)
 
 	m_ObjectMeshComponent = new MeshComponent(m_ObjectMesh);
 	m_ObjectTransformComponent = new TransformComponent(m_ObjectTransform);
-	m_SceneObject = m_Scene->CreateObject({ m_ObjectMeshComponent , m_ObjectTransformComponent });
+	m_ObjectMaterialComponent = new MaterialComponent(m_ObjectMaterial);
+	m_SceneObject = m_Scene->CreateObject({ m_ObjectMeshComponent, m_ObjectTransformComponent, m_ObjectMaterialComponent });
 
 	m_ObjectTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 	m_ObjectTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -95,17 +97,6 @@ void ViewerLayer::Update()
 
 void ViewerLayer::Render()
 {
-	//Bind HDR buffer
-	m_HDRBuffer->Clear();
-	m_HDRBuffer->Bind();
-
-	//Render Skybox
-	m_SkyboxShader->Bind();
-	m_SkyboxShader->SetUniformMat4("u_InverseVP", glm::inverse(m_Camera->GetViewMatrix()));
-	m_SkyboxShader->SetUniform1i("u_SkyboxTexture", 0);
-	m_IrradianceTexture->Bind(0);
-	m_FullscreenQuad->Render(false);
-
 	//Draw debug object
 	DebugRenderer::Begin(*m_Camera);
 	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
@@ -120,9 +111,6 @@ void ViewerLayer::Render()
 	m_GridMesh->Render(true);
 
 	//Upload scene object data
-	m_ObjectMaterial->SetUniform("u_CameraPosition", m_Camera->GetPosition());
-	m_ObjectMaterial->SetUniform("u_ModelMatrix", m_ObjectTransformComponent->m_Transform);
-	m_ObjectMaterial->SetUniform("u_MVP", m_Camera->GetProjectionMatrix() * m_Camera->GetViewMatrix() * m_ObjectTransformComponent->m_Transform);
 	m_ObjectMaterial->SetUniform("u_Direction", m_Light.direction);
 	m_ObjectMaterial->SetUniform("u_Radiance", m_Light.radiance);
 	m_ObjectMaterial->SetUniform("u_UsingIBL", (float)m_UsingIBL);
@@ -131,41 +119,14 @@ void ViewerLayer::Render()
 	m_ObjectMaterial->SetTexture("u_IrradianceTexture", m_IrradianceTexture);
 	m_ObjectMaterial->SetTexture("u_RadianceTexture", m_RadianceTexture);
 
-	m_ObjectMaterial->SetAlbedo(m_Albedo);
-	m_ObjectMaterial->SetAlbedoMap(m_AlbedoMap);
-	m_ObjectMaterial->UsingAlbedoMap(m_UsingAlbedoMap);
+	m_ObjectMaterial->SetAlbedo(m_Albedo, m_AlbedoMap, m_UsingAlbedoMap);
+	m_ObjectMaterial->SetMetalness(m_Metalness, m_MetalnessMap, m_UsingMetalnessMap);
+	m_ObjectMaterial->SetRoughness(m_Roughness, m_RoughnessMap, m_UsingRoughnessMap);
+	m_ObjectMaterial->SetNormal(m_NormalMap, m_UsingNormalMap);
 
-	m_ObjectMaterial->SetMetalness(m_Metalness);
-	m_ObjectMaterial->SetMetalnessMap(m_MetalnessMap);
-	m_ObjectMaterial->UsingMetalnessMap(m_UsingMetalnessMap);
-
-	m_ObjectMaterial->SetNormalMap(m_NormalMap);
-	m_ObjectMaterial->UsingNormalMap(m_UsingNormalMap);
-
-	m_ObjectMaterial->SetRoughness(m_Roughness);
-	m_ObjectMaterial->SetRoughnessMap(m_RoughnessMap);
-	m_ObjectMaterial->UsingRoughnessMap(m_UsingRoughnessMap);
-
-	m_ObjectMaterial->Bind();
-
-	//Render Scene to HDR buffer
 	m_Scene->Render();
 
-	m_HDRBuffer->Unbind();
-
-	//Bind Renderspace buffer
-	m_RenderSpaceBuffer->Clear();
-	m_RenderSpaceBuffer->Bind();
-
-	//Render HDR buffer to renderspace buffer
-	m_HDRShader->Bind();
-	m_HDRShader->SetUniform1i("u_InputTexture", 0);
-	m_HDRShader->SetUniform1f("u_Exposure", m_Exposure);
-	m_HDRBuffer->GetTexture()->Bind(0);
-	m_FullscreenQuad->Render(true);
-	m_HDRShader->Unbind();
-
-	m_RenderSpaceBuffer->Unbind();
+	m_RenderSpaceBuffer = Renderer::GetFinalBuffer();
 }
 
 void ViewerLayer::ImGUIRender()
@@ -190,6 +151,7 @@ void ViewerLayer::ImGUIRender()
 
 	//Set HDR exposure
 	ImGui::SliderFloat("HDR Exposure", &m_Exposure, 0.0f, 10.f);
+	Renderer::SetExposure(m_Exposure);
 
 	//ImGuizmo mode
 	ImGui::RadioButton("TRANSLATE", &m_GizmoMode, 0); ImGui::SameLine();

@@ -1,12 +1,17 @@
 #pragma once
 #include "SceneObject.h"
+#include "Nyx/graphics/renderer/camera/Camera.h"
+#include "Nyx/graphics/renderer/API/TextureCube.h"
 
 namespace Nyx {
+
+	class Mesh;
+	class Material;
 
 	class Scene
 	{
 	public:
-		Scene();
+		Scene(Camera* camera, TextureCube* skybox);
 		~Scene();
 	
 	public:
@@ -30,10 +35,17 @@ namespace Nyx {
 			return m_ComponentCache.Get<T>(sceneObject);
 		}
 
+		const Camera* GetCamera() { return m_Camera; }
+
 	private:
 		ComponentCache m_ComponentCache;
 		std::vector<SceneObject> m_SceneObjects;
 
+		Mesh* m_SkyboxMesh;
+		Material* m_SkyboxMaterial;
+
+		Camera* m_Camera;
+	
 	};
 
 }

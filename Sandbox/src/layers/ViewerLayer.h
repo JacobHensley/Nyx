@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Nyx/scene/component/MeshComponent.h"
+#include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/PRBMaterial.h"
 
@@ -77,6 +78,7 @@ private:
 	SceneObject* m_SceneObject = nullptr;
 	MeshComponent* m_ObjectMeshComponent = nullptr;
 	TransformComponent* m_ObjectTransformComponent = nullptr;
+	MaterialComponent* m_ObjectMaterialComponent = nullptr;
 
 	//Scene Object Data
 	Mesh* m_ObjectMesh = nullptr;

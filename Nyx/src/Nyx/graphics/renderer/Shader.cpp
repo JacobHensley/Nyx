@@ -273,17 +273,24 @@ namespace Nyx {
 		{
 			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, -1);
 		}
-			
-		int offset = 0;
-		if (m_Uniforms.size() > 0)
+
+		if (m_UserUniforms.size() > 0 || m_RenderUniforms.size() > 0) 
 		{
-			ShaderUniform* lastUniform = m_Uniforms[m_Uniforms.size() - 1];
-			offset = lastUniform->GetOffset() + lastUniform->GetSize();
-			shaderUniform->SetOffset(offset);
+			shaderUniform->SetOffset(m_UniformSize);
 		}
 
 		m_UniformSize += shaderUniform->GetSize();
-		m_Uniforms.push_back(shaderUniform);
+		
+		if (shaderUniform->GetName().front() == 'u')
+		{
+			m_UniformUserSize += shaderUniform->GetSize();
+			m_UserUniforms.push_back(shaderUniform);
+		}
+		else if (shaderUniform->GetName().front() == 'r')
+		{
+			m_UniformRenderSize += shaderUniform->GetSize();
+			m_RenderUniforms.push_back(shaderUniform);
+		}
 	}
 
 	void Shader::SetTextureIDs(const String& name)
@@ -324,7 +331,7 @@ namespace Nyx {
 		m_UniformLocationCache.clear();
 		m_Sampler = 0;
 		m_UniformSize = 0;
-		m_Uniforms.clear();
+		m_UserUniforms.clear();
 		m_UniformStructs.clear();
 		m_ShaderID = reloadedShader;
 
@@ -333,7 +340,7 @@ namespace Nyx {
 
 	void Shader::PrintUniforms()
 	{
-		for each (ShaderUniform* uniform in m_Uniforms)
+		for each (ShaderUniform* uniform in m_UserUniforms)
 		{
 			NX_CORE_DEBUG("Name: {0}", uniform->GetName());
 			NX_CORE_DEBUG("	Type:    {0}", uniform->GetTypeString());
@@ -343,13 +350,26 @@ namespace Nyx {
 		}
 	}
 
-	ShaderUniform* Shader::FindUniform(const String & name)
+	ShaderUniform* Shader::FindRenderUniform(const String& name)
 	{
-		for (int i = 0;i < m_Uniforms.size();i++)
+		for (int i = 0; i < m_RenderUniforms.size(); i++)
 		{
-			if (m_Uniforms[i]->GetName() == name)
+			if (m_RenderUniforms[i]->GetName() == name)
 			{
-				return m_Uniforms[i];
+				return m_RenderUniforms[i];
+			}
+		}
+
+		return nullptr;
+	}
+
+	ShaderUniform* Shader::FindUserUniform(const String & name)
+	{
+		for (int i = 0;i < m_UserUniforms.size();i++)
+		{
+			if (m_UserUniforms[i]->GetName() == name)
+			{
+				return m_UserUniforms[i];
 			}
 		}
 

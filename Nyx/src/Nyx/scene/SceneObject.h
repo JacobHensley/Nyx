@@ -18,8 +18,8 @@ namespace Nyx {
 		void Update();
 		void Render();
 		
-		inline void SetVisibility(bool visible) { m_Visibility = visible; }
-		inline bool IsVisible() { return m_Visibility; }
+		inline void Toggle(bool active) { m_IsActive = active; }
+		inline bool IsActive() { return m_IsActive; }
 
 		void AddComponent(Component* component);
 
@@ -29,7 +29,7 @@ namespace Nyx {
 
 	private:
 		Scene* m_Scene = nullptr;
-		bool m_Visibility = true;
+		bool m_IsActive = true;
 	};
 
 }

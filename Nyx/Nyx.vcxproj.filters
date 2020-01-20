@@ -66,6 +66,9 @@
     <ClInclude Include="src\Nyx\Log.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\Utilities.h">
+      <Filter>src\Nyx</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\events\AppEvent.h">
       <Filter>src\Nyx\events</Filter>
     </ClInclude>
@@ -129,6 +132,9 @@
     <ClInclude Include="src\Nyx\graphics\renderer\PRBMaterial.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\graphics\renderer\Renderer.h">
+      <Filter>src\Nyx\graphics\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\Shader.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
@@ -156,10 +162,16 @@
     <ClInclude Include="src\Nyx\scene\SceneObject.h">
       <Filter>src\Nyx\scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\scene\SceneRenderer.h">
+      <Filter>src\Nyx\scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\scene\component\Component.h">
       <Filter>src\Nyx\scene\component</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\scene\component\ComponentCache.h">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h">
       <Filter>src\Nyx\scene\component</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\scene\component\MeshComponent.h">
@@ -171,7 +183,6 @@
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
@@ -181,6 +192,9 @@
       <Filter>src\Nyx</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
+      <Filter>src\Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\Utilities.cpp">
       <Filter>src\Nyx</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp">
@@ -237,6 +251,9 @@
     <ClCompile Include="src\Nyx\graphics\renderer\PRBMaterial.cpp">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\graphics\renderer\Renderer.cpp">
+      <Filter>src\Nyx\graphics\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\Shader.cpp">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
@@ -255,6 +272,12 @@
     <ClCompile Include="src\Nyx\scene\SceneObject.cpp">
       <Filter>src\Nyx\scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\scene\SceneRenderer.cpp">
+      <Filter>src\Nyx\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\scene\component\MaterialComponent.cpp">
+      <Filter>src\Nyx\scene\component</Filter>
+    </ClCompile>
     <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp">
       <Filter>src\Nyx\scene\component</Filter>
     </ClCompile>
@@ -264,6 +287,5 @@
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\Utilities.cpp" />
   </ItemGroup>
 </Project>

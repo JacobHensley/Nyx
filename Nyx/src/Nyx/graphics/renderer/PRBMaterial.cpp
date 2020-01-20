@@ -20,6 +20,33 @@ namespace Nyx {
 	{
 	}
 
+	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue, Texture* albedoMap, bool usingMap)
+	{
+		SetAlbedo(albedoValue);
+		SetAlbedoMap(albedoMap);
+		UsingAlbedoMap(usingMap);
+	}
+
+	void PBRMaterial::SetMetalness(float metalnessValue, Texture* metalnessMap, bool usingMap)
+	{
+		SetMetalness(metalnessValue);
+		SetMetalnessMap(metalnessMap);
+		UsingMetalnessMap(usingMap);
+	}
+
+	void PBRMaterial::SetRoughness(float roughnessValue, Texture* roughnessMap, bool usingMap)
+	{
+		SetRoughness(roughnessValue);
+		SetRoughnessMap(roughnessMap);
+		UsingRoughnessMap(usingMap);
+	}
+
+	void PBRMaterial::SetNormal(Texture* normalMap, bool usingMap)
+	{
+		SetNormalMap(normalMap);
+		UsingNormalMap(usingMap);
+	}
+
 	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue)
 	{
 		SetUniform("u_AlbedoValue", albedoValue);

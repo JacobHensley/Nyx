@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <initializer_list>
+#include <queue>
 
 #include "Nyx/Log.h"
 #include "Nyx/Common.h"

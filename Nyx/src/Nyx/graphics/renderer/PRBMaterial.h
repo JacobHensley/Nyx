@@ -9,6 +9,11 @@ namespace Nyx {
 		PBRMaterial(Shader* shader);
 		~PBRMaterial();
 
+		void SetAlbedo(glm::vec3 albedoValue, Texture* albedoMap, bool usingMap);
+		void SetMetalness(float metalnessValue, Texture* metalnessMap, bool usingMap);
+		void SetRoughness(float roughnessValue, Texture* roughnessMap, bool usingMap);
+		void SetNormal(Texture* normalMap, bool usingMap);
+
 		void SetAlbedo(glm::vec3 albedoValue);
 		void SetMetalness(float metalnessValue);
 		void SetRoughness(float roughnessValue);

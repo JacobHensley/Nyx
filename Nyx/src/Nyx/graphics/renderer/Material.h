@@ -20,7 +20,7 @@ namespace Nyx {
 		template<typename T>
 		bool SetUniform(const String& name, const T& data)
 		{
-			ShaderUniform* uniform = m_Shader->FindUniform(name);
+			ShaderUniform* uniform = m_Shader->FindUserUniform(name);
 
 			if (uniform == nullptr) 
 			{

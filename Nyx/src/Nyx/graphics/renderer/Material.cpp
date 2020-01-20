@@ -6,8 +6,8 @@ namespace Nyx {
 	Material::Material(Shader* shader)
 		:	m_Shader(shader)
 	{
-		m_UniformBuffer = (byte*)malloc(m_Shader->GetUniformSize());
-		memset(m_UniformBuffer, 0, m_Shader->GetUniformSize());
+		m_UniformBuffer = (byte*)malloc(m_Shader->GetUserUniformSize());
+		memset(m_UniformBuffer, 0, m_Shader->GetUserUniformSize());
 
 		NX_CORE_INFO("Creating Material with Shader at path: {0}", m_Shader->GetPath());
 	}
@@ -29,7 +29,7 @@ namespace Nyx {
 
 	void Material::SetTexture(const String& name, Texture* texture)
 	{
-		ShaderUniform* uniform = m_Shader->FindUniform(name);
+		ShaderUniform* uniform = m_Shader->FindUserUniform(name);
 
 		uint slot = uniform->GetSampler();
 		if (m_Textures.size() <= slot)
@@ -42,7 +42,7 @@ namespace Nyx {
 
 	void Material::SetTexture(const String& name, TextureCube* texture)
 	{
-		ShaderUniform* uniform = m_Shader->FindUniform(name);
+		ShaderUniform* uniform = m_Shader->FindUserUniform(name);
 
 		uint slot = uniform->GetSampler();
 		if (m_TextureCubes.size() <= slot)
@@ -55,9 +55,9 @@ namespace Nyx {
 
 	void Material::UploadUniformBuffer()
 	{
-		for (int i = 0;i < m_Shader->GetUniforms().size();i++)
+		for (int i = 0;i < m_Shader->GetUserUniforms().size();i++)
 		{
-			ShaderUniform* uniform = m_Shader->GetUniforms()[i];
+			ShaderUniform* uniform = m_Shader->GetUserUniforms()[i];
 			const String& name = uniform->GetName();
 			int offset = uniform->GetOffset();
 			switch (uniform->GetType())
