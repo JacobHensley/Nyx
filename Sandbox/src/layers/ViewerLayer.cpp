@@ -5,7 +5,7 @@
 #include "Nyx/graphics/DebugRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 #include "Nyx/Utilities.h"
-#include "Nyx/graphics/renderer/Renderer.h"
+#include "Nyx/scene/SceneRenderer.h"
 
 ViewerLayer::ViewerLayer(const String& name)
 	: Layer(name)
@@ -126,7 +126,7 @@ void ViewerLayer::Render()
 
 	m_Scene->Render();
 
-	m_RenderSpaceBuffer = Renderer::GetFinalBuffer();
+	m_RenderSpaceBuffer = SceneRenderer::GetFinalBuffer();
 }
 
 void ViewerLayer::ImGUIRender()
@@ -151,7 +151,7 @@ void ViewerLayer::ImGUIRender()
 
 	//Set HDR exposure
 	ImGui::SliderFloat("HDR Exposure", &m_Exposure, 0.0f, 10.f);
-	Renderer::SetExposure(m_Exposure);
+	SceneRenderer::SetExposure(m_Exposure);
 
 	//ImGuizmo mode
 	ImGui::RadioButton("TRANSLATE", &m_GizmoMode, 0); ImGui::SameLine();

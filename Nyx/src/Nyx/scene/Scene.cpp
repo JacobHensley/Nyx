@@ -13,6 +13,7 @@ namespace Nyx {
 	{
 		m_SkyboxMaterial = new Material(new Shader("assets/shaders/Skybox.shader"));
 		m_SkyboxMaterial->SetTexture("u_SkyboxTexture", skybox);
+		m_SkyboxMaterial->SetDepthTesting(false);
 		m_SkyboxMesh = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
 
 		NX_CORE_INFO("Created Scene");
@@ -35,7 +36,7 @@ namespace Nyx {
 
 		SceneRenderer::Begin(this);
 		
-		SceneRenderer::SubmitMesh(m_SkyboxMesh, glm::mat4(1.0f), false, m_SkyboxMaterial);
+		SceneRenderer::SubmitMesh(m_SkyboxMesh, glm::mat4(1.0f), m_SkyboxMaterial);
 
 		for (auto component : meshComponents)
 		{
@@ -52,7 +53,7 @@ namespace Nyx {
 				MaterialComponent* materialComponent = m_ComponentCache.Get<MaterialComponent>(meshComponent->GetSceneObject());
 
 				if (materialComponent)
-					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), true, materialComponent->GetMaterial());
+					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
 				else
 					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
 			}

@@ -2,8 +2,21 @@
 #include "nyx/scene/Scene.h"
 #include "nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/Material.h"
+#include "Nyx/graphics/renderer/RenderPass.h"
 
 namespace Nyx {
+
+	struct RenderCommand
+	{
+		RenderCommand(Mesh* mesh, glm::mat4 transform, Material* material)
+			: mesh(mesh), transform(transform), material(material)
+		{
+		}
+
+		Mesh* mesh;
+		glm::mat4 transform;
+		Material* material;
+	};
 
 	class SceneRenderer
 	{
@@ -12,15 +25,36 @@ namespace Nyx {
 		~SceneRenderer();
 
 	public:
-		static void Begin(Scene* scene, Material* sceneMaterialOverride = nullptr);
-		static void Flush();
-		static void End();
+		static inline void Begin(Scene* scene) { s_Instance->BeginI(scene); }
+		static inline void Flush() { s_Instance->FlushI(); }
+		static inline void End() { s_Instance->EndI(); }
 
-		static void SubmitMesh(Mesh* mesh, glm::mat4 transform, bool depthTesting = true, Material* objectMaterialOverride = nullptr);
+		static inline void SubmitMesh(Mesh* mesh, glm::mat4 transform, Material* material = nullptr) { s_Instance->SubmitMeshI(mesh, transform, material); }
 
+		static inline void InitGL() { s_Instance->InitGLI(); }
+
+		static inline FrameBuffer* GetFinalBuffer() { return s_Instance->m_FinalBuffer; }
+		static inline void SetExposure(float exposure) { s_Instance->m_Exposure = exposure; }
+		
 	private:
-		static Scene* m_ActiveScene;
-		static Material* m_ActiveSceneMaterial;
+		void BeginI(Scene* scene);
+		void FlushI();
+		void EndI();
+
+		void SubmitMeshI(Mesh* mesh, glm::mat4 transform, Material* material);
+
+		void InitGLI();
+
+		Scene* m_ActiveScene = nullptr;
+		Material* m_ActiveSceneMaterial = nullptr;
+		std::vector<RenderCommand> m_RenderCommands;
+
+		FrameBuffer* m_FinalBuffer;
+
+		RenderPass* m_HDRPass;
+		FrameBuffer* m_HDRFrameBuffer;
+		Shader* m_HDRShader;
+		float m_Exposure = 1.0f;
 
 		static SceneRenderer* s_Instance;
 	};

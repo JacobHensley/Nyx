@@ -4,14 +4,14 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TexCoord;
 
-uniform mat4 u_InverseVP;
+uniform mat4 r_InverseVP;
 
 out vec3 v_Position;
 
 void main()
 {
 	vec4 position = vec4(a_Position.xy, 1.0, 1.0);
-	v_Position = (u_InverseVP * position).xyz;
+	v_Position = (r_InverseVP * position).xyz;
 
 	gl_Position = position;
 }

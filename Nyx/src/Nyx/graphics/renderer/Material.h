@@ -17,6 +17,11 @@ namespace Nyx {
 		void SetTexture(const String& name, Texture* texture);
 		void SetTexture(const String& name, TextureCube* texture);
 
+		inline bool GetDepthTesting() { return m_DepthTesting; }
+		inline void SetDepthTesting(bool depthTesting) { m_DepthTesting = depthTesting; }
+
+		inline Shader* GetShader() { return m_Shader; }
+
 		template<typename T>
 		bool SetUniform(const String& name, const T& data)
 		{
@@ -33,6 +38,8 @@ namespace Nyx {
 
 	private:
 		void UploadUniformBuffer();
+
+		bool m_DepthTesting = true;
 
 		Shader* m_Shader;
 		byte* m_UniformBuffer;

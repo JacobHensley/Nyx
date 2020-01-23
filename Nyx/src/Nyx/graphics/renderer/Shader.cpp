@@ -257,6 +257,28 @@ namespace Nyx {
 			}
 			isInStruct = false;
 		}
+
+		SetRenderUniformIDs();
+	}
+
+	void Shader::SetRenderUniformIDs()
+	{
+		for (int i = 0; i < m_RenderUniforms.size(); i++)
+		{
+			const String& name = m_RenderUniforms.at(i)->GetName();
+			if (name == "r_ModelMatrix")
+				m_RenderUniformIDs.push_back(RenderUniformID::MODEL_MATRIX);
+			if (name == "r_ViewMatrix")
+				m_RenderUniformIDs.push_back(RenderUniformID::VIEW_MATRIX);
+			if (name == "r_ProjMatrix")
+				m_RenderUniformIDs.push_back(RenderUniformID::PROJ_MATRIX);
+			if (name == "r_InverseVP")
+				m_RenderUniformIDs.push_back(RenderUniformID::INVERSE_VP);
+			if (name == "r_MVP")
+				m_RenderUniformIDs.push_back(RenderUniformID::MVP);
+			if (name == "r_CameraPosition")
+				m_RenderUniformIDs.push_back(RenderUniformID::CAMERA_POSITION);
+		}
 	}
 
 	void Shader::PushUniform(ShaderType uniform)

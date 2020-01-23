@@ -8,6 +8,11 @@ namespace Nyx {
 
 	struct ShaderSource;
 
+	enum RenderUniformID
+	{
+		IDNONE = 0, MODEL_MATRIX, VIEW_MATRIX, PROJ_MATRIX, INVERSE_VP, MVP, CAMERA_POSITION
+	};
+
 	struct UniformStruct
 	{
 		String name;
@@ -62,6 +67,8 @@ namespace Nyx {
 		inline int GetRenderUniformSize() const { return m_UniformRenderSize; }
 		inline std::vector<ShaderUniform*> GetUserUniforms() const { return m_UserUniforms; }
 		
+		inline std::vector<RenderUniformID> GetRenderUniformIDs() const { return m_RenderUniformIDs; }
+
 		inline uint GetID() const { return m_ShaderID; }
 		inline const String& GetPath() const { return m_FilePath; }
 
@@ -82,6 +89,7 @@ namespace Nyx {
 		void ParseUniformStructs();
 		void ParseUniformBlock(int startingLineNumber);
 		void ParseUniforms();
+		void SetRenderUniformIDs();
 		void PushUniform(ShaderType uniform);
 
 		void SetTextureIDs(const String& name);
@@ -98,6 +106,7 @@ namespace Nyx {
 		int m_UniformUserSize = 0;
 
 		std::unordered_map<String, int> m_UniformLocationCache;
+		std::vector<RenderUniformID> m_RenderUniformIDs;
 		std::vector<UniformStruct> m_UniformStructs;
 		std::vector<ShaderUniform*> m_UserUniforms;
 		std::vector<ShaderUniform*> m_RenderUniforms;

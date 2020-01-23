@@ -7,8 +7,8 @@ layout(location = 2) in vec3 a_Tangent;
 layout(location = 3) in vec3 a_Binormals;
 layout(location = 4) in vec2 a_TexCoords;
 
-uniform mat4 u_MVP;
-uniform mat4 u_ModelMatrix;
+uniform mat4 r_MVP;
+uniform mat4 r_ModelMatrix;
 
 out vec3 v_Normal;
 out vec3 v_WorldPosition;
@@ -17,12 +17,12 @@ out mat3 v_WorldNormals;
 
 void main()
 {
-	gl_Position = u_MVP * vec4(a_Position, 1.0f);
+	gl_Position = r_MVP * vec4(a_Position, 1.0f);
 
-	v_Normal = mat3(u_ModelMatrix) * a_Normal;
-	v_WorldPosition = vec3(u_ModelMatrix * vec4(a_Position, 1.0f));
+	v_Normal = mat3(r_ModelMatrix) * a_Normal;
+	v_WorldPosition = vec3(r_ModelMatrix * vec4(a_Position, 1.0f));
 	v_TexCoords = a_TexCoords;
-	v_WorldNormals = mat3(u_ModelMatrix) * mat3(a_Tangent, a_Binormals, a_Normal);
+	v_WorldNormals = mat3(r_ModelMatrix) * mat3(a_Tangent, a_Binormals, a_Normal);
 }
 
 #Shader Fragment
@@ -36,7 +36,7 @@ const float PI = 3.141592;
 uniform vec3 u_Radiance;
 uniform vec3 u_Direction;
 
-uniform vec3 u_CameraPosition;
+uniform vec3 r_CameraPosition;
 
 uniform float u_UsingIBL;
 uniform float u_UsingLighting;
@@ -172,7 +172,7 @@ void main()
 	float metalness = GetMetalness(v_TexCoords);
 	float roughness = GetRoughness(v_TexCoords);
 
-	vec3 view = normalize(u_CameraPosition - v_WorldPosition);
+	vec3 view = normalize(r_CameraPosition - v_WorldPosition);
 	float NdotV = max(dot(normal, view), 0.0);
 
 	// I - 2.0 * dot(N, I) * N.

@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GL/GL.h>
 #include "Nyx/GLError.h"
-#include "Nyx/graphics/renderer/Renderer.h"
+#include "Nyx/scene/SceneRenderer.h"
 
 namespace Nyx {
 
@@ -34,7 +34,7 @@ namespace Nyx {
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Renderer::InitGL();
+		SceneRenderer::InitGL();
 
 		NX_CORE_INFO("Created OpenGL Graphics Context");
 	}
