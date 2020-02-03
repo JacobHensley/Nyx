@@ -8,24 +8,9 @@
 #include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/PRBMaterial.h"
+#include "Nyx/graphics/LightEnvironment.h"
 
 using namespace Nyx;
-
-	struct Light
-	{
-		glm::vec3 radiance;
-		glm::vec3 direction;
-
-		Light(glm::vec3 radiance, glm::vec3 direction)
-			: radiance(radiance), direction(direction)
-		{
-		}
-
-		Light()
-			: radiance(glm::vec3()), direction(glm::vec3())
-		{
-		}
-	};
 
 class ViewerLayer : public Layer
 {
@@ -46,6 +31,8 @@ private:
 	bool OnMouseClick(MouseButtonPressedEvent& e);
 
 private:
+	LightEnvironment* m_LightEnvironment = nullptr;
+
 	//PBR Values
 	Shader* m_PBRShader = nullptr;
 

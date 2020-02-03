@@ -22,8 +22,9 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_RadianceTexture = new TextureCube("assets/textures/canyon_Radiance.png");
 
 	//Scene
+	m_LightEnvironment = new LightEnvironment();
 	m_Camera = new Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-	m_Scene = new Scene(m_Camera, m_IrradianceTexture);
+	m_Scene = new Scene(m_Camera, m_LightEnvironment, m_IrradianceTexture);
 
 	//Scene Object
 	m_ObjectMesh = new Mesh("assets/models/Cerberus.FBX");
@@ -58,6 +59,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	//Light
 	m_Light = Light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
 	m_LightColor = m_Light.radiance;
+	m_LightEnvironment->AddLight(&m_Light);
 }
 
 ViewerLayer::~ViewerLayer()
@@ -111,6 +113,7 @@ void ViewerLayer::Render()
 	m_GridMesh->Render(true);
 
 	//Upload scene object data
+	//Lights[LightIndex], LightEnv[i]
 	m_ObjectMaterial->SetUniform("u_Direction", m_Light.direction);
 	m_ObjectMaterial->SetUniform("u_Radiance", m_Light.radiance);
 	m_ObjectMaterial->SetUniform("u_UsingIBL", (float)m_UsingIBL);

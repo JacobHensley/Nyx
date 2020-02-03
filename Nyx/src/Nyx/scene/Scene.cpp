@@ -6,10 +6,11 @@
 #include "SceneRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 
+
 namespace Nyx {
 
-	Scene::Scene(Camera* camera, TextureCube* skybox)
-		: m_Camera(camera)
+	Scene::Scene(Camera* camera, LightEnvironment* lightEnv, TextureCube* skybox)
+		: m_Camera(camera), m_LightEnvironment(lightEnv)
 	{
 		m_SkyboxMaterial = new Material(new Shader("assets/shaders/Skybox.shader"));
 		m_SkyboxMaterial->SetTexture("u_SkyboxTexture", skybox);

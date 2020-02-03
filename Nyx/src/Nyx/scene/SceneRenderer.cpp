@@ -20,6 +20,12 @@ namespace Nyx {
 		m_ActiveScene = scene;
 
 		m_HDRPass->Bind();
+
+		auto lights = m_ActiveScene->GetLightEnvironment()->GetLights();
+
+		for (int i = 0; i < lights.size(); i++)
+		{
+		}
 	}
 
 	void SceneRenderer::FlushI()

@@ -102,7 +102,7 @@
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
-    <ClInclude Include="src\Nyx\graphics\renderer\RenderPass.h" />
+    <ClInclude Include="src\Nyx\graphics\LightEnvironment.h" />
     <ClInclude Include="src\Nyx\Log.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />
     <ClInclude Include="src\Nyx\events\AppEvent.h" />
@@ -126,6 +126,7 @@
     <ClInclude Include="src\Nyx\graphics\renderer\Material.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\Mesh.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\PRBMaterial.h" />
+    <ClInclude Include="src\Nyx\graphics\renderer\RenderPass.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\Renderer.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\Shader.h" />
     <ClInclude Include="src\Nyx\graphics\renderer\ShaderUniform.h" />
@@ -149,7 +150,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
-    <ClCompile Include="src\Nyx\graphics\renderer\RenderPass.cpp" />
+    <ClCompile Include="src\Nyx\graphics\LightEnvironment.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />
     <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="src\Nyx\graphics\renderer\Material.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\Mesh.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\PRBMaterial.cpp" />
+    <ClCompile Include="src\Nyx\graphics\renderer\RenderPass.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\Renderer.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\Shader.cpp" />
     <ClCompile Include="src\Nyx\graphics\renderer\ShaderUniform.cpp" />

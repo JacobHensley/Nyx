@@ -2,6 +2,7 @@
 #include "SceneObject.h"
 #include "Nyx/graphics/renderer/camera/Camera.h"
 #include "Nyx/graphics/renderer/API/TextureCube.h"
+#include "Nyx/graphics/LightEnvironment.h"
 
 namespace Nyx {
 
@@ -11,7 +12,7 @@ namespace Nyx {
 	class Scene
 	{
 	public:
-		Scene(Camera* camera, TextureCube* skybox);
+		Scene(Camera* camera, LightEnvironment* lightEnv, TextureCube* skybox);
 		~Scene();
 	
 	public:
@@ -36,6 +37,7 @@ namespace Nyx {
 		}
 
 		const Camera* GetCamera() { return m_Camera; }
+		LightEnvironment* GetLightEnvironment() { return m_LightEnvironment; }
 
 	private:
 		ComponentCache m_ComponentCache;
@@ -45,7 +47,7 @@ namespace Nyx {
 		Material* m_SkyboxMaterial;
 
 		Camera* m_Camera;
-	
+		LightEnvironment* m_LightEnvironment;
 	};
 
 }
