@@ -17,10 +17,13 @@ IncludeDir["assimp"] = "Nyx/vendor/assimp/include"
 IncludeDir["GLFW"] =   "Nyx/vendor/GLFW/include"
 IncludeDir["glad"] =   "Nyx/vendor/glad/include"
 IncludeDir["imgui"] =  "Nyx/vendor/imgui"
+IncludeDir["sol2"] =   "Nyx/vendor/sol2/include"
+IncludeDir["lua"] =    "Nyx/vendor/sol2/lua/src"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
 include "Nyx/vendor/imgui"
+include "Nyx/vendor/sol2"
 
 project "Nyx"
 	location "Nyx"
@@ -51,9 +54,10 @@ project "Nyx"
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
-		"%{IncludeDir.imgui}"
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.sol2}",
+		"%{IncludeDir.lua}"
 	}
-
 
 	filter "system:windows"
 		cppdialect "C++17"
@@ -109,7 +113,9 @@ project "Sandbox"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.glad}",
-		"%{IncludeDir.imgui}"
+		"%{IncludeDir.imgui}",
+		"%{IncludeDir.sol2}",
+		"%{IncludeDir.lua}"
 	}
 
 	links 
@@ -118,6 +124,7 @@ project "Sandbox"
 		"GLFW",
 		"glad",
 		"imgui",
+		"sol2",
 		"opengl32.lib"
 	}
 
