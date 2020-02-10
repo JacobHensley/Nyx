@@ -14,6 +14,8 @@ namespace Nyx {
 		NX_CORE_ASSERT(!s_Instance, "Instance of Application already exists");
 		s_Instance = this;
 
+		m_LuaState.open_libraries(sol::lib::base);
+
 		Log::Init();
 
 		m_Window = new Window("Nyx Engine", 1280, 720);
