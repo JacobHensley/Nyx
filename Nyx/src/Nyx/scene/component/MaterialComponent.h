@@ -13,6 +13,7 @@ namespace Nyx {
 	public:
 		Material* GetMaterial() { return m_Material; }
 
+
 		static Component::Type* GetStaticType()
 		{
 			static Component::Type type = { "Material" };

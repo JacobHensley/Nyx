@@ -8,7 +8,6 @@ namespace Nyx {
 	{
 	public:
 		TransformComponent(const glm::mat4& transform);
-
 	public:
 		void Rotate(float degrees, glm::vec3 axis);
 		void Translate(glm::vec3 delta);

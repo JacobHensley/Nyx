@@ -3,6 +3,7 @@
 #include "component/MeshComponent.h"
 #include "component/TransformComponent.h"
 #include "component/MaterialComponent.h"
+#include "component/ScriptComponent.h"
 #include "SceneRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 
@@ -29,6 +30,12 @@ namespace Nyx {
 	{
 		for (SceneObject& object : m_SceneObjects)
 			object.Update();
+
+		auto& scriptComponents = m_ComponentCache.GetAll<ScriptComponent>();
+		for (auto component : scriptComponents)
+		{
+			component->OnUpdate();
+		}
 	}
 
 	void Scene::Render()
@@ -58,6 +65,12 @@ namespace Nyx {
 				else
 					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
 			}
+		}
+
+		auto& scriptComponents = m_ComponentCache.GetAll<ScriptComponent>();
+		for (auto component : scriptComponents)
+		{
+			component->OnRender();
 		}
 
 		SceneRenderer::Flush();
@@ -111,6 +124,7 @@ namespace Nyx {
 	void Scene::AddComponent(Component* component)
 	{
 		m_ComponentCache.Add(component);
+		component->OnAttach();
 	}
 
 }

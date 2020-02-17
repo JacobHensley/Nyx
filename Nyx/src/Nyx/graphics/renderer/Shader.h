@@ -13,6 +13,18 @@ namespace Nyx {
 		IDNONE = 0, MODEL_MATRIX, VIEW_MATRIX, PROJ_MATRIX, INVERSE_VP, MVP, CAMERA_POSITION
 	};
 
+	struct RendererUniform
+	{
+		RenderUniformID ID;
+		int32_t Location;
+
+		bool operator==(const RendererUniform& other) const { return ID == other.ID; }
+	};
+
+	struct RendererUniformHash {
+		size_t operator() (const RendererUniform& uniform) const { return std::hash<int>()(uniform.ID); }
+	};
+
 	struct UniformStruct
 	{
 		String name;
@@ -46,6 +58,7 @@ namespace Nyx {
 
 	class Shader
 	{
+		using RendererUniformSet = std::unordered_set<RendererUniform, RendererUniformHash>;
 	public:
 		Shader(const String& filePath);
 		~Shader();
@@ -72,15 +85,18 @@ namespace Nyx {
 		inline uint GetID() const { return m_ShaderID; }
 		inline const String& GetPath() const { return m_FilePath; }
 
+		const RendererUniformSet& GetRendererUniforms() const { return m_RendererUniforms; }
+
 		void SetUniform1f(const String& name, float value);
 		void SetUniform2f(const String& name, const glm::vec2& vec);
 		void SetUniform3f(const String& name, const glm::vec3& vec);
+		void SetUniform3f(int location, const glm::vec3& vec);
 		void SetUniform4f(const String& name, const glm::vec4& vec);
 		void SetUniformMat4(const String& name, const glm::mat4& matrix);
+		void SetUniformMat4(int location, const glm::mat4& matrix);
 		void SetUniform1i(const String& name, int value);
 		void SetUniform1iv(const String& name, int* value, int count);
 		void SetUniformBool(const String& name, bool value);
-
 	private:
 		uint Init();
 		ShaderSource SplitShader(const String& filePath);
@@ -91,6 +107,7 @@ namespace Nyx {
 		void ParseUniforms();
 		void SetRenderUniformIDs();
 		void PushUniform(ShaderType uniform);
+		bool ResolveRendererUniform(RenderUniformID id, const std::string& name);
 
 		void SetTextureIDs(const String& name);
 		int GetUniformLocation(const String& name);
@@ -107,6 +124,7 @@ namespace Nyx {
 
 		std::unordered_map<String, int> m_UniformLocationCache;
 		std::vector<RenderUniformID> m_RenderUniformIDs;
+		RendererUniformSet m_RendererUniforms;
 		std::vector<UniformStruct> m_UniformStructs;
 		std::vector<ShaderUniform*> m_UserUniforms;
 		std::vector<ShaderUniform*> m_RenderUniforms;

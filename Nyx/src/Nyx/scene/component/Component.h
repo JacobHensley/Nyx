@@ -12,6 +12,12 @@ namespace Nyx {
 			String Name;
 		};
 
+		virtual void OnAttach() {};
+		virtual void OnDetach() {};
+		
+		virtual void OnUpdate() {};
+		virtual void OnRender() {};
+
 		virtual Type* GetType() const { return nullptr; }
 
 		inline SceneObject* GetSceneObject() { return m_sceneObject; }

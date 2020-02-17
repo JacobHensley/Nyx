@@ -8,6 +8,30 @@ namespace Nyx {
 
 	SceneRenderer::SceneRenderer()
 	{
+		m_RendererUniformFuncs[RenderUniformID::MODEL_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniformMat4(uniform.Location, command.transform);
+		};
+		m_RendererUniformFuncs[RenderUniformID::VIEW_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetViewMatrix());
+		};
+		m_RendererUniformFuncs[RenderUniformID::PROJ_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetProjectionMatrix());
+		};
+		m_RendererUniformFuncs[RenderUniformID::INVERSE_VP] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniformMat4(uniform.Location, glm::inverse(m_ActiveScene->GetCamera()->GetViewMatrix()));
+		};
+		m_RendererUniformFuncs[RenderUniformID::MVP] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetProjectionMatrix() * m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
+		};
+		m_RendererUniformFuncs[RenderUniformID::CAMERA_POSITION] = [&](const RendererUniform& uniform, RenderCommand& command, Shader* shader)
+		{
+			shader->SetUniform3f(uniform.Location, m_ActiveScene->GetCamera()->GetPosition());
+		};
 	}
 
 	SceneRenderer::~SceneRenderer()
@@ -30,28 +54,19 @@ namespace Nyx {
 
 	void SceneRenderer::FlushI()
 	{
+		// Set Camera
+
 		for (int i = 0; i < m_RenderCommands.size(); i++)
 		{
 			RenderCommand command = m_RenderCommands.at(i);
 			command.material->Bind();
+			Shader* shader = command.material->GetShader();
 
-			for (int j = 0; j < command.material->GetShader()->GetRenderUniformIDs().size(); j++)
-			{
-				RenderUniformID ID = command.material->GetShader()->GetRenderUniformIDs().at(j);
-				Shader* shader = command.material->GetShader();
-				if (ID == RenderUniformID::MODEL_MATRIX)
-					shader->SetUniformMat4("r_ModelMatrix", command.transform);
-				if (ID == RenderUniformID::VIEW_MATRIX)
-					shader->SetUniformMat4("r_ViewMatrix", m_ActiveScene->GetCamera()->GetViewMatrix());
-				if (ID == RenderUniformID::PROJ_MATRIX)
-					shader->SetUniformMat4("r_ProjMatrix", m_ActiveScene->GetCamera()->GetProjectionMatrix());
-				if (ID == RenderUniformID::INVERSE_VP)
-					shader->SetUniformMat4("r_InverseVP", glm::inverse(m_ActiveScene->GetCamera()->GetViewMatrix()));
-				if (ID == RenderUniformID::MVP)
-					shader->SetUniformMat4("r_MVP", m_ActiveScene->GetCamera()->GetProjectionMatrix() * m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
-				if (ID == RenderUniformID::CAMERA_POSITION)
-					shader->SetUniform3f("r_CameraPosition", m_ActiveScene->GetCamera()->GetPosition());
-			}
+			// Transform
+
+			const auto& rendererUniforms = shader->GetRendererUniforms();
+			for (const auto& uniform : rendererUniforms)
+				m_RendererUniformFuncs[uniform.ID](uniform, command, shader);
 
 			Renderer::SubmitMesh(command.mesh, command.transform, command.material);
 		}

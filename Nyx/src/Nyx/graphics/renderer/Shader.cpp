@@ -20,8 +20,15 @@ namespace Nyx {
 		NX_CORE_INFO("Created Shader at Path: {0}", m_FilePath);
 
 		ParseUniforms();
-
 		PrintUniforms();
+		
+		// Renderer Uniforms
+		ResolveRendererUniform(RenderUniformID::MODEL_MATRIX, "r_ModelMatrix");
+		ResolveRendererUniform(RenderUniformID::VIEW_MATRIX, "r_ViewMatrix");
+		ResolveRendererUniform(RenderUniformID::PROJ_MATRIX, "r_ProjMatrix");
+		ResolveRendererUniform(RenderUniformID::INVERSE_VP, "r_InverseVP");
+		ResolveRendererUniform(RenderUniformID::MVP, "r_MVP");
+		ResolveRendererUniform(RenderUniformID::CAMERA_POSITION, "r_CameraPosition");
 	}
 
 	Shader::~Shader()
@@ -315,6 +322,17 @@ namespace Nyx {
 		}
 	}
 
+	bool Shader::ResolveRendererUniform(RenderUniformID id, const std::string& name)
+	{
+		int location = GetUniformLocation(name);
+		if (location != -1)
+		{
+			m_RendererUniforms.emplace(RendererUniform{ id, location });
+			return true;
+		}
+		return false;
+	}
+
 	void Shader::SetTextureIDs(const String& name)
 	{
 		int textureIDs[32];
@@ -426,6 +444,11 @@ namespace Nyx {
 		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
 	}
 
+	void Shader::SetUniform3f(int location, const glm::vec3& vec)
+	{
+		glUniform3f(location, vec.x, vec.y, vec.z);
+	}
+
 	void Shader::SetUniform4f(const String& name, const glm::vec4& vec)
 	{
 		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
@@ -434,6 +457,11 @@ namespace Nyx {
 	void Shader::SetUniformMat4(const String& name, const glm::mat4& matrix)
 	{
 		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix[0]));
+	}
+
+	void Shader::SetUniformMat4(int location, const glm::mat4& matrix)
+	{
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix[0]));
 	}
 
 	void Shader::SetUniform1i(const String& name, int value)

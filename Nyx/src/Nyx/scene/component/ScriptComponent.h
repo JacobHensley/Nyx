@@ -7,13 +7,15 @@ namespace Nyx {
 	class ScriptComponent : public Component
 	{
 	public:
-		ScriptComponent(Script& script);
+		ScriptComponent(Script* script);
+		ScriptComponent(const String& path);
 
 	public:
-		void OnAttach();
-		void OnUpdate();
-		void OnRender();
-		void OnDetach();
+		virtual void OnAttach();
+		virtual void OnDetach();
+
+		virtual void OnUpdate();
+		virtual void OnRender();
 
 		static Component::Type* GetStaticType()
 		{
@@ -24,7 +26,7 @@ namespace Nyx {
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
 	public:
-		Script& m_Script;
+		Script* m_Script;
 	};
 
 }

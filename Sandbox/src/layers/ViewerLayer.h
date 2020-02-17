@@ -6,6 +6,7 @@
 
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/scene/component/MaterialComponent.h"
+#include "Nyx/scene/component/ScriptComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/PRBMaterial.h"
 #include "Nyx/graphics/LightEnvironment.h"
@@ -66,6 +67,7 @@ private:
 	MeshComponent* m_ObjectMeshComponent = nullptr;
 	TransformComponent* m_ObjectTransformComponent = nullptr;
 	MaterialComponent* m_ObjectMaterialComponent = nullptr;
+	ScriptComponent* m_ObjectScriptComponent = nullptr;
 
 	//Scene Object Data
 	Mesh* m_ObjectMesh = nullptr;

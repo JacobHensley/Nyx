@@ -107,7 +107,6 @@
     <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
-    <ClInclude Include="src\Nyx\scene\component\ScriptComponent.h" />
     <ClInclude Include="src\Nyx\Script.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />
     <ClInclude Include="src\Nyx\graphics\DebugRenderer.h" />
@@ -144,6 +143,7 @@
     <ClInclude Include="src\Nyx\scene\component\ComponentCache.h" />
     <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h" />
     <ClInclude Include="src\Nyx\scene\component\MeshComponent.h" />
+    <ClInclude Include="src\Nyx\scene\component\ScriptComponent.h" />
     <ClInclude Include="src\Nyx\scene\component\TransformComponent.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
@@ -153,7 +153,6 @@
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
-    <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />
     <ClCompile Include="src\Nyx\graphics\DebugRenderer.cpp" />
@@ -186,6 +185,7 @@
     <ClCompile Include="src\Nyx\scene\SceneRenderer.cpp" />
     <ClCompile Include="src\Nyx\scene\component\MaterialComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp" />
+    <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>

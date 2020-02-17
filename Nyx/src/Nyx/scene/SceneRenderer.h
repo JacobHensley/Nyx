@@ -56,6 +56,8 @@ namespace Nyx {
 		Shader* m_HDRShader;
 		float m_Exposure = 1.0f;
 
+		std::unordered_map<RenderUniformID, std::function<void(const RendererUniform&, RenderCommand&, Shader*)>> m_RendererUniformFuncs;
+
 		static SceneRenderer* s_Instance;
 	};
 }
