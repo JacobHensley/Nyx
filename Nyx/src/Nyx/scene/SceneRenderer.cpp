@@ -92,6 +92,12 @@ namespace Nyx {
 		Renderer::End();
 	}
 
+	void SceneRenderer::ResizeI(uint32_t width, uint32_t height)
+	{
+		m_HDRFrameBuffer->Resize(width, height);
+		m_FinalBuffer->Resize(width, height);
+	}
+
 	void SceneRenderer::SubmitMeshI(Mesh* mesh, glm::mat4 transform, Material* material)
 	{
 		if (m_ActiveSceneMaterial != nullptr)

@@ -87,6 +87,13 @@ namespace Nyx {
 
 	uint Texture::Init(byte* imageData, uint width, uint height)
 	{
+		if (!m_Parameters.generateMips)
+		{
+			if (m_Parameters.filter == TextureFilter::LINEAR_MIPMAP)
+				m_Parameters.filter = TextureFilter::LINEAR;
+		}
+
+
 		uint textureID;
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -103,10 +110,18 @@ namespace Nyx {
 			glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
 		}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGL(m_Parameters.filter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGL(m_Parameters.filter));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, TextureWrapToGL(m_Parameters.wrap));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, TextureWrapToGL(m_Parameters.wrap));
+
+		GLenum filter = TextureFilterToGL(m_Parameters.filter);
+		GLenum magFilter = filter == GL_LINEAR_MIPMAP_LINEAR ? GL_LINEAR : filter;
+		GLenum wrap = TextureWrapToGL(m_Parameters.wrap);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+
+		if (m_Parameters.generateMips)
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -144,7 +159,6 @@ namespace Nyx {
 	{
 		switch (wrap)
 		{
-			case TextureWrap::CLAMP:			return GL_CLAMP;
 			case TextureWrap::CLAMP_TO_BORDER:	return GL_CLAMP_TO_BORDER;
 			case TextureWrap::CLAMP_TO_EDGE:	return GL_CLAMP_TO_EDGE;
 			case TextureWrap::REPEAT:			return GL_REPEAT;
@@ -157,8 +171,10 @@ namespace Nyx {
 	{
 		switch (filter)
 		{
+			case TextureFilter::LINEAR_MIPMAP:	return GL_LINEAR_MIPMAP_LINEAR;
 			case TextureFilter::LINEAR:			return GL_LINEAR;
 			case TextureFilter::NEAREST:		return GL_NEAREST;
+
 		}
 		return 0;
 	}

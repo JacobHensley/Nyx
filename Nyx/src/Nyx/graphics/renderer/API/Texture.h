@@ -7,7 +7,6 @@ namespace Nyx {
 	{
 		NONE = 0,
 		REPEAT,
-		CLAMP,
 		MIRRORED_REPEAT,
 		CLAMP_TO_EDGE,
 		CLAMP_TO_BORDER
@@ -16,6 +15,7 @@ namespace Nyx {
 	enum class TextureFilter
 	{
 		NONE = 0,
+		LINEAR_MIPMAP,
 		LINEAR,
 		NEAREST
 	};
@@ -37,8 +37,9 @@ namespace Nyx {
 		TextureFormat format;
 		TextureFilter filter;
 		TextureWrap wrap;
+		bool generateMips = false;
 
-		TextureParameters(TextureFormat format = TextureFormat::RGBA, TextureFilter filter = TextureFilter::LINEAR, TextureWrap wrap = TextureWrap::CLAMP)
+		TextureParameters(TextureFormat format = TextureFormat::RGBA, TextureFilter filter = TextureFilter::LINEAR_MIPMAP, TextureWrap wrap = TextureWrap::CLAMP_TO_EDGE)
 			: format(format), filter(filter), wrap(wrap)
 		{
 		}

@@ -35,12 +35,14 @@ namespace Nyx {
 
 		static inline FrameBuffer* GetFinalBuffer() { return s_Instance->m_FinalBuffer; }
 		static inline void SetExposure(float exposure) { s_Instance->m_Exposure = exposure; }
-		
+
+		static inline void Resize(uint32_t width, uint32_t height) { s_Instance->ResizeI(width, height); }
 	private:
 		void BeginI(Scene* scene);
 		void FlushI();
 		void EndI();
 
+		void ResizeI(uint32_t width, uint32_t height);
 		void SubmitMeshI(Mesh* mesh, glm::mat4 transform, Material* material);
 
 		void InitGLI();

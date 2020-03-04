@@ -95,6 +95,7 @@ private:
 
 	//Renderspace info
 	glm::vec2 m_RenderSpaceSize = glm::vec2();
+	glm::vec2 m_LastRenderSpaceSize = glm::vec2();
 	glm::vec2 m_RenderSpacePosition = glm::vec2();
 	FrameBuffer* m_RenderSpaceBuffer = nullptr;
 

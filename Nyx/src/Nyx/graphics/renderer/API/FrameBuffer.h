@@ -22,10 +22,10 @@ namespace Nyx {
 		inline Texture* GetTexture() const { return m_Texture; }
 
 	private:
-		uint m_FrameBufferID;
-		uint m_RenderBufferID;
+		uint m_FrameBufferID = 0;
+		uint m_RenderBufferID = 0;
 
-		Texture* m_Texture;
+		Texture* m_Texture = nullptr;
 		TextureParameters m_Parameters;
 	};
 

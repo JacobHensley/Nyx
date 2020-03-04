@@ -14,10 +14,14 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_PBRShader = new Shader("assets/shaders/DefaultPBR.shader");
 
 	m_BRDFLutTexture = new Texture("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_AlbedoMap = new Texture("assets/textures/Cerberus_Albedo.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_MetalnessMap = new Texture("assets/textures/Cerberus_Metalness.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_NormalMap = new Texture("assets/textures/Cerberus_Normals.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_RoughnessMap = new Texture("assets/textures/Cerberus_Roughness.tga", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+
+	TextureParameters params(TextureFormat::RGB);
+	params.generateMips = true;
+	m_AlbedoMap = new Texture("assets/textures/Cerberus_Albedo.tga", params);
+	m_MetalnessMap = new Texture("assets/textures/Cerberus_Metalness.tga", params);
+	m_NormalMap = new Texture("assets/textures/Cerberus_Normals.tga", params);
+	m_RoughnessMap = new Texture("assets/textures/Cerberus_Roughness.tga", params);
+
 	m_IrradianceTexture = new TextureCube("assets/textures/canyon_irradiance.png");
 	m_RadianceTexture = new TextureCube("assets/textures/canyon_Radiance.png");
 
@@ -134,7 +138,7 @@ void ViewerLayer::Render()
 }
 
 void ViewerLayer::ImGUIRender()
-{	
+{
 	ImGuiIO& io = ImGui::GetIO();
 
 	//Begin settings panel
@@ -195,7 +199,7 @@ void ViewerLayer::ImGUIRender()
 
 	//Load albedo map
 	ImGui::SameLine();
-	if (ImGui::Button("Load Albedo Map")) 
+	if (ImGui::Button("Load Albedo Map"))
 	{
 		const String& path = OpenFileExplorer();
 		if (path != "" && path.find(".tga") != String::npos)
@@ -239,7 +243,7 @@ void ViewerLayer::ImGUIRender()
 	}
 
 	//Load object mesh
-	if (ImGui::Button("Load Mesh")) 
+	if (ImGui::Button("Load Mesh"))
 	{
 		const String& path = OpenFileExplorer();
 		if (path != "" && path.find(".fbx") != String::npos)
@@ -252,7 +256,7 @@ void ViewerLayer::ImGUIRender()
 
 	//Display object mesh node tree
 	m_ObjectMesh->RenderImGuiNodeTree(false);
-	
+
 	//End settings panel
 	ImGui::End();
 
@@ -276,10 +280,16 @@ void ViewerLayer::ImGUIRender()
 
 	//Set the viewport of the renderspace buffer to the size of the window
 	m_RenderSpaceBuffer->SetViewPortSize(0, 0, (int)m_RenderSpaceSize.x, (int)m_RenderSpaceSize.y);
-	
+
 	//Render the buffer with ImGui::Image
 	ImGui::Image((void*)(uint64_t)m_RenderSpaceBuffer->GetTexture()->GetTextureID(), ImVec2(m_RenderSpaceSize.x, m_RenderSpaceSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
-	
+
+	if (m_LastRenderSpaceSize != m_RenderSpaceSize)
+	{
+		SceneRenderer::Resize(m_RenderSpaceSize.x, m_RenderSpaceSize.y);
+		m_LastRenderSpaceSize = m_RenderSpaceSize;
+	}
+
 	//Update the cameras projection matrix
 	m_Camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), m_RenderSpaceSize.x, m_RenderSpaceSize.y, 0.01f, 1000.0f));
 
