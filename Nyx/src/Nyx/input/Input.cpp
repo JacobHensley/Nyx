@@ -9,19 +9,19 @@ namespace Nyx {
 
 	bool Input::IsKeyPressed(int keycode)
 	{
-		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		GLFWwindow* window = Application::GetApp().GetWindow()->GetGLFWWindow();
 		return glfwGetKey(window, keycode);
 	}
 
 	bool Input::IsMouseButtonPressed(int button)
 	{
-		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		GLFWwindow* window = Application::GetApp().GetWindow()->GetGLFWWindow();
 		return glfwGetMouseButton(window, button);
 	}
 
 	glm::vec2 Input::GetMousePos()
 	{
-		GLFWwindow* window = Application::GetApp().GetWindow().GetGLFWWindow();
+		GLFWwindow* window = Application::GetApp().GetWindow()->GetGLFWWindow();
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 

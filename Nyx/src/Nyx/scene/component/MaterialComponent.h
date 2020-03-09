@@ -8,10 +8,10 @@ namespace Nyx {
 	class MaterialComponent : public Component
 	{
 	public:
-		MaterialComponent(Material* material);
+		MaterialComponent(Ref<Material> material);
 
 	public:
-		Material* GetMaterial() { return m_Material; }
+		Ref<Material> GetMaterial() { return m_Material; }
 
 
 		static Component::Type* GetStaticType()
@@ -23,7 +23,7 @@ namespace Nyx {
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
 	public:
-		Material* m_Material;
+		Ref<Material> m_Material;
 	};
 
 }

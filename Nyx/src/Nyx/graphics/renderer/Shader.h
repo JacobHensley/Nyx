@@ -71,14 +71,14 @@ namespace Nyx {
 
 		void PrintUniforms();
 
-		ShaderUniform* FindRenderUniform(const String& name);
-		ShaderUniform* FindUserUniform(const String& name);
+		Ref<ShaderUniform> FindRenderUniform(const String& name);
+		Ref<ShaderUniform> FindUserUniform(const String& name);
 		
 		inline int GetUserUniformSize() const { return m_UniformUserSize; }
-		inline std::vector<ShaderUniform*> GetRenderUniforms() const { return m_RenderUniforms; }
+		inline std::vector<Ref<ShaderUniform>> GetRenderUniforms() const { return m_RenderUniforms; }
 
 		inline int GetRenderUniformSize() const { return m_UniformRenderSize; }
-		inline std::vector<ShaderUniform*> GetUserUniforms() const { return m_UserUniforms; }
+		inline std::vector<Ref<ShaderUniform>> GetUserUniforms() const { return m_UserUniforms; }
 		
 		inline std::vector<RenderUniformID> GetRenderUniformIDs() const { return m_RenderUniformIDs; }
 
@@ -119,6 +119,9 @@ namespace Nyx {
 		int m_Sampler = 0;
 		int m_UniformSize = 0;
 
+		uint32_t m_UserUniformBufferOffset = 0;
+		uint32_t m_RendererUniformBufferOffset = 0;
+
 		int m_UniformRenderSize = 0;
 		int m_UniformUserSize = 0;
 
@@ -126,8 +129,8 @@ namespace Nyx {
 		std::vector<RenderUniformID> m_RenderUniformIDs;
 		RendererUniformSet m_RendererUniforms;
 		std::vector<UniformStruct> m_UniformStructs;
-		std::vector<ShaderUniform*> m_UserUniforms;
-		std::vector<ShaderUniform*> m_RenderUniforms;
+		std::vector<Ref<ShaderUniform>> m_UserUniforms;
+		std::vector<Ref<ShaderUniform>> m_RenderUniforms;
 	};
 
 }

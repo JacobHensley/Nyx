@@ -12,14 +12,13 @@ namespace Nyx {
 		~Renderer();
 
 	public:
-		static void Begin(Scene* scene);
+		static void Begin();
 		static void Flush();
 		static void End();
 
-		static void SubmitMesh(Mesh* mesh, glm::mat4 transform, Material* material);
+		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material, Scene* scene);
 
 	private:
 		static Renderer* s_Instance;
-		static Scene* m_ActiveScene;
 	};
 }

@@ -291,35 +291,35 @@ namespace Nyx {
 	void Shader::PushUniform(ShaderType uniform)
 	{
 		Bind();
-		ShaderUniform* shaderUniform;
+		Ref<ShaderUniform> shaderUniform;
 		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") 
 		{
-			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, m_Sampler);
+			shaderUniform = CreateRef<ShaderUniform>(uniform.name, uniform.type, 1, m_Sampler);
 			SetUniform1i(shaderUniform->GetName(), shaderUniform->GetSampler());
 			m_Sampler++;
 		}
 		else 
 		{
-			shaderUniform = new ShaderUniform(uniform.name, uniform.type, 1, -1);
+			shaderUniform = CreateRef<ShaderUniform>(uniform.name, uniform.type, 1, -1);
 		}
 
-		if (m_UserUniforms.size() > 0 || m_RenderUniforms.size() > 0) 
-		{
-			shaderUniform->SetOffset(m_UniformSize);
-		}
-
-		m_UniformSize += shaderUniform->GetSize();
-		
 		if (shaderUniform->GetName().front() == 'u')
 		{
 			m_UniformUserSize += shaderUniform->GetSize();
 			m_UserUniforms.push_back(shaderUniform);
+
+			shaderUniform->SetOffset(m_UserUniformBufferOffset);
+			m_UserUniformBufferOffset += shaderUniform->GetSize();
 		}
 		else if (shaderUniform->GetName().front() == 'r')
 		{
 			m_UniformRenderSize += shaderUniform->GetSize();
 			m_RenderUniforms.push_back(shaderUniform);
+
+			shaderUniform->SetOffset(m_RendererUniformBufferOffset);
+			m_RendererUniformBufferOffset += shaderUniform->GetSize();
 		}
+
 	}
 
 	bool Shader::ResolveRendererUniform(RenderUniformID id, const std::string& name)
@@ -380,7 +380,7 @@ namespace Nyx {
 
 	void Shader::PrintUniforms()
 	{
-		for each (ShaderUniform* uniform in m_UserUniforms)
+		for each (Ref<ShaderUniform> uniform in m_UserUniforms)
 		{
 			NX_CORE_DEBUG("Name: {0}", uniform->GetName());
 			NX_CORE_DEBUG("	Type:    {0}", uniform->GetTypeString());
@@ -390,7 +390,7 @@ namespace Nyx {
 		}
 	}
 
-	ShaderUniform* Shader::FindRenderUniform(const String& name)
+	Ref<ShaderUniform> Shader::FindRenderUniform(const String& name)
 	{
 		for (int i = 0; i < m_RenderUniforms.size(); i++)
 		{
@@ -403,7 +403,7 @@ namespace Nyx {
 		return nullptr;
 	}
 
-	ShaderUniform* Shader::FindUserUniform(const String & name)
+	Ref<ShaderUniform> Shader::FindUserUniform(const String & name)
 	{
 		for (int i = 0;i < m_UserUniforms.size();i++)
 		{

@@ -38,7 +38,7 @@ namespace Nyx {
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Name.c_str(), NULL, NULL);
 		glfwMakeContextCurrent(m_Window);
 
-		m_Context = new GraphicsContext(m_Window);
+		m_Context = CreateRef<GraphicsContext>(m_Window);
 		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, this);
@@ -149,7 +149,8 @@ namespace Nyx {
 
 	void Window::ImGuiRender()
 	{
-		m_Context->RenderImGuiWindow();
+		if (m_RenderContext)
+			m_Context->RenderImGuiWindow();
 	}
 
 	bool Window::IsClosed()

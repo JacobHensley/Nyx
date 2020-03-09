@@ -23,7 +23,7 @@ namespace Nyx {
 		GLFWwindow* m_Window;
 
 		std::vector<float> m_Frames;
-		float m_LastTime, m_MSFrame, m_FPS;
-		int m_FrameCount;
+		float m_LastTime = 0.0f, m_MSFrame = 0.0f, m_FPS = 0.0f;
+		int m_FrameCount = 0;
 	};
 }

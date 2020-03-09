@@ -3,7 +3,7 @@
 
 namespace Nyx {
 
-	PBRMaterial::PBRMaterial(Shader* shader)
+	PBRMaterial::PBRMaterial(Ref<Shader> shader)
 		: Material(shader)
 	{
 		SetAlbedo(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -20,28 +20,28 @@ namespace Nyx {
 	{
 	}
 
-	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue, Texture* albedoMap, bool usingMap)
+	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue, Ref<Texture> albedoMap, bool usingMap)
 	{
 		SetAlbedo(albedoValue);
 		SetAlbedoMap(albedoMap);
 		UsingAlbedoMap(usingMap);
 	}
 
-	void PBRMaterial::SetMetalness(float metalnessValue, Texture* metalnessMap, bool usingMap)
+	void PBRMaterial::SetMetalness(float metalnessValue, Ref<Texture> metalnessMap, bool usingMap)
 	{
 		SetMetalness(metalnessValue);
 		SetMetalnessMap(metalnessMap);
 		UsingMetalnessMap(usingMap);
 	}
 
-	void PBRMaterial::SetRoughness(float roughnessValue, Texture* roughnessMap, bool usingMap)
+	void PBRMaterial::SetRoughness(float roughnessValue, Ref<Texture> roughnessMap, bool usingMap)
 	{
 		SetRoughness(roughnessValue);
 		SetRoughnessMap(roughnessMap);
 		UsingRoughnessMap(usingMap);
 	}
 
-	void PBRMaterial::SetNormal(Texture* normalMap, bool usingMap)
+	void PBRMaterial::SetNormal(Ref<Texture> normalMap, bool usingMap)
 	{
 		SetNormalMap(normalMap);
 		UsingNormalMap(usingMap);
@@ -62,22 +62,22 @@ namespace Nyx {
 		SetUniform("u_RoughnessValue", roughnessValue);
 	}
 
-	void PBRMaterial::SetAlbedoMap(Texture* albedoMap)
+	void PBRMaterial::SetAlbedoMap(Ref<Texture> albedoMap)
 	{
 		SetTexture("u_AlbedoMap", albedoMap);
 	}
 
-	void PBRMaterial::SetMetalnessMap(Texture* metalnessMap)
+	void PBRMaterial::SetMetalnessMap(Ref<Texture> metalnessMap)
 	{
 		SetTexture("u_MetalnessMap", metalnessMap);
 	}
 
-	void PBRMaterial::SetRoughnessMap(Texture* roughnessMap)
+	void PBRMaterial::SetRoughnessMap(Ref<Texture> roughnessMap)
 	{
 		SetTexture("u_RoughnessMap", roughnessMap);
 	}
 
-	void PBRMaterial::SetNormalMap(Texture* noramlMap)
+	void PBRMaterial::SetNormalMap(Ref<Texture> noramlMap)
 	{
 		SetTexture("u_NormalMap", noramlMap);
 	}

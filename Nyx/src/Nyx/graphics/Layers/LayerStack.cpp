@@ -8,25 +8,16 @@ namespace Nyx {
 	}
 
 	LayerStack::~LayerStack()
-	{
-		for (Layer* layer : m_Layers)
-		{
-			delete layer;
-		}
-			
-		for (Layer* overlay : m_Overlays) 
-		{
-			delete overlay;
-		}		
+	{	
 	}
 
-	void LayerStack::PushLayer(Layer* layer)
+	void LayerStack::PushLayer(Ref<Layer> layer)
 	{
 		m_Layers.emplace_back(layer);
 		layer->OnAttach();
 	}
 
-	void LayerStack::PopLayer(Layer* layer)
+	void LayerStack::PopLayer(Ref<Layer> layer)
 	{
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
 		if (it != m_Layers.end())
@@ -36,13 +27,13 @@ namespace Nyx {
 		}
 	}
 
-	void LayerStack::PushOverlay(Layer* overlay)
+	void LayerStack::PushOverlay(Ref<Layer> overlay)
 	{
 		m_Layers.emplace_back(overlay);
 		overlay->OnAttach();
 	}
 
-	void LayerStack::PopOverlay(Layer* overlay)
+	void LayerStack::PopOverlay(Ref<Layer> overlay)
 	{
 		auto it = std::find(m_Overlays.begin(), m_Overlays.end(), overlay);
 		if (it != m_Overlays.end())
@@ -54,12 +45,12 @@ namespace Nyx {
 
 	void LayerStack::Update()
 	{
-		for (Layer* layer : m_Layers)
+		for (Ref<Layer> layer : m_Layers)
 		{
 			layer->Update();
 		}
 			
-		for (Layer* overlay : m_Overlays)
+		for (Ref<Layer> overlay : m_Overlays)
 		{
 			overlay->Update();
 		}

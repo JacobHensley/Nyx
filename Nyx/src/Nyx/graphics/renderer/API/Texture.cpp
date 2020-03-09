@@ -79,6 +79,8 @@ namespace Nyx {
 		if (!imageData)
 			return -1;
 
+		if (bpp == 3)
+			m_Parameters.format = TextureFormat::RGB;
 		uint TextureID = Init(imageData, m_Width, m_Height);
 
 		stbi_image_free(imageData);

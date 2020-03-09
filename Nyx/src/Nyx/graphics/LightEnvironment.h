@@ -28,13 +28,13 @@ namespace Nyx {
 		LightEnvironment();
 		~LightEnvironment();
 
-		void AddLight(Light* light);
-		bool RemoveLight(Light* light);
+		void AddLight(Ref<Light> light);
+		bool RemoveLight(Ref<Light> light);
 
-		inline std::vector<Light*>& GetLights() { return m_Lights; }
+		inline std::vector<Ref<Light>>& GetLights() { return m_Lights; }
 
 	private:
-		std::vector<Light*> m_Lights;
+		std::vector<Ref<Light>> m_Lights;
 
 	};
 

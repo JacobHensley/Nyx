@@ -99,11 +99,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\layers\ViewerLayer.h" />
+    <ClInclude Include="src\layers\EditorLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\layers\ViewerLayer.cpp" />
+    <ClCompile Include="src\layers\EditorLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nyx\Nyx.vcxproj">

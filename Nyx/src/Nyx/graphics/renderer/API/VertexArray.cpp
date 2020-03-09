@@ -14,7 +14,7 @@ namespace Nyx {
 		glDeleteVertexArrays(1, &m_VertexArray);
 	}
 
-	void VertexArray::PushVertexBuffer(VertexBuffer* vertexBuffer)
+	void VertexArray::PushVertexBuffer(Ref<VertexBuffer> vertexBuffer)
 	{
 		glBindVertexArray(m_VertexArray);
 		vertexBuffer->Bind();

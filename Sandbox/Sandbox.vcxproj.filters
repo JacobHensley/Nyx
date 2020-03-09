@@ -6,13 +6,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\layers\ViewerLayer.h">
+    <ClInclude Include="src\layers\EditorLayer.h">
       <Filter>layers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\layers\ViewerLayer.cpp">
+    <ClCompile Include="src\layers\EditorLayer.cpp">
       <Filter>layers</Filter>
     </ClCompile>
   </ItemGroup>

@@ -177,9 +177,6 @@
     <ClInclude Include="src\Nyx\scene\component\Component.h">
       <Filter>src\Nyx\scene\component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\ComponentCache.h">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h">
       <Filter>src\Nyx\scene\component</Filter>
     </ClInclude>

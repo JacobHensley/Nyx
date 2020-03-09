@@ -87,7 +87,8 @@ namespace Nyx {
 		ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
 		ImGui::Text("Version:  %s", glGetString(GL_VERSION));
 
-		ImGui::PlotLines("ms/f", &m_Frames[0], (int)m_Frames.size(), 0, NULL, 0.0f, 16.0f, ImVec2(0, 80));
+		if (m_Frames.size() != 0)
+			ImGui::PlotLines("ms/f", &m_Frames[0], (int)m_Frames.size(), 0, NULL, 0.0f, 16.0f, ImVec2(0, 80));
 
 		ImGui::End();
 	}

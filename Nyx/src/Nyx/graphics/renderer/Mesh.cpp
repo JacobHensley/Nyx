@@ -4,6 +4,13 @@
 #include "Nyx/graphics/DebugRenderer.h"
 #include "imgui/imgui.h"
 
+#include <glm/gtx/matrix_decompose.hpp>
+
+#include "Nyx/scene/SceneRenderer.h"
+#include "PRBMaterial.h"
+
+#include <filesystem>
+
 namespace Nyx {
 
 	Mesh::Mesh(const String& path)
@@ -13,7 +20,7 @@ namespace Nyx {
 		NX_CORE_INFO("Created Mesh at Path: {0}", m_Path);
 	}
 
-	Mesh::Mesh(IndexBuffer* indexBuffer, VertexBuffer* vertexBuffer, VertexArray* vertexArray)
+	Mesh::Mesh(Ref<IndexBuffer> indexBuffer, Ref<VertexBuffer> vertexBuffer, Ref<VertexArray> vertexArray)
 		:	m_IndexBuffer(indexBuffer), m_VertexBuffer(vertexBuffer), m_VertexArray(vertexArray), m_Path("GenMesh")
 	{
 		m_SubMeshes.push_back(SubMesh(0, 0, indexBuffer->GetCount()));
@@ -45,6 +52,13 @@ namespace Nyx {
 	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const
 	{
 		DebugRenderer::DrawAABB(m_BoundingBox, transform);
+	}
+
+	void Mesh::OnImGuiRender()
+	{
+		ImGui::Begin("Mesh Hierarchy");
+		ImGuiNodeHierarchy(m_Scene->mRootNode);
+		ImGui::End();
 	}
 
 	void Mesh::RenderImGuiVertexData()
@@ -155,6 +169,49 @@ namespace Nyx {
 		}
 	}
 
+	static std::tuple<glm::vec3, glm::quat, glm::vec3> GetTransformDecomposition(const glm::mat4& transform)
+	{
+		glm::vec3 scale, translation, skew;
+		glm::vec4 perspective;
+		glm::quat orientation;
+		glm::decompose(transform, scale, orientation, translation, skew, perspective);
+
+		return { translation, orientation, scale };
+	}
+
+	void Mesh::ImGuiNodeHierarchy(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
+	{
+		glm::mat4 localTransform = aiMatrix4x4ToGlm(node->mTransformation);
+		glm::mat4 transform = parentTransform * localTransform;
+		for (uint32_t i = 0; i < node->mNumMeshes; i++)
+		{
+			uint32_t mesh = node->mMeshes[i];
+			m_SubMeshes[mesh].transform = transform;
+		}
+
+		std::string treenodeName = std::string(node->mName.C_Str()) + " (" + m_Path + ")";
+		if (ImGui::TreeNode(treenodeName.c_str()))
+		{
+			{
+				auto [translation, rotation, scale] = GetTransformDecomposition(transform);
+				ImGui::Text("World Transform");
+				ImGui::Text("  Translation: %.2f, %.2f, %.2f", translation.x, translation.y, translation.z);
+				ImGui::Text("  Scale: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
+			}
+			{
+				auto [translation, rotation, scale] = GetTransformDecomposition(localTransform);
+				ImGui::Text("Local Transform");
+				ImGui::Text("  Translation: %.2f, %.2f, %.2f", translation.x, translation.y, translation.z);
+				ImGui::Text("  Scale: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
+			}
+
+			for (uint32_t i = 0; i < node->mNumChildren; i++)
+				ImGuiNodeHierarchy(node->mChildren[i], transform, level + 1);
+
+			ImGui::TreePop();
+		}
+	}
+
 	void Mesh::DrawImGuiNode(aiNode* node) const
 	{
 		for (uint i = 0; i < node->mNumChildren; i++)
@@ -172,6 +229,7 @@ namespace Nyx {
 	{
 		m_Vertices.clear();
 		m_Indices.clear();
+		m_SubMeshes.clear();
 
 		if (!Load(path)) 
 		{
@@ -194,6 +252,7 @@ namespace Nyx {
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
+			NX_CORE_ERROR("Error {0}", importer.GetErrorString());
 			return false;
 		}
 			
@@ -204,9 +263,9 @@ namespace Nyx {
 
 		m_BoundingBox = AABB(m_bbMin, m_bbMax);
 
-		m_VertexBuffer = new VertexBuffer(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
-		m_IndexBuffer = new IndexBuffer(m_Indices.data(), (int)m_Indices.size());
-		m_VertexArray = new VertexArray();
+		m_VertexBuffer = CreateRef<VertexBuffer>(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
+		m_IndexBuffer = CreateRef<IndexBuffer>(m_Indices.data(), (int)m_Indices.size());
+		m_VertexArray = CreateRef<VertexArray>();
 		m_VertexBuffer->SetLayout({
 			{ShaderDataType::Vec3, "a_Position"},
 			{ShaderDataType::Vec3, "a_Normal"},
@@ -223,7 +282,7 @@ namespace Nyx {
 	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void Mesh::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
 	{
-		aiMatrix4x4 transform = aiMatrix4x4();
+		aiMatrix4x4 transform = parentTransform * node->mTransformation;
 
 		// Process each mesh located at the current node
 		for (uint i = 0; i < node->mNumMeshes; i++)
@@ -231,12 +290,12 @@ namespace Nyx {
 			// The node object only contains indices to index the actual objects in the scene.
 			// The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-			m_SubMeshes.push_back(processMesh(mesh, scene));
+			SubMesh sub = processMesh(mesh, scene);
+			sub.transform = aiMatrix4x4ToGlm(transform);
+			m_SubMeshes.push_back(sub);
 		}
 
-		transform = parentTransform * node->mTransformation;
-
+		
 		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
@@ -248,7 +307,7 @@ namespace Nyx {
 	SubMesh Mesh::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		// Data to fill
-		std::vector<Texture> textures;
+		std::vector<Ref<Texture>> textures;
 
 		// Walk through each of the mesh's vertices
 		for (uint i = 0; i < mesh->mNumVertices; i++)
@@ -312,6 +371,35 @@ namespace Nyx {
 			}
 		}
 
+		if (scene->HasMaterials())
+		{
+			m_Materials.resize(scene->mNumMaterials);
+			for (uint32_t i = 0; i < scene->mNumMaterials; i++)
+			{
+				auto aiMaterial = scene->mMaterials[i];
+				auto aiMaterialName = aiMaterial->GetName();
+
+				auto material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+				m_Materials[i] = material;
+
+				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
+
+				aiString aiTexPath;
+				if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS)
+				{
+					std::filesystem::path path = m_Path;
+					auto parentPath = path.parent_path();
+					parentPath /= std::string(aiTexPath.data);
+					std::string texturePath = parentPath.string();
+					auto texture = CreateRef<Texture>(texturePath);
+					material->SetAlbedoMap(texture);
+				}
+
+			}
+
+		}
+
+#if OLD
 		// Process materials
 		if (mesh->mMaterialIndex >= 0)
 		{
@@ -324,17 +412,18 @@ namespace Nyx {
 			// Normal: texture_normalN
 
 			// 1. Diffuse maps
-			std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			std::vector<Ref<Texture>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 			// 2. Specular maps
-			std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			std::vector<Ref<Texture>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
 			// 2. Normal maps
-			std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_normal");
+			std::vector<Ref<Texture>> normalMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_normal");
 			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 		}
+#endif
 
 		uint baseVertex = m_BaseVertexPointer;
 		m_BaseVertexPointer += mesh->mNumVertices;
@@ -347,9 +436,9 @@ namespace Nyx {
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
-	std::vector<Texture> Mesh::loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName)
+	std::vector<Ref<Texture>> Mesh::loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName)
 	{
-		std::vector<Texture> textures;
+		std::vector<Ref<Texture>> textures;
 
 		for (uint i = 0; i < material->GetTextureCount(type); i++)
 		{
@@ -361,7 +450,7 @@ namespace Nyx {
 
 			for (uint j = 0; j < m_TexturesLoaded.size(); j++)
 			{
-				if (m_TexturesLoaded[j].GetPath() == str.C_Str())
+				if (m_TexturesLoaded[j]->GetPath() == str.C_Str())
 				{
 					textures.push_back(m_TexturesLoaded[j]);
 					skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
@@ -375,11 +464,11 @@ namespace Nyx {
 				String path = str.C_Str();
 				std::ifstream file(path);
 
-				if (file)
+				if (false)
 				{
 					// If texture hasn't been loaded already, load it
-					Texture texture = Texture(path);
-					m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+				//	Ref<Texture> texture = CreateRef<Texture>(path);
+				//	m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
 				}
 
 			}

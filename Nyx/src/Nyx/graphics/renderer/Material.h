@@ -7,25 +7,25 @@ namespace Nyx {
 	class Material
 	{
 	public:
-		Material(Shader* shader);
+		Material(Ref<Shader> shader);
 		~Material();
 
 	public:
 		void Bind();
 		void Unbind();
 
-		void SetTexture(const String& name, Texture* texture);
-		void SetTexture(const String& name, TextureCube* texture);
+		void SetTexture(const String& name, Ref<Texture> texture);
+		void SetTexture(const String& name, Ref<TextureCube> texture);
 
 		inline bool GetDepthTesting() { return m_DepthTesting; }
 		inline void SetDepthTesting(bool depthTesting) { m_DepthTesting = depthTesting; }
 
-		inline Shader* GetShader() { return m_Shader; }
+		inline Ref<Shader> GetShader() { return m_Shader; }
 
 		template<typename T>
 		bool SetUniform(const String& name, const T& data)
 		{
-			ShaderUniform* uniform = m_Shader->FindUserUniform(name);
+			Ref<ShaderUniform> uniform = m_Shader->FindUserUniform(name);
 
 			if (uniform == nullptr) 
 			{
@@ -41,10 +41,10 @@ namespace Nyx {
 
 		bool m_DepthTesting = true;
 
-		Shader* m_Shader;
+		Ref<Shader> m_Shader;
 		byte* m_UniformBuffer;
 
-		std::vector<Texture*> m_Textures;
-		std::vector<TextureCube*> m_TextureCubes;
+		std::vector<Ref<Texture>> m_Textures;
+		std::vector<Ref<TextureCube>> m_TextureCubes;
 	};
 }

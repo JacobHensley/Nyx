@@ -24,6 +24,9 @@ namespace Nyx {
 
 		inline GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
+		inline void RenderGraphicsContex(bool value) { m_RenderContext = value; }
+		inline const bool GetContextFlag() { return m_RenderContext; }
+
 		inline const int GetWidth() const { return m_Width; }
 		inline const int GetHeight() const { return m_Height; }
 
@@ -36,9 +39,10 @@ namespace Nyx {
 
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Ref<GraphicsContext> m_Context;
 
-		const String& m_Name;
+		bool m_RenderContext = false;
+		const String m_Name;
 		int m_Width, m_Height;
 
 		glm::vec2 m_WindowPos;

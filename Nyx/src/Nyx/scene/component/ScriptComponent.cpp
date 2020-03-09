@@ -3,7 +3,7 @@
 
 namespace Nyx {
 
-	ScriptComponent::ScriptComponent(Script* script)
+	ScriptComponent::ScriptComponent(Ref<Script> script)
 		:	m_Script(script)
 	{
 	}

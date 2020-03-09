@@ -41,7 +41,7 @@ namespace Nyx {
 		~VertexArray();
 
 	public:
-		void PushVertexBuffer(VertexBuffer* vertexBuffer);
+		void PushVertexBuffer(Ref<VertexBuffer> vertexBuffer);
 
 		void Bind();
 		void Unbind();

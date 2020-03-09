@@ -6,7 +6,7 @@ namespace Nyx {
 
 	MeshFactory* MeshFactory::s_Instance = new MeshFactory();
 
-	Mesh* MeshFactory::GenQuad(float x, float y, float z, float width, float height)
+	Ref<Mesh> MeshFactory::GenQuad(float x, float y, float z, float width, float height)
 	{
 		struct QuadVertex
 		{
@@ -30,7 +30,7 @@ namespace Nyx {
 
 		std::array<uint32_t, 6> indices = { 0, 1, 2, 2, 3, 0 };
 
-		VertexBuffer* vertexBuffer = new VertexBuffer(&vertices[0], (int)(sizeof(QuadVertex) * vertices.size()));
+		Ref<VertexBuffer> vertexBuffer = CreateRef<VertexBuffer>(&vertices[0], (int)(sizeof(QuadVertex) * vertices.size()));
 
 		BufferLayout layout = {
 			{ShaderDataType::Vec3, "a_Position"},
@@ -39,11 +39,11 @@ namespace Nyx {
 
 		vertexBuffer->SetLayout(layout);
 
-		IndexBuffer* indexBuffer = new IndexBuffer(&indices[0], (uint)indices.size());
-		VertexArray* vertexArray = new VertexArray();
+		Ref<IndexBuffer> indexBuffer = CreateRef<IndexBuffer>(&indices[0], (uint)indices.size());
+		Ref<VertexArray> vertexArray = CreateRef<VertexArray>();
 		vertexArray->PushVertexBuffer(vertexBuffer);
 
-		return new Mesh(indexBuffer, vertexBuffer, vertexArray);
+		return CreateRef<Mesh>(indexBuffer, vertexBuffer, vertexArray);
 	}
 
 }

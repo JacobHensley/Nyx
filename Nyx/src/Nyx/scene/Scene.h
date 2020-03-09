@@ -12,42 +12,59 @@ namespace Nyx {
 	class Scene
 	{
 	public:
-		Scene(Camera* camera, LightEnvironment* lightEnv, TextureCube* skybox);
+		Scene(Ref<Camera> camera, Ref<LightEnvironment> lightEnv, Ref<TextureCube> skybox);
+
+	public:
+		void Update();
+		void Render();
+
+		Ref<SceneObject> CreateObject(const String& debugName);
+		Ref<SceneObject> CreateObject(std::initializer_list<Ref<Component>> components);
+		void AddObject(Ref<SceneObject> object);
+
+		void Remove(const Ref<SceneObject>& sceneObject);
+
+		inline std::vector<Ref<SceneObject>>& GetSceneObjects() { return m_SceneObjects; }
+		const Ref<Camera> GetCamera() { return m_Camera; }
+		Ref<LightEnvironment> GetLightEnvironment() { return m_LightEnvironment; }
+
+	private:
+		std::vector<Ref<SceneObject>> m_SceneObjects;
+
+		Ref<Camera> m_Camera;
+		Ref<Mesh> m_SkyboxMesh;
+		Ref<Material> m_SkyboxMaterial;
+		Ref<LightEnvironment> m_LightEnvironment;
+
+	};
+
+/*	public:
+		Scene(Ref<Camera> camera, Ref<LightEnvironment> lightEnv, Ref<TextureCube> skybox);
 		~Scene();
 	
 	public:
 		void Update();
 		void Render();
 
-		SceneObject* CreateObject();
-		SceneObject* CreateObject(std::initializer_list<Component*> components);
+		Ref<SceneObject> CreateObject(const String& debugName);
+		Ref<SceneObject> CreateObject(std::initializer_list<Ref<Component>> components);
 
-		void AddObject(SceneObject& object);
+		void AddObject(Ref<SceneObject> object);
 
-		void Remove(const SceneObject& sceneObject);
-		void RemoveAll();
+		bool RemoveObject(uint index);
+		void Remove(const Ref<SceneObject> sceneObject);
 
-		void AddComponent(Component* component);
+		inline std::vector<Ref<SceneObject>>& GetSceneObjects() { return m_SceneObjects; }
 
-		template<typename T>
-		T* GetComponent(const SceneObject* sceneObject)
-		{
-			static_assert(std::is_base_of<Component, T>::value, "T must inherit from Component");
-			return m_ComponentCache.Get<T>(sceneObject);
-		}
-
-		const Camera* GetCamera() { return m_Camera; }
-		LightEnvironment* GetLightEnvironment() { return m_LightEnvironment; }
+		const Ref<Camera> GetCamera() { return m_Camera; }
+		Ref<LightEnvironment> GetLightEnvironment() { return m_LightEnvironment; }
 
 	private:
-		ComponentCache m_ComponentCache;
-		std::vector<SceneObject> m_SceneObjects;
+		std::vector<Ref<SceneObject>> m_SceneObjects;
 
-		Mesh* m_SkyboxMesh;
-		Material* m_SkyboxMaterial;
+		Ref<Mesh> m_SkyboxMesh;
+		Ref<Material> m_SkyboxMaterial;
 
-		Camera* m_Camera;
-		LightEnvironment* m_LightEnvironment;
-	};
-
+		Ref<Camera> m_Camera;
+		Ref<LightEnvironment> m_LightEnvironment; */
 }

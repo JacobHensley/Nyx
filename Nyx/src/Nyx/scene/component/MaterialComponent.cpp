@@ -3,7 +3,7 @@
 
 namespace Nyx {
 
-	MaterialComponent::MaterialComponent(Material* Material)
+	MaterialComponent::MaterialComponent(Ref<Material> Material)
 		: m_Material(Material)
 	{
 	}

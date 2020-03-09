@@ -12,24 +12,24 @@ namespace Nyx {
 		~LayerStack();
 
 	public:
-		void PushLayer(Layer* layer);
-		void PopLayer(Layer* layer);
+		void PushLayer(Ref<Layer> layer);
+		void PopLayer(Ref<Layer> layer);
 
-		void PushOverlay(Layer* overlay);
-		void PopOverlay(Layer* overlay);
+		void PushOverlay(Ref<Layer> overlay);
+		void PopOverlay(Ref<Layer> overlay);
 
 		void Update();
 		void Render();
 		void ImGUIRender();
 
-		inline std::vector<Layer*> GetLayers() const { return m_Layers; }
-		inline std::vector<Layer*> GetOverlays() const { return m_Overlays; }
+		inline std::vector<Ref<Layer>>& GetLayers() { return m_Layers; }
+		inline std::vector<Ref<Layer>>& GetOverlays() { return m_Overlays; }
 
 		void OnEvent(Event& e);
 	private:
 
-		std::vector<Layer*> m_Layers;
-		std::vector<Layer*> m_Overlays;
+		std::vector<Ref<Layer>> m_Layers;
+		std::vector<Ref<Layer>> m_Overlays;
 	};
 
 }

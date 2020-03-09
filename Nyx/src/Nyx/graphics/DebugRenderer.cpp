@@ -35,7 +35,7 @@ namespace Nyx {
 			{ ShaderDataType::Vec4, "a_Color"}
 		});
 
-		m_VertexArray->PushVertexBuffer(m_VertexBuffer.get());
+		m_VertexArray->PushVertexBuffer(m_VertexBuffer);
 
 		m_IndexBuffer = std::make_unique<IndexBuffer>(indices, MAX_INDEX_COUNT);
 		m_IndexBuffer->SetData(indices, MAX_INDEX_COUNT);

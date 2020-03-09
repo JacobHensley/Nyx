@@ -1,11 +1,12 @@
 #include "NXpch.h"
 #include "Renderer.h"
 #include "Nyx/graphics/MeshFactory.h"
+#include "glad/glad.h"
+#include "glm/gtx/matrix_decompose.hpp"
 
 namespace Nyx {
 
 	Renderer* Renderer::s_Instance = new Renderer();
-	Scene* Renderer::m_ActiveScene = nullptr;
 
 	Renderer::Renderer()
 	{
@@ -16,9 +17,8 @@ namespace Nyx {
 	{
 	}
 
-	void Renderer::Begin(Scene* scene)
+	void Renderer::Begin()
 	{
-		m_ActiveScene = scene;
 	}
 
 	void Renderer::Flush()
@@ -29,9 +29,26 @@ namespace Nyx {
 	{
 	}
 
-	void Renderer::SubmitMesh(Mesh* mesh, glm::mat4 transform, Material* material)
+	void Renderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material, Scene* scene)
 	{
-		mesh->Render(material->GetDepthTesting());
+		if (!material->GetDepthTesting())
+			glDisable(GL_DEPTH_TEST);
+
+		mesh->GetVertexArray()->Bind();
+		mesh->GetIndexBuffer()->Bind();
+
+		std::vector<SubMesh> meshes = mesh->GetSubMeshs();
+
+		for (SubMesh& mesh : meshes)
+		{
+			material->GetShader()->SetUniformMat4("r_MVP", scene->GetCamera()->GetProjectionMatrix() * scene->GetCamera()->GetViewMatrix() * transform * mesh.transform);
+			material->GetShader()->SetUniformMat4("r_ModelMatrix", transform * mesh.transform);
+
+			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
+		}
+
+		if (!material->GetDepthTesting())
+			glEnable(GL_DEPTH_TEST);
 	}
 
 }

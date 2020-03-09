@@ -71,7 +71,7 @@ in mat3 v_WorldNormals;
 
 vec3 GetAlbedo(vec2 texCoords)
 {
-	return u_UsingAlbedoMap ? texture(u_AlbedoMap, texCoords).rgb : u_AlbedoValue;
+	return texture(u_AlbedoMap, texCoords).rgb ;
 }
 
 vec3 GetNormal(vec2 texCoords, vec3 normal)
@@ -188,5 +188,6 @@ void main()
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * u_UsingIBL;
 
-	color = vec4(lightContribution + iblContribution, 1.0f);
+	// color = vec4(lightContribution + iblContribution, 1.0f);
+	color = vec4(albedo, 1.0);
 }

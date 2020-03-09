@@ -13,11 +13,11 @@ namespace Nyx {
 		~Application();
 
 	public:
-		void PushLayer(Layer* layer);
-		void PopLayer(Layer* layer);
+		void PushLayer(Ref<Layer> layer);
+		void PopLayer(Ref<Layer> layer);
 
-		void PushOverlay(Layer* overlay);
-		void PopOverlay(Layer* overlay);
+		void PushOverlay(Ref<Layer> overlay);
+		void PopOverlay(Ref<Layer> overlay);
 
 		void Update();
 		void Render();
@@ -27,16 +27,15 @@ namespace Nyx {
 
 		void Run();
 
-		inline ImGUILayer& GetImGUILayer() { return *m_ImGUILayer; }
-		inline Window& GetWindow() { return *m_Window; }
-	//	inline sol::state& GetLuaState() { return *m_LuaState; }
+		inline Ref<ImGUILayer> GetImGUILayer() { return m_ImGUILayer; }
+		inline Ref<Window> GetWindow() { return m_Window; }
 		inline static sol::state& GetLuaState() { return s_Instance->m_LuaState; }
 		inline static Application& GetApp() { return *s_Instance; }
 
 	private:
-		Window* m_Window;
-		LayerStack* m_LayerStack;
-		ImGUILayer* m_ImGUILayer;
+		Ref<Window> m_Window;
+		Ref<LayerStack> m_LayerStack;
+		Ref<ImGUILayer> m_ImGUILayer;
 		sol::state m_LuaState;
 
 	private:

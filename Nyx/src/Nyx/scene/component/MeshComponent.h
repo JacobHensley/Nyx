@@ -7,11 +7,11 @@ namespace Nyx {
 	class MeshComponent : public Component
 	{
 	public:
-		MeshComponent(Mesh* mesh);
+		MeshComponent(Ref<Mesh> mesh);
 
 	public:
 		void RenderMesh(const glm::mat4& transform);
-		Mesh* GetMesh() { return m_Mesh; }
+		Ref<Mesh> GetMesh() { return m_Mesh; }
 
 		static Component::Type* GetStaticType()
 		{
@@ -22,7 +22,7 @@ namespace Nyx {
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
 	public:
-		Mesh* m_Mesh;
+		Ref<Mesh> m_Mesh;
 	};
 
 }

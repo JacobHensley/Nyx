@@ -47,6 +47,5 @@
 #include "Nyx/scene/SceneObject.h"
 
 #include "Nyx/scene/component/Component.h"
-#include "Nyx/scene/component/ComponentCache.h"
 //#include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/scene/component/TransformComponent.h"

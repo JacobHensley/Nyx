@@ -3,7 +3,7 @@
 
 namespace Nyx {
 
-	MeshComponent::MeshComponent(Mesh* mesh)
+	MeshComponent::MeshComponent(Ref<Mesh> mesh)
 		: m_Mesh(mesh)
 	{
 	}

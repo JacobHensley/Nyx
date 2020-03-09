@@ -39,7 +39,7 @@ namespace Nyx {
 		}
 
 		// Setup Platform/Renderer bindings
-		ImGui_ImplGlfw_InitForOpenGL(Application::GetApp().GetWindow().GetGLFWWindow(), true);
+		ImGui_ImplGlfw_InitForOpenGL(Application::GetApp().GetWindow()->GetGLFWWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
@@ -103,7 +103,7 @@ namespace Nyx {
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::GetApp();
 
-		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
+		io.DisplaySize = ImVec2((float)app.GetWindow()->GetWidth(), (float)app.GetWindow()->GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

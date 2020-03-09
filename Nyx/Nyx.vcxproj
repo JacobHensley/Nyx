@@ -140,7 +140,6 @@
     <ClInclude Include="src\Nyx\scene\SceneObject.h" />
     <ClInclude Include="src\Nyx\scene\SceneRenderer.h" />
     <ClInclude Include="src\Nyx\scene\component\Component.h" />
-    <ClInclude Include="src\Nyx\scene\component\ComponentCache.h" />
     <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h" />
     <ClInclude Include="src\Nyx\scene\component\MeshComponent.h" />
     <ClInclude Include="src\Nyx\scene\component\ScriptComponent.h" />

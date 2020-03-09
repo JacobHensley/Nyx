@@ -3,13 +3,16 @@
 #include "glad/glad.h"
 
 namespace Nyx {
-	Material::Material(Shader* shader)
+	Material::Material(Ref<Shader> shader)
 		:	m_Shader(shader)
 	{
 		m_UniformBuffer = (byte*)malloc(m_Shader->GetUserUniformSize());
 		memset(m_UniformBuffer, 0, m_Shader->GetUserUniformSize());
 
 		NX_CORE_INFO("Creating Material with Shader at path: {0}", m_Shader->GetPath());
+
+		m_Textures.resize(32);
+		m_TextureCubes.resize(32);
 	}
 
 	Material::~Material()
@@ -27,9 +30,9 @@ namespace Nyx {
 		m_Shader->Unbind();
 	}
 
-	void Material::SetTexture(const String& name, Texture* texture)
+	void Material::SetTexture(const String& name, Ref<Texture> texture)
 	{
-		ShaderUniform* uniform = m_Shader->FindUserUniform(name);
+		Ref<ShaderUniform> uniform = m_Shader->FindUserUniform(name);
 
 		uint slot = uniform->GetSampler();
 		if (m_Textures.size() <= slot)
@@ -40,9 +43,9 @@ namespace Nyx {
 		m_Textures[slot] = texture;
 	}
 
-	void Material::SetTexture(const String& name, TextureCube* texture)
+	void Material::SetTexture(const String& name, Ref<TextureCube> texture)
 	{
-		ShaderUniform* uniform = m_Shader->FindUserUniform(name);
+		Ref<ShaderUniform> uniform = m_Shader->FindUserUniform(name);
 
 		uint slot = uniform->GetSampler();
 		if (m_TextureCubes.size() <= slot)
@@ -57,7 +60,7 @@ namespace Nyx {
 	{
 		for (int i = 0;i < m_Shader->GetUserUniforms().size();i++)
 		{
-			ShaderUniform* uniform = m_Shader->GetUserUniforms()[i];
+			Ref<ShaderUniform> uniform = m_Shader->GetUserUniforms()[i];
 			const String& name = uniform->GetName();
 			int offset = uniform->GetOffset();
 			switch (uniform->GetType())

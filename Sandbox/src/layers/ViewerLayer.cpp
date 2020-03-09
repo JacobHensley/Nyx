@@ -38,7 +38,7 @@ ViewerLayer::ViewerLayer(const String& name)
 	m_ObjectTransformComponent = new TransformComponent(m_ObjectTransform);
 	m_ObjectMaterialComponent = new MaterialComponent(m_ObjectMaterial);
 	m_ObjectScriptComponent = new ScriptComponent("assets/scripts/Script.lua");
-	m_SceneObject = m_Scene->CreateObject({ m_ObjectMeshComponent, m_ObjectTransformComponent, m_ObjectMaterialComponent, m_ObjectScriptComponent });
+	m_SceneObject = &m_Scene->CreateObject({ m_ObjectMeshComponent, m_ObjectTransformComponent, m_ObjectMaterialComponent, m_ObjectScriptComponent });
 
 	m_ObjectTransformComponent->Scale(glm::vec3(0.05f, 0.05f, 0.05f));
 	m_ObjectTransformComponent->Rotate(-90, glm::vec3(1.0f, 0.0f, 0.0f));

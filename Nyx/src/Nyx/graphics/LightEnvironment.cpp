@@ -11,12 +11,12 @@ namespace Nyx {
 	{
 	}
 
-	void LightEnvironment::AddLight(Light* light)
+	void LightEnvironment::AddLight(Ref<Light> light)
 	{
 		m_Lights.push_back(light);
 	}
 
-	bool LightEnvironment::RemoveLight(Light* light)
+	bool LightEnvironment::RemoveLight(Ref<Light> light)
 	{
 		for (int i = 0; i < m_Lights.size(); i++)
 		{

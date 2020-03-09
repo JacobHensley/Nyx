@@ -18,14 +18,14 @@ namespace Nyx {
 
 		Log::Init();
 
-		m_Window = new Window("Nyx Engine", 1280, 720);
+		m_Window = CreateRef<Window>("Nyx Engine", 1280, 720);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
 		DebugRenderer::Init();
 
-		m_LayerStack = new LayerStack();
+		m_LayerStack =  CreateRef<LayerStack>();
 
-		m_ImGUILayer = new ImGUILayer("ImGUILayer");
+		m_ImGUILayer = CreateRef<ImGUILayer>("ImGUILayer");
 		PushOverlay(m_ImGUILayer);
 	}
 
@@ -33,22 +33,22 @@ namespace Nyx {
 	{
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Application::PushLayer(Ref<Layer> layer)
 	{
 		m_LayerStack->PushLayer(layer);
 	}
 
-	void Application::PopLayer(Layer* layer)
+	void Application::PopLayer(Ref<Layer> layer)
 	{
 		m_LayerStack->PopLayer(layer);
 	}
 
-	void Application::PushOverlay(Layer* overlay)
+	void Application::PushOverlay(Ref<Layer> overlay)
 	{
 		m_LayerStack->PushOverlay(overlay);
 	}
 
-	void Application::PopOverlay(Layer* overlay)
+	void Application::PopOverlay(Ref<Layer> overlay)
 	{
 		m_LayerStack->PopOverlay(overlay);
 	}

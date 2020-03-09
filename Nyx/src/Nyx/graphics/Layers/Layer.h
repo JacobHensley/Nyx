@@ -26,7 +26,7 @@ namespace Nyx {
 
 	protected:
 
-		const String& m_Name;
+		const String m_Name;
 		bool m_Visible = true;
 	};
 

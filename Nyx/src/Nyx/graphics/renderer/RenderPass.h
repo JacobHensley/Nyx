@@ -1,26 +1,27 @@
 #pragma once
-#include "Nyx/graphics/renderer/API/FrameBuffer.h"
 #include "Nyx/graphics/renderer/Shader.h"
+#include "Nyx/graphics/renderer/API/FrameBuffer.h"
 
 namespace Nyx {
 
 	class RenderPass
 	{
 	public:
-		RenderPass(FrameBuffer* framebuffer, Shader* shader);
+		RenderPass(Ref<FrameBuffer> targetBuffer);
 
 	public:
 		void Bind();
 		void Unbind();
 
-		void Render();
+		void SetLastRenderPass(Ref<RenderPass> pass);
 
-		inline FrameBuffer* GetFramebuffer() { return m_Framebuffer; }
-		inline Shader* GetShader() { return m_Shader; }
+		void Render(Ref<Shader> shader);
+
+		inline void Resize(int width, int height) { m_TargetBuffer->Resize(width, height); }
+		inline Ref<FrameBuffer> GetTargetBuffer() { return m_TargetBuffer; }
 	private:
-		FrameBuffer* m_Framebuffer = nullptr;
-		Shader* m_Shader = nullptr;
-		Mesh* m_FullscreenQuad;
+		Ref<Mesh> m_FullscreenQuad = nullptr;
+		Ref<FrameBuffer> m_TargetBuffer = nullptr;
 	};
 
 }

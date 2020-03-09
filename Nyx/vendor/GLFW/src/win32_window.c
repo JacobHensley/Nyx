@@ -1912,6 +1912,36 @@ void _glfwPlatformPollEvents(void)
     HWND handle;
     _GLFWwindow* window;
 
+#define YAN 0
+#if YAN
+    window = _glfw.windowListHead;
+    while (window)
+    {
+        while (PeekMessageW(&msg, window->win32.handle, 0, 0, PM_REMOVE))
+        {
+            if (msg.message == WM_QUIT)
+            {
+                // NOTE: While GLFW does not itself post WM_QUIT, other processes
+                //       may post it to this one, for example Task Manager
+                // HACK: Treat WM_QUIT as a close on all windows
+
+                _GLFWwindow* win = _glfw.windowListHead;
+                while (win)
+                {
+                    _glfwInputWindowCloseRequest(window);
+                    win = win->next;
+                }
+            }
+            else
+            {
+                TranslateMessage(&msg);
+                DispatchMessageW(&msg);
+            }
+        }
+
+        window = window->next;
+    }
+#else
     while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
     {
         if (msg.message == WM_QUIT)
@@ -1933,6 +1963,7 @@ void _glfwPlatformPollEvents(void)
             DispatchMessageW(&msg);
         }
     }
+#endif
 
     handle = GetActiveWindow();
     if (handle)
