@@ -38,7 +38,7 @@ namespace Nyx {
 		mesh->GetIndexBuffer()->Bind();
 
 		std::vector<SubMesh> meshes = mesh->GetSubMeshs();
-
+		material->Bind();
 		for (SubMesh& mesh : meshes)
 		{
 			material->GetShader()->SetUniformMat4("r_MVP", scene->GetCamera()->GetProjectionMatrix() * scene->GetCamera()->GetViewMatrix() * transform * mesh.transform);

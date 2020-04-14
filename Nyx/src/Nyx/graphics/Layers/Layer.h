@@ -25,7 +25,6 @@ namespace Nyx {
 		inline bool IsVisible() const { return m_Visible; }
 
 	protected:
-
 		const String m_Name;
 		bool m_Visible = true;
 	};

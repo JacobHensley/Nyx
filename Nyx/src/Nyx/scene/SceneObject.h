@@ -1,6 +1,6 @@
-
 #pragma once
 #include "component/Component.h"
+
 namespace Nyx {
 
 	class Scene;
@@ -11,6 +11,7 @@ namespace Nyx {
 		SceneObject();
 		SceneObject(const String& debugName);
 		SceneObject(const SceneObject& other);
+
 	public:
 		void Init(Scene* Scene);
 
@@ -28,8 +29,9 @@ namespace Nyx {
 			return nullptr;
 		}
 
-		inline void Toggle(bool active) { m_IsActive = active; }
+		inline void SetActive(bool value) { m_IsActive = value; }
 		inline bool IsActive() { return m_IsActive; }
+
 		inline const String& GetDebugName() { return m_DebugName; }
 
 		bool operator==(const SceneObject& other) const {
@@ -42,36 +44,7 @@ namespace Nyx {
 
 		bool m_IsActive = true;
 
-
 		std::unordered_map<Component::Type*, Ref<Component>> m_Components;
 	};
-/*	public:
-		SceneObject();
-		SceneObject(const String& debugName);
-		~SceneObject();
-
-		SceneObject(const SceneObject& other);
-
-	public:
-		void Init(Ref<Scene> Scene);
-
-		void Update();
-		void Render();
-		
-		inline void Toggle(bool active) { m_IsActive = active; }
-		inline bool IsActive() { return m_IsActive; }
-		inline const String& GetDebugName() { return m_DebugName; }
-
-		void AddComponent(Ref<Component> component);
-
-		bool operator==(const SceneObject& other) const {
-			return false;
-		}
-
-	private:
-		Ref<Scene> m_Scene = nullptr;
-		bool m_IsActive = true;
-		String m_DebugName;
- */
 
 }

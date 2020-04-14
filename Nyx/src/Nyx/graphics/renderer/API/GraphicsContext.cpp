@@ -34,7 +34,7 @@ namespace Nyx {
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		SceneRenderer::InitGL();
+		SceneRenderer::Init();
 
 		NX_CORE_INFO("Created OpenGL Graphics Context");
 	}

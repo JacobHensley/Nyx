@@ -385,12 +385,14 @@ namespace Nyx {
 				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
 
 				aiString aiTexPath;
+
 				if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS)
 				{
 					std::filesystem::path path = m_Path;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
 					std::string texturePath = parentPath.string();
+
 					auto texture = CreateRef<Texture>(texturePath);
 					material->SetAlbedoMap(texture);
 				}

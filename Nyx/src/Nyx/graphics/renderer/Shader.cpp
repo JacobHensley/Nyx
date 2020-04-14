@@ -425,6 +425,8 @@ namespace Nyx {
 			
 		int location = glGetUniformLocation(m_ShaderID, name.c_str());
 
+	//	NX_CORE_ASSERT(location != -1, "Invalid uniform location");
+
 		m_UniformLocationCache[name] = location;
 		return location;
 	}

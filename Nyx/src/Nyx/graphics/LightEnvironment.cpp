@@ -26,6 +26,7 @@ namespace Nyx {
 				return true;
 			}
 		}
+
 		return false;
 	}
 

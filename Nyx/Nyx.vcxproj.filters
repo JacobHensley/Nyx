@@ -138,9 +138,6 @@
     <ClInclude Include="src\Nyx\graphics\renderer\PRBMaterial.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\graphics\renderer\RenderPass.h">
-      <Filter>src\Nyx\graphics\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\graphics\renderer\Renderer.h">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClInclude>
@@ -264,9 +261,6 @@
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\PRBMaterial.cpp">
-      <Filter>src\Nyx\graphics\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\graphics\renderer\RenderPass.cpp">
       <Filter>src\Nyx\graphics\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\graphics\renderer\Renderer.cpp">

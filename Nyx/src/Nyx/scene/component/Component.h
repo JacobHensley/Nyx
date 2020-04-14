@@ -20,13 +20,13 @@ namespace Nyx {
 
 		virtual Type* GetType() const { return nullptr; }
 
-		inline Ref<SceneObject> GetSceneObject() { return m_sceneObject; }
-		inline const Ref<SceneObject> GetSceneObject() const { return m_sceneObject; }
+		inline SceneObject* GetSceneObject() { return m_sceneObject; }
+		inline const SceneObject* GetSceneObject() const { return m_sceneObject; }
 
-		inline void SetSceneObject(Ref<SceneObject> sceneObject) { m_sceneObject = sceneObject; }
+		inline void SetSceneObject(SceneObject* sceneObject) { m_sceneObject = sceneObject; }
 
 	protected:
-		Ref<SceneObject> m_sceneObject;
+		SceneObject* m_sceneObject;
 	};
 
 }

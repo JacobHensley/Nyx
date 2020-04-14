@@ -20,7 +20,6 @@ namespace Nyx {
 	SceneObject::SceneObject(const SceneObject& other)
 		: m_DebugName(other.m_DebugName)
 	{
-
 	}
 
 	void SceneObject::Init(Scene* scene)
@@ -30,15 +29,18 @@ namespace Nyx {
 
 	void SceneObject::Update()
 	{
-		for (auto const& x : m_Components)
+		if (m_IsActive)
 		{
-			x.second->OnUpdate();
+			for (auto const& x : m_Components)
+			{
+				x.second->OnUpdate();
+			}
 		}
 	}
 
 	void SceneObject::Render()
 	{
-		if (IsActive())
+		if (m_IsActive)
 		{
 			Ref<MeshComponent> meshComponent = GetComponent<MeshComponent>();
 			Ref<TransformComponent> transformComponent = GetComponent<TransformComponent>();
@@ -48,58 +50,20 @@ namespace Nyx {
 				SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
 			else
 				SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
-		}
+		
 
-		for (auto const& x : m_Components)
-		{
-			x.second->OnRender();
+			for (auto const& x : m_Components)
+			{
+				x.second->OnRender();
+			}
+
 		}
 	}
 
 	void SceneObject::AddComponent(Ref<Component> component)
 	{
 		m_Components[component->GetType()] = component;
-	}
-
-/*	SceneObject::SceneObject()
-		: m_DebugName("No name")
-	{
-	}
-
-	SceneObject::SceneObject(const String& debugName)
-		:	m_DebugName(debugName)
-	{
-	}
-
-	SceneObject::~SceneObject()
-	{
-	}
-
-	SceneObject::SceneObject(const SceneObject& other)
-		:	m_DebugName(other.m_DebugName)
-	{
-
-	}
-
-	void SceneObject::Init(Ref<Scene> scene)
-	{
-		m_Scene = scene;
-	}
-
-	void SceneObject::Update()
-	{
-	}
-
-	void SceneObject::Render()
-	{
-	}
-	
-	void SceneObject::AddComponent(Ref<Component> component)
-	{
-		NX_ASSERT(m_Scene, "Scene has not been initialized");
-
 		component->SetSceneObject(this);
-		m_Scene->AddComponent(component);
-	} */
+	}
 
 }

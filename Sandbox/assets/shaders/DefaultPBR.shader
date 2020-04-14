@@ -188,6 +188,6 @@ void main()
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * u_UsingLighting;
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * u_UsingIBL;
 
-	// color = vec4(lightContribution + iblContribution, 1.0f);
-	color = vec4(albedo, 1.0);
+	color = vec4(lightContribution + iblContribution, 1.0f);
+//	color = vec4(albedo, 1.0);
 }

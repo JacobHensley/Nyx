@@ -10,7 +10,6 @@ namespace Nyx {
 		MeshComponent(Ref<Mesh> mesh);
 
 	public:
-		void RenderMesh(const glm::mat4& transform);
 		Ref<Mesh> GetMesh() { return m_Mesh; }
 
 		static Component::Type* GetStaticType()

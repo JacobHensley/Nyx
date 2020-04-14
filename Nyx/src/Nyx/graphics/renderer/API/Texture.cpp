@@ -95,7 +95,6 @@ namespace Nyx {
 				m_Parameters.filter = TextureFilter::LINEAR;
 		}
 
-
 		uint textureID;
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -111,7 +110,6 @@ namespace Nyx {
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
 		}
-
 
 		GLenum filter = TextureFilterToGL(m_Parameters.filter);
 		GLenum magFilter = filter == GL_LINEAR_MIPMAP_LINEAR ? GL_LINEAR : filter;

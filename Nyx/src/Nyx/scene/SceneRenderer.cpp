@@ -5,132 +5,161 @@
 
 namespace Nyx {
 
-	SceneRenderer* SceneRenderer::s_Instance = new SceneRenderer();
-
-	SceneRenderer::SceneRenderer()
+	struct SceneRendererData
 	{
-		m_RendererUniformFuncs[RenderUniformID::MODEL_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniformMat4(uniform.Location, command.transform);
-		};
-		m_RendererUniformFuncs[RenderUniformID::VIEW_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetViewMatrix());
-		};
-		m_RendererUniformFuncs[RenderUniformID::PROJ_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetProjectionMatrix());
-		};
-		m_RendererUniformFuncs[RenderUniformID::INVERSE_VP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniformMat4(uniform.Location, glm::inverse(m_ActiveScene->GetCamera()->GetViewMatrix()));
-		};
-		m_RendererUniformFuncs[RenderUniformID::MVP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniformMat4(uniform.Location, m_ActiveScene->GetCamera()->GetProjectionMatrix() * m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
-		};
-		m_RendererUniformFuncs[RenderUniformID::CAMERA_POSITION] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			shader->SetUniform3f(uniform.Location, m_ActiveScene->GetCamera()->GetPosition());
-		};
+		Scene* m_ActiveScene;
+
+		std::vector<RenderCommand> m_RenderCommands;
+
+		Ref<Shader> m_PBRShader;
+		Ref<Shader> m_CompositeShader;
+		Ref<Shader> m_SkyboxShader;
+
+		Ref<FrameBuffer> m_GeometryBuffer;
+		Ref<FrameBuffer> m_CompositeBuffer;
+
+		Ref<Mesh> m_FullscreenQuad;
+
+		Ref<Material> m_EnvironmentMaterial;
+
+		std::unordered_map<RenderUniformID, std::function<void(const RendererUniform&, RenderCommand&, Ref<Shader>)>> m_RendererUniformFuncs;
+	};
+
+	static struct SceneRendererData s_Data;
+
+	void SceneRenderer::Init()
+	{
+		InitRenderFunctions();
+
+		s_Data.m_GeometryBuffer = CreateRef<FrameBuffer>(1280, 720);
+		s_Data.m_GeometryBuffer->Bind();
+		s_Data.m_GeometryBuffer->Attach(BufferAtachment::COLOR);
+		s_Data.m_GeometryBuffer->Attach(BufferAtachment::DEPTH);
+		s_Data.m_GeometryBuffer->Unbind();
+
+		s_Data.m_CompositeBuffer = CreateRef<FrameBuffer>(1280, 720, TextureParameters(TextureFormat::RGBA16F, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+		s_Data.m_CompositeBuffer->Bind();
+		s_Data.m_CompositeBuffer->Attach(BufferAtachment::COLOR);
+		s_Data.m_CompositeBuffer->Attach(BufferAtachment::DEPTH);
+		s_Data.m_CompositeBuffer->Unbind();
+
+		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
+		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
+		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+
+		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
+		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 	}
 
-	SceneRenderer::~SceneRenderer()
-	{
-	}
-
-	void SceneRenderer::BeginI(Scene* scene)
+	void SceneRenderer::Begin(Scene* scene)
 	{
 		Renderer::Begin();
-		m_ActiveScene = scene;
 
-		m_GeometryBuffer->Bind();
-		m_GeometryBuffer->Clear();
+		s_Data.m_ActiveScene = scene;
 
-		auto lights = m_ActiveScene->GetLightEnvironment()->GetLights();
-
-		for (int i = 0; i < lights.size(); i++)
-		{
-		}
+		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap);
+		
+		s_Data.m_GeometryBuffer->Bind();
+		s_Data.m_GeometryBuffer->Clear();
 	}
 
-	void SceneRenderer::FlushI()
+	void SceneRenderer::Flush()
 	{
-		// Set Camera
+		auto it = s_Data.m_RenderCommands.begin();
+		s_Data.m_RenderCommands.insert(it, RenderCommand(s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial));
 
-		for (int i = 0; i < m_RenderCommands.size(); i++)
+		for (int i = 0; i < s_Data.m_RenderCommands.size(); i++)
 		{
-			RenderCommand command = m_RenderCommands.at(i);
+			RenderCommand command = s_Data.m_RenderCommands.at(i);
 
 			auto materials = command.mesh->GetMaterials();
 			Ref<Material> material = materials.size() ? materials[0] : command.material;
+		//	Ref<Material> material = command.material;
 
 			material->Bind();
 			Ref<Shader> shader = material->GetShader();
 
-			// Transform
 			const auto& rendererUniforms = shader->GetRendererUniforms();
 			for (const auto& uniform : rendererUniforms)
-				m_RendererUniformFuncs[uniform.ID](uniform, command, shader);
+				s_Data.m_RendererUniformFuncs[uniform.ID](uniform, command, shader);
 
-			Renderer::SubmitMesh(command.mesh, command.transform, material, m_ActiveScene);
+			Renderer::SubmitMesh(command.mesh, command.transform, material, s_Data.m_ActiveScene);
 		}
 
-		m_GeometryBuffer->Unbind();
-
-		m_RenderCommands.clear();
+		s_Data.m_GeometryBuffer->Unbind();
+		s_Data.m_RenderCommands.clear();
 
 		Renderer::Flush();
 	}
 
-	void SceneRenderer::EndI()
+	void SceneRenderer::End()
 	{
-		m_CompositeBuffer->Bind();
-		m_CompositeBuffer->Clear();
+		s_Data.m_CompositeBuffer->Bind();
+		s_Data.m_CompositeBuffer->Clear();
 
-		m_CompositeShader->Bind();
-		m_CompositeShader->SetUniform1f("u_Exposure", m_Exposure);
-		m_CompositeShader->SetUniform1i("u_InputTexture", 0);
-		m_GeometryBuffer->GetTexture()->Bind(0);
-		m_FullscreenQuad->Render(true);
+		s_Data.m_CompositeShader->Bind();
+		s_Data.m_CompositeShader->SetUniform1f("u_Exposure", s_Data.m_ActiveScene->GetCamera()->GetExposure());
+		s_Data.m_CompositeShader->SetUniform1i("u_InputTexture", 0);
 
-		m_CompositeBuffer->Unbind();
+		s_Data.m_GeometryBuffer->GetTexture()->Bind(0);
+
+		s_Data.m_FullscreenQuad->Render(true);
+
+		s_Data.m_CompositeBuffer->Unbind();
 
 		Renderer::End();
 	}
 
-	void SceneRenderer::ResizeI(uint32_t width, uint32_t height)
+	void SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
 	{
-		m_CompositeBuffer->Resize(width, height);
-		m_GeometryBuffer->Resize(width, height);
+		if (material != nullptr)
+			s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, material));
+	//	else if (mesh.HasMaterial())
+	//		s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, mesh.getMaterial()));
 	}
 
-	void SceneRenderer::SubmitMeshI(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
+	void SceneRenderer::Resize(uint width, uint height)
 	{
-		if (m_ActiveSceneMaterial != nullptr)
-			m_RenderCommands.push_back(RenderCommand(mesh, transform, m_ActiveSceneMaterial));
-		else if (material != nullptr)
-			m_RenderCommands.push_back(RenderCommand(mesh, transform, material));
-		//	else if (mesh->HasMaterial())
-		//		m_RenderCommands.push_back(RenderCommand(mesh, transform, mesh->GetMaterial()));
+		s_Data.m_CompositeBuffer->Resize(width, height);
+		s_Data.m_GeometryBuffer->Resize(width, height);
 	}
 
-	void SceneRenderer::InitGLI()
+	Ref<Shader> SceneRenderer::GetPBRShader()
 	{
-		m_GeometryBuffer = CreateRef<FrameBuffer>(1280, 720);
-		m_GeometryBuffer->Bind();
-		m_GeometryBuffer->Attach(BufferAtachment::COLOR);
-		m_GeometryBuffer->Attach(BufferAtachment::DEPTH);
-		m_GeometryBuffer->Unbind();
+		return s_Data.m_PBRShader;
+	}
 
-		m_CompositeBuffer = CreateRef<FrameBuffer>(1280, 720, TextureParameters(TextureFormat::RGBA16F, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-		m_CompositeBuffer->Bind();
-		m_CompositeBuffer->Attach(BufferAtachment::COLOR);
-		m_CompositeBuffer->Attach(BufferAtachment::DEPTH);
-		m_CompositeBuffer->Unbind();
+	Ref<FrameBuffer> SceneRenderer::GetFinalBuffer()
+	{
+		return s_Data.m_CompositeBuffer;
+	}
 
-		m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
-		m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
-		m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+	void SceneRenderer::InitRenderFunctions()
+	{
+		s_Data.m_RendererUniformFuncs[RenderUniformID::MODEL_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniformMat4(uniform.Location, command.transform);
+		};
+		s_Data.m_RendererUniformFuncs[RenderUniformID::VIEW_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetViewMatrix());
+		};
+		s_Data.m_RendererUniformFuncs[RenderUniformID::PROJ_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix());
+		};
+		s_Data.m_RendererUniformFuncs[RenderUniformID::INVERSE_VP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniformMat4(uniform.Location, glm::inverse(s_Data.m_ActiveScene->GetCamera()->GetViewMatrix()));
+		};
+		s_Data.m_RendererUniformFuncs[RenderUniformID::MVP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix() * s_Data.m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
+		};
+		s_Data.m_RendererUniformFuncs[RenderUniformID::CAMERA_POSITION] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			shader->SetUniform3f(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetPosition());
+		};
 	}
 }

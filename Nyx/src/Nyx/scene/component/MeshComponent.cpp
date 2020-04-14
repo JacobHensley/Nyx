@@ -8,9 +8,4 @@ namespace Nyx {
 	{
 	}
 
-	void MeshComponent::RenderMesh(const glm::mat4& transform)
-	{
-		m_Mesh->Render(true);
-	}
-
 }

@@ -3,30 +3,24 @@
 EditorLayer::EditorLayer(const String& name) 
 	:	Layer(name)
 {
-	m_Skybox= CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
-	m_LightEnv= CreateRef<LightEnvironment>();
-	m_Camera= CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-	m_Scene= CreateRef<Scene>(m_Camera, m_LightEnv, m_Skybox);
-
-	//m_Scene= CreateRef<Scene(m_Camera);
-	//m_Scene.AddLight(m_Light);
-	//m_Scene.SetSkybox(irradiance, radiance);
-	//m_Scene.CreateObject("name", { new MeshComponent("path"), new TransformComponent(transform), new MaterialComponent(material) } );
-	//object = m_Scene.GetObject(index);
-	//object.getComponent<Transform>();
-	//m_Scene.getComponents<Transform>();
+	m_Skybox = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
+	m_LightEnv = CreateRef<LightEnvironment>();
+	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
 	parameters.generateMips = true;
 
-	m_AlbedoMap= CreateRef<Texture>(0, 0, parameters);
-	m_MetalnessMap= CreateRef<Texture>(0, 0, parameters);
-	m_RoughnessMap= CreateRef<Texture>(0, 0, parameters);
-	m_NormalMap= CreateRef<Texture>(0, 0, parameters);
+	m_AlbedoMap = CreateRef<Texture>(0, 0, parameters);
+	m_MetalnessMap = CreateRef<Texture>(0, 0, parameters);
+	m_RoughnessMap = CreateRef<Texture>(0, 0, parameters);
+	m_NormalMap = CreateRef<Texture>(0, 0, parameters);
 
-	m_BRDFLutTexture= CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_IrradianceTexture= CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
-	m_RadianceTexture= CreateRef<TextureCube>("assets/textures/canyon_Radiance.png");
+	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
+	m_RadianceTexture = CreateRef<TextureCube>("assets/textures/canyon_Radiance.png");
 	m_Light = CreateRef<Light>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
+
+	Ref<EnvironmentMap> envMap = CreateRef<EnvironmentMap>(m_RadianceTexture, m_IrradianceTexture);
+	m_Scene = CreateRef<Scene>(m_Camera, envMap, m_LightEnv);
 
 	m_DefaultMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 	m_DefaultMaterial->SetUniform("u_Direction", m_Light->direction);
@@ -561,7 +555,7 @@ void EditorLayer::RenderSceneGraphMenu()
 				bool active = objects[i]->IsActive();
 				ImGui::Checkbox("Visible", &active);
 				if (active != objects[i]->IsActive())
-					objects[i]->Toggle(active);
+					objects[i]->SetActive(active);
 
 				if (ImGui::Button("Select"))
 				{

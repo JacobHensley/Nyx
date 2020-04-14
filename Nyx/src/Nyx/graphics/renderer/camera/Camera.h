@@ -22,9 +22,12 @@ namespace Nyx {
 		inline void SetDistance(float distance) { m_Distance = distance; }
 
 		const glm::vec3& GetPosition() const { return m_Position; }
-		
+
 		inline void SetProjectionMatrix(const glm::mat4& projectionMatrix) { m_ProjectionMatrix = projectionMatrix; }
-		
+
+		inline void SetExposure(float exposure) { m_Exposure = exposure; }
+		inline float GetExposure() { return m_Exposure; }
+
 		glm::vec3 GetUpDirection();
 		glm::vec3 GetRightDirection();
 		glm::vec3 GetForwardDirection();
@@ -49,6 +52,8 @@ namespace Nyx {
 		float m_PanSpeed, m_RotationSpeed, m_ZoomSpeed;
 
 		float m_Pitch, m_Yaw;
+
+		float m_Exposure = 1.0f;
 	};
 
 }
