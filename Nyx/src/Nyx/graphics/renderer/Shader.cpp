@@ -18,17 +18,6 @@ namespace Nyx {
 		m_ShaderID = Init();
 		NX_CORE_ASSERT(m_ShaderID, "Shader ID is NULL (Shader most likely failed to compile)");
 		NX_CORE_INFO("Created Shader at Path: {0}", m_FilePath);
-
-		ParseUniforms();
-		PrintUniforms();
-		
-		// Renderer Uniforms
-		ResolveRendererUniform(RenderUniformID::MODEL_MATRIX, "r_ModelMatrix");
-		ResolveRendererUniform(RenderUniformID::VIEW_MATRIX, "r_ViewMatrix");
-		ResolveRendererUniform(RenderUniformID::PROJ_MATRIX, "r_ProjMatrix");
-		ResolveRendererUniform(RenderUniformID::INVERSE_VP, "r_InverseVP");
-		ResolveRendererUniform(RenderUniformID::MVP, "r_MVP");
-		ResolveRendererUniform(RenderUniformID::CAMERA_POSITION, "r_CameraPosition");
 	}
 
 	Shader::~Shader()
@@ -52,6 +41,8 @@ namespace Nyx {
 			NX_CORE_ASSERT(false, "Vertex or Fragment shader is empty!");
 			return 0;
 		}
+
+		ComplieShaders(shaderSrc);
 
 		if (CompileShader(vertex, vertexSrc) && CompileShader(fragment, fragSrc))
 		{
@@ -141,7 +132,7 @@ namespace Nyx {
 
 		TBuiltInResource Resources;
 		Resources = DefaultTBuiltInResource;
-		EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
+		EShMessages messages = (EShMessages)(EShMsgDefault);
 
 		//Get Path of File
 		std::string Path = m_FilePath;
@@ -182,8 +173,9 @@ namespace Nyx {
 		glslang::SpvOptions spvOptions;
 		glslang::GlslangToSpv(*Program.getIntermediate(ShaderType), SpirV, &logger, &spvOptions);
 
-		glslang::TReflection reflection(EShReflectionOptions::EShReflectionDefault, EShLangVertex, EShLangVertex);
-		reflection.addStage(EShLangVertex, *Program.getIntermediate(ShaderType));
+		glslang::TReflection reflection(EShReflectionOptions::EShReflectionDefault, EShLangVertex, EShLangFragment);
+		reflection.addStage(EShLangVertex, *Program.getIntermediate(EShLangVertex));
+		reflection.addStage(EShLangFragment, *Program.getIntermediate(EShLangFragment));
 
 		glShaderSource(shader, 1, &shaderString, NULL);
 		glCompileShader(shader);
@@ -204,199 +196,6 @@ namespace Nyx {
 		}
 
 		return 1;
-	}
-
-	void Shader::ParseUniformStructs()
-	{
-		std::ifstream stream(m_FilePath);
-		String line;
-
-		bool inStuct = false;
-		bool foundStruct = false;
-
-		while (getline(stream, line))
-		{
-			if (line.find("}") != String::npos)
-			{
-				foundStruct = false;
-				inStuct = false;
-			}
-
-			if (line.find("struct") != String::npos && line.find("//") == String::npos && line.empty() == false)
-			{
-				std::vector<String> tokens = Tokenize(line, ' ');
-				m_UniformStructs.push_back(UniformStruct(tokens[1]));
-				foundStruct = true;
-			}
-
-			if (inStuct == true)
-			{
-				std::vector<String> type = Tokenize(line, ' ');
-				String name = type[1];
-				name.pop_back();
-				m_UniformStructs.back().AddType(type[0], name);
-			}
-
-			if (line.find("{") != String::npos && foundStruct == true)
-			{
-				inStuct = true;
-				continue;
-			}
-		}
-	}
-
-	void Shader::ParseUniformBlock(int startingLineNumber)
-	{
-		std::ifstream stream(m_FilePath);
-		String line;
-		int lineNum = 0;
-
-		while (getline(stream, line))
-		{
-			if (lineNum == startingLineNumber)
-			{
-				std::vector<String> tokens = Tokenize(line, ' ');
-				m_UniformStructs.push_back(UniformStruct(tokens[1]));
-			}
-
-			if (lineNum - 2 >= startingLineNumber && line.find("//") == String::npos && line.empty() == false)
-			{
-				if (line.find("}") != String::npos)
-				{
-					return;
-				}
-
-				std::vector<String> type = Tokenize(line, ' ');
-				String name = type[1];
-				name.pop_back();
-
-				String typeToken = type[0];
-				typeToken.erase(std::remove(typeToken.begin(), typeToken.end(), '\t'), typeToken.end());
-
-				m_UniformStructs.back().AddType(typeToken, name);
-				PushUniform(ShaderType(m_UniformStructs.back().name + "." + name, typeToken));
-			}
-			lineNum++;
-		}
-	}
-
-	void Shader::ParseUniforms()
-	{
-		std::ifstream stream(m_FilePath);
-		String line;
-		int lineNum = 0;
-
-		std::vector<ShaderType> rawUniforms;
-
-		while (getline(stream, line))
-		{
-			if (line.find("uniform") != String::npos && line.find("//") == String::npos)
-			{
-				std::vector<String> tokens = Tokenize(line, ' ');
-
-				if (tokens.size() == 2)
-				{
-					ParseUniformBlock(lineNum);
-					continue;
-				}
-
-				String name = tokens[2];
-				name.pop_back();
-				rawUniforms.push_back(ShaderType(name, tokens[1]));
-			}
-			lineNum++;
-		}
-
-		for (int i = 0; i < rawUniforms.size(); i++)
-		{
-			ShaderType uniform = rawUniforms[i];
-			bool isInStruct = false;
-			for (int j = 0; j < m_UniformStructs.size(); j++)
-			{
-				if (uniform.type == m_UniformStructs[j].name)
-				{
-					isInStruct = true;
-					for (int k = 0; k < m_UniformStructs[j].types.size(); k++)
-					{
-						String type = m_UniformStructs[j].types[k].first;
-						type.erase(std::remove(type.begin(), type.end(), '\t'), type.end());
-						PushUniform(ShaderType(m_UniformStructs[j].name + "." + m_UniformStructs[j].types[k].second, type));
-					}
-				}
-			}
-			if (isInStruct == false)
-			{
-				PushUniform(rawUniforms[i]);
-			}
-			isInStruct = false;
-		}
-
-		SetRenderUniformIDs();
-	}
-
-	void Shader::SetRenderUniformIDs()
-	{
-		for (int i = 0; i < m_RenderUniforms.size(); i++)
-		{
-			const String& name = m_RenderUniforms.at(i)->GetName();
-			if (name == "r_ModelMatrix")
-				m_RenderUniformIDs.push_back(RenderUniformID::MODEL_MATRIX);
-			if (name == "r_ViewMatrix")
-				m_RenderUniformIDs.push_back(RenderUniformID::VIEW_MATRIX);
-			if (name == "r_ProjMatrix")
-				m_RenderUniformIDs.push_back(RenderUniformID::PROJ_MATRIX);
-			if (name == "r_InverseVP")
-				m_RenderUniformIDs.push_back(RenderUniformID::INVERSE_VP);
-			if (name == "r_MVP")
-				m_RenderUniformIDs.push_back(RenderUniformID::MVP);
-			if (name == "r_CameraPosition")
-				m_RenderUniformIDs.push_back(RenderUniformID::CAMERA_POSITION);
-		}
-	}
-
-	void Shader::PushUniform(ShaderType uniform)
-	{
-		Bind();
-		Ref<ShaderUniform> shaderUniform;
-		if (uniform.type == "sampler2D" || uniform.type == "samplerCube") 
-		{
-			shaderUniform = CreateRef<ShaderUniform>(uniform.name, uniform.type, 1, m_Sampler);
-			SetUniform1i(shaderUniform->GetName(), shaderUniform->GetSampler());
-			m_Sampler++;
-		}
-		else 
-		{
-			shaderUniform = CreateRef<ShaderUniform>(uniform.name, uniform.type, 1, -1);
-		}
-
-		if (shaderUniform->GetName().front() == 'u')
-		{
-			m_UniformUserSize += shaderUniform->GetSize();
-			m_UserUniforms.push_back(shaderUniform);
-
-			shaderUniform->SetOffset(m_UserUniformBufferOffset);
-			m_UserUniformBufferOffset += shaderUniform->GetSize();
-		}
-		else if (shaderUniform->GetName().front() == 'r')
-		{
-			m_UniformRenderSize += shaderUniform->GetSize();
-			m_RenderUniforms.push_back(shaderUniform);
-
-			shaderUniform->SetOffset(m_RendererUniformBufferOffset);
-			m_RendererUniformBufferOffset += shaderUniform->GetSize();
-		}
-
-	}
-
-	bool Shader::ResolveRendererUniform(RenderUniformID id, const std::string& name)
-	{
-		int location = GetUniformLocation(name);
-		if (location != -1)
-		{
-			m_RendererUniforms.emplace(RendererUniform{ id, location });
-			return true;
-		}
-		return false;
 	}
 
 	void Shader::SetTextureIDs(const String& name)
@@ -420,163 +219,6 @@ namespace Nyx {
 	void Shader::Unbind()
 	{
 		glUseProgram(0);
-	}
-
-	void Shader::Reload()
-	{
-		m_UniformLocationCache.clear();
-		uint reloadedShader = Init();
-
-		if (reloadedShader == NULL)
-		{
-			NX_CORE_WARN("Shader failed to compile aborting shader reload!");
-			return;
-		}
-
-		glDeleteProgram(m_ShaderID);
-		m_UniformLocationCache.clear();
-		m_Sampler = 0;
-		m_UniformSize = 0;
-		m_UserUniforms.clear();
-		m_UniformStructs.clear();
-		m_ShaderID = reloadedShader;
-
-		ParseUniforms();
-	}
-
-	void Shader::PrintUniforms()
-	{
-		for each (Ref<ShaderUniform> uniform in m_UserUniforms)
-		{
-			NX_CORE_DEBUG("Name: {0}", uniform->GetName());
-			NX_CORE_DEBUG("	Type:    {0}", uniform->GetTypeString());
-			NX_CORE_DEBUG("	Size:    {0}", uniform->GetSize());
-			NX_CORE_DEBUG("	Offset:  {0}", uniform->GetOffset());
-			NX_CORE_DEBUG("	Sampler: {0}", uniform->GetSampler());
-		}
-	}
-
-	Ref<ShaderUniform> Shader::FindRenderUniform(const String& name)
-	{
-		for (int i = 0; i < m_RenderUniforms.size(); i++)
-		{
-			if (m_RenderUniforms[i]->GetName() == name)
-			{
-				return m_RenderUniforms[i];
-			}
-		}
-
-		return nullptr;
-	}
-
-	Ref<ShaderUniform> Shader::FindUserUniform(const String & name)
-	{
-		for (int i = 0;i < m_UserUniforms.size();i++)
-		{
-			if (m_UserUniforms[i]->GetName() == name)
-			{
-				return m_UserUniforms[i];
-			}
-		}
-
-		return nullptr;		
-	}
-
-	int Shader::GetUniformLocation(const String& name)
-	{
-		if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end()) 
-		{
-			return m_UniformLocationCache[name];
-		}
-			
-		int location = glGetUniformLocation(m_ShaderID, name.c_str());
-
-	//	NX_CORE_ASSERT(location != -1, "Invalid uniform location");
-
-		m_UniformLocationCache[name] = location;
-		return location;
-	}
-
-	void Shader::SetUniform1f(const String& name, float value)
-	{
-		glUniform1f(GetUniformLocation(name), value);
-	}
-
-	void Shader::SetUniform2f(const String& name, const glm::vec2& vec)
-	{
-		glUniform2f(GetUniformLocation(name), vec.x, vec.y);
-	}
-
-	void Shader::SetUniform3f(const String& name, const glm::vec3& vec)
-	{
-		glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
-	}
-
-	void Shader::SetUniform3f(int location, const glm::vec3& vec)
-	{
-		glUniform3f(location, vec.x, vec.y, vec.z);
-	}
-
-	void Shader::SetUniform4f(const String& name, const glm::vec4& vec)
-	{
-		glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w);
-	}
-
-	void Shader::SetUniformMat4(const String& name, const glm::mat4& matrix)
-	{
-		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix[0]));
-	}
-
-	void Shader::SetUniformMat4(int location, const glm::mat4& matrix)
-	{
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix[0]));
-	}
-
-	void Shader::SetUniform1i(const String& name, int value)
-	{
-		glUniform1i(GetUniformLocation(name), value);
-	}
-
-	void Shader::SetUniform1iv(const String& name, int* value, int count)
-	{
-		glUniform1iv(GetUniformLocation(name), count, value);
-	}
-
-	void Shader::SetUniformBool(const String& name, bool value)
-	{
-		glUniform1i(GetUniformLocation(name), value);
-	}
-
-	std::string Shader::GetSuffix(const std::string& name)
-	{
-		const size_t pos = name.rfind('.');
-		return (pos == std::string::npos) ? "" : name.substr(name.rfind('.') + 1);
-	}
-
-	EShLanguage Shader::GetShaderStage(const std::string& stage)
-	{
-		if (stage == "vert") {
-			return EShLangVertex;
-		}
-		else if (stage == "tesc") {
-			return EShLangTessControl;
-		}
-		else if (stage == "tese") {
-			return EShLangTessEvaluation;
-		}
-		else if (stage == "geom") {
-			return EShLangGeometry;
-		}
-		else if (stage == "frag") {
-			return EShLangFragment;
-		}
-		else if (stage == "comp") {
-			return EShLangCompute;
-		}
-		else {
-			assert(0 && "Unknown shader stage");
-			return EShLangCount;
-		}
 	}
 
 }

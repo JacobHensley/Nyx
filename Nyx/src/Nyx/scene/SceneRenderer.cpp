@@ -44,8 +44,8 @@ namespace Nyx {
 		s_Data.m_CompositeBuffer->Unbind();
 
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f);
-		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
 
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);

@@ -1,5 +1,5 @@
 #Shader Vertex
-#version 430 core
+#version 450 core
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
@@ -7,13 +7,13 @@ layout(location = 2) in vec3 a_Tangent;
 layout(location = 3) in vec3 a_Binormals;
 layout(location = 4) in vec2 a_TexCoords;
 
-uniform mat4 r_MVP;
-uniform mat4 r_ModelMatrix;
+layout(location = 0) uniform mat4 r_MVP;
+layout(location = 1) uniform mat4 r_ModelMatrix;
 
-out vec3 v_Normal;
-out vec3 v_WorldPosition;
-out vec2 v_TexCoords;
-out mat3 v_WorldNormals;
+layout(location = 5) out vec3 v_Normal;
+layout(location = 6) out vec3 v_WorldPosition;
+layout(location = 7) out vec2 v_TexCoords;
+layout(location = 8) out mat3 v_WorldNormals;
 
 void main()
 {
@@ -26,7 +26,7 @@ void main()
 }
 
 #Shader Fragment
-#version 430 core
+#version 450 core
 
 layout(location = 0) out vec4 color;
 
@@ -64,10 +64,10 @@ uniform sampler2D u_BRDFLutTexture;
 uniform samplerCube u_IrradianceTexture;
 uniform samplerCube u_RadianceTexture;
 
-in vec3 v_Normal;
-in vec3 v_WorldPosition;
-in vec2 v_TexCoords;
-in mat3 v_WorldNormals;
+layout(location = 5) in vec3 v_Normal;
+layout(location = 6) in vec3 v_WorldPosition;
+layout(location = 7) in vec2 v_TexCoords;
+layout(location = 8) in mat3 v_WorldNormals;
 
 vec3 GetAlbedo(vec2 texCoords)
 {
