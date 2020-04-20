@@ -11,14 +11,16 @@ workspace "Nyx"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["spdlog"] = "Nyx/vendor/spdlog/include"
-IncludeDir["glm"] =    "Nyx/vendor/glm"
-IncludeDir["assimp"] = "Nyx/vendor/assimp/include"
-IncludeDir["GLFW"] =   "Nyx/vendor/GLFW/include"
-IncludeDir["glad"] =   "Nyx/vendor/glad/include"
-IncludeDir["imgui"] =  "Nyx/vendor/imgui"
-IncludeDir["sol2"] =   "Nyx/vendor/sol2/include"
-IncludeDir["lua"] =    "Nyx/vendor/sol2/lua/src"
+IncludeDir["spdlog"] =    "Nyx/vendor/spdlog/include"
+IncludeDir["glm"] =       "Nyx/vendor/glm"
+IncludeDir["assimp"] =    "Nyx/vendor/assimp/include"
+IncludeDir["GLFW"] =      "Nyx/vendor/GLFW/include"
+IncludeDir["glad"] =      "Nyx/vendor/glad/include"
+IncludeDir["imgui"] =     "Nyx/vendor/imgui"
+IncludeDir["sol2"] =      "Nyx/vendor/sol2/include"
+IncludeDir["lua"] =       "Nyx/vendor/sol2/lua/src"
+IncludeDir["glslang"] =   "Nyx/vendor/glslang"
+IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross/include"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
@@ -56,7 +58,9 @@ project "Nyx"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.sol2}",
-		"%{IncludeDir.lua}"
+		"%{IncludeDir.lua}",
+		"%{IncludeDir.glslang}",
+		"%{IncludeDir.SPVCross}"
 	}
 
 	filter "system:windows"
@@ -103,6 +107,12 @@ project "Sandbox"
 		"%{prj.name}/src/**.cpp"
 	}
 
+	excludes 
+	{ 
+		"%{prj.name}/src/layers/ViewerLayer.h",
+		"%{prj.name}/src/layers/ViewerLayer.cpp"
+	}
+
 	includedirs
 	{
 		"%{prj.name}/src",
@@ -115,7 +125,9 @@ project "Sandbox"
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.sol2}",
-		"%{IncludeDir.lua}"
+		"%{IncludeDir.lua}",
+		"%{IncludeDir.glslang}",
+		"%{IncludeDir.SPVCross}"
 	}
 
 	links 
@@ -143,12 +155,23 @@ project "Sandbox"
 
 		links 
 		{ 
-			"Nyx/vendor/assimp/lib/assimp-vc141-mtd.lib"
+			"Nyx/vendor/assimp/lib/assimp-vc141-mtd.lib",
+			"Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.lib"
+		}
+
+		links
+		{
+			"Nyx/vendor/glslang/glslang/Debug/glslangd.lib",
+			"Nyx/vendor/glslang/SPIRV/Debug/SPIRVd.lib",
+			"Nyx/vendor/glslang/hlsl/Debug/HLSLd.lib",
+			"Nyx/vendor/glslang/glslang/OSDependent/Windows/Debug/OSDependentd.lib",
+			"Nyx/vendor/glslang/OGLCompilersDLL/Debug/OGLCompilerd.lib"
 		}
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
+			("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Release"
@@ -157,10 +180,21 @@ project "Sandbox"
 
 		links 
 		{ 
-			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib"
+			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib",
+			"Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.lib"
+		}
+
+		links
+		{
+			"Nyx/vendor/glslang/glslang/Release/glslang.lib",
+			"Nyx/vendor/glslang/SPIRV/Release/SPIRV.lib",
+			"Nyx/vendor/glslang/hlsl/Release/HLSL.lib",
+			"Nyx/vendor/glslang/glslang/OSDependent/Windows/Release/OSDependent.lib",
+			"Nyx/vendor/glslang/OGLCompilersDLL/Release/OGLCompiler.lib"
 		}
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
+			("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}

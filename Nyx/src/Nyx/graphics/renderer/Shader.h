@@ -4,6 +4,11 @@
 #include "ShaderUniform.h"
 #include <glm/glm.hpp>
 
+#include "glslang/public/ShaderLang.h"
+#include <SPIRV/GlslangToSpv.h>
+#include <StandAlone/DirStackFileIncluder.h>
+#include "glslang/MachineIndependent/reflection.h"
+
 namespace Nyx {
 
 	struct ShaderSource;
@@ -97,6 +102,10 @@ namespace Nyx {
 		void SetUniform1i(const String& name, int value);
 		void SetUniform1iv(const String& name, int* value, int count);
 		void SetUniformBool(const String& name, bool value);
+
+		std::string GetSuffix(const std::string& name);
+		EShLanguage GetShaderStage(const std::string& stage);
+
 	private:
 		uint Init();
 		ShaderSource SplitShader(const String& filePath);

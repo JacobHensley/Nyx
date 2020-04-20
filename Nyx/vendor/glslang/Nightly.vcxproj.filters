@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\SPIRV\glslang\build\CMakeFiles\ecb5068fdfbcae28c25e622a542c8a4f\Nightly.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\SPIRV\glslang\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\dev\Nyx\Nyx\vendor\SPIRV\glslang\build\CMakeFiles\Nightly" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7A1119D0-2123-3749-92BE-165F5E4017D3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

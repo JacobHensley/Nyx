@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\glslang;..\Nyx\vendor\SPIRV-Cross\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -68,10 +68,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.lib;..\Nyx\vendor\SPIRV-Cross\build\Debug\spirv-cross-c-sharedd.lib;..\Nyx\vendor\glslang\glslang\Debug\glslangd.lib;..\Nyx\vendor\glslang\SPIRV\Debug\SPIRVd.lib;..\Nyx\vendor\glslang\hlsl\Debug\HLSLd.lib;..\Nyx\vendor\glslang\glslang\OSDependent\Windows\Debug\OSDependentd.lib;..\Nyx\vendor\glslang\OGLCompilersDLL\Debug\OGLCompilerd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)
+IF EXIST ..\Nyx\vendor\SPIRV-Cross\build\Debug\spirv-cross-c-sharedd.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\SPIRV-Cross\build\Debug\spirv-cross-c-sharedd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\SPIRV-Cross\build\Debug\spirv-cross-c-sharedd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -79,7 +80,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\glslang;..\Nyx\vendor\SPIRV-Cross\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -92,10 +93,11 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mt.lib;..\Nyx\vendor\SPIRV-Cross\build\Release\spirv-cross-c-shared.lib;..\Nyx\vendor\glslang\glslang\Release\glslang.lib;..\Nyx\vendor\glslang\SPIRV\Release\SPIRV.lib;..\Nyx\vendor\glslang\hlsl\Release\HLSL.lib;..\Nyx\vendor\glslang\glslang\OSDependent\Windows\Release\OSDependent.lib;..\Nyx\vendor\glslang\OGLCompilersDLL\Release\OGLCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)
+IF EXIST ..\Nyx\vendor\SPIRV-Cross\build\Release\spirv-cross-c-shared.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\SPIRV-Cross\build\Release\spirv-cross-c-shared.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\SPIRV-Cross\build\Release\spirv-cross-c-shared.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

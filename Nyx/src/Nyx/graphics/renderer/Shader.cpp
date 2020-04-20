@@ -115,9 +115,75 @@ namespace Nyx {
 		
 	}
 
+	const TBuiltInResource DefaultTBuiltInResource = { NULL };
+
 	int Shader::CompileShader(uint shader, const String& shaderSrc)
 	{
 		const char* shaderString = shaderSrc.c_str();
+
+		glslang::InitializeProcess();
+		EShLanguage ShaderType = EShLangVertex;
+		glslang::TShader Shader(ShaderType);
+
+		const char* glslString = shaderSrc.c_str();
+
+		Shader.setStrings(&glslString, 1);
+
+		int ClientInputSemanticsVersion = 100; // maps to, say, #define VULKAN 100
+		glslang::EShTargetClientVersion VulkanClientVersion = glslang::EShTargetOpenGL_450;
+		glslang::EShTargetLanguageVersion TargetVersion = glslang::EShTargetSpv_1_0;
+
+		Shader.setEnvInput(glslang::EShSourceGlsl, ShaderType, glslang::EShClientOpenGL, ClientInputSemanticsVersion);
+		Shader.setEnvClient(glslang::EShClientOpenGL, VulkanClientVersion);
+		Shader.setEnvTarget(glslang::EShTargetSpv, TargetVersion);
+
+		DirStackFileIncluder Includer;
+
+		TBuiltInResource Resources;
+		Resources = DefaultTBuiltInResource;
+		EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgVulkanRules);
+
+		//Get Path of File
+		std::string Path = m_FilePath;
+		Includer.pushExternalLocalDirectory(Path);
+		const int DefaultVersion = 100;
+
+		std::string PreprocessedGLSL;
+
+		if (!Shader.preprocess(&Resources, DefaultVersion, ENoProfile, false, false, messages, &PreprocessedGLSL, Includer))
+		{
+			std::cout << "GLSL Preprocessing Failed for: " << m_FilePath << std::endl;
+			std::cout << Shader.getInfoLog() << std::endl;
+			std::cout << Shader.getInfoDebugLog() << std::endl;
+		}
+
+		const char* PreprocessedCStr = PreprocessedGLSL.c_str();
+		Shader.setStrings(&PreprocessedCStr, 1);
+
+		if (!Shader.parse(&Resources, 100, false, messages))
+		{
+			std::cout << "GLSL Parsing Failed for: " << m_FilePath << std::endl;
+			std::cout << Shader.getInfoLog() << std::endl;
+			std::cout << Shader.getInfoDebugLog() << std::endl;
+		}
+
+		glslang::TProgram Program;
+		Program.addShader(&Shader);
+
+		if (!Program.link(messages))
+		{
+			std::cout << "GLSL Linking Failed for: " << m_FilePath << std::endl;
+			std::cout << Shader.getInfoLog() << std::endl;
+			std::cout << Shader.getInfoDebugLog() << std::endl;
+		}
+
+		std::vector<unsigned int> SpirV;
+		spv::SpvBuildLogger logger;
+		glslang::SpvOptions spvOptions;
+		glslang::GlslangToSpv(*Program.getIntermediate(ShaderType), SpirV, &logger, &spvOptions);
+
+		glslang::TReflection reflection(EShReflectionOptions::EShReflectionDefault, EShLangVertex, EShLangVertex);
+		reflection.addStage(EShLangVertex, *Program.getIntermediate(ShaderType));
 
 		glShaderSource(shader, 1, &shaderString, NULL);
 		glCompileShader(shader);
@@ -479,6 +545,38 @@ namespace Nyx {
 	void Shader::SetUniformBool(const String& name, bool value)
 	{
 		glUniform1i(GetUniformLocation(name), value);
+	}
+
+	std::string Shader::GetSuffix(const std::string& name)
+	{
+		const size_t pos = name.rfind('.');
+		return (pos == std::string::npos) ? "" : name.substr(name.rfind('.') + 1);
+	}
+
+	EShLanguage Shader::GetShaderStage(const std::string& stage)
+	{
+		if (stage == "vert") {
+			return EShLangVertex;
+		}
+		else if (stage == "tesc") {
+			return EShLangTessControl;
+		}
+		else if (stage == "tese") {
+			return EShLangTessEvaluation;
+		}
+		else if (stage == "geom") {
+			return EShLangGeometry;
+		}
+		else if (stage == "frag") {
+			return EShLangFragment;
+		}
+		else if (stage == "comp") {
+			return EShLangCompute;
+		}
+		else {
+			assert(0 && "Unknown shader stage");
+			return EShLangCount;
+		}
 	}
 
 }

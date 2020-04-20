@@ -7,6 +7,8 @@
 *.ko
 *.obj
 *.elf
+*.tlog
+*.log
 
 # Linker output
 *.ilk
@@ -59,9 +61,7 @@ _deps
 *.sln.docstates
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 x64/
 x86/
