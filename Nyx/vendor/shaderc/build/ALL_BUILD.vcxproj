@@ -1,0 +1,510 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DB0452A9-9EE1-3A56-B706-606F1FC726E6}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXCompilerFlag.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPythonInterp.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCXXCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeRCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeSystem.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\setup_build.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\utils.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXCompilerFlag.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPythonInterp.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCXXCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeRCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeSystem.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\setup_build.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\utils.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXCompilerFlag.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPythonInterp.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCXXCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeRCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeSystem.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\setup_build.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\utils.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXCompilerFlag.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCXXSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPythonInterp.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\GNUInstallDirs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeCXXCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeRCCompiler.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\3.17.1\CMakeSystem.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\setup_build.cmake;C:\dev\Nyx\Nyx\vendor\shaderc\cmake\utils.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\ZERO_CHECK.vcxproj">
+      <Project>{A06715D1-D9EF-3311-BA82-8378E080643B}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\hlsl\HLSL.vcxproj">
+      <Project>{0F6FA338-7999-3CD2-90C7-30F71EC4EB63}</Project>
+      <Name>HLSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\OGLCompilersDLL\OGLCompiler.vcxproj">
+      <Project>{058AF0B5-0270-3C48-BA54-51E0FC24380B}</Project>
+      <Name>OGLCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\glslang\OSDependent\Windows\OSDependent.vcxproj">
+      <Project>{E268EAAC-8B86-3BF2-A93D-93749C75CD84}</Project>
+      <Name>OSDependent</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\SPIRV\SPIRV.vcxproj">
+      <Project>{6F88F380-0C22-388E-8930-697E68093541}</Project>
+      <Name>SPIRV</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\SPIRV-Tools.vcxproj">
+      <Project>{5A898202-5B92-3321-B02A-74D724D27DCC}</Project>
+      <Name>SPIRV-Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\link\SPIRV-Tools-link.vcxproj">
+      <Project>{E6F6DDDC-1955-3F57-BA1B-462C619EF59C}</Project>
+      <Name>SPIRV-Tools-link</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\opt\SPIRV-Tools-opt.vcxproj">
+      <Project>{EBA48A22-3DB9-37BA-B90E-1EF349173919}</Project>
+      <Name>SPIRV-Tools-opt</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\reduce\SPIRV-Tools-reduce.vcxproj">
+      <Project>{09B829DB-816E-3F41-B14C-EE558EA9EB5B}</Project>
+      <Name>SPIRV-Tools-reduce</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\SPIRV-Tools-shared.vcxproj">
+      <Project>{C6F23EA9-E81C-3A41-92A7-4910FB4F02A9}</Project>
+      <Name>SPIRV-Tools-shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\SPIRV\SPVRemapper.vcxproj">
+      <Project>{D1ED173F-0CE0-373D-A3FB-B83B2B9EB8CB}</Project>
+      <Name>SPVRemapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\check-copyright.vcxproj">
+      <Project>{8003F7B7-3044-3476-992C-A6F47DD82637}</Project>
+      <Name>check-copyright</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\effcee\effcee\effcee.vcxproj">
+      <Project>{D666DC5C-D624-316E-8989-4377551B51C5}</Project>
+      <Name>effcee</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\effcee\examples\effcee-example.vcxproj">
+      <Project>{3FF5C8EC-25DF-3DCC-A465-82ABCFBC6B0D}</Project>
+      <Name>effcee-example</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\effcee\effcee\effcee-test.vcxproj">
+      <Project>{797832E6-23F6-3FB7-B045-BED7F36FAA57}</Project>
+      <Name>effcee-test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\glslang\glslang.vcxproj">
+      <Project>{4ACE3EC7-A431-325D-A864-D8E343997A32}</Project>
+      <Name>glslang</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\StandAlone\glslang-default-resource-limits.vcxproj">
+      <Project>{8144D536-E5E4-3835-857F-B50C47CACD78}</Project>
+      <Name>glslang-default-resource-limits</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\StandAlone\glslangValidator.vcxproj">
+      <Project>{AA6F7CEF-0597-3B1B-9C1D-1172C3AFB705}</Project>
+      <Name>glslangValidator</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\gtests\glslangtests.vcxproj">
+      <Project>{C04DDA2E-F84D-3DF7-95D9-12F7881488C5}</Project>
+      <Name>glslangtests</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc.vcxproj">
+      <Project>{364D1C7F-952F-3EE9-9497-47412DF4709F}</Project>
+      <Name>glslc</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc_exe.vcxproj">
+      <Project>{7AF8ECE6-89FB-320D-BE6F-FF1BAE3D7CAA}</Project>
+      <Name>glslc_exe</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc_file_test.vcxproj">
+      <Project>{884B2F3C-589F-3A5E-B0DC-A71EB5196393}</Project>
+      <Name>glslc_file_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc_resource_parse_test.vcxproj">
+      <Project>{E3548889-E1C2-3613-A17A-8307F69D7276}</Project>
+      <Name>glslc_resource_parse_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc_stage_test.vcxproj">
+      <Project>{62E57CDB-E46B-3AF9-BBB2-8C94287524A8}</Project>
+      <Name>glslc_stage_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googlemock\gmock.vcxproj">
+      <Project>{271D3403-31DA-39B6-9757-FC129A6B75FB}</Project>
+      <Name>gmock</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googlemock\gmock_main.vcxproj">
+      <Project>{3D15AEAB-8BF5-371A-84E4-DE695C3C9E92}</Project>
+      <Name>gmock_main</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googletest\gtest.vcxproj">
+      <Project>{EECB6535-423D-3C70-90FC-D1E6BBBB686E}</Project>
+      <Name>gtest</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googletest\gtest_main.vcxproj">
+      <Project>{07202274-1719-3524-9257-3E82E5788D82}</Project>
+      <Name>gtest_main</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\re2\re2.vcxproj">
+      <Project>{02D4895B-788B-399E-897F-DA24FADC960F}</Project>
+      <Name>re2</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc.vcxproj">
+      <Project>{4396631E-8CC6-3D92-BB26-054544AF4775}</Project>
+      <Name>shaderc</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\examples\online-compile\shaderc-online-compile.vcxproj">
+      <Project>{BA817661-86D5-389B-9F1F-AFB0668C2772}</Project>
+      <Name>shaderc-online-compile</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\shaderc-pkg-config.vcxproj">
+      <Project>{BD962DAB-32FA-31C8-A53C-87E20A7A35E3}</Project>
+      <Name>shaderc-pkg-config</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_c_smoke_test.vcxproj">
+      <Project>{630ADDC1-12CC-3866-8604-9EE0C3C8FD3A}</Project>
+      <Name>shaderc_c_smoke_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\shaderc_combined-pkg-config.vcxproj">
+      <Project>{7124615D-0CC3-3A9B-9911-A7B17652923D}</Project>
+      <Name>shaderc_combined-pkg-config</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_combined_genfile.vcxproj">
+      <Project>{83E21390-109F-3937-91AE-2C235C644BC8}</Project>
+      <Name>shaderc_combined_genfile</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_combined_shaderc_cpp_test.vcxproj">
+      <Project>{144F708F-0597-3FFF-B3A6-56183CCBAF2D}</Project>
+      <Name>shaderc_combined_shaderc_cpp_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_combined_shaderc_test.vcxproj">
+      <Project>{BB011C10-B932-3FBB-B053-753C309D8EA0}</Project>
+      <Name>shaderc_combined_shaderc_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shaderc_cpp_test.vcxproj">
+      <Project>{12674C5C-40BA-38F2-B0EE-AB6964FBD36B}</Project>
+      <Name>shaderc_shaderc_cpp_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shaderc_private_test.vcxproj">
+      <Project>{8E82D3FF-E717-35F7-ADBC-CA308DF608DF}</Project>
+      <Name>shaderc_shaderc_private_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shaderc_test.vcxproj">
+      <Project>{1620C4E4-47F2-3AD6-84F5-1F3568E46705}</Project>
+      <Name>shaderc_shaderc_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shared.vcxproj">
+      <Project>{F2208264-4918-340F-9B3C-85C8CBB12A72}</Project>
+      <Name>shaderc_shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shared_shaderc_cpp_test.vcxproj">
+      <Project>{0D2A3B94-0FD3-3476-B0A2-117CE62AE895}</Project>
+      <Name>shaderc_shared_shaderc_cpp_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shared_shaderc_private_test.vcxproj">
+      <Project>{2C3543FD-5BEB-3E67-95BD-5B7AD80D5A56}</Project>
+      <Name>shaderc_shared_shaderc_private_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc_shared_shaderc_test.vcxproj">
+      <Project>{E7B5265A-FFA5-353D-8668-98DA33B891AE}</Project>
+      <Name>shaderc_shared_shaderc_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\shaderc_static-pkg-config.vcxproj">
+      <Project>{3F3E2E2E-A5E6-3CCC-A6BE-B75B809C90D0}</Project>
+      <Name>shaderc_static-pkg-config</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util.vcxproj">
+      <Project>{FAC27AF2-2568-32BD-9DF0-F9BED2E60B9A}</Project>
+      <Name>shaderc_util</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_compiler_test.vcxproj">
+      <Project>{75B6F5CE-25E4-3C5D-89BE-E9EE0C0DBEE0}</Project>
+      <Name>shaderc_util_compiler_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_counting_includer_test.vcxproj">
+      <Project>{4FCBD173-0C44-39D4-B3DA-456DBF77E73C}</Project>
+      <Name>shaderc_util_counting_includer_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_file_finder_test.vcxproj">
+      <Project>{149587DC-429A-3700-B0B9-3BBAD4E32813}</Project>
+      <Name>shaderc_util_file_finder_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_format_test.vcxproj">
+      <Project>{C67656D2-3D1A-3B37-94E2-DE7507051444}</Project>
+      <Name>shaderc_util_format_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_io_test.vcxproj">
+      <Project>{F053DC51-5227-3A55-9C70-FADA9FDC1D82}</Project>
+      <Name>shaderc_util_io_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_message_test.vcxproj">
+      <Project>{23E29430-611F-3C38-A145-B12E23F6424E}</Project>
+      <Name>shaderc_util_message_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_mutex_test.vcxproj">
+      <Project>{EA37B57C-38FC-3D2A-846F-2B268F210DC2}</Project>
+      <Name>shaderc_util_mutex_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_string_piece_test.vcxproj">
+      <Project>{9243736F-1E1A-3601-B832-5CF7B33A46BB}</Project>
+      <Name>shaderc_util_string_piece_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util_version_profile_test.vcxproj">
+      <Project>{7BAE2642-9E16-3C01-A834-4A1DE9AC8185}</Project>
+      <Name>shaderc_util_version_profile_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-as.vcxproj">
+      <Project>{99B3D6D0-9D6A-3B30-956B-5D2319C0D5C4}</Project>
+      <Name>spirv-as</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-cfg.vcxproj">
+      <Project>{4F710234-66FD-302E-A551-A991F641360C}</Project>
+      <Name>spirv-cfg</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-dis.vcxproj">
+      <Project>{556090B1-5938-34B1-9EF0-8B12DCBDE006}</Project>
+      <Name>spirv-dis</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-link.vcxproj">
+      <Project>{21331A22-C126-374C-9728-25FBEE9E04F2}</Project>
+      <Name>spirv-link</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-opt.vcxproj">
+      <Project>{DADB98B3-963B-3E76-B0A3-5E2662E01A87}</Project>
+      <Name>spirv-opt</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-reduce.vcxproj">
+      <Project>{E5A3C989-7FB2-34BF-8AAA-B9AFC44E5913}</Project>
+      <Name>spirv-reduce</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\StandAlone\spirv-remap.vcxproj">
+      <Project>{AB89C8A9-729E-39BC-81FC-DE22BC2DCBCE}</Project>
+      <Name>spirv-remap</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\examples\cpp-interface\spirv-tools-cpp-example.vcxproj">
+      <Project>{8A743562-CCD2-3545-9633-4C0F29AC0D88}</Project>
+      <Name>spirv-tools-cpp-example</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\spirv-tools-pkg-config.vcxproj">
+      <Project>{85DCE9DB-2D18-3080-8962-0E9615EDCC00}</Project>
+      <Name>spirv-tools-pkg-config</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\spirv-tools-shared-pkg-config.vcxproj">
+      <Project>{9318E7F4-81CA-369B-99CD-DED56DADEADC}</Project>
+      <Name>spirv-tools-shared-pkg-config</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\tools\spirv-val.vcxproj">
+      <Project>{9A3CDC76-15C9-3800-8D69-5A0F131DB2B7}</Project>
+      <Name>spirv-val</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\test_c_interface.vcxproj">
+      <Project>{30DF8483-7456-330B-8104-6DEE303E7D74}</Project>
+      <Name>test_c_interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\test_c_interface_shared.vcxproj">
+      <Project>{1E7D3A37-E0DD-3548-86D0-080049DDCC26}</Project>
+      <Name>test_c_interface_shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\test_cpp_interface.vcxproj">
+      <Project>{368911C4-F317-3EDF-9B98-9E6D138EB493}</Project>
+      <Name>test_cpp_interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\opt\dominator_tree\test_dominator_analysis.vcxproj">
+      <Project>{16296640-D6A3-351A-A2D1-066F7B2EFB4E}</Project>
+      <Name>test_dominator_analysis</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\link\test_link.vcxproj">
+      <Project>{43310838-4863-3499-9945-CAC7D21CBA47}</Project>
+      <Name>test_link</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\opt\test_opt.vcxproj">
+      <Project>{7F50114F-508C-35DA-9F52-84520DD79087}</Project>
+      <Name>test_opt</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\opt\loop_optimizations\test_opt_loops.vcxproj">
+      <Project>{4B5FF5CA-294E-3406-9848-DDB3F9A83737}</Project>
+      <Name>test_opt_loops</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\reduce\test_reduce.vcxproj">
+      <Project>{438C0D37-579D-3779-A238-9E5E56CE47B1}</Project>
+      <Name>test_reduce</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\test_spirv_unit_tests.vcxproj">
+      <Project>{2F261739-0885-3DAF-BA3B-4ED23F6F752F}</Project>
+      <Name>test_spirv_unit_tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\util\test_utils.vcxproj">
+      <Project>{7A507782-D047-364A-B78A-D13880C1B53B}</Project>
+      <Name>test_utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\val\test_val_abcde.vcxproj">
+      <Project>{3CF3A8F2-C516-3E34-9C33-195480439DA7}</Project>
+      <Name>test_val_abcde</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\val\test_val_capability.vcxproj">
+      <Project>{AD29F9C4-58E9-3F59-9D49-CB6F6A459A5C}</Project>
+      <Name>test_val_capability</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\val\test_val_fghijklmnop.vcxproj">
+      <Project>{A3C519AD-5883-3C3C-9187-F58C3AAFF21C}</Project>
+      <Name>test_val_fghijklmnop</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\val\test_val_limits.vcxproj">
+      <Project>{0F70755E-CBD6-3AC1-9C11-AA42445E7268}</Project>
+      <Name>test_val_limits</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\test\val\test_val_stuvw.vcxproj">
+      <Project>{2543D876-9BFB-39DE-9F0D-52C2BFC1644B}</Project>
+      <Name>test_val_stuvw</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,2 @@
+C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\Debug\shaderc.pdb
+C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\shaderc.dir\Debug\shaderc.pdb

@@ -24,7 +24,7 @@ namespace Nyx {
 
 		GLErrorInit();
 
-		SetGLLogLevel(GLLogLevel::MEDIUM);
+		SetGLLogLevel(GLLogLevel::NOTIFICATION);
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -33,6 +33,11 @@ namespace Nyx {
 		glEnable(GL_BLEND);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		NX_CORE_INFO("Vendor:   {0}", glGetString(GL_VENDOR));
+		NX_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
+		NX_CORE_INFO("Version:  {0}", glGetString(GL_VERSION));
+
 
 		SceneRenderer::Init();
 

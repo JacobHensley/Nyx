@@ -19,13 +19,14 @@ IncludeDir["glad"] =      "Nyx/vendor/glad/include"
 IncludeDir["imgui"] =     "Nyx/vendor/imgui"
 IncludeDir["sol2"] =      "Nyx/vendor/sol2/include"
 IncludeDir["lua"] =       "Nyx/vendor/sol2/lua/src"
-IncludeDir["glslang"] =   "Nyx/vendor/glslang"
-IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross/include"
+IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross"
+IncludeDir["Shaderc"] =   "Nyx/vendor/shaderc/libshaderc/include"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
 include "Nyx/vendor/imgui"
 include "Nyx/vendor/sol2"
+include "Nyx/vendor/SPIRV-Cross"
 
 project "Nyx"
 	location "Nyx"
@@ -59,8 +60,8 @@ project "Nyx"
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.lua}",
-		"%{IncludeDir.glslang}",
-		"%{IncludeDir.SPVCross}"
+		"%{IncludeDir.SPVCross}",
+		"%{IncludeDir.Shaderc}"
 	}
 
 	filter "system:windows"
@@ -126,8 +127,8 @@ project "Sandbox"
 		"%{IncludeDir.imgui}",
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.lua}",
-		"%{IncludeDir.glslang}",
-		"%{IncludeDir.SPVCross}"
+		"%{IncludeDir.SPVCross}",
+		"%{IncludeDir.Shaderc}"
 	}
 
 	links 
@@ -137,6 +138,7 @@ project "Sandbox"
 		"glad",
 		"imgui",
 		"sol2",
+		"SPIRV-Cross",
 		"opengl32.lib"
 	}
 
@@ -156,22 +158,14 @@ project "Sandbox"
 		links 
 		{ 
 			"Nyx/vendor/assimp/lib/assimp-vc141-mtd.lib",
-			"Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.lib"
-		}
-
-		links
-		{
-			"Nyx/vendor/glslang/glslang/Debug/glslangd.lib",
-			"Nyx/vendor/glslang/SPIRV/Debug/SPIRVd.lib",
-			"Nyx/vendor/glslang/hlsl/Debug/HLSLd.lib",
-			"Nyx/vendor/glslang/glslang/OSDependent/Windows/Debug/OSDependentd.lib",
-			"Nyx/vendor/glslang/OGLCompilersDLL/Debug/OGLCompilerd.lib"
+		--	"Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.lib",
+			"Nyx/vendor/shaderc/build/libshaderc/Debug/shaderc_combined.lib"
 		}
 
 		postbuildcommands
 		{
 			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
-			("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 	filter "configurations:Release"
@@ -181,20 +175,12 @@ project "Sandbox"
 		links 
 		{ 
 			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib",
-			"Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.lib"
-		}
-
-		links
-		{
-			"Nyx/vendor/glslang/glslang/Release/glslang.lib",
-			"Nyx/vendor/glslang/SPIRV/Release/SPIRV.lib",
-			"Nyx/vendor/glslang/hlsl/Release/HLSL.lib",
-			"Nyx/vendor/glslang/glslang/OSDependent/Windows/Release/OSDependent.lib",
-			"Nyx/vendor/glslang/OGLCompilersDLL/Release/OGLCompiler.lib"
+		--	"Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.lib",
+			"Nyx/vendor/shaderc/build/libshaderc/Release/shaderc_combined.lib"
 		}
 
 		postbuildcommands
 		{
 			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
-			("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}

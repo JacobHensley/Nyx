@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\8308ab891ee783b6e8d2a40169dba3a7\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8A71F09D-44F1-3A1E-8111-A24873F0BF1D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

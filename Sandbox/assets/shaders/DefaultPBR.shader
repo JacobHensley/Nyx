@@ -33,36 +33,36 @@ layout(location = 0) out vec4 color;
 const float Epsilon = 0.00001;
 const float PI = 3.141592;
 
-uniform vec3 u_Radiance;
-uniform vec3 u_Direction;
+layout(location = 0) uniform vec3 u_Radiance;
+layout(location = 1) uniform vec3 u_Direction;
 
-uniform vec3 r_CameraPosition;
+layout(location = 2) uniform vec3 r_CameraPosition;
 
-uniform float u_UsingIBL;
-uniform float u_UsingLighting;
+layout(location = 3) uniform float u_UsingIBL;
+layout(location = 4) uniform float u_UsingLighting;
 
 // Albedo uniforms
-uniform vec3 u_AlbedoValue;
-uniform bool u_UsingAlbedoMap;
+layout(location = 5) uniform vec3 u_AlbedoValue;
+layout(location = 6) uniform bool u_UsingAlbedoMap;
 
 // Normal uniforms
-uniform bool u_UsingNormalMap;
+layout(location = 7) uniform bool u_UsingNormalMap;
 
 // Metalness uniforms
-uniform float u_MetalnessValue;
-uniform bool u_UsingMetalnessMap;
+layout(location = 8) uniform float u_MetalnessValue;
+layout(location = 9) uniform bool u_UsingMetalnessMap;
 
 // Roughness uniforms
-uniform float u_RoughnessValue;
-uniform bool u_UsingRoughnessMap;
+layout(location = 10) uniform float u_RoughnessValue;
+layout(location = 11) uniform bool u_UsingRoughnessMap;
 
-uniform sampler2D u_NormalMap;
-uniform sampler2D u_AlbedoMap;
-uniform sampler2D u_RoughnessMap;
-uniform sampler2D u_MetalnessMap;
-uniform sampler2D u_BRDFLutTexture;
-uniform samplerCube u_IrradianceTexture;
-uniform samplerCube u_RadianceTexture;
+layout(location = 18) uniform sampler2D u_NormalMap;
+layout(location = 12) uniform sampler2D u_AlbedoMap;
+layout(location = 13) uniform sampler2D u_RoughnessMap;
+layout(location = 14) uniform sampler2D u_MetalnessMap;
+layout(location = 15) uniform sampler2D u_BRDFLutTexture;
+layout(location = 16) uniform samplerCube u_IrradianceTexture;
+layout(location = 17) uniform samplerCube u_RadianceTexture;
 
 layout(location = 5) in vec3 v_Normal;
 layout(location = 6) in vec3 v_WorldPosition;

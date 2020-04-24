@@ -19,7 +19,7 @@ layout(location = 0) out vec4 outColor;
 layout(location = 2) in vec2 v_TexCoords;
 
 uniform sampler2D u_InputTexture;
-uniform float u_Exposure;
+layout(location = 0) uniform float u_Exposure;
 
 void main()
 {

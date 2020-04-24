@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\d800d038ff9c22b91bdebfb987a5af40\shaderc_combined.lib.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\CMakeFiles\363884dccc9fe419e8798e2d5c4e53c5\shaderc_combined_genfile.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc\CMakeFiles\shaderc_combined_genfile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8A71F09D-44F1-3A1E-8111-A24873F0BF1D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\args.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\compiler.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\file_finder.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\io.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\message.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\resources.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\shader_stage.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\spirv_tools_wrapper.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\version_profile.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\counting_includer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\file_finder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\format.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\spirv_tools_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\string_piece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\universal_unistd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include\libshaderc_util\version_profile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{15AE722B-258E-3D8C-8430-0131F4E674B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{47D76983-DCAE-392B-9BB9-CA229FEE2F2B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

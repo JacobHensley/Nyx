@@ -1,0 +1,2 @@
+C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\Debug\glslc.pdb
+C:\dev\Nyx\Nyx\vendor\shaderc\build\glslc\glslc.dir\Debug\glslc.pdb

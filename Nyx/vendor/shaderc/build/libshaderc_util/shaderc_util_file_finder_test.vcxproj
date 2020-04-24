@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{149587DC-429A-3700-B0B9-3BBAD4E32813}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>shaderc_util_file_finder_test</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shaderc_util_file_finder_test.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">shaderc_util_file_finder_test</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shaderc_util_file_finder_test.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">shaderc_util_file_finder_test</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">shaderc_util_file_finder_test.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">shaderc_util_file_finder_test</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">shaderc_util_file_finder_test.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">shaderc_util_file_finder_test</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;ENABLE_HLSL;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;ENABLE_HLSL;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Debug\shaderc_util.lib;..\lib\Debug\gmockd.lib;..\lib\Debug\gtest_maind.lib;..\third_party\glslang\SPIRV\Debug\SPIRVd.lib;..\third_party\glslang\glslang\Debug\glslangd.lib;..\third_party\glslang\glslang\OSDependent\Windows\Debug\OSDependentd.lib;..\third_party\glslang\OGLCompilersDLL\Debug\OGLCompilerd.lib;..\third_party\glslang\hlsl\Debug\HLSLd.lib;..\third_party\spirv-tools\source\opt\Debug\SPIRV-Tools-opt.lib;..\third_party\spirv-tools\source\Debug\SPIRV-Tools.lib;..\lib\Debug\gtestd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/Debug/shaderc_util_file_finder_test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/Debug/shaderc_util_file_finder_test.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Release\shaderc_util.lib;..\lib\Release\gmock.lib;..\lib\Release\gtest_main.lib;..\third_party\glslang\SPIRV\Release\SPIRV.lib;..\third_party\glslang\glslang\Release\glslang.lib;..\third_party\glslang\glslang\OSDependent\Windows\Release\OSDependent.lib;..\third_party\glslang\OGLCompilersDLL\Release\OGLCompiler.lib;..\third_party\glslang\hlsl\Release\HLSL.lib;..\third_party\spirv-tools\source\opt\Release\SPIRV-Tools-opt.lib;..\third_party\spirv-tools\source\Release\SPIRV-Tools.lib;..\lib\Release\gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/Release/shaderc_util_file_finder_test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/Release/shaderc_util_file_finder_test.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>MinSizeRel\shaderc_util.lib;..\lib\MinSizeRel\gmock.lib;..\lib\MinSizeRel\gtest_main.lib;..\third_party\glslang\SPIRV\MinSizeRel\SPIRV.lib;..\third_party\glslang\glslang\MinSizeRel\glslang.lib;..\third_party\glslang\glslang\OSDependent\Windows\MinSizeRel\OSDependent.lib;..\third_party\glslang\OGLCompilersDLL\MinSizeRel\OGLCompiler.lib;..\third_party\glslang\hlsl\MinSizeRel\HLSL.lib;..\third_party\spirv-tools\source\opt\MinSizeRel\SPIRV-Tools-opt.lib;..\third_party\spirv-tools\source\MinSizeRel\SPIRV-Tools.lib;..\lib\MinSizeRel\gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/MinSizeRel/shaderc_util_file_finder_test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/MinSizeRel/shaderc_util_file_finder_test.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ENABLE_HLSL;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest\include;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googlemock;C:\dev\Nyx\Nyx\vendor\shaderc\third_party\googletest\googletest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>RelWithDebInfo\shaderc_util.lib;..\lib\RelWithDebInfo\gmock.lib;..\lib\RelWithDebInfo\gtest_main.lib;..\third_party\glslang\SPIRV\RelWithDebInfo\SPIRV.lib;..\third_party\glslang\glslang\RelWithDebInfo\glslang.lib;..\third_party\glslang\glslang\OSDependent\Windows\RelWithDebInfo\OSDependent.lib;..\third_party\glslang\OGLCompilersDLL\RelWithDebInfo\OGLCompiler.lib;..\third_party\glslang\hlsl\RelWithDebInfo\HLSL.lib;..\third_party\spirv-tools\source\opt\RelWithDebInfo\SPIRV-Tools-opt.lib;..\third_party\spirv-tools\source\RelWithDebInfo\SPIRV-Tools.lib;..\lib\RelWithDebInfo\gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/RelWithDebInfo/shaderc_util_file_finder_test.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/RelWithDebInfo/shaderc_util_file_finder_test.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/libshaderc_util/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/libshaderc_util/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/libshaderc_util/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/dev/Nyx/Nyx/vendor/shaderc/libshaderc_util/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/dev/Nyx/Nyx/vendor/shaderc -BC:/dev/Nyx/Nyx/vendor/shaderc/build --check-stamp-file C:/dev/Nyx/Nyx/vendor/shaderc/build/libshaderc_util/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.17\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.17\Modules\FindThreads.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\dev\Nyx\Nyx\vendor\shaderc\libshaderc_util\src\file_finder_test.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\ZERO_CHECK.vcxproj">
+      <Project>{A06715D1-D9EF-3311-BA82-8378E080643B}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\hlsl\HLSL.vcxproj">
+      <Project>{0F6FA338-7999-3CD2-90C7-30F71EC4EB63}</Project>
+      <Name>HLSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\OGLCompilersDLL\OGLCompiler.vcxproj">
+      <Project>{058AF0B5-0270-3C48-BA54-51E0FC24380B}</Project>
+      <Name>OGLCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\glslang\OSDependent\Windows\OSDependent.vcxproj">
+      <Project>{E268EAAC-8B86-3BF2-A93D-93749C75CD84}</Project>
+      <Name>OSDependent</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\SPIRV\SPIRV.vcxproj">
+      <Project>{6F88F380-0C22-388E-8930-697E68093541}</Project>
+      <Name>SPIRV</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\SPIRV-Tools.vcxproj">
+      <Project>{5A898202-5B92-3321-B02A-74D724D27DCC}</Project>
+      <Name>SPIRV-Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\spirv-tools\source\opt\SPIRV-Tools-opt.vcxproj">
+      <Project>{EBA48A22-3DB9-37BA-B90E-1EF349173919}</Project>
+      <Name>SPIRV-Tools-opt</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\glslang\glslang\glslang.vcxproj">
+      <Project>{4ACE3EC7-A431-325D-A864-D8E343997A32}</Project>
+      <Name>glslang</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googlemock\gmock.vcxproj">
+      <Project>{271D3403-31DA-39B6-9757-FC129A6B75FB}</Project>
+      <Name>gmock</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googletest\gtest.vcxproj">
+      <Project>{EECB6535-423D-3C70-90FC-D1E6BBBB686E}</Project>
+      <Name>gtest</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\third_party\googletest\googletest\gtest_main.vcxproj">
+      <Project>{07202274-1719-3524-9257-3E82E5788D82}</Project>
+      <Name>gtest_main</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\shaderc_util.vcxproj">
+      <Project>{FAC27AF2-2568-32BD-9DF0-F9BED2E60B9A}</Project>
+      <Name>shaderc_util</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\dev\Nyx\Nyx\vendor\shaderc\build\libshaderc_util\testdata.vcxproj">
+      <Project>{7C8A216C-1084-3A56-94FF-0D521B29605A}</Project>
+      <Name>testdata</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
