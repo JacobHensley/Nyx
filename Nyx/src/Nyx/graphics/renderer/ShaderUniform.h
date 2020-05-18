@@ -1,45 +1,63 @@
 #pragma once
+#include "spirv_cross.hpp"
 
 namespace Nyx {
 
-	enum class Type
+	enum class UniformType
 	{
-		NONE = 0, SHADER_INT = 1, SHADER_FLOAT = 2, SHADER_VEC2 = 3, SHADER_VEC3 = 4, SHADER_VEC4 = 5, SHADER_MAT4 = 6, SHADER_SAMPLER2D = 7, SHADER_SAMPLERCUBE = 8, SHADER_BOOL = 9
+		NONE = -1, BOOL, INT, FLOAT, STRUCT, IMAGE
+	};
+
+	enum class RendererID
+	{
+		NONE = -1, MODEL_MATRIX, VIEW_MATRIX, PROJ_MATRIX, INVERSE_VP, MVP, CAMERA_POSITION, BRDF_LUT, IRRADIANCE_TEXTURE, RADIANCE_TEXTURE
 	};
 
 	class ShaderUniform
 	{
 	public:
-		ShaderUniform(const String& name, const String& type, uint count, int sampler);
-		ShaderUniform();
-		~ShaderUniform();
+		ShaderUniform(const String& name, UniformType type, uint size, uint offset, RendererID rendererID);
 
-	public:
+		static UniformType SpirvTypeToUniformType(spirv_cross::SPIRType type);
+		static const String& UniformTypeToString(UniformType type);
+
 		inline const String& GetName() { return m_Name; }
-		inline const Type GetType() { return m_Type; }
-		inline const uint GetCount() { return m_Count; }
-		inline const uint GetSize() { return m_Size; }
-		inline const uint GetOffset() { return m_Offset; }
-		inline const int GetSampler() { return m_Sampler; }
+		inline UniformType GetType() { return m_Type; }
+		inline uint GetSize() { return m_Size; }
+		inline uint GetOffset() { return m_Offset; }
 
-		inline String GetTypeString() { return StringFromType(m_Type); }
+		inline RendererID GetRendererID() { return m_RendererID; }
 
 	private:
-		inline void SetOffset(int offset) { m_Offset = offset; }
-
-		static uint SizeFromType(Type type);
-		static Type StringToType(const String& type);
-		static String StringFromType(Type type);
-
-	private:
-		friend class Shader;
-
 		const String m_Name;
-		Type m_Type = Type::NONE;
-		uint m_Count = 0;
-		uint m_Size = 0;
-		uint m_Offset = 0;
-		int m_Sampler = 0;
+		UniformType m_Type;
+		uint m_Size;
+		uint m_Offset;
+
+		RendererID m_RendererID;
+	};
+
+
+	class ShaderResource
+	{
+	public:
+		ShaderResource::ShaderResource(const String& name, uint dimension, uint location, RendererID rendererID)
+			: m_Name(name), m_Dimension(dimension), m_Location(location), m_RendererID(rendererID)
+		{
+		}
+
+		inline const String& GetName() { return m_Name; }
+		inline uint GetLocation() { return m_Location; }
+		inline uint GetDimension() { return m_Dimension; }
+		
+		inline RendererID GetRendererID() { return m_RendererID; }
+
+	private:
+		const String m_Name;
+		uint m_Location;
+		uint m_Dimension;
+
+		RendererID m_RendererID;
 	};
 
 }

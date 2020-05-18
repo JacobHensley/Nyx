@@ -35,5 +35,6 @@ namespace Nyx {
 
 	private:
 		static void InitRenderFunctions();
+		static void InitRenderResourceFunFunctions();
 	};
 }

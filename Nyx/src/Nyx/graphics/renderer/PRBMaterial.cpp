@@ -49,17 +49,17 @@ namespace Nyx {
 
 	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue)
 	{
-		SetUniform("u_AlbedoValue", albedoValue);
+		Set("u_AlbedoValue", albedoValue);
 	}
 
 	void PBRMaterial::SetMetalness(float metalnessValue)
 	{
-		SetUniform("u_MetalnessValue", metalnessValue);
+		Set("u_MetalnessValue", metalnessValue);
 	}
 
 	void PBRMaterial::SetRoughness(float roughnessValue)
 	{
-		SetUniform("u_RoughnessValue", roughnessValue);
+		Set("u_RoughnessValue", roughnessValue);
 	}
 
 	void PBRMaterial::SetAlbedoMap(Ref<Texture> albedoMap)
@@ -84,22 +84,22 @@ namespace Nyx {
 
 	void PBRMaterial::UsingAlbedoMap(bool value)
 	{
-		SetUniform("u_UsingAlbedoMap", value ? true : false);
+		Set("u_UsingAlbedoMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingMetalnessMap(bool value)
 	{
-		SetUniform("u_UsingMetalnessMap", value ? true : false);
+		Set("u_UsingMetalnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingRoughnessMap(bool value)
 	{
-		SetUniform("u_UsingRoughnessMap", value ? true : false);
+		Set("u_UsingRoughnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingNormalMap(bool value)
 	{
-		SetUniform("u_UsingNormalMap", value ? true : false);
+		Set("u_UsingNormalMap", value ? true : false);
 	}
 
 }

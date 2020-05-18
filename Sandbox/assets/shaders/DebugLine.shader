@@ -1,26 +1,30 @@
 #Shader Vertex
-#version 330 core
+#version 450 core
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 
-uniform mat4 u_VP;
+layout(binding = 0) uniform r_RendererBuffer
+{
+	uniform mat4 VP;
+} RendererBuffer;
 
-out vec4 v_Color;
+
+layout(location = 3) out vec4 v_Color;
 
 void main()
 {
 	v_Color = a_Color;
 
-	gl_Position = u_VP * vec4(a_Position, 1.0);
+	gl_Position = RendererBuffer.VP * vec4(a_Position, 1.0);
 }
 
 #Shader Fragment
-#version 330 core
+#version 450 core
 
 layout(location = 0) out vec4 color;
 
-in vec4 v_Color;
+layout(location = 3) in vec4 v_Color;
 
 void main()
 {

@@ -22,7 +22,10 @@ namespace Nyx {
 
 		Ref<Material> m_EnvironmentMaterial;
 
-		std::unordered_map<RenderUniformID, std::function<void(const RendererUniform&, RenderCommand&, Ref<Shader>)>> m_RendererUniformFuncs;
+		Ref<Texture> m_BRDFLutTexture;
+
+		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, RenderCommand&, Ref<Shader>)>> m_RendererResourceFuncs;
+		std::unordered_map<RendererID, std::function<void(const Ref<ShaderUniform>&, RenderCommand&, Ref<Shader>)>> m_RendererUniformFuncs;
 	};
 
 	static struct SceneRendererData s_Data;
@@ -30,6 +33,7 @@ namespace Nyx {
 	void SceneRenderer::Init()
 	{
 		InitRenderFunctions();
+		InitRenderResourceFunFunctions();
 
 		s_Data.m_GeometryBuffer = CreateRef<FrameBuffer>(1280, 720);
 		s_Data.m_GeometryBuffer->Bind();
@@ -47,6 +51,8 @@ namespace Nyx {
 		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
 		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+
+		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
@@ -80,9 +86,27 @@ namespace Nyx {
 			material->Bind();
 			Ref<Shader> shader = material->GetShader();
 
-			const auto& rendererUniforms = shader->GetRendererUniforms();
-			for (const auto& uniform : rendererUniforms)
-				s_Data.m_RendererUniformFuncs[uniform.ID](uniform, command, shader);
+			//This needs to be cached
+			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
+
+			for each (UniformBuffer* uniformBuffer in uniformBuffers)
+			{
+				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
+				
+				for each (Ref<ShaderUniform> uniform in uniforms)
+				{
+					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, command, shader);
+				}
+			}
+
+			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
+
+			for each (Ref<ShaderResource> resource in resources)
+			{
+				RendererID rendererID = resource->GetRendererID();
+				s_Data.m_RendererResourceFuncs[rendererID](resource, command, shader);
+				NX_CORE_DEBUG("");
+			}
 
 			Renderer::SubmitMesh(command.mesh, command.transform, material, s_Data.m_ActiveScene);
 		}
@@ -137,29 +161,44 @@ namespace Nyx {
 
 	void SceneRenderer::InitRenderFunctions()
 	{
-		s_Data.m_RendererUniformFuncs[RenderUniformID::MODEL_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniformMat4(uniform.Location, command.transform);
+		//	shader->SetUniformMat4(uniform.Location, command.transform);
 		};
-		s_Data.m_RendererUniformFuncs[RenderUniformID::VIEW_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetViewMatrix());
+		//	shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetViewMatrix());
 		};
-		s_Data.m_RendererUniformFuncs[RenderUniformID::PROJ_MATRIX] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::PROJ_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix());
+		//	shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix());
 		};
-		s_Data.m_RendererUniformFuncs[RenderUniformID::INVERSE_VP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::INVERSE_VP] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniformMat4(uniform.Location, glm::inverse(s_Data.m_ActiveScene->GetCamera()->GetViewMatrix()));
+		//	shader->SetUniformMat4(uniform.Location, glm::inverse(s_Data.m_ActiveScene->GetCamera()->GetViewMatrix()));
 		};
-		s_Data.m_RendererUniformFuncs[RenderUniformID::MVP] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::MVP] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix() * s_Data.m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
+		//	shader->SetUniformMat4(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix() * s_Data.m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform);
 		};
-		s_Data.m_RendererUniformFuncs[RenderUniformID::CAMERA_POSITION] = [&](const RendererUniform& uniform, RenderCommand& command, Ref<Shader> shader)
+		s_Data.m_RendererUniformFuncs[RendererID::CAMERA_POSITION] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			shader->SetUniform3f(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetPosition());
+		//	shader->SetUniform3f(uniform.Location, s_Data.m_ActiveScene->GetCamera()->GetPosition()); 
+		};
+	}
+	void SceneRenderer::InitRenderResourceFunFunctions()
+	{
+		s_Data.m_RendererResourceFuncs[RendererID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap->Bind(uniform->GetLocation());
+		};
+		s_Data.m_RendererResourceFuncs[RendererID::RADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			s_Data.m_ActiveScene->GetEnvironmentMap()->radianceMap->Bind(uniform->GetLocation());
+		};
+		s_Data.m_RendererResourceFuncs[RendererID::BRDF_LUT] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
+		{
+			s_Data.m_BRDFLutTexture->Bind(uniform->GetLocation());
 		};
 	}
 }

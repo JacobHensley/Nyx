@@ -15,18 +15,23 @@ void main()
 #Shader Fragment
 #version 450 core
 
-layout(location = 0) out vec4 outColor;
 layout(location = 2) in vec2 v_TexCoords;
 
-uniform sampler2D u_InputTexture;
-layout(location = 0) uniform float u_Exposure;
+layout(location = 0) out vec4 outColor;
+
+layout(binding = 0) uniform r_RendererBuffer
+{
+	 uniform float Exposure;
+} RendererBuffer;
+
+layout(location = 4) uniform sampler2D r_InputTexture;
 
 void main()
 {
 	const float gamma = 2.2;
 	const float pureWhite = 1.0;
 
-	vec3 color = texture(u_InputTexture, v_TexCoords).rgb * u_Exposure;
+	vec3 color = texture(r_InputTexture, v_TexCoords).rgb * RendererBuffer.Exposure;
 	// Reinhard tonemapping operator.
 	// see: "Photographic Tone Reproduction for Digital Images", eq. 4
 	float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));

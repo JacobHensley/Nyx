@@ -3,16 +3,25 @@
 #include "glad/glad.h"
 
 namespace Nyx {
+
 	Material::Material(Ref<Shader> shader)
 		:	m_Shader(shader)
 	{
-		m_UniformBuffer = (byte*)malloc(m_Shader->GetUserUniformSize());
-		memset(m_UniformBuffer, 0, m_Shader->GetUserUniformSize());
+		std::vector<UniformBuffer*> uniformBuffers = m_Shader->GetUniformBuffers(UniformSystemType::MATERIAL);
+		for each (UniformBuffer* uniformBuffer in uniformBuffers)
+		{
+			MaterialBuffer& materialBuffer = m_MaterialBuffers.emplace_back();
 
-		NX_CORE_INFO("Creating Material with Shader at path: {0}", m_Shader->GetPath());
+			materialBuffer.size = uniformBuffer->size;
+			materialBuffer.data = new byte[uniformBuffer->size];
+			materialBuffer.index = uniformBuffer->index;
 
-		m_Textures.resize(32);
-		m_TextureCubes.resize(32);
+			for (Ref<ShaderUniform> uniform : uniformBuffer->uniforms)
+			{
+				m_Uniforms[uniform->GetName()] = { uniformBuffer->index, uniform };
+			}
+		}
+
 	}
 
 	Material::~Material()
@@ -22,7 +31,11 @@ namespace Nyx {
 	void Material::Bind()
 	{
 		m_Shader->Bind();
-		UploadUniformBuffer();
+
+		for (MaterialBuffer& materialBuffer : m_MaterialBuffers)
+		{
+			m_Shader->UploadUniformBuffer(materialBuffer.index, materialBuffer.data, materialBuffer.size);
+		}
 	}
 
 	void Material::Unbind()
@@ -30,11 +43,14 @@ namespace Nyx {
 		m_Shader->Unbind();
 	}
 
-	void Material::SetTexture(const String& name, Ref<Texture> texture)
+	void Material::SetTexture(const String& name, Ref<Texture>& texture)
 	{
-		Ref<ShaderUniform> uniform = m_Shader->FindUserUniform(name);
+		Ref<ShaderResource> resource = m_Shader->FindShaderResource(name, UniformSystemType::MATERIAL);
 
-		uint slot = uniform->GetSampler();
+		if (resource == nullptr)
+			return;
+
+		uint slot = resource->GetLocation();
 		if (m_Textures.size() <= slot)
 		{
 			m_Textures.resize(slot + 1);
@@ -43,61 +59,20 @@ namespace Nyx {
 		m_Textures[slot] = texture;
 	}
 
-	void Material::SetTexture(const String& name, Ref<TextureCube> texture)
+	void Material::SetTexture(const String& name, Ref<TextureCube>& texture)
 	{
-		Ref<ShaderUniform> uniform = m_Shader->FindUserUniform(name);
+		Ref<ShaderResource> resource = m_Shader->FindShaderResource(name, UniformSystemType::MATERIAL);
 
-		uint slot = uniform->GetSampler();
+		if (resource == nullptr)
+			return;
+
+		uint slot = resource->GetLocation();
 		if (m_TextureCubes.size() <= slot)
 		{
 			m_TextureCubes.resize(slot + 1);
 		}
 
 		m_TextureCubes[slot] = texture;
-	}
-
-	void Material::UploadUniformBuffer()
-	{
-		for (int i = 0;i < m_Shader->GetUserUniforms().size();i++)
-		{
-			Ref<ShaderUniform> uniform = m_Shader->GetUserUniforms()[i];
-			const String& name = uniform->GetName();
-			int offset = uniform->GetOffset();
-			switch (uniform->GetType())
-			{
-			case Type::SHADER_FLOAT:
-				m_Shader->SetUniform1f(name, *(float*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_INT:
-				m_Shader->SetUniform1i(name, *(int*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_VEC2:
-				m_Shader->SetUniform2f(name, *(glm::vec2*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_VEC3:
-				m_Shader->SetUniform3f(name, *(glm::vec3*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_VEC4:
-				m_Shader->SetUniform4f(name, *(glm::vec4*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_MAT4:
-				m_Shader->SetUniformMat4(name, *(glm::mat4*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_BOOL:
-				m_Shader->SetUniformBool(name, *(bool*)&m_UniformBuffer[offset]);
-				break;
-			case Type::SHADER_SAMPLER2D:
-				if (m_Textures[uniform->GetSampler()])
-					m_Textures[uniform->GetSampler()]->Bind(uniform->GetSampler());
-				break;
-			case Type::SHADER_SAMPLERCUBE:
-				if (m_TextureCubes[uniform->GetSampler()])
-					m_TextureCubes[uniform->GetSampler()]->Bind(uniform->GetSampler());
-				break;
-			default:
-				NX_CORE_ASSERT(false, "Unknown type");
-			}
-		}
 	}
 
 }
