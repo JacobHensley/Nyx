@@ -28,7 +28,7 @@ namespace Nyx {
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material = nullptr);
 
-		static void Resize(uint width, uint height);
+		static void Resize(uint width, uint height); //Remove later?
 
 		static Ref<Shader> GetPBRShader();
 		static Ref<FrameBuffer> GetFinalBuffer();

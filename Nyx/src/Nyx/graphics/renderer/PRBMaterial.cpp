@@ -49,57 +49,57 @@ namespace Nyx {
 
 	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue)
 	{
-		Set("u_AlbedoValue", albedoValue);
+		Set("AlbedoValue", albedoValue);
 	}
 
 	void PBRMaterial::SetMetalness(float metalnessValue)
 	{
-		Set("u_MetalnessValue", metalnessValue);
+		Set("MetalnessValue", metalnessValue);
 	}
 
 	void PBRMaterial::SetRoughness(float roughnessValue)
 	{
-		Set("u_RoughnessValue", roughnessValue);
+		Set("RoughnessValue", roughnessValue);
 	}
 
 	void PBRMaterial::SetAlbedoMap(Ref<Texture> albedoMap)
 	{
-		SetTexture("u_AlbedoMap", albedoMap);
+		SetTexture("m_AlbedoMap", albedoMap);
 	}
 
 	void PBRMaterial::SetMetalnessMap(Ref<Texture> metalnessMap)
 	{
-		SetTexture("u_MetalnessMap", metalnessMap);
+		SetTexture("m_MetalnessMap", metalnessMap);
 	}
 
 	void PBRMaterial::SetRoughnessMap(Ref<Texture> roughnessMap)
 	{
-		SetTexture("u_RoughnessMap", roughnessMap);
+		SetTexture("m_RoughnessMap", roughnessMap);
 	}
 
 	void PBRMaterial::SetNormalMap(Ref<Texture> noramlMap)
 	{
-		SetTexture("u_NormalMap", noramlMap);
+		SetTexture("m_NormalMap", noramlMap);
 	}
 
 	void PBRMaterial::UsingAlbedoMap(bool value)
 	{
-		Set("u_UsingAlbedoMap", value ? true : false);
+		Set("UsingAlbedoMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingMetalnessMap(bool value)
 	{
-		Set("u_UsingMetalnessMap", value ? true : false);
+		Set("UsingMetalnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingRoughnessMap(bool value)
 	{
-		Set("u_UsingRoughnessMap", value ? true : false);
+		Set("UsingRoughnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingNormalMap(bool value)
 	{
-		Set("u_UsingNormalMap", value ? true : false);
+		Set("UsingNormalMap", value ? true : false);
 	}
 
 }

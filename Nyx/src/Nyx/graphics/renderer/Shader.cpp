@@ -17,43 +17,50 @@ namespace Nyx {
 	void Shader::Init()
 	{
 		m_ShaderSrc = SplitShaders(m_Path);
-		m_ShaderID = CompileShaders(m_ShaderSrc);
+		CompileShaders(m_ShaderSrc);
 
 	}
 
-	uint Shader::CompileShaders(std::unordered_map<ShaderType, String> shaderSrc)
+	//check new calls
+	//create buffer class
+	uint Shader::CompileShaders(std::unordered_map<ShaderType, String> shaderSrc) // take by ref
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 
-		options.SetTargetEnvironment(shaderc_target_env_opengl, 430);
+		const int shaderVersion = 430;
+
+		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderVersion);
 
 		GLuint program = glCreateProgram();
+		m_ShaderID = program;
 
-		std::vector<GLuint> shaderIDs;
+		std::vector<GLuint> shaderIDs; // heap array
+		shaderIDs.reserve(shaderSrc.size()); // remember reserve
+
+		//use stack array
+		uint32_t shaderDataIndex = 0;
+		std::vector<uint32_t> shaderData[2];
 
 		for (auto const& shader : shaderSrc)
 		{
 			ShaderType type = shader.first;
 			const String& src = shader.second;
 
-			shaderc::SpvCompilationResult compilationResult = compiler.CompileGlslToSpv(src, ShaderTypeToShaderc(type), m_Path.c_str(), options);
-
+			auto compilationResult = compiler.CompileGlslToSpv(src, ShaderTypeToShaderc(type), m_Path.c_str(), options);
 			if (compilationResult.GetCompilationStatus() != shaderc_compilation_status_success)
 				NX_CORE_ERROR("Warnings ({0}), Errors ({1}) \n{2}", compilationResult.GetNumWarnings(), compilationResult.GetNumErrors(), compilationResult.GetErrorMessage());
 
 			const uint8_t* data = reinterpret_cast<const uint8_t*>(compilationResult.cbegin());
 			const uint8_t* dataEnd = reinterpret_cast<const uint8_t*>(compilationResult.cend());
 			uint32_t size = dataEnd - data;
+			shaderData[shaderDataIndex++] = std::vector<uint32_t>(compilationResult.cbegin(), compilationResult.cend());
 
 			GLuint shader = glCreateShader(ShaderTypeToGL(type));
 			glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, data, size);
 			glSpecializeShader(shader, (const GLchar*)"main", 0, nullptr, nullptr);
 
 			shaderIDs.push_back(shader);
-
-			std::vector<uint32_t> spirv = { compilationResult.cbegin(), compilationResult.cend() };
-			SpirvReflect(spirv);
 
 			glAttachShader(program, shader);
 		}
@@ -74,7 +81,7 @@ namespace Nyx {
 
 			glDeleteProgram(program);
 
-			for each (GLuint shader in shaderIDs)
+			for (GLuint shader : shaderIDs) //remember correct for each
 			{
 				glDeleteShader(shader);
 			}
@@ -82,10 +89,17 @@ namespace Nyx {
 			return -1;
 		}
 
-		for each (GLuint shader in shaderIDs)
+		for (GLuint shader : shaderIDs)
 		{
 			glDetachShader(program, shader);
 		}
+
+		for (uint32_t i = 0; i < 2; i++)
+		{
+			//pass by data and size / 4
+			SpirvReflect(shaderData[i]);
+		}
+
 
 		return program;
 	}
@@ -95,6 +109,7 @@ namespace Nyx {
 		spirv_cross::Compiler comp(data);
 		spirv_cross::ShaderResources res = comp.get_shader_resources();
 
+		uint32_t bufferIndex = 0;
 		for (const spirv_cross::Resource& resource : res.uniform_buffers)
 		{
 			auto& bufferType = comp.get_type(resource.base_type_id);
@@ -121,9 +136,10 @@ namespace Nyx {
 				buffer.uniforms.emplace_back(CreateRef<ShaderUniform>(name, uniformType, size, offset, rendererID));
 			}
 
+			glUseProgram(m_ShaderID);
 			glCreateBuffers(1, &buffer.openGLID);
 			glBindBuffer(GL_UNIFORM_BUFFER, buffer.openGLID);
-			glBufferData(GL_UNIFORM_BUFFER, buffer.size, nullptr, GL_STATIC_DRAW);
+			glBufferData(GL_UNIFORM_BUFFER, buffer.size, nullptr, GL_DYNAMIC_DRAW);
 			glBindBufferBase(GL_UNIFORM_BUFFER, buffer.bindingPoint, buffer.openGLID);
 		}
 
@@ -250,16 +266,18 @@ namespace Nyx {
 	{
 	}
 
-	void Shader::UploadUniformBuffer(uint index, byte* buffer, uint size)
+	void Shader::UploadUniformBuffer(uint index, byte* buffer, uint size) //asserts 
 	{
-		UniformBuffer& ub = m_UniformBuffers[index];
+		UniformBuffer& ub = m_UniformBuffers[index]; // look into driver docs?
 		glBindBuffer(GL_UNIFORM_BUFFER, ub.openGLID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, ub.size, (const void*)buffer);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.openGLID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, (const void*)buffer);
 	}
 
-	std::vector<UniformBuffer*> Shader::GetUniformBuffers(UniformSystemType type)
+	//store as array of vector
+	std::vector<UniformBuffer*> Shader::GetUniformBuffers(UniformSystemType type) //return const ref
 	{
-		char identifier;
+		char identifier; //init mem
 		if (type == UniformSystemType::MATERIAL)
 			identifier = 'm';
 		else if (type == UniformSystemType::RENDERER)
@@ -359,6 +377,7 @@ namespace Nyx {
 
 	void Shader::SetUniform1f(const String& name, float value)
 	{
+		glUniform1f(glGetUniformLocation(m_ShaderID, name.c_str()), value);
 	}
 
 	void Shader::SetUniform2f(const String& name, const glm::vec2& vec)

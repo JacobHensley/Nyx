@@ -16,7 +16,7 @@ namespace Nyx {
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		const glm::mat4& GetVPMatrix() const { return m_ViewMatrix * m_ProjectionMatrix; }
+		const glm::mat4& GetVPMatrix() const { return (m_ViewMatrix * m_ProjectionMatrix); }
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }

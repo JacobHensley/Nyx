@@ -12,10 +12,11 @@ layout(location = 6) out vec3 v_WorldPosition;
 layout(location = 7) out vec2 v_TexCoords;
 layout(location = 8) out mat3 v_WorldNormals;
 
-layout(binding = 0) uniform r_RendererBuffer
+// Index 0
+layout(std140, binding = 0) uniform r_RendererBuffer
 {
-	uniform mat4 MVP;
-	uniform mat4 ModelMatrix;
+	mat4 MVP;
+	mat4 ModelMatrix;
 } RendererBuffer;
 
 void main()
@@ -41,32 +42,34 @@ layout(location = 0) out vec4 color;
 const float Epsilon = 0.00001;
 const float PI = 3.141592;
 
-layout(binding = 1) uniform m_UserBuffer
+// Index 0
+layout(std140, binding = 1) uniform m_UserBuffer
 {
-	uniform vec3 AlbedoValue;
-	uniform bool UsingAlbedoMap;
+	vec3 AlbedoValue;
+	bool UsingAlbedoMap;
 
-	uniform bool UsingNormalMap;
+	bool UsingNormalMap;
 
-	uniform float MetalnessValue;
-	uniform bool UsingMetalnessMap;
+	float MetalnessValue;
+	bool UsingMetalnessMap;
 
-	uniform float RoughnessValue;
-	uniform bool UsingRoughnessMap;
+	float RoughnessValue;
+	bool UsingRoughnessMap;
 
-	uniform vec3 Radiance;
-	uniform vec3 Direction;
+	vec3 Radiance;
+	vec3 Direction;
 
-	uniform vec3 CameraPosition;
+	vec3 CameraPosition;
 
-	uniform float UsingIBL;
-	uniform float UsingLighting;
+	float UsingIBL;
+	float UsingLighting;
 	
 } UserBuffer;
 
-layout(binding = 2) uniform r_FragmentRendererBuffer
+// Index 1
+layout(std140, binding = 2) uniform r_FragmentRendererBuffer
 {
-	uniform vec3 CameraPosition;
+	vec3 CameraPosition;
 } FragmentRendererBuffer;
 
 uniform sampler2D m_NormalMap;
@@ -198,4 +201,5 @@ void main()
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * UserBuffer.UsingIBL;
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
+//	color = vec4(UserBuffer.UsingLighting, UserBuffer.UsingLighting, UserBuffer.UsingLighting, 1.0f);
 }

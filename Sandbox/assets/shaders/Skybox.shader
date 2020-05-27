@@ -24,11 +24,11 @@ void main()
 
 layout(location = 2) in vec3 v_Position;
 
-layout(location = 3) out vec4 color;
+uniform samplerCube u_SkyboxTexture;
 
-uniform samplerCube r_SkyboxTexture;
+layout(location = 0) out vec4 color;
 
 void main()
 {
-	color = texture(r_SkyboxTexture, v_Position);
+	color = texture(u_SkyboxTexture, v_Position);
 }

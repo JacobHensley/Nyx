@@ -23,13 +23,12 @@ EditorLayer::EditorLayer(const String& name)
 	m_Scene = CreateRef<Scene>(m_Camera, envMap, m_LightEnv);
 
 	m_DefaultMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
-	m_DefaultMaterial->Set("u_Direction", m_Light->direction);
-	m_DefaultMaterial->Set("u_Radiance", m_Light->radiance);
-	m_DefaultMaterial->Set("u_UsingIBL", (float)m_UsingIBL);
-	m_DefaultMaterial->Set("u_UsingLighting", (float)m_UsingLighting);
-	m_DefaultMaterial->SetTexture("u_BRDFLutTexture", m_BRDFLutTexture);
-	m_DefaultMaterial->SetTexture("u_IrradianceTexture", m_IrradianceTexture);
-	m_DefaultMaterial->SetTexture("u_RadianceTexture", m_RadianceTexture);
+
+	m_DefaultMaterial->Set("Direction", m_Light->direction);
+	m_DefaultMaterial->Set("Radiance", m_Light->radiance);
+	m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
+	m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
+
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
 	// Application::GetCommandLineArgs()[0]
@@ -303,13 +302,10 @@ void EditorLayer::RenderMaterialMenu()
 			finalMaterial->SetRoughness(m_RoughnessValue, CreateRef<Texture>(*m_RoughnessMap), m_UseRoughnessMap);
 			finalMaterial->SetNormal(CreateRef<Texture>(*m_NormalMap), m_UseNormalMap);
 
-			finalMaterial->Set("u_Direction", m_Light->direction);
-			finalMaterial->Set("u_Radiance", m_Light->radiance);
-			finalMaterial->Set("u_UsingIBL", (float)m_UsingIBL);
-			finalMaterial->Set("u_UsingLighting", (float)m_UsingLighting);
-			finalMaterial->SetTexture("u_BRDFLutTexture", m_BRDFLutTexture);
-			finalMaterial->SetTexture("u_IrradianceTexture", m_IrradianceTexture);
-			finalMaterial->SetTexture("u_RadianceTexture", m_RadianceTexture);
+			m_DefaultMaterial->Set("Direction", m_Light->direction);
+			m_DefaultMaterial->Set("Radiance", m_Light->radiance);
+			m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
+			m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
 
 			finalMaterial->Bind();
 

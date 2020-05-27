@@ -19,19 +19,16 @@ layout(location = 2) in vec2 v_TexCoords;
 
 layout(location = 0) out vec4 outColor;
 
-layout(binding = 0) uniform r_RendererBuffer
-{
-	 uniform float Exposure;
-} RendererBuffer;
 
-layout(location = 4) uniform sampler2D r_InputTexture;
+layout(location = 4) uniform float r_Exposure;
+layout(location = 5) uniform sampler2D r_InputTexture;
 
 void main()
 {
 	const float gamma = 2.2;
 	const float pureWhite = 1.0;
 
-	vec3 color = texture(r_InputTexture, v_TexCoords).rgb * RendererBuffer.Exposure;
+	vec3 color = texture(r_InputTexture, v_TexCoords).rgb * r_Exposure;
 	// Reinhard tonemapping operator.
 	// see: "Photographic Tone Reproduction for Digital Images", eq. 4
 	float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
@@ -42,4 +39,5 @@ void main()
 
 	// Gamma correction.
 	outColor = vec4(pow(mappedColor, vec3(1.0 / gamma)), 1.0);
+	outColor = vec4(texture(r_InputTexture, v_TexCoords).rgb, 1.0f);
 }

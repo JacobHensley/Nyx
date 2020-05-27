@@ -32,6 +32,16 @@ namespace Nyx {
 	{
 		m_Shader->Bind();
 
+		for (int i = 0; i < m_Textures.size();i++)
+		{
+			m_Textures[i]->Bind(i);
+		}
+
+		for (int i = 0; i < m_TextureCubes.size(); i++)
+		{
+			m_TextureCubes[i]->Bind(i);
+		}
+
 		for (MaterialBuffer& materialBuffer : m_MaterialBuffers)
 		{
 			m_Shader->UploadUniformBuffer(materialBuffer.index, materialBuffer.data, materialBuffer.size);
