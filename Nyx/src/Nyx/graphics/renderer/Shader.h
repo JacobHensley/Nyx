@@ -45,7 +45,7 @@ namespace Nyx {
 		void UploadUniformBuffer(uint index, byte* buffer, uint size);
 
 		std::vector<UniformBuffer*> GetUniformBuffers(UniformSystemType type);
-		std::vector<Ref<ShaderResource>> GetResources(UniformSystemType type);
+		const std::vector<Ref<ShaderResource>>& GetResources(UniformSystemType type);
 
 		Ref<ShaderResource> FindShaderResource(const String& name, UniformSystemType type);
 

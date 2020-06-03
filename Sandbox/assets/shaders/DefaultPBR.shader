@@ -72,18 +72,18 @@ layout(std140, binding = 2) uniform r_FragmentRendererBuffer
 	vec3 CameraPosition;
 } FragmentRendererBuffer;
 
-uniform sampler2D m_NormalMap;
-uniform sampler2D m_AlbedoMap;
-uniform sampler2D m_RoughnessMap;
-uniform sampler2D m_MetalnessMap;
+layout(location = 0) uniform sampler2D r_BRDFLutTexture;
+layout(location = 1) uniform samplerCube r_IrradianceTexture;
+layout(location = 2) uniform samplerCube r_RadianceTexture;
 
-uniform sampler2D r_BRDFLutTexture;
-uniform samplerCube r_IrradianceTexture;
-uniform samplerCube r_RadianceTexture;
+layout(location = 3) uniform sampler2D m_NormalMap;
+layout(location = 4) uniform sampler2D m_AlbedoMap;
+layout(location = 5) uniform sampler2D m_RoughnessMap;
+layout(location = 6) uniform sampler2D m_MetalnessMap;
 
 vec3 GetAlbedo(vec2 texCoords)
 {
-	return texture(m_AlbedoMap, texCoords).rgb;
+	return UserBuffer.UsingAlbedoMap ? texture(m_AlbedoMap, texCoords).rgb : UserBuffer.AlbedoValue;
 }
 
 vec3 GetNormal(vec2 texCoords, vec3 normal)
@@ -200,6 +200,7 @@ void main()
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * UserBuffer.UsingLighting;
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * UserBuffer.UsingIBL;
 
-	color = vec4(lightContribution + iblContribution, 1.0f);
+//	color = vec4(lightContribution + iblContribution, 1.0f);
 //	color = vec4(UserBuffer.UsingLighting, UserBuffer.UsingLighting, UserBuffer.UsingLighting, 1.0f);
+	color = vec4(texture(m_AlbedoMap, v_TexCoords).rgb, 1.0f);
 }

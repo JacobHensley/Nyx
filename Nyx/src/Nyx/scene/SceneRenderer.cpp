@@ -85,11 +85,15 @@ namespace Nyx {
 	void SceneRenderer::Flush()
 	{
 		auto it = s_Data.m_RenderCommands.begin();
-	//	s_Data.m_RenderCommands.insert(it, RenderCommand(s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial));
+		s_Data.m_RenderCommands.insert(it, RenderCommand(s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial));
 
 		for (int i = 0; i < s_Data.m_RenderCommands.size(); i++)
 		{
 			RenderCommand command = s_Data.m_RenderCommands.at(i);
+
+			// Clear all textures
+			for (uint32_t i = 0; i < 32; i++)
+				glBindTextureUnit(i, 0);
 
 			auto materials = command.mesh->GetMaterials();
 		//	Ref<Material> material = materials.size() ? materials[0] : command.material;
@@ -118,7 +122,6 @@ namespace Nyx {
 			}
 
 			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
-
 			for (Ref<ShaderResource> resource : resources)
 			{
 				RendererID rendererID = resource->GetRendererID();
@@ -224,15 +227,15 @@ namespace Nyx {
 	{
 		s_Data.m_RendererResourceFuncs[RendererID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap->Bind(uniform->GetLocation());
+			s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap->Bind(uniform->GetSampler());
 		};
 		s_Data.m_RendererResourceFuncs[RendererID::RADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			s_Data.m_ActiveScene->GetEnvironmentMap()->radianceMap->Bind(uniform->GetLocation());
+			s_Data.m_ActiveScene->GetEnvironmentMap()->radianceMap->Bind(uniform->GetSampler());
 		};
 		s_Data.m_RendererResourceFuncs[RendererID::BRDF_LUT] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
 		{
-			s_Data.m_BRDFLutTexture->Bind(uniform->GetLocation());
+			s_Data.m_BRDFLutTexture->Bind(uniform->GetSampler());
 		};
 	}
 }

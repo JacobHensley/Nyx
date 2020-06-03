@@ -41,14 +41,15 @@ namespace Nyx {
 	class ShaderResource
 	{
 	public:
-		ShaderResource::ShaderResource(const String& name, uint dimension, uint location, RendererID rendererID)
-			: m_Name(name), m_Dimension(dimension), m_Location(location), m_RendererID(rendererID)
+		ShaderResource::ShaderResource(const String& name, uint dimension, uint location, RendererID rendererID, int sampler)
+			: m_Name(name), m_Dimension(dimension), m_Location(location), m_RendererID(rendererID), m_Sampler(sampler)
 		{
 		}
 
 		inline const String& GetName() { return m_Name; }
 		inline uint GetLocation() { return m_Location; }
 		inline uint GetDimension() { return m_Dimension; }
+		inline int GetSampler() { return m_Sampler; }
 		
 		inline RendererID GetRendererID() { return m_RendererID; }
 
@@ -56,6 +57,7 @@ namespace Nyx {
 		const String m_Name;
 		uint m_Location;
 		uint m_Dimension;
+		int m_Sampler;
 
 		RendererID m_RendererID;
 	};

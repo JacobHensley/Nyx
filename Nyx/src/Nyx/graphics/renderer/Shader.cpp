@@ -143,6 +143,8 @@ namespace Nyx {
 			glBindBufferBase(GL_UNIFORM_BUFFER, buffer.bindingPoint, buffer.openGLID);
 		}
 
+		glUseProgram(m_ShaderID);
+		int32_t sampler = 0;
 		for (const spirv_cross::Resource& resource : res.sampled_images)
 		{
 			auto& type = comp.get_type(resource.base_type_id);
@@ -151,13 +153,15 @@ namespace Nyx {
 			uint dimension = type.image.dim;
 
 			RendererID rendererID = GetRendererUniformID(name);
-			Ref<ShaderResource> resource = CreateRef<ShaderResource>(name, dimension, location, rendererID);
+			Ref<ShaderResource> resource = CreateRef<ShaderResource>(name, dimension, location, rendererID, sampler);
+			glUniform1i(location, sampler);
 
 			if (rendererID != RendererID::NONE)
 				m_Resources[UniformSystemType::RENDERER].push_back(resource);
 			else
 				m_Resources[UniformSystemType::MATERIAL].push_back(resource);
 			
+			sampler++;
 		}
 	}
 
@@ -270,7 +274,7 @@ namespace Nyx {
 	{
 		UniformBuffer& ub = m_UniformBuffers[index]; // look into driver docs?
 		glBindBuffer(GL_UNIFORM_BUFFER, ub.openGLID);
-		glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.openGLID);
+		glBindBufferBase(GL_UNIFORM_BUFFER, ub.bindingPoint, ub.openGLID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, (const void*)buffer);
 	}
 
@@ -295,14 +299,14 @@ namespace Nyx {
 		return result;
 	}
 
-	std::vector<Ref<ShaderResource>> Shader::GetResources(UniformSystemType type)
+	const std::vector<Ref<ShaderResource>>& Shader::GetResources(UniformSystemType type)
 	{
 		return m_Resources[type];
 	}
 
 	Ref<ShaderResource> Shader::FindShaderResource(const String& name, UniformSystemType type)
 	{
-		for each (Ref<ShaderResource> resource in m_Resources[type])
+		for (Ref<ShaderResource> resource : m_Resources.at(type))
 		{
 			if (resource->GetName() == name)
 				return resource;

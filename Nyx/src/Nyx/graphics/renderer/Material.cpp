@@ -14,6 +14,7 @@ namespace Nyx {
 
 			materialBuffer.size = uniformBuffer->size;
 			materialBuffer.data = new byte[uniformBuffer->size];
+			memset(materialBuffer.data, 0, uniformBuffer->size);
 			materialBuffer.index = uniformBuffer->index;
 
 			for (Ref<ShaderUniform> uniform : uniformBuffer->uniforms)
@@ -32,7 +33,7 @@ namespace Nyx {
 	{
 		m_Shader->Bind();
 
-		for (int i = 0; i < m_Textures.size();i++)
+		for (int i = 0; i < m_Textures.size(); i++)
 		{
 			m_Textures[i]->Bind(i);
 		}
@@ -60,7 +61,7 @@ namespace Nyx {
 		if (resource == nullptr)
 			return;
 
-		uint slot = resource->GetLocation();
+		uint slot = resource->GetSampler();
 		if (m_Textures.size() <= slot)
 		{
 			m_Textures.resize(slot + 1);
@@ -76,7 +77,7 @@ namespace Nyx {
 		if (resource == nullptr)
 			return;
 
-		uint slot = resource->GetLocation();
+		uint slot = resource->GetSampler();
 		if (m_TextureCubes.size() <= slot)
 		{
 			m_TextureCubes.resize(slot + 1);

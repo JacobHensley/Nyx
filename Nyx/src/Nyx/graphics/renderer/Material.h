@@ -39,6 +39,16 @@ namespace Nyx {
 			memcpy(m_MaterialBuffers[bufferIndex - 1].data + uniform->GetOffset(), &data, uniform->GetSize());
 		}
 
+		template<>
+		void Set(const String& name, const bool& data)
+		{
+			auto [bufferIndex, uniform] = m_Uniforms[name];
+			if (uniform == nullptr)
+				return;
+
+			int intData = (int)data;
+			memcpy(m_MaterialBuffers[bufferIndex - 1].data + uniform->GetOffset(), &intData, uniform->GetSize());
+		}
 	private:
 		Ref<Shader> m_Shader;
 		std::vector<MaterialBuffer> m_MaterialBuffers;

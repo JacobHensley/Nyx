@@ -9,7 +9,7 @@ EditorLayer::EditorLayer(const String& name)
 
 	parameters.generateMips = true;
 
-	m_AlbedoMap = CreateRef<Texture>(0, 0, parameters);
+	m_AlbedoMap = CreateRef<Texture>("assets/textures/Cerberus_Albedo.tga", parameters);
 	m_MetalnessMap = CreateRef<Texture>(0, 0, parameters);
 	m_RoughnessMap = CreateRef<Texture>(0, 0, parameters);
 	m_NormalMap = CreateRef<Texture>(0, 0, parameters);
@@ -28,6 +28,9 @@ EditorLayer::EditorLayer(const String& name)
 	m_DefaultMaterial->Set("Radiance", m_Light->radiance);
 	m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
 	m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
+	m_DefaultMaterial->Set("AlbedoValue", glm::vec3(0.2f, 1.0f, 0.3f));
+	m_DefaultMaterial->Set("UsingAlbedoMap", false);
+	m_DefaultMaterial->SetTexture("m_AlbedoMap", m_AlbedoMap);
 
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
