@@ -1,8 +1,8 @@
 #pragma once
 #include "Nyx.h"
-#include "Nyx/scene/SceneRenderer.h"
+#include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/Utilities.h"
-#include "Nyx/graphics/renderer/PRBMaterial.h"
+#include "Nyx/graphics/renderer/PBRMaterial.h"
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/scene/component/ScriptComponent.h"

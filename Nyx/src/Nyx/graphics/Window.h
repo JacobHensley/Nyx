@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "Nyx/Input/Input.h"
 #include "Nyx/Events/Event.h"
-#include "Nyx/graphics/renderer/API/GraphicsContext.h"
+#include "Nyx/graphics/API/GraphicsContext.h"
 
 namespace Nyx {
 

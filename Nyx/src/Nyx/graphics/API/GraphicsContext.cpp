@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GL/GL.h>
 #include "Nyx/GLError.h"
-#include "Nyx/scene/SceneRenderer.h"
+#include "Nyx/graphics/renderer/SceneRenderer.h"
 
 namespace Nyx {
 

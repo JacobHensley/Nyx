@@ -1,5 +1,5 @@
 #pragma once
-#include "Nyx/graphics/renderer/API/Texture.h"
+#include "Nyx/graphics/API/Texture.h"
 
 namespace Nyx {
 
@@ -24,7 +24,7 @@ namespace Nyx {
 		void Resize(int width, int height);
 		void SetViewPortSize(int x, int y, int width, int height);
 
-		inline Texture* GetTexture() const { return m_Texture; }
+		inline Ref<Texture> GetTexture() const { return m_Texture; }
 		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
 		inline uint GetRenderBufferID() const { return m_RenderBufferID; }
 
@@ -35,7 +35,7 @@ namespace Nyx {
 		uint m_FrameBufferID = 0;
 		uint m_RenderBufferID = 0;
 
-		Texture* m_Texture = nullptr;
+		Ref<Texture> m_Texture = nullptr;
 		TextureParameters m_Parameters;
 	};
 

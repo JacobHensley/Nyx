@@ -61,7 +61,7 @@ namespace Nyx {
 	private:
 		void Init();
 		std::unordered_map<ShaderType, String> SplitShaders(const String& path);
-		uint CompileShaders(std::unordered_map<ShaderType, String> shaderSrc);
+		uint CompileShaders(const std::unordered_map<ShaderType, String>& shaderSrc);
 		void SpirvReflect(std::vector<uint32_t>& data);
 
 		RendererID GetRendererUniformID(const String& name);

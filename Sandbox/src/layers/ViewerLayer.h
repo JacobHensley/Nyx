@@ -8,8 +8,8 @@
 #include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/scene/component/ScriptComponent.h"
 #include "Nyx/graphics/renderer/Mesh.h"
-#include "Nyx/graphics/renderer/PRBMaterial.h"
-#include "Nyx/graphics/LightEnvironment.h"
+#include "Nyx/graphics/renderer/PBRMaterial.h"
+#include "Nyx/graphics/renderer/LightEnvironment.h"
 
 using namespace Nyx;
 

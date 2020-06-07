@@ -58,8 +58,7 @@ namespace Nyx {
 			glDeleteRenderbuffers(1, &m_RenderBufferID);
 		}
 
-		delete m_Texture;
-		m_Texture = new Texture(width, height, m_Parameters);
+		m_Texture = CreateRef<Texture>(width, height, m_Parameters);
 
 		glGenFramebuffers(1, &m_FrameBufferID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);

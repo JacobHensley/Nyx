@@ -155,6 +155,13 @@ void EditorLayer::RenderMenuBar()
 			if (ImGui::MenuItem("Skybox")) {}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Material Filter"))
+		{
+			if (ImGui::MenuItem("Normals")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NORMALS); }
+			if (ImGui::MenuItem("Texture Coordinates")) { SceneRenderer::SetMaterialFilter(MaterialFilter::TEXTURE_COORDS); }
+			if (ImGui::MenuItem("None")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NONE); }
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 	}
 }

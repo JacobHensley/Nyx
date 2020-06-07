@@ -1,13 +1,13 @@
 #include "NXpch.h"
 #include "Mesh.h"
 #include "glad/glad.h"
-#include "Nyx/graphics/DebugRenderer.h"
+#include "Nyx/graphics/renderer/DebugRenderer.h"
 #include "imgui/imgui.h"
 
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "Nyx/scene/SceneRenderer.h"
-#include "PRBMaterial.h"
+#include "Nyx/graphics/renderer/SceneRenderer.h"
+#include "PBRMaterial.h"
 
 #include <filesystem>
 

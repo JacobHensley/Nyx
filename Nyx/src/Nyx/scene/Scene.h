@@ -1,8 +1,8 @@
 #pragma once
 #include "SceneObject.h"
-#include "Nyx/graphics/renderer/camera/Camera.h"
-#include "Nyx/graphics/renderer/API/TextureCube.h"
-#include "Nyx/graphics/LightEnvironment.h"
+#include "Nyx/graphics/renderer/Camera.h"
+#include "Nyx/graphics/API/TextureCube.h"
+#include "Nyx/graphics/renderer/LightEnvironment.h"
 
 namespace Nyx {
 

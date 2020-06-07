@@ -23,7 +23,7 @@ namespace Nyx {
 
 	//check new calls
 	//create buffer class
-	uint Shader::CompileShaders(std::unordered_map<ShaderType, String> shaderSrc) // take by ref
+	uint Shader::CompileShaders(const std::unordered_map<ShaderType, String>& shaderSrc) // take by ref
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -35,10 +35,9 @@ namespace Nyx {
 		GLuint program = glCreateProgram();
 		m_ShaderID = program;
 
-		std::vector<GLuint> shaderIDs; // heap array
-		shaderIDs.reserve(shaderSrc.size()); // remember reserve
+		std::vector<GLuint> shaderIDs;
+		shaderIDs.reserve(shaderSrc.size());
 
-		//use stack array
 		uint32_t shaderDataIndex = 0;
 		std::vector<uint32_t> shaderData[2];
 
@@ -76,12 +75,16 @@ namespace Nyx {
 
 			std::vector<GLchar> infoLog(maxLength);
 
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-			NX_CORE_ERROR("{0}", &infoLog[0]);
+			if (infoLog.size() > 0)
+			{
+				glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+				NX_CORE_ERROR("{0}", &infoLog[0]);
+			}
+
 
 			glDeleteProgram(program);
 
-			for (GLuint shader : shaderIDs) //remember correct for each
+			for (GLuint shader : shaderIDs)
 			{
 				glDeleteShader(shader);
 			}
@@ -96,7 +99,6 @@ namespace Nyx {
 
 		for (uint32_t i = 0; i < 2; i++)
 		{
-			//pass by data and size / 4
 			SpirvReflect(shaderData[i]);
 		}
 
@@ -272,7 +274,7 @@ namespace Nyx {
 
 	void Shader::UploadUniformBuffer(uint index, byte* buffer, uint size) //asserts 
 	{
-		UniformBuffer& ub = m_UniformBuffers[index]; // look into driver docs?
+		UniformBuffer& ub = m_UniformBuffers[index];
 		glBindBuffer(GL_UNIFORM_BUFFER, ub.openGLID);
 		glBindBufferBase(GL_UNIFORM_BUFFER, ub.bindingPoint, ub.openGLID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, (const void*)buffer);
@@ -281,7 +283,7 @@ namespace Nyx {
 	//store as array of vector
 	std::vector<UniformBuffer*> Shader::GetUniformBuffers(UniformSystemType type) //return const ref
 	{
-		char identifier; //init mem
+		char identifier = 0;
 		if (type == UniformSystemType::MATERIAL)
 			identifier = 'm';
 		else if (type == UniformSystemType::RENDERER)

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Nyx/graphics/renderer/API/IndexBuffer.h"
-#include "Nyx/graphics/renderer/API/VertexArray.h"
-#include "Nyx/graphics/renderer/API/VertexBuffer.h"
+#include "Nyx/graphics/API/IndexBuffer.h"
+#include "Nyx/graphics/API/VertexArray.h"
+#include "Nyx/graphics/API/VertexBuffer.h"
 
 #include "Nyx/graphics/renderer/Shader.h"
 

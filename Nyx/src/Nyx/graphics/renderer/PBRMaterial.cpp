@@ -1,5 +1,5 @@
 #include "NXpch.h"
-#include "PRBMaterial.h"
+#include "PBRMaterial.h"
 
 namespace Nyx {
 

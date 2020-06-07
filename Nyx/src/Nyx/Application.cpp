@@ -1,7 +1,7 @@
 #include "NXpch.h"
 #include "Application.h"
 
-#include "Nyx/graphics/DebugRenderer.h"
+#include "Nyx/graphics/renderer/DebugRenderer.h"
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 

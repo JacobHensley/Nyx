@@ -4,7 +4,7 @@
 #include "component/TransformComponent.h"
 #include "component/MaterialComponent.h"
 #include "component/ScriptComponent.h"
-#include "SceneRenderer.h"
+#include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 
 namespace Nyx {

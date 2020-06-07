@@ -1,5 +1,5 @@
 #pragma once
-#include "Nyx/graphics/renderer/API/Texture.h"
+#include "Nyx/graphics/API/Texture.h"
 #include "Nyx/graphics/renderer/Shader.h"
 
 namespace Nyx {
