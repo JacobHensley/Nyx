@@ -10,9 +10,9 @@ EditorLayer::EditorLayer(const String& name)
 	parameters.generateMips = true;
 
 	m_AlbedoMap = CreateRef<Texture>("assets/textures/Cerberus_Albedo.tga", parameters);
-	m_MetalnessMap = CreateRef<Texture>(0, 0, parameters);
-	m_RoughnessMap = CreateRef<Texture>(0, 0, parameters);
-	m_NormalMap = CreateRef<Texture>(0, 0, parameters);
+	m_MetalnessMap = CreateRef<Texture>("assets/textures/Cerberus_Metalness.tga", parameters);
+	m_RoughnessMap = CreateRef<Texture>("assets/textures/Cerberus_Roughness.tga", parameters);
+	m_NormalMap = CreateRef<Texture>("assets/textures/Cerberus_Normals.tga", parameters);
 
 	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
@@ -28,9 +28,12 @@ EditorLayer::EditorLayer(const String& name)
 	m_DefaultMaterial->Set("Radiance", m_Light->radiance);
 	m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
 	m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
-	m_DefaultMaterial->Set("AlbedoValue", glm::vec3(0.2f, 1.0f, 0.3f));
-	m_DefaultMaterial->Set("UsingAlbedoMap", false);
-	m_DefaultMaterial->SetTexture("m_AlbedoMap", m_AlbedoMap);
+
+	m_DefaultMaterial->SetMetalness(0.0f, m_MetalnessMap, true);
+	m_DefaultMaterial->SetRoughness(0.0f, m_RoughnessMap, true);
+	m_DefaultMaterial->SetAlbedo(glm::vec3(), m_AlbedoMap, true);
+	m_DefaultMaterial->SetNormalMap(m_NormalMap);
+
 
 	m_Materials["Default Material"] = m_DefaultMaterial;
 

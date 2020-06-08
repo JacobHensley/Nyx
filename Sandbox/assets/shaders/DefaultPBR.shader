@@ -200,7 +200,7 @@ void main()
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * UserBuffer.UsingLighting;
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * UserBuffer.UsingIBL;
 
-//	color = vec4(lightContribution + iblContribution, 1.0f);
+	color = vec4(lightContribution + iblContribution, 1.0f);
 //	color = vec4(UserBuffer.UsingLighting, UserBuffer.UsingLighting, UserBuffer.UsingLighting, 1.0f);
-	color = vec4(texture(m_AlbedoMap, v_TexCoords).rgb, 1.0f);
+//	color = vec4(texture(m_AlbedoMap, v_TexCoords).rgb, 1.0f);
 }
