@@ -6,6 +6,7 @@
 #include <GL/GL.h>
 #include "Nyx/GLError.h"
 #include "Nyx/graphics/renderer/SceneRenderer.h"
+#include "Nyx/graphics/renderer/Renderer.h"
 
 namespace Nyx {
 
@@ -38,8 +39,8 @@ namespace Nyx {
 		NX_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
 		NX_CORE_INFO("Version:  {0}", glGetString(GL_VERSION));
 
-
 		SceneRenderer::Init();
+		Renderer::Init();
 
 		NX_CORE_INFO("Created OpenGL Graphics Context");
 	}

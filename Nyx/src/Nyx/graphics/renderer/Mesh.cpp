@@ -379,8 +379,8 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
-				auto material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
-				m_Materials[i] = material;
+			//	auto material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+			//	m_Materials[i] = material;
 
 				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
 
@@ -394,7 +394,7 @@ namespace Nyx {
 					std::string texturePath = parentPath.string();
 
 					auto texture = CreateRef<Texture>(texturePath);
-					material->SetAlbedoMap(texture);
+			//		material->SetAlbedoMap(texture);
 				}
 
 			}

@@ -8,17 +8,13 @@ namespace Nyx {
 	class Renderer
 	{
 	public:
-		Renderer();
-		~Renderer();
+		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform);
+		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material);
 
-	public:
-		static void Begin();
-		static void Flush();
-		static void End();
-
-		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material, Scene* scene);
+		static void Init();
 
 	private:
-		static Renderer* s_Instance;
+		static void InitRenderFunctions();
+		static void InitRenderResourceFunFunctions();
 	};
 }

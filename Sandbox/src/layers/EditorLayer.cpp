@@ -38,7 +38,7 @@ EditorLayer::EditorLayer(const String& name)
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
 	// Application::GetCommandLineArgs()[0]
-	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
+	CreateObject("Default Object", "assets/models/TestScene.fbx", "Default Material");
 }
 
 EditorLayer::~EditorLayer()
@@ -160,9 +160,9 @@ void EditorLayer::RenderMenuBar()
 		}
 		if (ImGui::BeginMenu("Material Filter"))
 		{
-			if (ImGui::MenuItem("Normals")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NORMALS); }
-			if (ImGui::MenuItem("Texture Coordinates")) { SceneRenderer::SetMaterialFilter(MaterialFilter::TEXTURE_COORDS); }
-			if (ImGui::MenuItem("None")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NONE); }
+		//	if (ImGui::MenuItem("Normals")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NORMALS); }
+		//	if (ImGui::MenuItem("Texture Coordinates")) { SceneRenderer::SetMaterialFilter(MaterialFilter::TEXTURE_COORDS); }
+		//	if (ImGui::MenuItem("None")) { SceneRenderer::SetMaterialFilter(MaterialFilter::NONE); }
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -308,21 +308,21 @@ void EditorLayer::RenderMaterialMenu()
 	{
 		if (m_MaterialName != "" && !invaildTexture)
 		{
-			Ref<PBRMaterial> finalMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+		//	Ref<PBRMaterial> finalMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 
-			finalMaterial->SetAlbedo(m_AlbedoValue, CreateRef<Texture>(*m_AlbedoMap), m_UseAlbedoMap);
-			finalMaterial->SetMetalness(m_MetalnessValue, CreateRef<Texture>(*m_MetalnessMap), m_UseMetalnessMap);
-			finalMaterial->SetRoughness(m_RoughnessValue, CreateRef<Texture>(*m_RoughnessMap), m_UseRoughnessMap);
-			finalMaterial->SetNormal(CreateRef<Texture>(*m_NormalMap), m_UseNormalMap);
+		//	finalMaterial->SetAlbedo(m_AlbedoValue, CreateRef<Texture>(*m_AlbedoMap), m_UseAlbedoMap);
+		//	finalMaterial->SetMetalness(m_MetalnessValue, CreateRef<Texture>(*m_MetalnessMap), m_UseMetalnessMap);
+		//	finalMaterial->SetRoughness(m_RoughnessValue, CreateRef<Texture>(*m_RoughnessMap), m_UseRoughnessMap);
+		//	finalMaterial->SetNormal(CreateRef<Texture>(*m_NormalMap), m_UseNormalMap);
 
 			m_DefaultMaterial->Set("Direction", m_Light->direction);
 			m_DefaultMaterial->Set("Radiance", m_Light->radiance);
 			m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
 			m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
 
-			finalMaterial->Bind();
+		//	finalMaterial->Bind();
 
-			m_Materials[m_MaterialName] = finalMaterial;
+		//	m_Materials[m_MaterialName] = finalMaterial;
 
 			m_MaterialMenu = false;
 

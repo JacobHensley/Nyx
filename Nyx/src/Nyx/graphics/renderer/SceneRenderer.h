@@ -1,7 +1,6 @@
 #pragma once
 #include "nyx/scene/Scene.h"
 #include "nyx/graphics/renderer/Mesh.h"
-#include "Nyx/graphics/renderer/Material.h"
 
 namespace Nyx {
 
@@ -26,13 +25,13 @@ namespace Nyx {
 			m_FrameBuffer->Unbind();
 		}
 
-		void Bind() 
+		void Bind()
 		{
 			m_FrameBuffer->Bind();
 			m_FrameBuffer->Clear();
 		}
 
-		void Unbind() 
+		void Unbind()
 		{
 			m_FrameBuffer->Unbind();
 		}
@@ -45,19 +44,24 @@ namespace Nyx {
 
 	struct RenderCommand
 	{
-		RenderCommand(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
-			: mesh(mesh), transform(transform), material(material)
+		RenderCommand(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride)
+			: mesh(mesh), transform(transform), materialOverride(materialOverride)
+		{
+		}
+		
+		RenderCommand(Ref<Mesh> mesh, glm::mat4 transform)
+			: mesh(mesh), transform(transform), materialOverride(nullptr)
 		{
 		}
 
 		Ref<Mesh> mesh;
 		glm::mat4 transform;
-		Ref<Material> material;
+		Ref<Material> materialOverride;
 	};
 
 	enum class MaterialFilter
 	{
-		NONE = -1, NORMALS, TEXTURE_COORDS, WORLD_NORMALS
+		NONE = -1, NORMALS, TEXTURE_COORDS
 	};
 
 	class SceneRenderer
@@ -69,17 +73,17 @@ namespace Nyx {
 		static void Flush();
 		static void End();
 
-		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material = nullptr);
+		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
+		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
 
-		static void SetMaterialFilter(MaterialFilter filter);
-
-		static void Resize(uint width, uint height); //Remove later?
-
-		static Ref<Shader> GetPBRShader();
 		static Ref<FrameBuffer> GetFinalBuffer();
 
+		// Temp functions
+		static void Resize(uint width, uint height);
+		static Ref<Shader> GetPBRShader();
+
 	private:
-		static void InitRenderFunctions();
-		static void InitRenderResourceFunFunctions();
+		static void GeometryPass();
+		static void CompositePass();
 	};
 }

@@ -2,52 +2,26 @@
 #include "SceneRenderer.h"
 #include "Nyx/graphics/renderer/Renderer.h"
 #include "Nyx/graphics/MeshFactory.h"
-
 #include "glm/gtc/type_ptr.hpp"
-
-#include <glad/glad.h>
 
 namespace Nyx {
 
 	struct SceneRendererData
 	{
 		Scene* m_ActiveScene;
-
 		std::vector<RenderCommand> m_RenderCommands;
-
-		Ref<Shader> m_PBRShader;
-		Ref<Shader> m_CompositeShader;
-		Ref<Shader> m_SkyboxShader;
-
-		Ref<Material> m_NormalsMaterial;
-		Ref<Material> m_TexCoordsMaterial;
-		Ref<Material> m_WorldNormalsMaterial;
-
 		Ref<RenderPass> m_GeometryPass;
 		Ref<RenderPass> m_CompositePass;
+		Ref<Shader> m_CompositeShader;
 
 		Ref<Mesh> m_FullscreenQuad;
-
-		Ref<Material> m_EnvironmentMaterial;
-
-		Ref<Texture> m_BRDFLutTexture;
-
-		byte* m_UniformBuffer;
-		uint m_UniformBufferSize;
-
-		MaterialFilter m_MaterialFilter = MaterialFilter::NONE;
-
-		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, RenderCommand&, Ref<Shader>)>> m_RendererResourceFuncs;
-		std::unordered_map<RendererID, std::function<void(const Ref<ShaderUniform>&, RenderCommand&, Ref<Shader>)>> m_RendererUniformFuncs;
+		Ref<Shader> m_PBRShader;
 	};
 
 	static struct SceneRendererData s_Data;
 
 	void SceneRenderer::Init()
 	{
-		InitRenderFunctions();
-		InitRenderResourceFunFunctions();
-
 		//Create buffer size as ratio of size of window
 		// screen size App > Renderer > framebuffer
 		// Create MSAA buffer
@@ -59,95 +33,68 @@ namespace Nyx {
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
 		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
-		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
-
-		s_Data.m_NormalsMaterial = CreateRef<Material>(CreateRef<Shader>("assets/shaders/filters/Normals.shader"));
-		s_Data.m_TexCoordsMaterial = CreateRef<Material>(CreateRef<Shader>("assets/shaders/filters/TexCoords.shader"));
-		s_Data.m_WorldNormalsMaterial = CreateRef<Material>(CreateRef<Shader>("assets/shaders/filters/WorldNormals.shader"));
-
-		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
-
-		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
-		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 	}
 
 	void SceneRenderer::Begin(Scene* scene)
 	{
-		Renderer::Begin();
-
 		s_Data.m_ActiveScene = scene;
-		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap);
-		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 	}
 
 	void SceneRenderer::Flush()
 	{
-		s_Data.m_GeometryPass->Bind();
-
-		auto it = s_Data.m_RenderCommands.begin();
-	//	s_Data.m_RenderCommands.insert(it, RenderCommand(s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial));
-
-		Renderer::SubmitMesh(s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial, s_Data.m_ActiveScene);
-
-		for (int i = 0; i < s_Data.m_RenderCommands.size(); i++)
-		{
-			RenderCommand command = s_Data.m_RenderCommands.at(i);
-
-			// Clear all textures
-			for (uint32_t i = 0; i < 32; i++)
-				glBindTextureUnit(i, 0);
-
-			auto materials = command.mesh->GetMaterials();
-			Ref<Material> material;
-
-			if (s_Data.m_MaterialFilter == MaterialFilter::NONE)
-				material = command.material;
-			else if (s_Data.m_MaterialFilter == MaterialFilter::NORMALS)
-				material = s_Data.m_NormalsMaterial;
-			else if (s_Data.m_MaterialFilter == MaterialFilter::TEXTURE_COORDS)
-				material = s_Data.m_TexCoordsMaterial;
-			else if (s_Data.m_MaterialFilter == MaterialFilter::WORLD_NORMALS)
-				material = s_Data.m_WorldNormalsMaterial;
-
-			material->Bind();
-			Ref<Shader> shader = material->GetShader();
-
-			//This needs to be cached
-			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
-
-			for (UniformBuffer* uniformBuffer : uniformBuffers)
-			{
-				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
-				
-				s_Data.m_UniformBufferSize = uniformBuffer->size;
-				s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
-
-				for (Ref<ShaderUniform> uniform : uniforms)
-				{
-					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, command, shader);
-				}
-
-				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-				delete s_Data.m_UniformBuffer;
-			}
-
-			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
-			for (Ref<ShaderResource> resource : resources)
-			{
-				RendererID rendererID = resource->GetRendererID();
-				s_Data.m_RendererResourceFuncs[rendererID](resource, command, shader);
-			}
-
-			Renderer::SubmitMesh(command.mesh, command.transform, material, s_Data.m_ActiveScene);
-		}
-
-		s_Data.m_GeometryPass->Unbind();
+		GeometryPass();
 		s_Data.m_RenderCommands.clear();
-
-		Renderer::Flush();
 	}
 
 	void SceneRenderer::End()
+	{
+		CompositePass();
+	}
+
+	void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
+	{
+		s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform));
+	}
+
+	void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride)
+	{
+		s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, materialOverride));
+	}
+
+	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
+	{
+		return s_Data.m_CompositePass->GetFrameBuffer();
+	}
+
+	void Nyx::SceneRenderer::Resize(uint width, uint height)
+	{
+		s_Data.m_CompositePass->GetFrameBuffer()->Resize(width, height);
+		s_Data.m_GeometryPass->GetFrameBuffer()->Resize(width, height);
+	}
+
+	Ref<Shader> Nyx::SceneRenderer::GetPBRShader()
+	{
+		return s_Data.m_PBRShader;
+	}
+
+	void SceneRenderer::GeometryPass()
+	{
+		s_Data.m_GeometryPass->Bind();
+
+		//Scene level sorting
+
+		for (RenderCommand command : s_Data.m_RenderCommands)
+		{
+			if (command.materialOverride == nullptr)
+				Renderer::SubmitMesh(s_Data.m_ActiveScene, command.mesh, command.transform);
+			else
+				Renderer::SubmitMesh(s_Data.m_ActiveScene, command.mesh, command.transform, command.materialOverride);
+		}
+
+		s_Data.m_GeometryPass->Unbind();
+	}
+
+	void SceneRenderer::CompositePass()
 	{
 		s_Data.m_CompositePass->Bind();
 
@@ -160,85 +107,6 @@ namespace Nyx {
 		s_Data.m_FullscreenQuad->Render(true);
 
 		s_Data.m_CompositePass->Unbind();
-
-		Renderer::End();
 	}
 
-	void SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
-	{
-		if (material != nullptr)
-			s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, material));
-	//	else if (mesh.HasMaterial())
-	//		s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, mesh.getMaterial()));
-	}
-
-	void SceneRenderer::SetMaterialFilter(MaterialFilter filter)
-	{
-		s_Data.m_MaterialFilter = filter;
-	}
-
-	void SceneRenderer::Resize(uint width, uint height)
-	{
-		s_Data.m_CompositePass->GetFrameBuffer()->Resize(width, height);
-		s_Data.m_GeometryPass->GetFrameBuffer()->Resize(width, height);
-	}
-
-	Ref<Shader> SceneRenderer::GetPBRShader()
-	{
-		return s_Data.m_PBRShader;
-	}
-
-	Ref<FrameBuffer> SceneRenderer::GetFinalBuffer()
-	{
-		return s_Data.m_CompositePass->GetFrameBuffer();
-	}
-
-	void SceneRenderer::InitRenderFunctions()
-	{
-		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto transform = command.transform;
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &transform, uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto view = s_Data.m_ActiveScene->GetCamera()->GetViewMatrix();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(view), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::PROJ_MATRIX] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto proj = s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(proj), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::INVERSE_VP] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto ivp = glm::inverse(s_Data.m_ActiveScene->GetCamera()->GetViewMatrix() * s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix());
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(ivp), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::MVP] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto mvp = s_Data.m_ActiveScene->GetCamera()->GetProjectionMatrix() * s_Data.m_ActiveScene->GetCamera()->GetViewMatrix() * command.transform;
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &mvp, uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::CAMERA_POSITION] = [&](const Ref<ShaderUniform>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			auto pos = s_Data.m_ActiveScene->GetCamera()->GetPosition();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(pos), uniform->GetSize());
-		};
-	}
-	void SceneRenderer::InitRenderResourceFunFunctions()
-	{
-		s_Data.m_RendererResourceFuncs[RendererID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap->Bind(uniform->GetSampler());
-		};
-		s_Data.m_RendererResourceFuncs[RendererID::RADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			s_Data.m_ActiveScene->GetEnvironmentMap()->radianceMap->Bind(uniform->GetSampler());
-		};
-		s_Data.m_RendererResourceFuncs[RendererID::BRDF_LUT] = [&](const Ref<ShaderResource>& uniform, RenderCommand& command, Ref<Shader> shader)
-		{
-			s_Data.m_BRDFLutTexture->Bind(uniform->GetSampler());
-		};
-	}
 }
