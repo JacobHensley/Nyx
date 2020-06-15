@@ -27,6 +27,7 @@ namespace Nyx {
 		uint vertexOffset;
 		uint indexOffset;
 		uint indexCount;
+		uint materialIndex = 0;
 		AABB boundingBox;
 		glm::mat4 transform;
 
@@ -51,7 +52,7 @@ namespace Nyx {
 
 		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;
-
+		Ref<Shader> GetBaseShader() const { return m_BaseShader; }
 		bool Reload(const String& path);
 		
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
@@ -89,6 +90,8 @@ namespace Nyx {
 		Ref<IndexBuffer> m_IndexBuffer;
 		Ref<VertexArray> m_VertexArray;
 		Ref<VertexBuffer> m_VertexBuffer;
+
+		Ref<Shader> m_BaseShader;
 
 		uint m_BaseVertexPointer = 0;
 		uint m_BaseIndexPointer = 0;

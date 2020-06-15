@@ -31,9 +31,45 @@ namespace Nyx {
 	{
 		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
 
+		mesh->GetVertexArray()->Bind();
+		mesh->GetIndexBuffer()->Bind();
+
+		const auto& materials = mesh->GetMaterials();
+
 		for (SubMesh subMesh : subMeshes)
 		{
+			Ref<Material> material = materials[subMesh.materialIndex];
 
+			material->Bind();
+
+			Ref<Shader> shader = material->GetShader();
+
+			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
+
+			for (UniformBuffer* uniformBuffer : uniformBuffers)
+			{
+				s_Data.m_UniformBufferSize = uniformBuffer->size;
+				s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+
+				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
+
+				for (Ref<ShaderUniform> uniform : uniforms)
+				{
+					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, subMesh, scene);
+				}
+
+				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
+				delete s_Data.m_UniformBuffer;
+			}
+
+			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
+			for (Ref<ShaderResource> resource : resources)
+			{
+				RendererID rendererID = resource->GetRendererID();
+				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
+			}
+
+			glDrawElementsBaseVertex(GL_TRIANGLES, subMesh.indexCount, GL_UNSIGNED_INT, (void*)(subMesh.indexOffset * sizeof(uint)), subMesh.vertexOffset);
 		}
 	}
 
@@ -74,7 +110,13 @@ namespace Nyx {
 				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
 			}
 
+			if (!material->GetDepthTesting())
+				glDisable(GL_DEPTH_TEST);
+
 			glDrawElementsBaseVertex(GL_TRIANGLES, subMesh.indexCount, GL_UNSIGNED_INT, (void*)(subMesh.indexOffset * sizeof(uint)), subMesh.vertexOffset);
+
+			if (!material->GetDepthTesting())
+				glEnable(GL_DEPTH_TEST);
 		}
 	}
 

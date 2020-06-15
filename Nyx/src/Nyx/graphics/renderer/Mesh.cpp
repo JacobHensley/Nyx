@@ -5,7 +5,7 @@
 #include "imgui/imgui.h"
 
 #include <glm/gtx/matrix_decompose.hpp>
-
+#include <assimp/pbrmaterial.h>
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "PBRMaterial.h"
 
@@ -258,6 +258,8 @@ namespace Nyx {
 			
 		m_Scene = importer.GetOrphanedScene();
 
+		m_BaseShader = SceneRenderer::GetPBRShader();
+
 		// Process ASSIMP's root node recursively
 		processNode(scene->mRootNode, scene, scene->mRootNode->mTransformation);
 
@@ -379,8 +381,9 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
-			//	auto material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
-			//	m_Materials[i] = material;
+				auto material = CreateRef<PBRMaterial>(m_BaseShader);
+
+				m_Materials[i] = material;
 
 				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
 
@@ -395,7 +398,34 @@ namespace Nyx {
 
 					auto texture = CreateRef<Texture>(texturePath);
 			//		material->SetAlbedoMap(texture);
+					material->Set("UsingAlbedoMap", true);
+					
 				}
+				else
+				{
+					aiColor3D aiColor;
+					aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
+					material->Set("AlbedoValue", glm::vec3(aiColor.r, aiColor.g, aiColor.b));
+					material->Set("UsingAlbedoMap", false);
+				}
+
+				{
+					float shininess;
+					aiMaterial->Get(AI_MATKEY_SHININESS, shininess);
+
+					float roughness = 1 - sqrt(shininess / 100);
+					material->Set("RoughnessValue", roughness);
+					material->Set("UsingRoughnessMap", false);
+				}
+
+				{
+					float metalness;
+					aiMaterial->Get(AI_MATKEY_REFLECTIVITY, metalness);
+					material->Set("MetalnessValue", metalness);
+					material->Set("UsingMetalnessMap", false);
+				}
+
+				material->Set("UsingNormalMap", false);
 
 			}
 
@@ -433,7 +463,9 @@ namespace Nyx {
 		uint indexCount = mesh->mNumFaces * 3;
 		m_BaseIndexPointer += indexCount;
 		
-		return SubMesh(baseVertex, baseIndex, indexCount);
+		SubMesh submesh(baseVertex, baseIndex, indexCount);
+		submesh.materialIndex = mesh->mMaterialIndex;
+		return submesh;
 	}
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.

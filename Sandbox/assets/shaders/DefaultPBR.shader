@@ -59,8 +59,6 @@ layout(std140, binding = 1) uniform m_UserBuffer
 	vec3 Radiance;
 	vec3 Direction;
 
-	vec3 CameraPosition;
-
 	float UsingIBL;
 	float UsingLighting;
 	
@@ -197,10 +195,10 @@ void main()
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
-	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV) * UserBuffer.UsingLighting;
-	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0) * UserBuffer.UsingIBL;
+	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV);
+	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
 //	color = vec4(UserBuffer.UsingLighting, UserBuffer.UsingLighting, UserBuffer.UsingLighting, 1.0f);
-//	color = vec4(texture(m_AlbedoMap, v_TexCoords).rgb, 1.0f);
+//	color = vec4(UserBuffer.AlbedoValue, 1.0f);
 }

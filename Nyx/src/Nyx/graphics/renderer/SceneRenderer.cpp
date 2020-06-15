@@ -16,6 +16,9 @@ namespace Nyx {
 
 		Ref<Mesh> m_FullscreenQuad;
 		Ref<Shader> m_PBRShader;
+
+		Ref<Material> m_EnvironmentMaterial;
+		Ref<Shader> m_SkyboxShader;
 	};
 
 	static struct SceneRendererData s_Data;
@@ -33,11 +36,17 @@ namespace Nyx {
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
 		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+
+		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
+		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 	}
 
 	void SceneRenderer::Begin(Scene* scene)
 	{
 		s_Data.m_ActiveScene = scene;
+
+		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap);
 	}
 
 	void SceneRenderer::Flush()
@@ -82,6 +91,8 @@ namespace Nyx {
 		s_Data.m_GeometryPass->Bind();
 
 		//Scene level sorting
+
+		Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
 
 		for (RenderCommand command : s_Data.m_RenderCommands)
 		{

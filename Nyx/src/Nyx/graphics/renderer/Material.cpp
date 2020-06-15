@@ -8,9 +8,9 @@ namespace Nyx {
 		:	m_Shader(shader)
 	{
 		std::vector<UniformBuffer*> uniformBuffers = m_Shader->GetUniformBuffers(UniformSystemType::MATERIAL);
-		for each (UniformBuffer* uniformBuffer in uniformBuffers)
+		for (UniformBuffer* uniformBuffer : uniformBuffers)
 		{
-			MaterialBuffer& materialBuffer = m_MaterialBuffers.emplace_back();
+			MaterialBuffer& materialBuffer = m_MaterialBuffers[uniformBuffer->index];
 
 			materialBuffer.size = uniformBuffer->size;
 			materialBuffer.data = new byte[uniformBuffer->size];
@@ -43,8 +43,9 @@ namespace Nyx {
 			m_TextureCubes[i]->Bind(i);
 		}
 
-		for (MaterialBuffer& materialBuffer : m_MaterialBuffers)
+		for (auto& kv : m_MaterialBuffers)
 		{
+			MaterialBuffer & materialBuffer = kv.second;
 			m_Shader->UploadUniformBuffer(materialBuffer.index, materialBuffer.data, materialBuffer.size);
 		}
 	}

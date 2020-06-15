@@ -36,7 +36,7 @@ namespace Nyx {
 			if (uniform == nullptr)
 				return;
 
-			memcpy(m_MaterialBuffers[bufferIndex - 1].data + uniform->GetOffset(), &data, uniform->GetSize());
+			memcpy(m_MaterialBuffers[bufferIndex].data + uniform->GetOffset(), &data, uniform->GetSize());
 		}
 
 		template<>
@@ -47,11 +47,12 @@ namespace Nyx {
 				return;
 
 			int intData = (int)data;
-			memcpy(m_MaterialBuffers[bufferIndex - 1].data + uniform->GetOffset(), &intData, uniform->GetSize());
+			memcpy(m_MaterialBuffers[bufferIndex].data + uniform->GetOffset(), &intData, uniform->GetSize());
 		}
+
 	private:
 		Ref<Shader> m_Shader;
-		std::vector<MaterialBuffer> m_MaterialBuffers;
+		std::unordered_map<uint, MaterialBuffer> m_MaterialBuffers;
 		std::unordered_map<String, std::pair<uint, Ref<ShaderUniform>>> m_Uniforms;
 
 		std::vector<Ref<Texture>> m_Textures;
