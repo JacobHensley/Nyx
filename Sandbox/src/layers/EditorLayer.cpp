@@ -3,7 +3,7 @@
 EditorLayer::EditorLayer(const String& name) 
 	:	Layer(name)
 {
-	m_Skybox = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
+//	m_Skybox = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
 	m_LightEnv = CreateRef<LightEnvironment>();
 	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
@@ -14,7 +14,7 @@ EditorLayer::EditorLayer(const String& name)
 	m_RoughnessMap = CreateRef<Texture>("assets/textures/Cerberus_Roughness.tga", parameters);
 	m_NormalMap = CreateRef<Texture>("assets/textures/Cerberus_Normals.tga", parameters);
 
-	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+//	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
 	m_RadianceTexture = CreateRef<TextureCube>("assets/textures/canyon_Radiance.png");
 	m_Light = CreateRef<Light>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
@@ -38,7 +38,7 @@ EditorLayer::EditorLayer(const String& name)
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
 	// Application::GetCommandLineArgs()[0]
-	CreateObject("Default Object", "assets/models/TestScene.fbx", "Default Material");
+	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
 }
 
 EditorLayer::~EditorLayer()

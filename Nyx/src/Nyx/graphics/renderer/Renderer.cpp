@@ -36,6 +36,13 @@ namespace Nyx {
 
 		const auto& materials = mesh->GetMaterials();
 
+		// Only upload render uniforms and textures once
+		// Group sub meshes by material to pervent rebinds
+		
+		// -----------------------------------------------------------------------------
+		// use a scratch buffer instead of creating a new one for every buffer
+		// maybe cache result of GetUniformBuffers in shader to pervent String compassion
+
 		for (SubMesh subMesh : subMeshes)
 		{
 			Ref<Material> material = materials[subMesh.materialIndex];

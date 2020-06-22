@@ -385,21 +385,37 @@ namespace Nyx {
 
 				m_Materials[i] = material;
 
-				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
-
 				aiString aiTexPath;
 
 				if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS)
 				{
-					std::filesystem::path path = m_Path;
-					auto parentPath = path.parent_path();
+					std::filesystem::path meshPath = m_Path;
+					auto parentPath = meshPath.parent_path();
 					parentPath /= std::string(aiTexPath.data);
 					std::string texturePath = parentPath.string();
 
-					auto texture = CreateRef<Texture>(texturePath);
-			//		material->SetAlbedoMap(texture);
+					bool skipTexture = false;
+
+					for (int i = 0;i < m_TexturesLoaded.size();i++)
+					{
+						Ref<Texture> texture = m_TexturesLoaded[i];
+
+						if (texture->GetPath() == texturePath)
+						{
+							material->SetAlbedoMap(texture);
+							skipTexture = true;
+							break;
+						}
+					}
+
+					if (!skipTexture || m_TexturesLoaded.size() == 0)
+					{
+					//	auto loadedTexture = CreateRef<Texture>(texturePath);
+					//	material->SetAlbedoMap(loadedTexture);
+					//	m_TexturesLoaded.push_back(loadedTexture);
+					}
+
 					material->Set("UsingAlbedoMap", true);
-					
 				}
 				else
 				{
@@ -425,37 +441,43 @@ namespace Nyx {
 					material->Set("UsingMetalnessMap", false);
 				}
 
-				material->Set("UsingNormalMap", false);
+			/*	if (aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS)
+				{
+					std::filesystem::path meshPath = m_Path;
+					auto parentPath = meshPath.parent_path();
+					parentPath /= std::string(aiTexPath.data);
+					std::string texturePath = parentPath.string();
 
+					bool skipTexture = false;
+
+					for (int i = 0; i < m_TexturesLoaded.size(); i++)
+					{
+						Ref<Texture> texture = m_TexturesLoaded[i];
+
+						if (texture->GetPath() == texturePath)
+						{
+					//		material->SetNormalMap(texture);
+							skipTexture = true;
+							break;
+						}
+					}
+
+					if (!skipTexture || m_TexturesLoaded.size() == 0)
+					{
+						auto loadedTexture = CreateRef<Texture>(texturePath);
+					//	material->SetNormalMap(loadedTexture);
+						m_TexturesLoaded.push_back(loadedTexture);
+					}
+
+					material->Set("UsingNormalMap", true);
+				}
+				else
+				{
+					material->Set("UsingNormalMap", false);
+				} */
+				
 			}
-
 		}
-
-#if OLD
-		// Process materials
-		if (mesh->mMaterialIndex >= 0)
-		{
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-			// We assume a convention for sampler names in the shaders. Each diffuse texture should be named
-			// as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
-			// Same applies to other texture as the following list summarizes:
-			// Diffuse: texture_diffuseN
-			// Specular: texture_specularN
-			// Normal: texture_normalN
-
-			// 1. Diffuse maps
-			std::vector<Ref<Texture>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
-			// 2. Specular maps
-			std::vector<Ref<Texture>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
-			// 2. Normal maps
-			std::vector<Ref<Texture>> normalMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_normal");
-			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-		}
-#endif
 
 		uint baseVertex = m_BaseVertexPointer;
 		m_BaseVertexPointer += mesh->mNumVertices;
