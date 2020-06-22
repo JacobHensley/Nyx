@@ -34,49 +34,54 @@ namespace Nyx {
 		mesh->GetVertexArray()->Bind();
 		mesh->GetIndexBuffer()->Bind();
 
-		const auto& materials = mesh->GetMaterials();
-
-		// Only upload render uniforms and textures once
-		// Group sub meshes by material to pervent rebinds
-		
-		// -----------------------------------------------------------------------------
-		// use a scratch buffer instead of creating a new one for every buffer
-		// maybe cache result of GetUniformBuffers in shader to pervent String compassion
-
-		for (SubMesh subMesh : subMeshes)
+		const auto & meshMaterials = mesh->GetMaterials();
+		std::unordered_map<Ref<Shader>, std::unordered_map<uint32_t, std::vector<SubMesh*>>> materials;
+		for (SubMesh& subMesh : subMeshes)
 		{
-			Ref<Material> material = materials[subMesh.materialIndex];
-
-			material->Bind();
-
-			Ref<Shader> shader = material->GetShader();
-
+			const auto & submeshMaterial = meshMaterials[subMesh.materialIndex];
+			materials[submeshMaterial->GetShader()][subMesh.materialIndex].emplace_back(&subMesh);
+		}
+		
+		for (auto& [shader, materialMap] : materials)
+		{
+			shader->Bind();
+			
 			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
-
-			for (UniformBuffer* uniformBuffer : uniformBuffers)
-			{
-				s_Data.m_UniformBufferSize = uniformBuffer->size;
-				s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
-
-				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
-
-				for (Ref<ShaderUniform> uniform : uniforms)
-				{
-					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, subMesh, scene);
-				}
-
-				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-				delete s_Data.m_UniformBuffer;
-			}
-
+			
 			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
 			for (Ref<ShaderResource> resource : resources)
 			{
 				RendererID rendererID = resource->GetRendererID();
 				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
 			}
+			
+			for (auto& [materialIndex, submeshList] : materialMap)
+			{
+				auto & material = meshMaterials[materialIndex];
+				material->BindTextures();
+				material->UploadUniformBuffers();
+				
+				for (SubMesh* subMesh : submeshList)
+				{
+					for (UniformBuffer* uniformBuffer : uniformBuffers)
+					{
+						s_Data.m_UniformBufferSize = uniformBuffer->size;
+						s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+						
+						std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
+						
+						for (Ref<ShaderUniform> uniform : uniforms)
+						{
+							s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, *subMesh, scene);
+						}
+						
+						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
+						delete s_Data.m_UniformBuffer;
+					}
 
-			glDrawElementsBaseVertex(GL_TRIANGLES, subMesh.indexCount, GL_UNSIGNED_INT, (void*)(subMesh.indexOffset * sizeof(uint)), subMesh.vertexOffset);
+					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);
+				}
+			}
 		}
 	}
 

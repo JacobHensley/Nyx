@@ -33,6 +33,18 @@ namespace Nyx {
 	{
 		m_Shader->Bind();
 
+		BindTextures();
+
+		UploadUniformBuffers();
+	}
+
+	void Material::Unbind()
+	{
+		m_Shader->Unbind();
+	}
+
+	void Material::BindTextures()
+	{
 		for (int i = 0; i < m_Textures.size(); i++)
 		{
 			m_Textures[i]->Bind(i);
@@ -42,17 +54,15 @@ namespace Nyx {
 		{
 			m_TextureCubes[i]->Bind(i);
 		}
+	}
 
+	void Material::UploadUniformBuffers()
+	{
 		for (auto& kv : m_MaterialBuffers)
 		{
 			MaterialBuffer & materialBuffer = kv.second;
 			m_Shader->UploadUniformBuffer(materialBuffer.index, materialBuffer.data, materialBuffer.size);
 		}
-	}
-
-	void Material::Unbind()
-	{
-		m_Shader->Unbind();
 	}
 
 	void Material::SetTexture(const String& name, Ref<Texture>& texture)

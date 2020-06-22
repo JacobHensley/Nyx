@@ -21,6 +21,9 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
+		void BindTextures();
+		void UploadUniformBuffers();
+
 		void SetTexture(const String& name, Ref<Texture>& texture);
 		void SetTexture(const String& name, Ref<TextureCube>& texture);
 

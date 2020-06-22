@@ -410,9 +410,9 @@ namespace Nyx {
 
 					if (!skipTexture || m_TexturesLoaded.size() == 0)
 					{
-					//	auto loadedTexture = CreateRef<Texture>(texturePath);
-					//	material->SetAlbedoMap(loadedTexture);
-					//	m_TexturesLoaded.push_back(loadedTexture);
+						auto loadedTexture = CreateRef<Texture>(texturePath);
+						material->SetAlbedoMap(loadedTexture);
+						m_TexturesLoaded.push_back(loadedTexture);
 					}
 
 					material->Set("UsingAlbedoMap", true);

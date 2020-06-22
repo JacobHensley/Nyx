@@ -38,7 +38,8 @@ EditorLayer::EditorLayer(const String& name)
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
 	// Application::GetCommandLineArgs()[0]
-	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
+//	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
+	CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
 }
 
 EditorLayer::~EditorLayer()
