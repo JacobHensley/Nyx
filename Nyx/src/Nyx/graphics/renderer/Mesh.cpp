@@ -247,7 +247,7 @@ namespace Nyx {
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -383,116 +383,73 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
+				auto material = CreateRef<PBRMaterial>(m_BaseShader);
+				m_Materials[i] = material;
+
+				bool foundAlbedoMap = false;
+				bool foundRoughnessMap = false;
+				bool foundNormalMap = false;
+				bool foundMetalnessMap = false;
+
 				for (uint32_t i = 0; i < aiMaterial->mNumProperties; i++)
 				{
 					auto prop = aiMaterial->mProperties[i];
-
-
-					NX_CORE_DEBUG("Material Property:");
-					NX_CORE_DEBUG("  Name = {0}", prop->mKey.data);
-					NX_CORE_DEBUG("  Type = {0}", prop->mType);
-					NX_CORE_DEBUG("  Size = {0}", prop->mDataLength);
-					float data = *(float*)prop->mData;
-					NX_CORE_DEBUG("  Value = {0}", data);
-
 					if (prop->mType == aiPTI_String)
 					{
 						uint32_t strLength = *(uint32_t*)prop->mData;
 						std::string str(prop->mData + 4, strLength);
 
-						std::string key = prop->mKey.data;
-
-						NX_CORE_DEBUG("{0} = {1}", key, str);
-					}
-
-					switch (prop->mSemantic)
-					{
-					case aiTextureType_NONE:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_NONE");
-						break;
-					case aiTextureType_DIFFUSE:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_DIFFUSE");
-						break;
-					case aiTextureType_SPECULAR:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_SPECULAR");
-						break;
-					case aiTextureType_AMBIENT:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_AMBIENT");
-						break;
-					case aiTextureType_EMISSIVE:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_EMISSIVE");
-						break;
-					case aiTextureType_HEIGHT:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_HEIGHT");
-						break;
-					case aiTextureType_NORMALS:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_NORMALS");
-						break;
-					case aiTextureType_SHININESS:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_SHININESS");
-						break;
-					case aiTextureType_OPACITY:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_OPACITY");
-						break;
-					case aiTextureType_DISPLACEMENT:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_DISPLACEMENT");
-						break;
-					case aiTextureType_LIGHTMAP:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_LIGHTMAP");
-						break;
-					case aiTextureType_REFLECTION:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_REFLECTION");
-						break;
-					case aiTextureType_UNKNOWN:
-						NX_CORE_DEBUG("  Semantic = aiTextureType_UNKNOWN");
-						break;
-					}
-				}
-
-				auto material = CreateRef<PBRMaterial>(m_BaseShader);
-
-				m_Materials[i] = material;
-
-				aiString aiTexPath;
-
-				if (aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiTexPath) == AI_SUCCESS)
-				{
-					std::filesystem::path meshPath = m_Path;
-					auto parentPath = meshPath.parent_path();
-					parentPath /= std::string(aiTexPath.data);
-					std::string texturePath = parentPath.string();
-
-					bool skipTexture = false;
-
-					for (int i = 0;i < m_TexturesLoaded.size();i++)
-					{
-						Ref<Texture> texture = m_TexturesLoaded[i];
-
-						if (texture->GetPath() == texturePath)
+						if ((String)(prop->mKey.data) == "$raw.DiffuseColor|file")
 						{
-							material->SetAlbedoMap(texture);
-							skipTexture = true;
-							break;
+							Ref<Texture> texture = LoadMaterialTexture(str);
+							if (texture)
+							{
+								material->SetAlbedoMap(texture);
+								material->UsingAlbedoMap(true);
+								foundAlbedoMap = true;
+							}
+						}
+						else if ((String)(prop->mKey.data) == "$raw.ShininessExponent|file")
+						{
+							Ref<Texture> texture = LoadMaterialTexture(str);
+							if (texture)
+							{
+								material->SetRoughnessMap(texture);
+								material->UsingRoughnessMap(true);
+								foundRoughnessMap = true;
+							}
+						}
+						else if ((String)(prop->mKey.data) == "$raw.NormalMap|file")
+						{
+							Ref<Texture> texture = LoadMaterialTexture(str);
+							if (texture)
+							{
+								material->SetNormalMap(texture);
+								material->UsingNormalMap(true);
+								foundNormalMap = true;
+							}
+						}
+						else if ((String)(prop->mKey.data) == "$raw.ReflectionFactor|file")
+						{
+							Ref<Texture> texture = LoadMaterialTexture(str);
+							if (texture)
+							{
+								material->SetMetalnessMap(texture);
+								material->UsingMetalnessMap(true);
+								foundMetalnessMap = true;
+							}
 						}
 					}
-
-					if (!skipTexture || m_TexturesLoaded.size() == 0)
-					{
-						auto loadedTexture = CreateRef<Texture>(texturePath);
-						material->SetAlbedoMap(loadedTexture);
-						m_TexturesLoaded.push_back(loadedTexture);
-					}
-
-					material->Set("UsingAlbedoMap", true);
 				}
-				else
+
+				if (!foundAlbedoMap)
 				{
 					aiColor3D aiColor;
 					aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
 					material->Set("AlbedoValue", glm::vec3(aiColor.r, aiColor.g, aiColor.b));
 					material->Set("UsingAlbedoMap", false);
 				}
-
+				if (!foundRoughnessMap)
 				{
 					float shininess;
 					aiMaterial->Get(AI_MATKEY_SHININESS, shininess);
@@ -501,49 +458,17 @@ namespace Nyx {
 					material->Set("RoughnessValue", roughness);
 					material->Set("UsingRoughnessMap", false);
 				}
-
+				if (!foundMetalnessMap)
 				{
 					float metalness;
 					aiMaterial->Get(AI_MATKEY_REFLECTIVITY, metalness);
 					material->Set("MetalnessValue", metalness);
 					material->Set("UsingMetalnessMap", false);
 				}
-
-			/*	if (aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS)
-				{
-					std::filesystem::path meshPath = m_Path;
-					auto parentPath = meshPath.parent_path();
-					parentPath /= std::string(aiTexPath.data);
-					std::string texturePath = parentPath.string();
-
-					bool skipTexture = false;
-
-					for (int i = 0; i < m_TexturesLoaded.size(); i++)
-					{
-						Ref<Texture> texture = m_TexturesLoaded[i];
-
-						if (texture->GetPath() == texturePath)
-						{
-					//		material->SetNormalMap(texture);
-							skipTexture = true;
-							break;
-						}
-					}
-
-					if (!skipTexture || m_TexturesLoaded.size() == 0)
-					{
-						auto loadedTexture = CreateRef<Texture>(texturePath);
-					//	material->SetNormalMap(loadedTexture);
-						m_TexturesLoaded.push_back(loadedTexture);
-					}
-
-					material->Set("UsingNormalMap", true);
-				}
-				else
+				if (!foundNormalMap)
 				{
 					material->Set("UsingNormalMap", false);
-				} */
-				
+				}
 			}
 		}
 
@@ -558,47 +483,31 @@ namespace Nyx {
 		return submesh;
 	}
 
-	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
-	// The required info is returned as a Texture struct.
-	std::vector<Ref<Texture>> Mesh::loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName)
+	Ref<Texture> Mesh::LoadMaterialTexture(const String& str)
 	{
-		std::vector<Ref<Texture>> textures;
+		//	NX_CORE_DEBUG("Metalness Texture: {0}", str);
 
-		for (uint i = 0; i < material->GetTextureCount(type); i++)
+		std::filesystem::path meshPath = m_Path;
+		auto parentPath = meshPath.parent_path();
+		parentPath /= str;
+		std::string texturePath = parentPath.string();
+
+		if (FILE* file = fopen(texturePath.c_str(), "r"))
+			fclose(file);
+		else
+			return nullptr;
+
+		Ref<Texture> texture = m_LoadedTextures[texturePath];
+		if (texture == nullptr)
 		{
-			aiString str;
-			material->GetTexture(type, i, &str);
-
-			// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-			bool skip = false;
-
-			for (uint j = 0; j < m_TexturesLoaded.size(); j++)
-			{
-				if (m_TexturesLoaded[j]->GetPath() == str.C_Str())
-				{
-					textures.push_back(m_TexturesLoaded[j]);
-					skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
-
-					break;
-				}
-			}
-
-			if (!skip)
-			{
-				String path = str.C_Str();
-				std::ifstream file(path);
-
-				if (false)
-				{
-					// If texture hasn't been loaded already, load it
-				//	Ref<Texture> texture = CreateRef<Texture>(path);
-				//	m_TexturesLoaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
-				}
-
-			}
+			Ref<Texture> loadedTexture = CreateRef<Texture>(texturePath);
+			m_LoadedTextures[texturePath] = loadedTexture;
+			return loadedTexture;
 		}
-
-		return textures;
+		else
+		{
+			return texture;
+		}
 	}
 
 }

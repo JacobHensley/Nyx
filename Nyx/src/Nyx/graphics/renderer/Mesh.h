@@ -65,7 +65,8 @@ namespace Nyx {
 		void processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform);
 		SubMesh processMesh(aiMesh* mesh, const aiScene* scene);
 		void ImGuiNodeHierarchy(aiNode* node, const glm::mat4& parentTransform = glm::mat4(1.0f), uint32_t level = 0);
-		std::vector<Ref<Texture>> loadMaterialTextures(aiMaterial* material, aiTextureType type, const String& typeName);
+
+		Ref<Texture> LoadMaterialTexture(const String& str);
 
 		void DrawImGuiNode(aiNode* node) const;
 
@@ -83,6 +84,7 @@ namespace Nyx {
 		String m_Path;
 		std::vector<SubMesh> m_SubMeshes;
 		std::vector<Ref<Texture>> m_TexturesLoaded;
+		std::unordered_map<String, Ref<Texture>> m_LoadedTextures;
 
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint> m_Indices;

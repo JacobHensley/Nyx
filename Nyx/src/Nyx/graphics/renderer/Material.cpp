@@ -47,12 +47,14 @@ namespace Nyx {
 	{
 		for (int i = 0; i < m_Textures.size(); i++)
 		{
-			m_Textures[i]->Bind(i);
+			if (m_Textures[i] != nullptr)
+				m_Textures[i]->Bind(i);
 		}
 
 		for (int i = 0; i < m_TextureCubes.size(); i++)
 		{
-			m_TextureCubes[i]->Bind(i);
+			if (m_TextureCubes[i] != nullptr)
+				m_TextureCubes[i]->Bind(i);
 		}
 	}
 
