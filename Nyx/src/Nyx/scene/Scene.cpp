@@ -7,11 +7,22 @@
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 
+#include "yaml-cpp/yaml.h"
+
 namespace Nyx {
 
 	Scene::Scene(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 		:	m_Camera(camera), m_EnvironmentMap(environmentMap), m_LightEnvironment(lightEnvironment)
 	{
+		YAML::Node config = YAML::LoadFile("assets/config/config.yaml");
+	/*	NX_CORE_DEBUG("Size: {0}", config.size());
+		NX_CORE_DEBUG("By name: {0}", config["Position"]);
+		NX_CORE_DEBUG("By name at index 2: {0}", config["Position"][2]);
+		NX_CORE_DEBUG("Name size: {0}", config["Position"]);
+		float x = config["Position"][0].as<float>();
+		config["Position"][0] = 4.4f;
+		std::ofstream fout("config.yaml");
+		fout << config; */
 	}
 
 	void Scene::Update()

@@ -1,0 +1,8 @@
+%YAML 1.2
+---
+Camera:
+  ViewMatrix:
+    Position: [1.0, 2.0, 1.0]
+    Translation: [0.0, 0.0, 0.0]
+    Scale: [2.0, 2.0, 2.0]
+...

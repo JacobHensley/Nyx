@@ -47,14 +47,14 @@ namespace Nyx {
 
 	void APIENTRY GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
-	/*	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION && s_GLLogLevel >= GLLogLevel::NOTIFICATION && false)
+		if (severity == GL_DEBUG_SEVERITY_NOTIFICATION && s_GLLogLevel >= GLLogLevel::NOTIFICATION && false)
 			NX_CORE_INFO(message);
 		else if (severity == GL_DEBUG_SEVERITY_LOW && s_GLLogLevel >= GLLogLevel::LOW)
 			NX_CORE_WARN(message);
 		else if (severity == GL_DEBUG_SEVERITY_MEDIUM && s_GLLogLevel >= GLLogLevel::MEDIUM)
 			NX_CORE_ERROR(message);
 		else if (severity == GL_DEBUG_SEVERITY_HIGH && s_GLLogLevel >= GLLogLevel::HIGH)
-			NX_CORE_CRITICAL(message); */
+			NX_CORE_CRITICAL(message); 
 	}
 
 	static void SetGLLogLevel(GLLogLevel level)

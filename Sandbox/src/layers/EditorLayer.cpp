@@ -5,7 +5,13 @@ EditorLayer::EditorLayer(const String& name)
 {
 //	m_Skybox = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
 	m_LightEnv = CreateRef<LightEnvironment>();
+
 	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
+
+	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
+	m_RadianceTexture = CreateRef<TextureCube>("assets/textures/canyon_Radiance.png");
+	Ref<EnvironmentMap> envMap = CreateRef<EnvironmentMap>(m_RadianceTexture, m_IrradianceTexture);
+	m_Scene = CreateRef<Scene>(m_Camera, envMap, m_LightEnv);
 
 	parameters.generateMips = true;
 
@@ -15,12 +21,8 @@ EditorLayer::EditorLayer(const String& name)
 	m_NormalMap = CreateRef<Texture>("assets/textures/Cerberus_Normals.tga", parameters);
 
 //	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
-	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
-	m_RadianceTexture = CreateRef<TextureCube>("assets/textures/canyon_Radiance.png");
-	m_Light = CreateRef<Light>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
 
-	Ref<EnvironmentMap> envMap = CreateRef<EnvironmentMap>(m_RadianceTexture, m_IrradianceTexture);
-	m_Scene = CreateRef<Scene>(m_Camera, envMap, m_LightEnv);
+	m_Light = CreateRef<Light>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
 
 	m_DefaultMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 

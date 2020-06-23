@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;NX_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -78,7 +78,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

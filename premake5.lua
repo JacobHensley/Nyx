@@ -21,12 +21,14 @@ IncludeDir["sol2"] =      "Nyx/vendor/sol2/include"
 IncludeDir["lua"] =       "Nyx/vendor/sol2/lua/src"
 IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross"
 IncludeDir["Shaderc"] =   "Nyx/vendor/shaderc/libshaderc/include"
+IncludeDir["yamlCPP"] =  "Nyx/vendor/yaml-cpp/include"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
 include "Nyx/vendor/imgui"
 include "Nyx/vendor/sol2"
 include "Nyx/vendor/SPIRV-Cross"
+include "Nyx/vendor/yaml-cpp"
 
 project "Nyx"
 	location "Nyx"
@@ -61,7 +63,8 @@ project "Nyx"
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.lua}",
 		"%{IncludeDir.SPVCross}",
-		"%{IncludeDir.Shaderc}"
+		"%{IncludeDir.Shaderc}",
+		"%{IncludeDir.yamlCPP}"
 	}
 
 	filter "system:windows"
@@ -128,7 +131,8 @@ project "Sandbox"
 		"%{IncludeDir.sol2}",
 		"%{IncludeDir.lua}",
 		"%{IncludeDir.SPVCross}",
-		"%{IncludeDir.Shaderc}"
+		"%{IncludeDir.Shaderc}",
+		"%{IncludeDir.yamlCPP}"
 	}
 
 	links 
@@ -139,6 +143,7 @@ project "Sandbox"
 		"imgui",
 		"sol2",
 		"SPIRV-Cross",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 

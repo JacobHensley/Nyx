@@ -79,6 +79,9 @@ namespace Nyx {
 		if (!imageData)
 			return -1;
 
+		if (bpp == 1)
+			m_Parameters.format = TextureFormat::RED;
+
 		if (bpp == 3)
 			m_Parameters.format = TextureFormat::RGB;
 		uint TextureID = Init(imageData, m_Width, m_Height);
@@ -108,7 +111,7 @@ namespace Nyx {
 		}	
 		else 
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, TextureFormatToGL(m_Parameters.format), width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
 		}
 
 		GLenum filter = TextureFilterToGL(m_Parameters.filter);

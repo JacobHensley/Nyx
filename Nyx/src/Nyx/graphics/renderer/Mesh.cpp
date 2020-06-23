@@ -373,6 +373,8 @@ namespace Nyx {
 			}
 		}
 
+
+
 		if (scene->HasMaterials())
 		{
 			m_Materials.resize(scene->mNumMaterials);
@@ -381,13 +383,79 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
+				for (uint32_t i = 0; i < aiMaterial->mNumProperties; i++)
+				{
+					auto prop = aiMaterial->mProperties[i];
+
+
+					NX_CORE_DEBUG("Material Property:");
+					NX_CORE_DEBUG("  Name = {0}", prop->mKey.data);
+					NX_CORE_DEBUG("  Type = {0}", prop->mType);
+					NX_CORE_DEBUG("  Size = {0}", prop->mDataLength);
+					float data = *(float*)prop->mData;
+					NX_CORE_DEBUG("  Value = {0}", data);
+
+					if (prop->mType == aiPTI_String)
+					{
+						uint32_t strLength = *(uint32_t*)prop->mData;
+						std::string str(prop->mData + 4, strLength);
+
+						std::string key = prop->mKey.data;
+
+						NX_CORE_DEBUG("{0} = {1}", key, str);
+					}
+
+					switch (prop->mSemantic)
+					{
+					case aiTextureType_NONE:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_NONE");
+						break;
+					case aiTextureType_DIFFUSE:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_DIFFUSE");
+						break;
+					case aiTextureType_SPECULAR:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_SPECULAR");
+						break;
+					case aiTextureType_AMBIENT:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_AMBIENT");
+						break;
+					case aiTextureType_EMISSIVE:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_EMISSIVE");
+						break;
+					case aiTextureType_HEIGHT:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_HEIGHT");
+						break;
+					case aiTextureType_NORMALS:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_NORMALS");
+						break;
+					case aiTextureType_SHININESS:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_SHININESS");
+						break;
+					case aiTextureType_OPACITY:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_OPACITY");
+						break;
+					case aiTextureType_DISPLACEMENT:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_DISPLACEMENT");
+						break;
+					case aiTextureType_LIGHTMAP:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_LIGHTMAP");
+						break;
+					case aiTextureType_REFLECTION:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_REFLECTION");
+						break;
+					case aiTextureType_UNKNOWN:
+						NX_CORE_DEBUG("  Semantic = aiTextureType_UNKNOWN");
+						break;
+					}
+				}
+
 				auto material = CreateRef<PBRMaterial>(m_BaseShader);
 
 				m_Materials[i] = material;
 
 				aiString aiTexPath;
 
-				if (aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS)
+				if (aiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiTexPath) == AI_SUCCESS)
 				{
 					std::filesystem::path meshPath = m_Path;
 					auto parentPath = meshPath.parent_path();

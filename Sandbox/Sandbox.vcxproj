@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\SPIRV-Cross;..\Nyx\vendor\shaderc\libshaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\SPIRV-Cross;..\Nyx\vendor\shaderc\libshaderc\include;..\Nyx\vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\SPIRV-Cross;..\Nyx\vendor\shaderc\libshaderc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\sol2\include;..\Nyx\vendor\sol2\lua\src;..\Nyx\vendor\SPIRV-Cross;..\Nyx\vendor\shaderc\libshaderc\include;..\Nyx\vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,6 +123,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Nyx\vendor\SPIRV-Cross\Spirv-Cross.vcxproj">
       <Project>{B029C0D2-1CDF-38C8-A5D3-329F11882FCC}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Nyx\vendor\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
