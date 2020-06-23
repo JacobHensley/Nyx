@@ -68,10 +68,10 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.lib;..\Nyx\vendor\shaderc\build\libshaderc\Debug\shaderc_combined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;..\Nyx\vendor\assimp\lib\assimp-vc141-mt.lib;..\Nyx\vendor\shaderc\build\libshaderc\Debug\shaderc_combined.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mtd.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll\ (xcopy /Q /E /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\Nyx\vendor\assimp\lib\assimp-vc141-mt.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

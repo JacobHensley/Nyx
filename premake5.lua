@@ -162,14 +162,14 @@ project "Sandbox"
 
 		links 
 		{ 
-			"Nyx/vendor/assimp/lib/assimp-vc141-mtd.lib",
+			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib",
 		--	"Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.lib",
 			"Nyx/vendor/shaderc/build/libshaderc/Debug/shaderc_combined.lib"
 		}
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mtd.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
 		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
