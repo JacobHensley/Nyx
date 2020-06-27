@@ -4,20 +4,20 @@
 
 namespace Nyx {
 
-	struct Light
+	struct DirectionalLight
 	{
 		glm::vec3 radiance;
 		glm::vec3 direction;
 
-		bool active = true;
+		float active = true;
 
-		Light(glm::vec3 radiance, glm::vec3 direction, bool active = true)
-			: radiance(radiance), direction(direction), active(active)
+		DirectionalLight(glm::vec3 radiance, glm::vec3 direction, bool active = true)
+			: radiance(radiance), direction(direction), active(1.0f)
 		{
 		}
 
-		Light()
-			: radiance(glm::vec3()), direction(glm::vec3()), active(true)
+		DirectionalLight()
+			: radiance(glm::vec3()), direction(glm::vec3()), active(1.0f)
 		{
 		}
 	};
@@ -28,13 +28,11 @@ namespace Nyx {
 		LightEnvironment();
 		~LightEnvironment();
 
-		void AddLight(Ref<Light> light);
-		bool RemoveLight(Ref<Light> light);
-
-		inline std::vector<Ref<Light>>& GetLights() { return m_Lights; }
+		inline void SetDirectionalLight(Ref<DirectionalLight>& light) { m_DirectionalLight = light; }
+		inline Ref<DirectionalLight> GetDirectionalLight() { return m_DirectionalLight; }
 
 	private:
-		std::vector<Ref<Light>> m_Lights;
+		Ref<DirectionalLight> m_DirectionalLight;
 
 	};
 

@@ -5,7 +5,8 @@ EditorLayer::EditorLayer(const String& name)
 {
 //	m_Skybox = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
 	m_LightEnv = CreateRef<LightEnvironment>();
-
+	m_Light = CreateRef<DirectionalLight>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
+	m_LightEnv->SetDirectionalLight(m_Light);
 	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
 	m_IrradianceTexture = CreateRef<TextureCube>("assets/textures/canyon_irradiance.png");
@@ -22,12 +23,10 @@ EditorLayer::EditorLayer(const String& name)
 
 //	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 
-	m_Light = CreateRef<Light>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.7f));
+	
 
 	m_DefaultMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 
-	m_DefaultMaterial->Set("Direction", m_Light->direction);
-	m_DefaultMaterial->Set("Radiance", m_Light->radiance);
 	m_DefaultMaterial->Set("UsingIBL", (float)m_UsingIBL);
 	m_DefaultMaterial->Set("UsingLighting", (float)m_UsingLighting);
 
@@ -71,6 +70,14 @@ void EditorLayer::ImGUIRender()
 {
 	RenderViewport();
 	RenderMenuBar();
+
+	ImGui::Begin("Light Test");
+	Ref<DirectionalLight> l = m_LightEnv->GetDirectionalLight();
+
+	ImGui::SliderFloat3("Light Radiance", glm::value_ptr(l->radiance), -1.0f, 1.0f);
+	ImGui::SliderFloat3("Light Direction", glm::value_ptr(l->direction), -1.0f, 1.0f);
+	ImGui::SliderFloat("Light Active", &l->active, -1.0f, 1.0f);
+	ImGui::End();
 
 	if (m_MaterialMenu)
 		RenderMaterialMenu();

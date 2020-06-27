@@ -205,6 +205,10 @@ namespace Nyx {
 		{
 			return RendererID::RADIANCE_TEXTURE;
 		}
+		else if (name == "DirectionLight")
+		{
+			return RendererID::DIRECTIONAL_LIGHT;
+		}
 
 		return RendererID::NONE;
 	}

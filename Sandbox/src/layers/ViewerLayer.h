@@ -100,7 +100,7 @@ private:
 	FrameBuffer* m_RenderSpaceBuffer = nullptr;
 
 	//Light data
-	Light m_Light;
+	DirectionalLight m_Light;
 	glm::vec3 m_LightColor = { 1.0f, 1.0f, 1.0f };
 	float m_LightMultiplier = 1.0f;
 

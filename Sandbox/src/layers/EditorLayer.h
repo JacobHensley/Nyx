@@ -86,7 +86,7 @@ private:
 
 private:
 	Ref<PBRMaterial> m_DefaultMaterial = nullptr;
-	Ref<Light> m_Light;
+	Ref<DirectionalLight> m_Light;
 	Ref<Texture> m_BRDFLutTexture = nullptr;
 	Ref<TextureCube> m_IrradianceTexture = nullptr;
 	Ref<TextureCube> m_RadianceTexture = nullptr;

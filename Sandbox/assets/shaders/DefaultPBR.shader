@@ -56,18 +56,25 @@ layout(std140, binding = 1) uniform m_UserBuffer
 	float RoughnessValue;
 	bool UsingRoughnessMap;
 
-	vec3 Radiance;
-	vec3 Direction;
-
 	float UsingIBL;
 	float UsingLighting;
 	
 } UserBuffer;
 
+struct DirectionalLight
+{
+	vec3 radiance;
+	vec3 direction;
+
+	float lightActive;
+};
+
 // Index 1
 layout(std140, binding = 2) uniform r_FragmentRendererBuffer
 {
 	vec3 CameraPosition;
+	DirectionalLight DirectionLight;
+
 } FragmentRendererBuffer;
 
 layout(location = 0) uniform sampler2D r_BRDFLutTexture;
@@ -140,8 +147,8 @@ float gaSchlickGGX(float cosLi, float NdotV, float roughness)
 
 vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
-	vec3 Li = -UserBuffer.Direction;
-	vec3 Lradiance = UserBuffer.Radiance;
+	vec3 Li = -FragmentRendererBuffer.DirectionLight.direction;
+	vec3 Lradiance = FragmentRendererBuffer.DirectionLight.radiance;
 	vec3 Lh = normalize(Li + V);
 
 	float cosLi = max(0.0, dot(N, Li));
@@ -199,7 +206,4 @@ void main()
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	color = vec4(lightContribution + iblContribution, 1.0f);
-//	color = vec4(v_TexCoords, 0.0f, 1.0f);
-//	color = vec4(UserBuffer.UsingLighting, UserBuffer.UsingLighting, UserBuffer.UsingLighting, 1.0f);
-//	color = vec4(UserBuffer.AlbedoValue, 1.0f);
 }

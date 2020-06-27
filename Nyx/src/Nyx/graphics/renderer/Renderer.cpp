@@ -76,7 +76,7 @@ namespace Nyx {
 						}
 						
 						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-						delete s_Data.m_UniformBuffer;
+					//	delete s_Data.m_UniformBuffer;
 					}
 
 					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);
@@ -137,7 +137,7 @@ namespace Nyx {
 		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene)
 		{
 			auto transform = mesh.transform;
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &transform, uniform->GetSize());
+ 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &transform, uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene)
 		{
@@ -163,6 +163,15 @@ namespace Nyx {
 		{
 			auto pos = scene->GetCamera()->GetPosition();
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(pos), uniform->GetSize());
+		};
+		s_Data.m_RendererUniformFuncs[RendererID::DIRECTIONAL_LIGHT] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene)
+		{
+			auto light = scene->GetLightEnvironment()->GetDirectionalLight();
+			DirectionalLight l = *light;
+			uint s = sizeof(DirectionalLight);
+			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &l.radiance, sizeof(glm::vec3));
+			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4, &l.direction, sizeof(glm::vec3));
+			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4 + sizeof(glm::vec3) + 4, &l.active, sizeof(float));
 		};
 	}
 	void Renderer::InitRenderResourceFunFunctions()
