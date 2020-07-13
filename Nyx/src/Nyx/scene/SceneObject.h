@@ -32,6 +32,10 @@ namespace Nyx {
 		inline void SetActive(bool value) { m_IsActive = value; }
 		inline bool IsActive() { return m_IsActive; }
 
+		inline UUID GetUUID() { return m_UUID; }
+
+		inline const std::unordered_map<Component::Type*, Ref<Component>>& GetComponents() { return m_Components; }
+
 		inline const String& GetDebugName() { return m_DebugName; }
 
 		bool operator==(const SceneObject& other) const {
@@ -41,6 +45,8 @@ namespace Nyx {
 	private:
 		Scene* m_Scene = nullptr;
 		String m_DebugName;
+
+		UUID m_UUID;
 
 		bool m_IsActive = true;
 

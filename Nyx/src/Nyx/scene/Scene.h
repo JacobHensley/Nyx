@@ -32,6 +32,8 @@ namespace Nyx {
 		Ref<SceneObject> CreateObject(const String& debugName);
 		Ref<SceneObject> CreateObject(const String& debugName, std::initializer_list<Ref<Component>> components);
 		
+		void Save(const String& filename);
+
 		void Remove(const Ref<SceneObject>& sceneObject);
 		void RemoveObject(uint index);
 

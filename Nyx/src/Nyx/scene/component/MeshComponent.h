@@ -12,6 +12,8 @@ namespace Nyx {
 	public:
 		Ref<Mesh> GetMesh() { return m_Mesh.Get<Mesh>(); }
 
+		UUID GetUUID() { return m_Mesh.GetUUID(); }
+
 		static Component::Type* GetStaticType()
 		{
 			static Component::Type type = { "Mesh" };

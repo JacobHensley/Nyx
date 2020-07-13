@@ -16,10 +16,10 @@ EditorLayer::EditorLayer(const String& name)
 
 	parameters.generateMips = true;
 
-	m_AlbedoMap = CreateRef<Texture>("assets/textures/Cerberus_Albedo.tga", parameters);
-	m_MetalnessMap = CreateRef<Texture>("assets/textures/Cerberus_Metalness.tga", parameters);
-	m_RoughnessMap = CreateRef<Texture>("assets/textures/Cerberus_Roughness.tga", parameters);
-	m_NormalMap = CreateRef<Texture>("assets/textures/Cerberus_Normals.tga", parameters);
+//	m_AlbedoMap = CreateRef<Texture>("assets/textures/Cerberus_Albedo.tga", parameters);
+//	m_MetalnessMap = CreateRef<Texture>("assets/textures/Cerberus_Metalness.tga", parameters);
+//	m_RoughnessMap = CreateRef<Texture>("assets/textures/Cerberus_Roughness.tga", parameters);
+//	m_NormalMap = CreateRef<Texture>("assets/textures/Cerberus_Normals.tga", parameters);
 
 //	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 
@@ -41,6 +41,8 @@ EditorLayer::EditorLayer(const String& name)
 	// Application::GetCommandLineArgs()[0]
 //	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
 	CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
+
+	m_Scene->Save("TestScene.yaml");
 }
 
 EditorLayer::~EditorLayer()
@@ -77,6 +79,8 @@ void EditorLayer::ImGUIRender()
 	ImGui::SliderFloat3("Light Radiance", glm::value_ptr(l->radiance), -1.0f, 1.0f);
 	ImGui::SliderFloat3("Light Direction", glm::value_ptr(l->direction), -1.0f, 1.0f);
 	ImGui::SliderFloat("Light Active", &l->active, -1.0f, 1.0f);
+	if (ImGui::Button("Save"))
+		m_Scene->Save("TestScene.yaml");
 	ImGui::End();
 
 	if (m_MaterialMenu)
@@ -545,6 +549,8 @@ void EditorLayer::CreateObject(const std::string& objectName, const std::string&
 	if (m_SelectedComponents[1])
 	{
 		Ref<TransformComponent> transformComponent = CreateRef<TransformComponent>(glm::mat4(1.0f));
+		
+		transformComponent->m_Transform = glm::scale(transformComponent->m_Transform, glm::vec3(0.5f, 0.5f, 0.5f));
 		object->AddComponent(transformComponent);
 	}
 

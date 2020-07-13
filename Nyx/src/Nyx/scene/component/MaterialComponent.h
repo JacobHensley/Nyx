@@ -13,6 +13,7 @@ namespace Nyx {
 	public:
 		Ref<Material> GetMaterial() { return m_Material.Get<Material>(); }
 
+		UUID GetUUID() { return m_Material.GetUUID(); }
 
 		static Component::Type* GetStaticType()
 		{

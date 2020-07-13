@@ -17,6 +17,8 @@ namespace Nyx {
 		virtual void OnUpdate();
 		virtual void OnRender();
 
+		UUID GetUUID() { return m_Script.GetUUID(); }
+
 		static Component::Type* GetStaticType()
 		{
 			static Component::Type type = { "Script" };

@@ -155,6 +155,7 @@
     <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
+    <ClCompile Include="src\Nyx\UUID.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />
     <ClCompile Include="src\Nyx\graphics\API\BufferLayout.cpp" />
     <ClCompile Include="src\Nyx\graphics\API\FrameBuffer.cpp" />
@@ -187,7 +188,6 @@
     <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp" />
-    <ClCompile Include="UUID.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
