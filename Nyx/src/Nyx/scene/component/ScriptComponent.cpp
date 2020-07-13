@@ -3,35 +3,35 @@
 
 namespace Nyx {
 
-	ScriptComponent::ScriptComponent(Ref<Script> script)
+	ScriptComponent::ScriptComponent(AssetHandle script)
 		:	m_Script(script)
 	{
 	}
 
 	ScriptComponent::ScriptComponent(const String& path)
-		:	m_Script(new Script(path))
+		: m_Script(CreateRef<Script>(path))
 	{	
 	}
 
 	void ScriptComponent::OnAttach()
 	{
-		m_Script->Run();
-		m_Script->CallFunction<>("OnAttach");
+		m_Script.Get<Script>()->Run();
+		m_Script.Get<Script>()->CallFunction<>("OnAttach");
 	}
 
 	void ScriptComponent::OnDetach()
 	{
-		m_Script->CallFunction<>("OnDetach");
+		m_Script.Get<Script>()->CallFunction<>("OnDetach");
 	}
 
 	void ScriptComponent::OnUpdate()
 	{
-		m_Script->CallFunction<>("OnUpdate");
+		m_Script.Get<Script>()->CallFunction<>("OnUpdate");
 	}
 
 	void ScriptComponent::OnRender()
 	{
-		m_Script->CallFunction<>("OnRender");
+		m_Script.Get<Script>()->CallFunction<>("OnRender");
 	}
 
 }

@@ -3,9 +3,10 @@
 
 namespace Nyx {
 
-	MaterialComponent::MaterialComponent(Ref<Material> Material)
+	MaterialComponent::MaterialComponent(AssetHandle Material)
 		: m_Material(Material)
 	{
+		NX_CORE_DEBUG(m_Material.GetUUID().GetUUID());
 	}
 
 }

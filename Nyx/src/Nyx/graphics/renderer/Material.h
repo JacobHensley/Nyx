@@ -11,7 +11,7 @@ namespace Nyx {
 		uint32_t index;
 	};
 
-	class Material
+	class Material : public Asset
 	{
 	public:
 		Material(Ref<Shader> shader);

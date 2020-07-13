@@ -1,5 +1,6 @@
 #pragma once
 #include "Nyx/Common.h"
+#include "Nyx/Asset.h"
 
 namespace Nyx {
 
@@ -45,7 +46,7 @@ namespace Nyx {
 		}
 	};
 
-	class Texture
+	class Texture : public Asset
 	{
 	public:
 		Texture(const String& path, TextureParameters parameters = TextureParameters());

@@ -2,10 +2,11 @@
 #include "nyx/Common.h"
 #include "Nyx/Application.h"
 #include "sol/sol.hpp"
+#include "Nyx/Asset.h"
 
 namespace Nyx {
 
-	class Script
+	class Script : public Asset
 	{
 	public:
 		Script(const String& path);

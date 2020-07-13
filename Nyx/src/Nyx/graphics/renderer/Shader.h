@@ -32,7 +32,7 @@ namespace Nyx {
 		std::vector<Ref<ShaderUniform>> uniforms;
 	};
 
-	class Shader
+	class Shader : Asset
 	{
 	public:
 		Shader(const String& path);

@@ -7,10 +7,10 @@ namespace Nyx {
 	class MeshComponent : public Component
 	{
 	public:
-		MeshComponent(Ref<Mesh> mesh);
+		MeshComponent(AssetHandle mesh);
 
 	public:
-		Ref<Mesh> GetMesh() { return m_Mesh; }
+		Ref<Mesh> GetMesh() { return m_Mesh.Get<Mesh>(); }
 
 		static Component::Type* GetStaticType()
 		{
@@ -21,7 +21,7 @@ namespace Nyx {
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
 	public:
-		Ref<Mesh> m_Mesh;
+		AssetHandle m_Mesh;
 	};
 
 }

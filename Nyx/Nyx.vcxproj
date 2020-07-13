@@ -63,7 +63,6 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,10 +100,12 @@
     <ClInclude Include="src\NXpch.h" />
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
+    <ClInclude Include="src\Nyx\Asset.h" />
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
     <ClInclude Include="src\Nyx\Script.h" />
+    <ClInclude Include="src\Nyx\UUID.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />
     <ClInclude Include="src\Nyx\events\AppEvent.h" />
     <ClInclude Include="src\Nyx\events\Event.h" />
@@ -151,6 +152,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
+    <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />
@@ -185,16 +187,8 @@
     <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp" />
     <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp" />
-    <ClCompile Include="vendor\stbimage\stb_image.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MaxSpeed</Optimization>
-      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</WholeProgramOptimization>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fast</FloatingPointModel>
-      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ProgramDatabase</DebugInformationFormat>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</BasicRuntimeChecks>
-    </ClCompile>
+    <ClCompile Include="UUID.cpp" />
+    <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,7 +23,7 @@ EditorLayer::EditorLayer(const String& name)
 
 //	m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png", TextureParameters(TextureFormat::RGB, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 
-	
+
 
 	m_DefaultMaterial= CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 
@@ -536,7 +536,9 @@ void EditorLayer::CreateObject(const std::string& objectName, const std::string&
 
 	if (m_SelectedComponents[0])
 	{
-		Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(CreateRef<Mesh>(meshPath));
+	//	Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(CreateRef<Mesh>(meshPath));
+		AssetHandle handle(CreateRef<Mesh>(meshPath));
+		Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(handle);
 		object->AddComponent(meshComponent);
 	}
 
@@ -548,7 +550,8 @@ void EditorLayer::CreateObject(const std::string& objectName, const std::string&
 
 	if (m_SelectedComponents[2])
 	{
-		Ref<MaterialComponent> materialComponent = CreateRef<MaterialComponent>(m_Materials[selectedMaterialName]);
+		AssetHandle handle(m_Materials[selectedMaterialName]);
+		Ref<MaterialComponent> materialComponent = CreateRef<MaterialComponent>(handle);
 		object->AddComponent(materialComponent);
 	}
 

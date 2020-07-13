@@ -54,6 +54,9 @@
     <ClInclude Include="src\Nyx\Application.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\Asset.h">
+      <Filter>src\Nyx</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\Common.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
@@ -64,6 +67,9 @@
       <Filter>src\Nyx</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\Script.h">
+      <Filter>src\Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\UUID.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\Utilities.h">
@@ -194,6 +200,9 @@
     <ClCompile Include="src\Nyx\Application.cpp">
       <Filter>src\Nyx</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\Asset.cpp">
+      <Filter>src\Nyx</Filter>
+    </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
       <Filter>src\Nyx</Filter>
     </ClCompile>
@@ -298,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
+    </ClCompile>
+    <ClCompile Include="UUID.cpp">
+      <Filter>src\Nyx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

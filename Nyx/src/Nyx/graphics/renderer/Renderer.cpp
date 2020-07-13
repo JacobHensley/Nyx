@@ -112,7 +112,7 @@ namespace Nyx {
 				}
 
 				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-				delete s_Data.m_UniformBuffer;
+			//	delete s_Data.m_UniformBuffer;
 			}
 
 			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);

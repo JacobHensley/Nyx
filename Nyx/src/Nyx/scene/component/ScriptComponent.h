@@ -7,7 +7,7 @@ namespace Nyx {
 	class ScriptComponent : public Component
 	{
 	public:
-		ScriptComponent(Ref<Script> script);
+		ScriptComponent(AssetHandle script);
 		ScriptComponent(const String& path);
 
 	public:
@@ -26,7 +26,7 @@ namespace Nyx {
 		inline virtual Component::Type* GetType() const override { return GetStaticType(); }
 
 	public:
-		Ref<Script> m_Script;
+		AssetHandle m_Script;
 	};
 
 }

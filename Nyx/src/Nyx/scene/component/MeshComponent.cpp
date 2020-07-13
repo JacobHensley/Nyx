@@ -3,9 +3,10 @@
 
 namespace Nyx {
 
-	MeshComponent::MeshComponent(Ref<Mesh> mesh)
+	MeshComponent::MeshComponent(AssetHandle mesh)
 		: m_Mesh(mesh)
 	{
+		NX_CORE_DEBUG(m_Mesh.GetUUID().GetUUID());
 	}
 
 }
