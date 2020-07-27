@@ -10,6 +10,7 @@ namespace Nyx {
 		MeshComponent(AssetHandle mesh);
 
 	public:
+		AssetHandle Get() { return m_Mesh; }
 		Ref<Mesh> GetMesh() { return m_Mesh.Get<Mesh>(); }
 
 		UUID GetUUID() { return m_Mesh.GetUUID(); }

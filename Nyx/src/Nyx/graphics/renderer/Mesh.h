@@ -61,6 +61,8 @@ namespace Nyx {
 		std::vector<SubMesh>& GetSubMeshs() { return m_SubMeshes; }
 
 		const std::vector<Ref<Material>>& GetMaterials() const { return m_Materials; }
+
+		const String& GetPath() const { return m_Path; }
 	private:
 		bool Load(const String& path);
 		void processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform);

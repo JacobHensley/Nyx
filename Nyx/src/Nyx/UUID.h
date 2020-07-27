@@ -27,4 +27,10 @@ namespace Nyx {
 		uint64_t m_UUID;
 	};
 
+	struct UUIDHash {
+		std::size_t operator()(UUID e) const {
+			return static_cast<std::size_t>(e);
+		}
+	};
+
 }

@@ -9,7 +9,7 @@ namespace Nyx {
 	}
 
 	ScriptComponent::ScriptComponent(const String& path)
-		: m_Script(CreateRef<Script>(path))
+		: m_Script(AssetManager::Load<Script>(path))
 	{	
 	}
 

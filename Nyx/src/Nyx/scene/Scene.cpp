@@ -78,14 +78,12 @@ namespace Nyx {
 
 	YAML::Emitter& operator << (YAML::Emitter& out, const glm::quat& q) {
 		out << YAML::Flow;
-		out << YAML::BeginSeq << q.x << q.y << q.z << YAML::EndSeq;
+		out << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;
 		return out;
 	}
 
 	void Scene::Save(const String& filename)
 	{
-		glm::vec3 test(1.0f, 4.0f, 5.0f);
-
 		YAML::Emitter out;
 		out << YAML::BeginMap;
 		out << YAML::Key << "Objects";

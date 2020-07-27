@@ -101,6 +101,7 @@
     <ClInclude Include="src\Nyx.h" />
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Asset.h" />
+    <ClInclude Include="src\Nyx\AssetLoader.h" />
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />

@@ -37,7 +37,9 @@ private:
 	void RenderObjectMenu();
 	void RenderSceneGraphMenu();
 
-	void CreateObject(const std::string& objectName, const std::string& meshPath, const std::string& selectedMaterialName, const std::string& scriptPath = "");
+	void ReloadMesh();
+
+	Ref<SceneObject> CreateObject(const std::string& objectName, const std::string& meshPath, const std::string& selectedMaterialName, const std::string& scriptPath = "");
 private:
 	bool m_SceneGraphMenu = true;
 	Ref<SceneObject> m_SelectedObject = nullptr;
@@ -65,6 +67,7 @@ private:
 
 	std::unordered_map<String, Ref<PBRMaterial>> m_Materials;
 
+	Ref<SceneObject> m_SceneObject;
 private:
 	bool m_ObjectMenu = false;
 

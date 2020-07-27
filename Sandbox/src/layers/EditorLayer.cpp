@@ -40,7 +40,8 @@ EditorLayer::EditorLayer(const String& name)
 
 	// Application::GetCommandLineArgs()[0]
 //	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
-	CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
+	// m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
+	m_SceneObject = CreateObject("Default Object", "assets/models/Cube.fbx", "Default Material");
 
 	m_Scene->Save("TestScene.yaml");
 }
@@ -100,8 +101,24 @@ void EditorLayer::ImGUIRender()
 
 }
 
+void EditorLayer::ReloadMesh()
+{
+	auto meshComponent = m_SceneObject->GetComponent<MeshComponent>();
+	AssetHandle meshHandle = meshComponent->Get();
+	const auto& path = meshHandle.Get<Mesh>()->GetPath();
+	AssetManager::Load<Mesh>(path);
+}
+
 void EditorLayer::OnEvent(Event& e)
 {
+	if (e.GetEventType() == EventType::KeyPressed)
+	{
+		KeyPressedEvent& kpe = static_cast<KeyPressedEvent&>(e);
+		if (kpe.GetKeycode() == NX_KEY_R && kpe.GetRepeatCount() == 0)
+		{
+			ReloadMesh();
+		}
+	}
 }
 
 void EditorLayer::RenderViewport()
@@ -534,14 +551,15 @@ void EditorLayer::RenderObjectMenu()
 	ImGui::End();
 }
 
-void EditorLayer::CreateObject(const std::string& objectName, const std::string& meshPath, const std::string& selectedMaterialName, const std::string& scriptPath)
+Ref<SceneObject> EditorLayer::CreateObject(const std::string& objectName, const std::string& meshPath, const std::string& selectedMaterialName, const std::string& scriptPath)
 {
 	Ref<SceneObject> object = m_Scene->CreateObject(objectName);
 
 	if (m_SelectedComponents[0])
 	{
 	//	Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(CreateRef<Mesh>(meshPath));
-		AssetHandle handle(CreateRef<Mesh>(meshPath));
+
+		AssetHandle handle = AssetManager::Load<Mesh>(meshPath);
 		Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(handle);
 		object->AddComponent(meshComponent);
 	}
@@ -556,7 +574,7 @@ void EditorLayer::CreateObject(const std::string& objectName, const std::string&
 
 	if (m_SelectedComponents[2])
 	{
-		AssetHandle handle(m_Materials[selectedMaterialName]);
+		AssetHandle handle = AssetManager::Insert(m_Materials[selectedMaterialName]);
 		Ref<MaterialComponent> materialComponent = CreateRef<MaterialComponent>(handle);
 		object->AddComponent(materialComponent);
 	}
@@ -566,6 +584,8 @@ void EditorLayer::CreateObject(const std::string& objectName, const std::string&
 		Ref<ScriptComponent> scriptComponent = CreateRef<ScriptComponent>(scriptPath);
 		object->AddComponent(scriptComponent);
 	}
+
+	return object;
 }
 
 void EditorLayer::RenderSceneGraphMenu()
