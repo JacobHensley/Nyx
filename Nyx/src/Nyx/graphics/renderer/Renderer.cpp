@@ -7,8 +7,8 @@ namespace Nyx {
 
 	struct RendererData
 	{
-		byte* m_UniformBuffer;
-		uint m_UniformBufferSize;
+		byte* m_UniformBuffer = nullptr;
+		uint m_UniformBufferSize = 0;
 
 		Ref<Texture> m_BRDFLutTexture;
 
@@ -16,7 +16,7 @@ namespace Nyx {
 		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, Scene*)>> m_RendererResourceFuncs;
 	};
 
-	static struct RendererData s_Data;
+	static RendererData s_Data;
 
 	void Renderer::Init()
 	{
@@ -27,6 +27,7 @@ namespace Nyx {
 
 	}
 
+	// Material sorting... but on a mesh level -> per SCENE
 	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform)
 	{
 		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
@@ -65,8 +66,12 @@ namespace Nyx {
 				{
 					for (UniformBuffer* uniformBuffer : uniformBuffers)
 					{
-						s_Data.m_UniformBufferSize = uniformBuffer->size;
-						s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+					//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
+						{
+						//	delete[] s_Data.m_UniformBuffer;
+							s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+							s_Data.m_UniformBufferSize = uniformBuffer->size;
+						}
 						
 						std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
 						
@@ -78,7 +83,6 @@ namespace Nyx {
 						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
 					//	delete s_Data.m_UniformBuffer;
 					}
-
 					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);
 				}
 			}
@@ -101,8 +105,12 @@ namespace Nyx {
 
 			for (UniformBuffer* uniformBuffer : uniformBuffers)
 			{
-				s_Data.m_UniformBufferSize = uniformBuffer->size;
-				s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+			//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
+				{
+				//	delete[] s_Data.m_UniformBuffer;
+					s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+					s_Data.m_UniformBufferSize = uniformBuffer->size;
+				}
 
 				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
 

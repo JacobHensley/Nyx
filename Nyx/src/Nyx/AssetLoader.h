@@ -11,24 +11,6 @@ namespace Nyx {
 	class AssetLoader 
 	{
 	public:
-		template<typename T>
-		static Ref<Asset> LoadAsset(const std::string& filepath)
-		{
-			static_assert(false, "");
-		}
 
-		template<>
-		static Ref<Asset> LoadAsset<Mesh>(const std::string& filepath)
-		{
-			// TODO: Better
-			return CreateRef<Mesh>(filepath);
-		}
-
-		template<>
-		static Ref<Asset> LoadAsset<Texture>(const std::string& filepath)
-		{
-			// TODO: Better
-			return CreateRef<Texture>(filepath);
-		}
 	};
 }

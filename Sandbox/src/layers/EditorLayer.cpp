@@ -35,13 +35,12 @@ EditorLayer::EditorLayer(const String& name)
 	m_DefaultMaterial->SetAlbedo(glm::vec3(), m_AlbedoMap, true);
 	m_DefaultMaterial->SetNormalMap(m_NormalMap);
 
-
 	m_Materials["Default Material"] = m_DefaultMaterial;
 
 	// Application::GetCommandLineArgs()[0]
 //	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
 	// m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
-	m_SceneObject = CreateObject("Default Object", "assets/models/Cube.fbx", "Default Material");
+	m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
 
 	m_Scene->Save("TestScene.yaml");
 }

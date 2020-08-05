@@ -2,6 +2,7 @@
 #include "Nyx/scene/component/Component.h"
 #include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/renderer/Material.h"
+#include "Nyx/AssetManager.h"
 
 namespace Nyx {
 

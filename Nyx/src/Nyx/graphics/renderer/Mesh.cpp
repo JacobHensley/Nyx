@@ -6,6 +6,7 @@
 
 #include <glm/gtx/matrix_decompose.hpp>
 #include <assimp/pbrmaterial.h>
+#include <assimp/postprocess.h>
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "PBRMaterial.h"
 

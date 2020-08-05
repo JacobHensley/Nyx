@@ -61,7 +61,9 @@
       <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -85,6 +87,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -102,6 +105,7 @@
     <ClInclude Include="src\Nyx\Application.h" />
     <ClInclude Include="src\Nyx\Asset.h" />
     <ClInclude Include="src\Nyx\AssetLoader.h" />
+    <ClInclude Include="src\Nyx\AssetManager.h" />
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
@@ -153,7 +157,6 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
-    <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\UUID.cpp" />

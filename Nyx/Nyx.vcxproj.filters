@@ -57,6 +57,12 @@
     <ClInclude Include="src\Nyx\Asset.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\AssetLoader.h">
+      <Filter>src\Nyx</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\AssetManager.h">
+      <Filter>src\Nyx</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\Common.h">
       <Filter>src\Nyx</Filter>
     </ClInclude>
@@ -192,16 +198,12 @@
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\AssetLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp">
-      <Filter>src\Nyx</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Asset.cpp">
       <Filter>src\Nyx</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">

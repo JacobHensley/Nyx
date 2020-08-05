@@ -11,12 +11,12 @@ namespace Nyx {
 
 	Application::Application()
 	{
+		Log::Init();
 		NX_CORE_ASSERT(!s_Instance, "Instance of Application already exists");
 		s_Instance = this;
 
 		m_LuaState.open_libraries(sol::lib::base);
 
-		Log::Init();
 
 		m_Window = CreateRef<Window>("Nyx Engine", 1280, 720);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
