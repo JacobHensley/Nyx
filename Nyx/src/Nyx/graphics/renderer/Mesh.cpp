@@ -52,7 +52,7 @@ namespace Nyx {
 
 	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const
 	{
-		DebugRenderer::DrawAABB(m_BoundingBox, transform);
+		DebugRenderer::DrawAABB(*m_BoundingBox, transform);
 	}
 
 	void Mesh::OnImGuiRender()
@@ -263,8 +263,8 @@ namespace Nyx {
 
 		// Process ASSIMP's root node recursively
 		processNode(scene->mRootNode, scene, scene->mRootNode->mTransformation);
-
-		m_BoundingBox = AABB(m_bbMin, m_bbMax);
+		
+		m_BoundingBox = CreateRef<AABB>(m_bbMin, m_bbMax);
 
 		m_VertexBuffer = CreateRef<VertexBuffer>(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
 		m_IndexBuffer = CreateRef<IndexBuffer>(m_Indices.data(), (int)m_Indices.size());
@@ -324,8 +324,13 @@ namespace Nyx {
 			vector.z = mesh->mVertices[i].z;
 			vertex.position = vector;
 
-			m_bbMin = glm::min(vector, m_bbMin);
-			m_bbMax = glm::max(vector, m_bbMax);
+			m_bbMin.x = glm::min(vector.x, m_bbMin.x);
+			m_bbMin.y = glm::min(vector.y, m_bbMin.y);
+			m_bbMin.z = glm::min(vector.z, m_bbMin.z);
+			
+			m_bbMax.x = glm::max(vector.x, m_bbMax.x);
+			m_bbMax.y = glm::max(vector.y, m_bbMax.y);
+			m_bbMax.z = glm::max(vector.z, m_bbMax.z);
 
 			// Normals
 			vector.x = mesh->mNormals[i].x;

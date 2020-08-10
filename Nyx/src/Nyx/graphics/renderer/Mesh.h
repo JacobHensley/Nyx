@@ -53,6 +53,7 @@ namespace Nyx {
 		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;
 		Ref<Shader> GetBaseShader() const { return m_BaseShader; }
+		Ref<AABB> GetBoundingBox() { return m_BoundingBox; }
 		bool Reload(const String& path);
 		
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
@@ -104,7 +105,7 @@ namespace Nyx {
 
 		std::vector<Ref<Material>> m_Materials;
 
-		AABB m_BoundingBox;
+		Ref<AABB> m_BoundingBox;
 
 		glm::vec3 m_bbMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };
 		glm::vec3 m_bbMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };

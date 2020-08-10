@@ -36,7 +36,8 @@ private:
 	void RenderMaterialMenu();
 	void RenderObjectMenu();
 	void RenderSceneGraphMenu();
-
+	void MousePick();
+	bool OnMouseClick(MouseButtonPressedEvent& e);
 	void ReloadMesh();
 
 	Ref<SceneObject> CreateObject(const std::string& objectName, const std::string& meshPath, const std::string& selectedMaterialName, const std::string& scriptPath = "");
@@ -86,7 +87,10 @@ private:
 
 	glm::vec2 m_RenderSpaceSize = glm::vec2();
 	glm::vec2 m_LastRenderSpaceSize = glm::vec2();
+	glm::vec2 m_RenderSpacePos = glm::vec2();
 
+	Ray m_MouseRay;
+	glm::vec2 m_NDC;
 private:
 	Ref<PBRMaterial> m_DefaultMaterial = nullptr;
 	Ref<DirectionalLight> m_Light;

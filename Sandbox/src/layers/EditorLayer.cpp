@@ -1,4 +1,6 @@
 #include "EditorLayer.h"
+#include "Nyx/graphics/renderer/DebugRenderer.h"
+#include <glm/glm.hpp>
 
 EditorLayer::EditorLayer(const String& name) 
 	:	Layer(name)
@@ -39,9 +41,9 @@ EditorLayer::EditorLayer(const String& name)
 
 	// Application::GetCommandLineArgs()[0]
 //	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
-	// m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
-	m_SceneObject = CreateObject("Default Object", "assets/models/backpack/backpack.fbx", "Default Material");
-
+	m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
+//	m_SceneObject = CreateObject("Default Object", "assets/models/sphere1m.fbx", "Default Material");
+//	m_SceneObject->GetComponent<TransformComponent>()->Scale(glm::vec3(1.5f));
 	m_Scene->Save("TestScene.yaml");
 }
 
@@ -61,11 +63,65 @@ void EditorLayer::Update()
 {
 	m_Scene->Update();
 	m_Camera->Update();
+
+	if (Input::IsKeyPressed(NX_KEY_LEFT_CONTROL) && Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
+		MousePick();
 }
 
 void EditorLayer::Render()
 {
+	DebugRenderer::Begin(*m_Camera);
+
 	m_Scene->Render();
+
+	SceneRenderer::GetFinalBuffer()->Bind();
+	auto meshComponent = m_SceneObject->GetComponent<MeshComponent>();
+	meshComponent->GetMesh()->DebugDrawBoundingBox(m_SceneObject->GetComponent<TransformComponent>()->GetTransform());
+
+//	Ref<AABB> boundingBox = meshComponent->GetMesh()->GetBoundingBox();
+	DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
+
+//	bool intersection = boundingBox->Intersec(m_MouseRay);
+
+//	if (intersection)
+//		NX_CORE_DEBUG(intersection);
+
+	DebugRenderer::End();
+	DebugRenderer::Flush();
+	SceneRenderer::GetFinalBuffer()->Unbind();
+}
+
+void EditorLayer::MousePick()
+{
+	auto [mx, my] = ImGui::GetMousePos();
+	mx -= m_RenderSpacePos.x;
+	my -= m_RenderSpacePos.y;
+
+	glm::vec2 maxBounds;
+	maxBounds.x = m_RenderSpacePos.x + m_RenderSpaceSize.x;
+	maxBounds.y = m_RenderSpacePos.y + m_RenderSpaceSize.y;
+
+	auto viewportWidth = maxBounds.x - m_RenderSpacePos.x;
+	auto viewportHeight = maxBounds.y - m_RenderSpacePos.y;
+
+	glm::vec2 NDC = { (mx / viewportWidth) * 2.0f - 1.0f, ((my / viewportHeight) * 2.0f - 1.0f) * -1.0f };
+
+	glm::vec4 mouseClipPos = { NDC.x, NDC.y, -1.0f, 1.0f };
+
+	auto inverseProj = glm::inverse(m_Camera->GetProjectionMatrix());
+	auto inverseView = glm::inverse(glm::mat3(m_Camera->GetViewMatrix()));
+
+	auto pos = glm::inverse(m_Camera->GetViewMatrix())[3];
+
+	glm::vec4 ray = inverseProj * mouseClipPos;
+	glm::vec3 rayPos = pos;
+	glm::vec3 rayDir = inverseView * glm::vec3(ray);
+
+	m_MouseRay = Ray(rayPos, rayDir);
+
+
+	m_NDC = NDC;
+	NX_CORE_DEBUG("Result X: {0}, Y {1}, Z {2}", rayPos.x, rayPos.y, rayPos.z);
 }
 
 void EditorLayer::ImGUIRender()
@@ -75,6 +131,8 @@ void EditorLayer::ImGUIRender()
 
 	ImGui::Begin("Light Test");
 	Ref<DirectionalLight> l = m_LightEnv->GetDirectionalLight();
+
+	ImGui::Text("NDC: X, %f, Y %f", m_NDC.x, m_NDC.y);
 
 	ImGui::SliderFloat3("Light Radiance", glm::value_ptr(l->radiance), -1.0f, 1.0f);
 	ImGui::SliderFloat3("Light Direction", glm::value_ptr(l->direction), -1.0f, 1.0f);
@@ -118,6 +176,16 @@ void EditorLayer::OnEvent(Event& e)
 			ReloadMesh();
 		}
 	}
+
+	EventDispatcher eventDispatcher = EventDispatcher(e);
+	eventDispatcher.Dispatch<MouseButtonPressedEvent>(std::bind(&EditorLayer::OnMouseClick, this, std::placeholders::_1));
+}
+
+bool EditorLayer::OnMouseClick(MouseButtonPressedEvent& e)
+{
+//	if (Input::IsKeyPressed(NX_KEY_LEFT_CONTROL) && e.GetMouseButton() == NX_MOUSE_BUTTON_LEFT)
+//		MousePick();
+	return true;
 }
 
 void EditorLayer::RenderViewport()
@@ -132,10 +200,17 @@ void EditorLayer::RenderViewport()
 	//Push the settings and start the viewer window
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::Begin("Editor", &open, flags);
+	auto viewportOffset = ImGui::GetCursorPos();
 
 	//Get the size of the ImGui viewer window
 	m_RenderSpaceSize.x = ImGui::GetWindowWidth();
-	m_RenderSpaceSize.y = ImGui::GetWindowHeight();
+	m_RenderSpaceSize.y = ImGui::GetWindowHeight() - viewportOffset.y;
+
+	m_RenderSpacePos.x = ImGui::GetWindowPos().x;
+	m_RenderSpacePos.y = ImGui::GetWindowPos().y;
+
+	m_RenderSpacePos.x += viewportOffset.x;
+	m_RenderSpacePos.y += viewportOffset.y;
 
 	//Render the buffer with ImGui::Image
 	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetTexture()->GetTextureID(), ImVec2(m_RenderSpaceSize.x, m_RenderSpaceSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
@@ -567,7 +642,7 @@ Ref<SceneObject> EditorLayer::CreateObject(const std::string& objectName, const 
 	{
 		Ref<TransformComponent> transformComponent = CreateRef<TransformComponent>(glm::mat4(1.0f));
 		
-		transformComponent->m_Transform = glm::scale(transformComponent->m_Transform, glm::vec3(0.5f, 0.5f, 0.5f));
+	//	transformComponent->m_Transform = glm::scale(transformComponent->m_Transform, glm::vec3(0.5f, 0.5f, 0.5f));
 		object->AddComponent(transformComponent);
 	}
 

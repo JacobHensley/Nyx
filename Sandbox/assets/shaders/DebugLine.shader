@@ -6,7 +6,7 @@ layout(location = 1) in vec4 a_Color;
 
 layout(binding = 0) uniform r_RendererBuffer
 {
-	uniform mat4 VP;
+	mat4 VP;
 } RendererBuffer;
 
 
@@ -28,5 +28,5 @@ layout(location = 3) in vec4 v_Color;
 
 void main()
 {
-	color = v_Color;
+	color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

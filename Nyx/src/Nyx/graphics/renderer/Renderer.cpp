@@ -144,7 +144,7 @@ namespace Nyx {
 	{
 		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene)
 		{
-			auto transform = mesh.transform;
+			auto transform = mesh.transform; // 
  			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &transform, uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene)

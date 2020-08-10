@@ -1,6 +1,6 @@
 #include "NXpch.h"
 #include "DebugRenderer.h"
-
+#include "glm/gtc/type_ptr.hpp"
 #include <glad/glad.h>
 
 namespace Nyx {
@@ -54,7 +54,13 @@ namespace Nyx {
 		m_LineVertexBufferWritePtr = m_LineVertexBuffer;
 
 		m_LineShader->Bind();
-		m_LineShader->SetUniformMat4("u_VP", camera.GetProjectionMatrix() * camera.GetViewMatrix());
+		byte* buffer;
+		buffer = new byte[64];
+		glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+		memcpy(buffer, glm::value_ptr(vp), 64);
+		m_LineShader->UploadUniformBuffer(0, buffer, 64);
+		m_LineShader->GetUniformBuffers(UniformSystemType::RENDERER);
+	//	m_LineShader->SetUniformMat4("u_VP", camera.GetProjectionMatrix() * camera.GetViewMatrix());
 	}
 
 	void DebugRenderer::EndInternal()
@@ -72,8 +78,10 @@ namespace Nyx {
 		m_VertexArray->Bind();
 		m_IndexBuffer->Bind();
 		
+		glDisable(GL_DEPTH_TEST);
 		glLineWidth(3.0f);
 		glDrawElements(GL_LINES, m_LineIndexCount, GL_UNSIGNED_INT, nullptr);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void DebugRenderer::DrawLineInternal(const glm::vec3& v0, const glm::vec3& v1, const glm::vec4& color)
