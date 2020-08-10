@@ -14,15 +14,6 @@ namespace Nyx {
 	Scene::Scene(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 		: m_Camera(camera), m_EnvironmentMap(environmentMap), m_LightEnvironment(lightEnvironment)
 	{
-		/*	YAML::Node config = YAML::LoadFile("assets/config/Scene.yaml");
-		NX_CORE_DEBUG("{0}", config["Objects"][0]);
-		NX_CORE_DEBUG("By name: {0}", config["Position"]);
-		NX_CORE_DEBUG("By name at index 2: {0}", config["Position"][2]);
-		NX_CORE_DEBUG("Name size: {0}", config["Position"]);
-		float x = config["Position"][0].as<float>();
-		config["Position"][0] = 4.4f;
-		std::ofstream fout("config.yaml");
-		fout << config; */
 	}
 
 	void Scene::Update()
@@ -102,47 +93,83 @@ namespace Nyx {
 			out << YAML::Value << object->GetUUID().GetUUID();
 			out << YAML::Key << "Components";
 			out << YAML::Value;
-			out << YAML::BeginSeq;
-			for (auto const& x : object->GetComponents())
+			out << YAML::BeginMap;
+				
+			Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
+			if (transformComponent)
 			{
-				out << YAML::BeginMap;
-				out << YAML::Key << x.first->Name;
+				out << YAML::Key << "Transform";
 				out << YAML::Value;
 				out << YAML::BeginMap;
-				if (x.first->Name != "Transform")
-				{
-					out << YAML::Key << "UUID";
-					out << YAML::Value << x.second->GetUUID().GetUUID();
-				}
-				else
-				{
-					glm::mat4 transform = object->GetComponent<TransformComponent>()->GetTransform();
-					glm::vec3 scale;
-					glm::quat rot;
-					glm::vec3 trans;
-					glm::vec3 scew;
-					glm::vec4 prep;
-					glm::decompose(transform, scale, rot, trans, scew, prep);
+				glm::mat4 transform = transformComponent->GetTransform();
+				glm::vec3 scale;
+				glm::quat rot;
+				glm::vec3 trans;
+				glm::vec3 scew;
+				glm::vec4 prep;
+				glm::decompose(transform, scale, rot, trans, scew, prep);
 
-					out << YAML::Key << "Translation";
-					out << YAML::Value << trans;
-					out << YAML::Key << "Rotation";
-					out << YAML::Value << rot;
-					out << YAML::Key << "Scale";
-					out << YAML::Value << scale;
-				}
-				out << YAML::EndMap;
+				out << YAML::Key << "Translation";
+				out << YAML::Value << trans;
+				out << YAML::Key << "Rotation";
+				out << YAML::Value << rot;
+				out << YAML::Key << "Scale";
+				out << YAML::Value << scale;
 				out << YAML::EndMap;
 			}
-			out << YAML::EndSeq;
+
+			Ref<MeshComponent> meshComponent = object->GetComponent<MeshComponent>();
+			if (meshComponent)
+			{
+				out << YAML::Key << "Mesh";
+				out << YAML::Value;
+				out << YAML::BeginMap;
+
+				out << YAML::Key << "UUID";
+				out << YAML::Value << meshComponent->GetUUID();
+
+				out << YAML::EndMap;
+			}
+
 			out << YAML::EndMap;
-			Ref<TransformComponent> tc = object->GetComponent<TransformComponent>();
+			out << YAML::EndMap;
 
 			out << YAML::EndMap;
 		}
 
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
+
+		out << YAML::BeginMap;
+		out << YAML::Key << "Assets";
+		out << YAML::Value;
+		out << YAML::BeginSeq;
+
+		const std::unordered_map<UUID, String, UUIDHash>& paths = AssetManager::GetAssetPaths();
+
+		for (auto const& x : paths)
+		{
+			UUID id = x.first;
+			Ref<Asset> asset = AssetManager::GetByUUID(id);
+			out << YAML::BeginMap;
+			String typeName = AssetManager::GetAssetTypeName(asset->m_AssetType);
+			out << YAML::Key << typeName;
+			out << YAML::Value;
+			out << YAML::BeginMap;
+
+			out << YAML::Key << "UUID";
+			out << YAML::Value << id;
+
+			out << YAML::Key << "Path";
+			out << YAML::Value << x.second;
+
+			out << YAML::EndMap;
+			out << YAML::EndMap;
+		}
+
+		out << YAML::EndSeq;
+		out << YAML::EndMap;
+
 
 		const String& path = "assets/config/" + filename;
 		std::ofstream fout(path);

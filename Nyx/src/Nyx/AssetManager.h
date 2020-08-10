@@ -42,6 +42,30 @@ namespace Nyx {
 		friend class AssetLoader;
 
 	public:
+		static const std::unordered_map<UUID, Ref<Asset>, UUIDHash>& GetAssets()
+		{
+			return m_Assets;
+		}
+
+		static const std::unordered_map<UUID, String, UUIDHash>& GetAssetPaths()
+		{
+			return m_AssetPaths;
+		}
+
+	public:
+		static String GetAssetTypeName(AssetType type)
+		{
+			if (type == AssetType::MESH)
+				return "Mesh";
+			else if (type == AssetType::TEXTURE)
+				return "Texture";
+			else if (type == AssetType::SCRIPT)
+				return "Script";
+
+			else
+				return "invaild";
+		}
+
 		template<typename T>
 		static AssetHandle Load(const std::string& path)
 		{
@@ -49,9 +73,11 @@ namespace Nyx {
 			return InsertAndLoad<T>(uuid, path);
 		}
 
-		static AssetHandle Insert(Ref<Asset> asset, UUID uuid = UUID())
+		static AssetHandle Insert(Ref<Asset> asset, const String& path = "", UUID uuid = UUID())
 		{
 			m_Assets[uuid] = asset;
+			if (path != "")
+				m_AssetPaths[uuid] = path;
 			return uuid;
 		}
 
@@ -65,14 +91,18 @@ namespace Nyx {
 		static Ref<Asset> LoadAsset<Mesh>(const std::string& filepath)
 		{
 			// TODO: Better
-			return CreateRef<Mesh>(filepath);
+			Ref<Asset> asset = CreateRef<Mesh>(filepath);
+			asset->m_AssetType = AssetType::MESH;
+			return asset;
 		}
 
 		template<>
 		static Ref<Asset> LoadAsset<Texture>(const std::string& filepath)
 		{
 			// TODO: Better
-			return CreateRef<Texture>(filepath);
+			Ref<Asset> asset = CreateRef<Texture>(filepath);
+			asset->m_AssetType = AssetType::TEXTURE;
+			return asset;
 		}
 
 		// Deserialization function
@@ -82,7 +112,7 @@ namespace Nyx {
 			// Loading
 			NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
 
-			Insert(LoadAsset<T>(path), uuid);
+			Insert(LoadAsset<T>(path), path, uuid);
 			return uuid;
 		}
 
@@ -90,6 +120,11 @@ namespace Nyx {
 		{
 			NX_CORE_ASSERT(m_Assets.find(handle) != m_Assets.end(), "Asset not found!");
 			return m_Assets.at(handle);
+		}
+
+		static Ref<Asset> GetByUUID(UUID id)
+		{
+			return m_Assets.at(id);
 		}
 
 		template<typename T>

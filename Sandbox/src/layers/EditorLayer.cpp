@@ -40,7 +40,7 @@ EditorLayer::EditorLayer(const String& name)
 	// Application::GetCommandLineArgs()[0]
 //	CreateObject("Default Object", "assets/models/Cerberus.fbx", "Default Material");
 	// m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
-	m_SceneObject = CreateObject("Default Object", "assets/models/backpack/Backpack.fbx", "Default Material");
+	m_SceneObject = CreateObject("Default Object", "assets/models/backpack/backpack.fbx", "Default Material");
 
 	m_Scene->Save("TestScene.yaml");
 }

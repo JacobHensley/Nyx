@@ -3,6 +3,11 @@
 
 namespace Nyx {
 
+	enum class AssetType
+	{
+		INVAILD = 0, MESH, TEXTURE, SCRIPT
+	};
+
     class Asset
     {
     public:
@@ -12,6 +17,8 @@ namespace Nyx {
 		{
 			return false;
 		}
+
+		AssetType m_AssetType;
 	};
 
 }
