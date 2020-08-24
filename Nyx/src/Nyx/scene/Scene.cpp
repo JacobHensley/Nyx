@@ -18,9 +18,14 @@ namespace Nyx {
 
 	void Scene::Update()
 	{
-		for (auto object : m_SceneObjects)
+		m_Camera->Update();
+
+		if (m_SceneObjects.size() > 0)
 		{
-			object->Update();
+			for (auto object : m_SceneObjects)
+			{
+				object->Update();
+			}
 		}
 	}
 
@@ -28,11 +33,13 @@ namespace Nyx {
 	{
 		SceneRenderer::Begin(this);
 
-		for (auto object : m_SceneObjects)
+		if (m_SceneObjects.size() > 0)
 		{
-			object->Render();
+			for (auto object : m_SceneObjects)
+			{
+				object->Render();
+			}
 		}
-
 		SceneRenderer::Flush();
 		SceneRenderer::End();
 	}

@@ -314,5 +314,6 @@
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
+    <ClCompile Include="src\Nyx\Asset.cpp" />
   </ItemGroup>
 </Project>

@@ -13,8 +13,8 @@ namespace Nyx {
 		void Translate(glm::vec3 delta);
 		void Scale(glm::vec3 scaler);
 
-		const glm::mat4& GetTransform() { return m_Transform; }
-
+		glm::mat4& GetTransform() { return m_Transform; }
+		void SetTransform(glm::mat4 transform) { m_Transform = transform; }
 		static Component::Type* GetStaticType()
 		{
 			static Component::Type type = { "Transform" };

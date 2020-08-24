@@ -1,8 +1,8 @@
 #pragma once
 #include "SceneObject.h"
 #include "Nyx/graphics/renderer/Camera.h"
-#include "Nyx/graphics/API/TextureCube.h"
 #include "Nyx/graphics/renderer/LightEnvironment.h"
+#include "Nyx/Asset.h"
 
 namespace Nyx {
 
@@ -11,13 +11,13 @@ namespace Nyx {
 
 	struct EnvironmentMap
 	{
-		EnvironmentMap(Ref<TextureCube> radianceMap, Ref<TextureCube> irradianceMap)
+		EnvironmentMap(AssetHandle radianceMap, AssetHandle irradianceMap)
 			:	radianceMap(radianceMap), irradianceMap(irradianceMap)
 		{
 		}
 
-		Ref<TextureCube> radianceMap;
-		Ref<TextureCube> irradianceMap;
+		AssetHandle radianceMap;
+		AssetHandle irradianceMap;
 	};
 
 	class Scene

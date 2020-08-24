@@ -1,5 +1,6 @@
 #pragma once
 #include "nyx/scene/Scene.h"
+#include "Nyx/graphics/renderer/Shader.h"
 #include "nyx/graphics/renderer/Mesh.h"
 
 namespace Nyx {

@@ -48,7 +48,7 @@ namespace Nyx {
 		void Render(bool depthTesting);
 		void DebugDrawBoundingBox(const glm::mat4& transform) const;
 
-		void OnImGuiRender();
+		void RenderImGuiNodeHierarchy(bool& open);
 
 		void RenderImGuiVertexData();
 		void RenderImGuiNodeTree(bool isOwnWindow) const;
@@ -106,6 +106,7 @@ namespace Nyx {
 		std::vector<Ref<Material>> m_Materials;
 
 		Ref<AABB> m_BoundingBox;
+
 
 		glm::vec3 m_bbMin = { FLT_MAX,  FLT_MAX,  FLT_MAX };
 		glm::vec3 m_bbMax = { -FLT_MAX, -FLT_MAX, -FLT_MAX };

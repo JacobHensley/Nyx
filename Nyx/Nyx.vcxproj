@@ -71,7 +71,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib "..\bin\Debug-windows-x86_64\Editor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Nyx\Nyx.lib "..\bin\Debug-windows-x86_64\Editor\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -96,7 +96,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Nyx\Nyx.lib\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Nyx\Nyx.lib "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Nyx\Nyx.lib "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\Nyx\Nyx.lib\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Nyx\Nyx.lib "..\bin\Release-windows-x86_64\Editor\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Nyx\Nyx.lib "..\bin\Release-windows-x86_64\Editor\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -157,6 +157,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp" />
+    <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\UUID.cpp" />

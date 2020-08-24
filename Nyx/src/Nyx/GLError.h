@@ -69,7 +69,7 @@ namespace Nyx {
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(GLErrorCallback, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
-		NX_CORE_INFO("Created OpenGL Debug Message Callback");
+		NX_CORE_INFO("Enabled OpenGL debug output");
 	}
 
 }

@@ -1,6 +1,6 @@
 workspace "Nyx"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Editor"
 
 	configurations
 	{
@@ -85,7 +85,7 @@ project "Nyx"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Editor/\"")
 		}
 
 	filter "configurations:Debug"
@@ -101,8 +101,8 @@ project "Nyx"
 		runtime "Release"
 		optimize "On"
 
-project "Sandbox"
-	location "Sandbox"
+project "Editor"
+	location "Editor"
 	kind "ConsoleApp"
 	language "C++"
 	staticruntime "on"
@@ -174,8 +174,8 @@ project "Sandbox"
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
-		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Editor/\""),
+		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Editor/\"")
 		}
 
 	filter "configurations:Release"
@@ -191,6 +191,6 @@ project "Sandbox"
 
 		postbuildcommands
 		{
-			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Sandbox/\""),
-		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Sandbox/\"")
+			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Editor/\""),
+		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Editor/\"")
 		}

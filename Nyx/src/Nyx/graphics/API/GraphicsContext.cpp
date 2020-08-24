@@ -35,14 +35,14 @@ namespace Nyx {
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		NX_CORE_INFO("Created OpenGL Graphics Context");
+
 		NX_CORE_INFO("Vendor:   {0}", glGetString(GL_VENDOR));
 		NX_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
 		NX_CORE_INFO("Version:  {0}", glGetString(GL_VERSION));
 
 		SceneRenderer::Init();
 		Renderer::Init();
-
-		NX_CORE_INFO("Created OpenGL Graphics Context");
 	}
 
 	void GraphicsContext::SwapBuffers()

@@ -3,6 +3,7 @@
 #include "Nyx/graphics/renderer/Renderer.h"
 #include "Nyx/graphics/MeshFactory.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "Nyx/AssetManager.h"
 
 namespace Nyx {
 
@@ -46,7 +47,7 @@ namespace Nyx {
 	{
 		s_Data.m_ActiveScene = scene;
 
-		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap);
+		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", AssetManager::GetByUUID<TextureCube>(s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap.GetUUID()));
 	}
 
 	void SceneRenderer::Flush()
@@ -110,7 +111,8 @@ namespace Nyx {
 		s_Data.m_CompositePass->Bind();
 
 		s_Data.m_CompositeShader->Bind();
-		s_Data.m_CompositeShader->SetUniform1f("r_Exposure", s_Data.m_ActiveScene->GetCamera()->GetExposure());
+		s_Data.m_CompositeShader->SetUniform1f("r_Exposure", *s_Data.m_ActiveScene->GetCamera()->GetExposure());
+		s_Data.m_CompositeShader->SetUniform1f("r_ExposureActive", *s_Data.m_ActiveScene->GetCamera()->GetExposureActive());
 		s_Data.m_CompositeShader->SetUniform1i("r_InputTexture", 5);
 
 		s_Data.m_GeometryPass->GetFrameBuffer()->GetTexture()->Bind(5);

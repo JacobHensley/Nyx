@@ -26,7 +26,8 @@ namespace Nyx {
 		inline void SetProjectionMatrix(const glm::mat4& projectionMatrix) { m_ProjectionMatrix = projectionMatrix; }
 
 		inline void SetExposure(float exposure) { m_Exposure = exposure; }
-		inline float GetExposure() { return m_Exposure; }
+		inline float* GetExposure() { return &m_Exposure; }
+		inline bool* GetExposureActive() { return &m_ExposureActive; }
 
 		glm::vec3 GetUpDirection();
 		glm::vec3 GetRightDirection();
@@ -54,6 +55,7 @@ namespace Nyx {
 		float m_Pitch, m_Yaw;
 
 		float m_Exposure = 1.0f;
+		bool m_ExposureActive = false;
 	};
 
 }

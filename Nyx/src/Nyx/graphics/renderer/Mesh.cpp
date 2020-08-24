@@ -55,9 +55,9 @@ namespace Nyx {
 		DebugRenderer::DrawAABB(*m_BoundingBox, transform);
 	}
 
-	void Mesh::OnImGuiRender()
+	void Mesh::RenderImGuiNodeHierarchy(bool& open)
 	{
-		ImGui::Begin("Mesh Hierarchy");
+		ImGui::Begin("Mesh Hierarchy", &open);
 		ImGuiNodeHierarchy(m_Scene->mRootNode);
 		ImGui::End();
 	}

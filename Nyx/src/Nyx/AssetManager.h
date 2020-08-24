@@ -4,32 +4,9 @@
 
 #include "Nyx/graphics/renderer/Mesh.h"
 #include "Nyx/graphics/API/Texture.h"
+#include "Nyx/graphics/API/TextureCube.h"
 
 namespace Nyx {
-
-	class AssetManager;
-	struct AssetHandle
-	{
-		AssetHandle(UUID uuid)
-			: m_UUID(uuid) { }
-
-		AssetHandle()
-			: m_UUID({ 0 })
-		{
-		}
-
-		UUID GetUUID() { return m_UUID; }
-
-		template<typename T>
-		Ref<T> Get() { NX_CORE_ASSERT(IsValid(), "Invalid asset handle!"); return std::dynamic_pointer_cast<T>(AssetManager::Get(*this)); }
-
-		operator UUID () const { return m_UUID; }
-
-		bool IsValid() const { return m_UUID != 0; }
-		operator bool() const { return IsValid(); }
-	private:
-		UUID m_UUID;
-	};
 
 	class AssetLoader;
 
@@ -105,12 +82,31 @@ namespace Nyx {
 			return asset;
 		}
 
+		template<>
+		static Ref<Asset> LoadAsset<TextureCube>(const std::string& filepath)
+		{
+			// TODO: Better
+			Ref<Asset> asset = CreateRef<TextureCube>(filepath);
+			asset->m_AssetType = AssetType::TEXTURE_CUBE;
+			return asset;
+		}
+
 		// Deserialization function
 		template<typename T>
 		static AssetHandle InsertAndLoad(UUID uuid, const std::string& path)
 		{
 			// Loading
 			NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
+
+			Insert(LoadAsset<T>(path), path, uuid);
+			return uuid;
+		}
+
+		template<typename T>
+		static AssetHandle SwapAsset(UUID uuid, const std::string& path)
+		{
+			// Loading
+			NX_CORE_ASSERT(m_Assets.find(uuid) != m_Assets.end(), "Asset UUID does not exist in map!");
 
 			Insert(LoadAsset<T>(path), path, uuid);
 			return uuid;
