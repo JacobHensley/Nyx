@@ -38,9 +38,7 @@ namespace Nyx {
 
 		inline const String& GetDebugName() { return m_DebugName; }
 
-		bool operator==(const SceneObject& other) const {
-			return false;
-		}
+
 
 	private:
 		Scene* m_Scene = nullptr;

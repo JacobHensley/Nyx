@@ -6,6 +6,7 @@
 #include "Nyx/graphics/API/VertexBuffer.h"
 #include "Nyx/graphics/renderer/Shader.h"
 #include "Nyx/math/AABB.h"
+#include "Nyx/math/Triangle.h"
 #include "glm/glm.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,12 +25,18 @@ namespace Nyx {
 
 	struct SubMesh 
 	{
-		uint vertexOffset;
-		uint indexOffset;
-		uint indexCount;
+		uint vertexOffset = 0;
+		uint indexOffset = 0;
+		uint indexCount = 0;
 		uint materialIndex = 0;
-		AABB boundingBox;
-		glm::mat4 transform;
+		AABB boundingBox = AABB();
+		std::vector<Triangle> triangles;
+		glm::mat4 transform = glm::mat4(1);
+
+		SubMesh()
+		{
+
+		}
 
 		SubMesh(uint vertexOffset, uint indexOffset, uint indexCount)
 			: vertexOffset(vertexOffset), indexOffset(indexOffset), indexCount(indexCount)

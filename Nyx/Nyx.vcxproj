@@ -109,6 +109,7 @@
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
+    <ClInclude Include="src\Nyx\math\Triangle.h" />
     <ClInclude Include="src\Nyx\Script.h" />
     <ClInclude Include="src\Nyx\UUID.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />

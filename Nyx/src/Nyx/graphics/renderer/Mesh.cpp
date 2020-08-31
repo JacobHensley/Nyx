@@ -51,8 +51,11 @@ namespace Nyx {
 	}
 
 	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const
-	{
-		DebugRenderer::DrawAABB(*m_BoundingBox, transform);
+	{	
+		for (auto& mesh : m_SubMeshes)
+		{
+			DebugRenderer::DrawAABB(mesh.boundingBox, transform * mesh.transform);
+		}
 	}
 
 	void Mesh::RenderImGuiNodeHierarchy(bool& open)
@@ -264,7 +267,7 @@ namespace Nyx {
 		// Process ASSIMP's root node recursively
 		processNode(scene->mRootNode, scene, scene->mRootNode->mTransformation);
 		
-		m_BoundingBox = CreateRef<AABB>(m_bbMin, m_bbMax);
+	//	m_BoundingBox = CreateRef<AABB>(m_bbMin, m_bbMax);
 
 		m_VertexBuffer = CreateRef<VertexBuffer>(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
 		m_IndexBuffer = CreateRef<IndexBuffer>(m_Indices.data(), (int)m_Indices.size());
@@ -312,6 +315,12 @@ namespace Nyx {
 		// Data to fill
 		std::vector<Ref<Texture>> textures;
 
+		SubMesh submesh;
+
+		AABB boundingBox;
+		boundingBox.Min = glm::vec3(FLT_MAX);
+		boundingBox.Max = glm::vec3(-FLT_MAX);
+
 		// Walk through each of the mesh's vertices
 		for (uint i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -324,13 +333,13 @@ namespace Nyx {
 			vector.z = mesh->mVertices[i].z;
 			vertex.position = vector;
 
-			m_bbMin.x = glm::min(vector.x, m_bbMin.x);
-			m_bbMin.y = glm::min(vector.y, m_bbMin.y);
-			m_bbMin.z = glm::min(vector.z, m_bbMin.z);
+			boundingBox.Min.x = glm::min(vector.x, boundingBox.Min.x);
+			boundingBox.Min.y = glm::min(vector.y, boundingBox.Min.y);
+			boundingBox.Min.z = glm::min(vector.z, boundingBox.Min.z);
 			
-			m_bbMax.x = glm::max(vector.x, m_bbMax.x);
-			m_bbMax.y = glm::max(vector.y, m_bbMax.y);
-			m_bbMax.z = glm::max(vector.z, m_bbMax.z);
+			boundingBox.Max.x = glm::max(vector.x, boundingBox.Max.x);
+			boundingBox.Max.y = glm::max(vector.y, boundingBox.Max.y);
+			boundingBox.Max.z = glm::max(vector.z, boundingBox.Max.z);
 
 			// Normals
 			vector.x = mesh->mNormals[i].x;
@@ -373,13 +382,16 @@ namespace Nyx {
 		{
 			aiFace face = mesh->mFaces[i];
 			// Retrieve all indices of the face and store them in the indices vector
+			Triangle triangle;
 			for (uint j = 0; j < face.mNumIndices; j++)
-			{
+			{	
+				triangle.Points[j].x = mesh->mVertices[face.mIndices[j]].x;
+				triangle.Points[j].y = mesh->mVertices[face.mIndices[j]].y;
+				triangle.Points[j].z = mesh->mVertices[face.mIndices[j]].z;
 				m_Indices.push_back(face.mIndices[j]);
 			}
+			submesh.triangles.push_back(triangle);
 		}
-
-
 
 		if (scene->HasMaterials())
 		{
@@ -484,8 +496,12 @@ namespace Nyx {
 		uint indexCount = mesh->mNumFaces * 3;
 		m_BaseIndexPointer += indexCount;
 		
-		SubMesh submesh(baseVertex, baseIndex, indexCount);
+		submesh.vertexOffset = baseVertex;
+		submesh.indexOffset = baseIndex;
+		submesh.indexCount = indexCount;
+		submesh.boundingBox = boundingBox;
 		submesh.materialIndex = mesh->mMaterialIndex;
+
 		return submesh;
 	}
 

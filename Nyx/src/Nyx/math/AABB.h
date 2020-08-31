@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Nyx/Common.h"
-#include "Nyx/math/Ray.h"
 #include <glm/glm.hpp>
 
 namespace Nyx {
@@ -19,12 +18,6 @@ namespace Nyx {
 			: Min(min), Max(max)
 		{
 			NX_ASSERT(min.x < max.x && min.y < max.y && min.z < max.z, "Min must be less than max!");
-		}
-
-		bool Intersec(Ray ray)
-		{
-
-			return true;
 		}
 
 		glm::vec3 GetSize() const

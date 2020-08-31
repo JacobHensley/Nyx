@@ -198,6 +198,7 @@
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\math\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
