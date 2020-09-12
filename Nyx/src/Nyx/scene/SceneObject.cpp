@@ -48,7 +48,6 @@ namespace Nyx {
 
 		//	SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
 			SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
-
 		//	if (materialComponent)
 		//		SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
 		//	else

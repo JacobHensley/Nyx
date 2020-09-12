@@ -4,6 +4,7 @@
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/graphics/renderer/DebugRenderer.h"
+#include "Nyx/graphics/renderer/Renderer.h"
 #include "Nyx/Utilities.h"
 
 #include "ImGui/ImGuizmo.h"
@@ -46,7 +47,7 @@ private:
 
 	void UpdateGizmoMode();
 	void MousePick();
-	void SelectObject();
+	bool SelectObject();
 
 private:
 	glm::vec2 m_ViewportSize;

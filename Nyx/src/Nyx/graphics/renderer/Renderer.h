@@ -11,6 +11,8 @@ namespace Nyx {
 		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform);
 		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material);
 
+		static void DrawWireframe(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform);
+
 		static void Init();
 
 	private:

@@ -1,5 +1,5 @@
 #include "EditorLayer.h"
-#include "glm/gtx/intersect.hpp"
+
 EditorLayer::EditorLayer()
 	:	Layer("Editor")
 {
@@ -62,10 +62,6 @@ void EditorLayer::DebugRender()
 		mesh->DebugDrawBoundingBox(transform);
 	}
 
-	DebugRenderer::DrawLine(glm::vec3(0, 0, 0), glm::vec3(2, 0, 0));
-	DebugRenderer::DrawLine(glm::vec3(2, 0, 0), glm::vec3(2, 2, 0));
-	DebugRenderer::DrawLine(glm::vec3(2, 2, 0), glm::vec3(0, 0, 0));
-
 	if (m_DebugSettings.DrawMouseRay)
 		DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
 
@@ -97,6 +93,9 @@ void EditorLayer::RenderSceneWindow()
 
 	for (int i = 0; i < objects.size(); i++)
 	{
+		if (objects[i] == m_SelectedObject)
+			selected = i;
+
 		if (ImGui::Selectable((objects[i]->GetDebugName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
 		{
 			m_SelectedObject = objects[i];
@@ -107,7 +106,7 @@ void EditorLayer::RenderSceneWindow()
 			
 	}
 
-	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
+	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject == nullptr)
 	{
 		m_SelectedObject = nullptr;
 		selected = -1;
@@ -342,16 +341,8 @@ void EditorLayer::MousePick()
 	SelectObject();
 }
 
-void EditorLayer::SelectObject()
+bool EditorLayer::SelectObject()
 {
-	Triangle debugTriangle = Triangle(glm::vec3(0, 0, 0), glm::vec3(2, 0, 0), glm::vec3(2, 2, 0));
-	bool test = m_MouseRay.IntersectsTriangle(debugTriangle);
-	if (test)
-	{
-	//	NX_CORE_DEBUG("YO");
-	}
-
-
 	for (Ref<SceneObject> object : m_Scene->GetSceneObjects())
 	{
 		Ref<Mesh> mesh = object->GetComponent<MeshComponent>()->GetMesh();
@@ -361,29 +352,28 @@ void EditorLayer::SelectObject()
 		{
 			glm::mat4 finalTransform = objectTransform * subMesh.transform;
 
-			AABB finalBoundingBox = subMesh.boundingBox;
-			finalBoundingBox.Min = finalTransform * glm::vec4(finalBoundingBox.Min, 1.0f);
-			finalBoundingBox.Max = finalTransform * glm::vec4(finalBoundingBox.Max, 1.0f);
+			AABB localBoundingBox = subMesh.boundingBox;
+			localBoundingBox.Min = finalTransform * glm::vec4(localBoundingBox.Min, 1.0f);
+			localBoundingBox.Max = finalTransform * glm::vec4(localBoundingBox.Max, 1.0f);
 
-			float t;
-			bool boxIntersecs = m_MouseRay.IntersectsAABB(finalBoundingBox, t);
+			float distance;
+			bool boxIntersection = m_MouseRay.IntersectsAABB(localBoundingBox, distance);
 
-			if (boxIntersecs)
+			if (boxIntersection)
 			{
 				Ray localRay = m_MouseRay;
 				localRay.Origin = glm::inverse(finalTransform) * glm::vec4(localRay.Origin, 1.0f);
 				localRay.Direction = glm::inverse(glm::mat3(finalTransform)) * localRay.Direction;
 				
-				NX_CORE_DEBUG("Bounding Box Intersects: {0}", boxIntersecs);
 				for (auto& triangle : subMesh.triangles)
 				{
-				//	bool triangleIntersecs = m_MouseRay.IntersectsTriangle(finalTransform * glm::vec4(triangle.Points[0], 1.0f), finalTransform * glm::vec4(triangle.Points[1], 1.0f), finalTransform * glm::vec4(triangle.Points[2], 1.0f));
-					bool triangleIntersecs = localRay.IntersectsTriangle(glm::vec4(triangle.Points[0], 1.0f), glm::vec4(triangle.Points[1], 1.0f), glm::vec4(triangle.Points[2], 1.0f));
+				//	bool triangleIntersection = localRay.IntersectsTriangle(glm::vec4(triangle.Points[0], 1.0f), glm::vec4(triangle.Points[1], 1.0f), glm::vec4(triangle.Points[2], 1.0f));
+					bool triangleIntersection = localRay.IntersectsTriangle(triangle);
 
-					if (triangleIntersecs) 
+					if (triangleIntersection)
 					{
-						NX_CORE_DEBUG("Triangle Intersects: {0}", triangleIntersecs);
-						break;
+						m_SelectedObject = object;
+						return true;
 					}
 				}
 			}
@@ -391,5 +381,8 @@ void EditorLayer::SelectObject()
 		}
 		
 	}
+
+	m_SelectedObject = nullptr;
+	return false;
 	
 }
