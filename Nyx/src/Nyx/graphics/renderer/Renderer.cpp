@@ -86,16 +86,6 @@ namespace Nyx {
 						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
 					//	delete s_Data.m_UniformBuffer;
 					}
-
-					//This system is terrible completly rewrite the whole thing just wanted to see if i could get it work late at night at surgery
-					//1. structure in way as to not have to rebind shader this is very bad
-					//2. structure that makes choosing to render an outline or not easier
-					//3. in the drawWireframe method remove all the extra code for uploading uniforms dynamicly
-					//4. Find out correct order to render this in becuse it needs to render below the object but over everything else 
-					//   - this is going to be the hardest i think and might need to be done first as to know when to bind shaders
-					//5. Add point rendering to it so that it smooths out the corners
-					//6. Add settings for color and size
-					//7. also maybe grow some balls and dont be afraid of the jump flood algo
 				//	DrawWireframe(scene, mesh, transform);
 				//	shader->Bind();
 					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);

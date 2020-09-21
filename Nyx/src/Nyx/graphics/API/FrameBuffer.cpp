@@ -78,7 +78,7 @@ namespace Nyx {
 		}
 
 
-		glClearColor(1.1f, 0.1f, 1.1f, 1.0f);
+		glClearColor(0, 0, 0, 0.0f);
 
 		SetViewPortSize(0, 0, width, height);
 

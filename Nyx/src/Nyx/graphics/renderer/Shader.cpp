@@ -392,6 +392,7 @@ namespace Nyx {
 
 	void Shader::SetUniform2f(const String& name, const glm::vec2& vec)
 	{
+		glUniform2f(glGetUniformLocation(m_ShaderID, name.c_str()), vec.x, vec.y);
 	}
 
 	void Shader::SetUniform3f(const String& name, const glm::vec3& vec)

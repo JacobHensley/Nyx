@@ -40,8 +40,8 @@ namespace Nyx {
 				object->Render();
 			}
 		}
-		SceneRenderer::Flush();
 		SceneRenderer::End();
+		SceneRenderer::Flush();
 	}
 
 	Ref<SceneObject> Scene::CreateObject(const String& debugName)

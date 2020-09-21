@@ -367,7 +367,6 @@ bool EditorLayer::SelectObject()
 				
 				for (auto& triangle : subMesh.triangles)
 				{
-				//	bool triangleIntersection = localRay.IntersectsTriangle(glm::vec4(triangle.Points[0], 1.0f), glm::vec4(triangle.Points[1], 1.0f), glm::vec4(triangle.Points[2], 1.0f));
 					bool triangleIntersection = localRay.IntersectsTriangle(triangle);
 
 					if (triangleIntersection)

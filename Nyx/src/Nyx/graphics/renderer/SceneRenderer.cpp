@@ -4,6 +4,7 @@
 #include "Nyx/graphics/MeshFactory.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "Nyx/AssetManager.h"
+#include <glad/glad.h>
 
 namespace Nyx {
 
@@ -14,6 +15,16 @@ namespace Nyx {
 		Ref<RenderPass> m_GeometryPass;
 		Ref<RenderPass> m_CompositePass;
 		Ref<Shader> m_CompositeShader;
+
+		Ref<FrameBuffer> m_TempBuffer0;
+		Ref<FrameBuffer> m_TempBuffer1;
+
+		Ref<FrameBuffer> m_JumpFloodBuffer;
+
+		Ref<Shader> m_JumpFloodInitShader;
+		Ref<Shader> m_JumpFloodShader;
+		Ref<Shader> m_FinalJumpFloodShader;
+		Ref<Shader> m_CopyShader;
 
 		Ref<Mesh> m_FullscreenQuad;
 		Ref<Shader> m_PBRShader;
@@ -41,6 +52,31 @@ namespace Nyx {
 		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
+
+		TextureParameters params;
+		params.format = TextureFormat::RGBA16F;
+		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(1280, 720, params);
+		s_Data.m_TempBuffer0->Bind();
+		s_Data.m_TempBuffer0->Attach(BufferAtachment::COLOR);
+		s_Data.m_TempBuffer0->Attach(BufferAtachment::DEPTH);
+		s_Data.m_TempBuffer0->Unbind();
+
+		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(1280, 720, params);
+		s_Data.m_TempBuffer1->Bind();
+		s_Data.m_TempBuffer1->Attach(BufferAtachment::COLOR);
+		s_Data.m_TempBuffer1->Attach(BufferAtachment::DEPTH);
+		s_Data.m_TempBuffer1->Unbind();
+
+		s_Data.m_JumpFloodBuffer = CreateRef<FrameBuffer>(1280, 720);
+		s_Data.m_JumpFloodBuffer->Bind();
+		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::COLOR);
+		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::DEPTH);
+		s_Data.m_JumpFloodBuffer->Unbind();
+
+		s_Data.m_JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFloodInit.shader");
+		s_Data.m_JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood.shader");
+		s_Data.m_FinalJumpFloodShader = CreateRef<Shader>("assets/shaders/FinalJumpFlood.shader");
+		s_Data.m_CopyShader = CreateRef<Shader>("assets/shaders/CopyShader.shader");
 	}
 
 	void SceneRenderer::Begin(Scene* scene)
@@ -54,11 +90,16 @@ namespace Nyx {
 	{
 		GeometryPass();
 		s_Data.m_RenderCommands.clear();
+
+		JumpFloodPass();
+		CompositePass();
+
+		glDepthMask(GL_TRUE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void SceneRenderer::End()
 	{
-		CompositePass();
 	}
 
 	void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
@@ -73,7 +114,8 @@ namespace Nyx {
 
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
-		return s_Data.m_CompositePass->GetFrameBuffer();
+		return s_Data.m_JumpFloodBuffer;
+		//return s_Data.m_GeometryPass->GetFrameBuffer();
 	}
 
 	void Nyx::SceneRenderer::Resize(uint width, uint height)
@@ -93,7 +135,7 @@ namespace Nyx {
 
 		//Scene level sorting
 
-		Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
+	//	Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
 
 		for (RenderCommand command : s_Data.m_RenderCommands)
 		{
@@ -104,6 +146,59 @@ namespace Nyx {
 		}
 
 		s_Data.m_GeometryPass->Unbind();
+	}
+
+	static int steps = 12;
+
+	void SceneRenderer::JumpFloodPass()
+	{
+		steps = std::clamp(steps, 0, 32);
+
+		// Jump flood state
+		//glDepthMask(GL_FALSE); // ZWrite Off
+		glBlendFunc(GL_ONE, GL_ZERO); // Blend One Zero
+
+		s_Data.m_JumpFloodInitShader->Bind();
+		s_Data.m_JumpFloodInitShader->SetUniform2f("u_TextureSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
+		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_TempBuffer0, s_Data.m_JumpFloodInitShader);
+
+		int step = std::round(std::pow(steps - 1, 2));
+		while (step != 0) {
+			
+			s_Data.m_JumpFloodShader->Bind();
+			s_Data.m_JumpFloodShader->SetUniform1i("u_Step", step);
+			s_Data.m_JumpFloodShader->SetUniform2f("u_TexelSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
+			Blit(s_Data.m_TempBuffer0, s_Data.m_TempBuffer1, s_Data.m_JumpFloodShader);
+
+			Ref<FrameBuffer> tmp = s_Data.m_TempBuffer0;
+			s_Data.m_TempBuffer0 = s_Data.m_TempBuffer1;
+			s_Data.m_TempBuffer1 = tmp;
+
+			step /= 2;
+		}
+
+		// Restore state
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader);
+		Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader);
+	//	Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader);
+	}
+
+	void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader)
+	{
+		dest->Bind();
+		dest->Clear();
+
+		shader->Bind();
+		shader->SetUniform1i("r_InputTexture", 5);
+
+		src->GetTexture()->Bind(5);
+
+		s_Data.m_FullscreenQuad->Render(true);
+
+		shader->Unbind();
+		dest->Unbind();
 	}
 
 	void SceneRenderer::CompositePass()

@@ -86,5 +86,8 @@ namespace Nyx {
 	private:
 		static void GeometryPass();
 		static void CompositePass();
+		static void JumpFloodPass();
+
+		static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader);
 	};
 }
