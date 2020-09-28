@@ -33,13 +33,14 @@ namespace Nyx {
 	{
 		SceneRenderer::Begin(this);
 
-		if (m_SceneObjects.size() > 0)
+		for (auto object : m_SceneObjects)
 		{
-			for (auto object : m_SceneObjects)
-			{
+			if (object != m_SelectedObject)
 				object->Render();
-			}
+			else
+				object->RenderSelected();
 		}
+
 		SceneRenderer::End();
 		SceneRenderer::Flush();
 	}
@@ -66,6 +67,15 @@ namespace Nyx {
 		}
 
 		return object;
+	}
+
+	bool Scene::SetSelectedObject(const Ref<SceneObject>& sceneObject)
+	{
+		auto e = std::find(m_SceneObjects.begin(), m_SceneObjects.end(), sceneObject);
+
+		m_SelectedObject = sceneObject;
+
+		return false;
 	}
 
 	YAML::Emitter& operator << (YAML::Emitter& out, const glm::vec3& v) {

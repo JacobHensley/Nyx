@@ -32,6 +32,8 @@ namespace Nyx {
 		Ref<SceneObject> CreateObject(const String& debugName);
 		Ref<SceneObject> CreateObject(const String& debugName, std::initializer_list<Ref<Component>> components);
 		
+		bool SetSelectedObject(const Ref<SceneObject>& sceneObject);
+
 		void Save(const String& filename);
 
 		void Remove(const Ref<SceneObject>& sceneObject);
@@ -49,6 +51,7 @@ namespace Nyx {
 
 	private:
 		std::vector<Ref<SceneObject>> m_SceneObjects;
+		Ref<SceneObject> m_SelectedObject;
 		Ref<Camera> m_Camera;
 		Ref<EnvironmentMap> m_EnvironmentMap;
 		Ref<LightEnvironment> m_LightEnvironment;

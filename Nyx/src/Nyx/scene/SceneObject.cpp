@@ -62,6 +62,30 @@ namespace Nyx {
 		}
 	}
 
+	void SceneObject::RenderSelected()
+	{
+		if (m_IsActive)
+		{
+			Ref<MeshComponent> meshComponent = GetComponent<MeshComponent>();
+			Ref<TransformComponent> transformComponent = GetComponent<TransformComponent>();
+			Ref<MaterialComponent> materialComponent = GetComponent<MaterialComponent>();
+
+			//	SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
+			SceneRenderer::SubmitSelectedMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), nullptr);
+			//	if (materialComponent)
+			//		SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
+			//	else
+			//		SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
+
+
+			for (auto const& x : m_Components)
+			{
+				x.second->OnRender();
+			}
+
+		}
+	}
+
 	void SceneObject::AddComponent(Ref<Component> component)
 	{
 		m_Components[component->GetType()] = component;

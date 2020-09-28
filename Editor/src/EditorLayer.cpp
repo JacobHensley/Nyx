@@ -99,6 +99,7 @@ void EditorLayer::RenderSceneWindow()
 		if (ImGui::Selectable((objects[i]->GetDebugName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
 		{
 			m_SelectedObject = objects[i];
+			m_Scene->SetSelectedObject(objects[i]);
 			selected = i;
 
 			m_DebugSettings.DrawBoundingBox = false;
@@ -109,6 +110,7 @@ void EditorLayer::RenderSceneWindow()
 	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject == nullptr)
 	{
 		m_SelectedObject = nullptr;
+		m_Scene->SetSelectedObject(nullptr);
 		selected = -1;
 
 		m_DebugSettings.DrawBoundingBox = false;
@@ -372,6 +374,7 @@ bool EditorLayer::SelectObject()
 					if (triangleIntersection)
 					{
 						m_SelectedObject = object;
+						m_Scene->SetSelectedObject(object);
 						return true;
 					}
 				}
@@ -382,6 +385,7 @@ bool EditorLayer::SelectObject()
 	}
 
 	m_SelectedObject = nullptr;
+	m_Scene->SetSelectedObject(nullptr);
 	return false;
 	
 }

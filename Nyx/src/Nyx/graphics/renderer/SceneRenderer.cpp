@@ -11,6 +11,7 @@ namespace Nyx {
 	struct SceneRendererData
 	{
 		Scene* m_ActiveScene;
+
 		std::vector<RenderCommand> m_RenderCommands;
 		Ref<RenderPass> m_GeometryPass;
 		Ref<RenderPass> m_CompositePass;
@@ -20,6 +21,7 @@ namespace Nyx {
 		Ref<FrameBuffer> m_TempBuffer1;
 
 		Ref<FrameBuffer> m_JumpFloodBuffer;
+		Ref<FrameBuffer> m_SelectedObjectBuffer;
 
 		Ref<Shader> m_JumpFloodInitShader;
 		Ref<Shader> m_JumpFloodShader;
@@ -112,6 +114,11 @@ namespace Nyx {
 		s_Data.m_RenderCommands.push_back(RenderCommand(mesh, transform, materialOverride));
 	}
 
+	void SceneRenderer::SubmitSelectedMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride)
+	{
+
+	}
+
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
 		return s_Data.m_JumpFloodBuffer;
@@ -148,7 +155,7 @@ namespace Nyx {
 		s_Data.m_GeometryPass->Unbind();
 	}
 
-	static int steps = 12;
+	static int steps = 2;
 
 	void SceneRenderer::JumpFloodPass()
 	{
@@ -160,7 +167,7 @@ namespace Nyx {
 
 		s_Data.m_JumpFloodInitShader->Bind();
 		s_Data.m_JumpFloodInitShader->SetUniform2f("u_TextureSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
-		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_TempBuffer0, s_Data.m_JumpFloodInitShader);
+		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_TempBuffer0, s_Data.m_JumpFloodInitShader, true);
 
 		int step = std::round(std::pow(steps - 1, 2));
 		while (step != 0) {
@@ -168,7 +175,7 @@ namespace Nyx {
 			s_Data.m_JumpFloodShader->Bind();
 			s_Data.m_JumpFloodShader->SetUniform1i("u_Step", step);
 			s_Data.m_JumpFloodShader->SetUniform2f("u_TexelSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
-			Blit(s_Data.m_TempBuffer0, s_Data.m_TempBuffer1, s_Data.m_JumpFloodShader);
+			Blit(s_Data.m_TempBuffer0, s_Data.m_TempBuffer1, s_Data.m_JumpFloodShader, true);
 
 			Ref<FrameBuffer> tmp = s_Data.m_TempBuffer0;
 			s_Data.m_TempBuffer0 = s_Data.m_TempBuffer1;
@@ -180,15 +187,18 @@ namespace Nyx {
 		// Restore state
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader);
-		Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader);
-	//	Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader);
+		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader, true);
+		Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader, false);
+
+		
 	}
 
-	void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader)
+	void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader, bool clear = true)
 	{
 		dest->Bind();
-		dest->Clear();
+		if (clear)
+			dest->Clear();
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		shader->Bind();
 		shader->SetUniform1i("r_InputTexture", 5);

@@ -76,7 +76,7 @@ namespace Nyx {
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
-
+		static void SubmitSelectedMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
 		static Ref<FrameBuffer> GetFinalBuffer();
 
 		// Temp functions
@@ -88,6 +88,6 @@ namespace Nyx {
 		static void CompositePass();
 		static void JumpFloodPass();
 
-		static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader);
+		static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader, bool clear);
 	};
 }

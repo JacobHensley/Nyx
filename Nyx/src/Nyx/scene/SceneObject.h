@@ -18,6 +18,8 @@ namespace Nyx {
 		void Update();
 		void Render();
 
+		void RenderSelected();
+
 		void AddComponent(Ref<Component> component);
 
 		template<typename T>
