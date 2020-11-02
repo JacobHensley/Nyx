@@ -38,13 +38,13 @@ namespace Nyx {
 
 		inline const std::unordered_map<Component::Type*, Ref<Component>>& GetComponents() { return m_Components; }
 
-		inline const String& GetDebugName() { return m_DebugName; }
+		inline const String& GetObjectName() { return m_ObjectName; }
 
 
 
 	private:
 		Scene* m_Scene = nullptr;
-		String m_DebugName;
+		String m_ObjectName;
 
 		UUID m_UUID;
 

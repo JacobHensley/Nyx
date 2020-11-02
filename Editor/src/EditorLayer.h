@@ -3,6 +3,7 @@
 
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/scene/component/MeshComponent.h"
+#include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/graphics/renderer/DebugRenderer.h"
 #include "Nyx/graphics/renderer/Renderer.h"
 #include "Nyx/Utilities.h"
@@ -15,12 +16,6 @@
 
 using namespace Nyx;
 
-struct DebugSettings
-{
-	bool DrawBoundingBox = false;
-	bool DrawMouseRay = false;
-};
-
 class EditorLayer : public Layer
 {
 public:
@@ -32,9 +27,8 @@ public:
 	void Update();
 	void Render();
 	void ImGUIRender();
-	void OnEvent(Event& e);
 
-	void DebugRender();
+	void OnEvent(Event& e);
 
 private:
 	void CreateObject(const String& name, const String& meshPath, glm::mat4& transform);
@@ -53,11 +47,10 @@ private:
 	glm::vec2 m_ViewportSize;
 	glm::vec2 m_ViewportPosition;
 	glm::vec2 m_LastViewportSize;
+	bool m_MouseOverViewport = false;
 
 	ImGuizmo::OPERATION m_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
 	Ray m_MouseRay;
-
-	DebugSettings m_DebugSettings;
 
 	Ref<SceneObject> m_SelectedObject;
 

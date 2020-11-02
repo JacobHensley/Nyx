@@ -28,8 +28,7 @@ void EditorLayer::Update()
 
 void EditorLayer::Render()
 {
-	m_Scene->Render();	
-	DebugRender();
+	m_Scene->Render();
 }
 
 void EditorLayer::ImGUIRender()
@@ -45,29 +44,9 @@ void EditorLayer::OnEvent(Event& e)
 	if (e.GetEventType() == EventType::MouseButtonPressed)
 	{
 		MouseButtonEvent& mousePressed = static_cast<MouseButtonEvent&>(e);
-		if (Input::IsKeyPressed(NX_KEY_LEFT_CONTROL) && mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT)
+		if (mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT && m_MouseOverViewport)
 			MousePick();
 	}
-}
-
-void EditorLayer::DebugRender()
-{
-	SceneRenderer::GetFinalBuffer()->Bind();
-	DebugRenderer::Begin(*m_Camera);
-
-	if (m_DebugSettings.DrawBoundingBox && m_SelectedObject)
-	{
-		Ref<Mesh> mesh = m_SelectedObject->GetComponent<MeshComponent>()->GetMesh();
-		glm::mat4& transform = m_SelectedObject->GetComponent<TransformComponent>()->GetTransform();
-		mesh->DebugDrawBoundingBox(transform);
-	}
-
-	if (m_DebugSettings.DrawMouseRay)
-		DebugRenderer::DrawLine(m_MouseRay.Origin, m_MouseRay.Origin + m_MouseRay.Direction * 10000.0f);
-
-	DebugRenderer::End();
-	DebugRenderer::Flush();
-	SceneRenderer::GetFinalBuffer()->Unbind();
 }
 
 void EditorLayer::CreateObject(const String& name, const String& meshPath, glm::mat4& transform)
@@ -96,13 +75,11 @@ void EditorLayer::RenderSceneWindow()
 		if (objects[i] == m_SelectedObject)
 			selected = i;
 
-		if (ImGui::Selectable((objects[i]->GetDebugName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
+		if (ImGui::Selectable((objects[i]->GetObjectName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
 		{
 			m_SelectedObject = objects[i];
 			m_Scene->SetSelectedObject(objects[i]);
 			selected = i;
-
-			m_DebugSettings.DrawBoundingBox = false;
 		}
 			
 	}
@@ -112,8 +89,6 @@ void EditorLayer::RenderSceneWindow()
 		m_SelectedObject = nullptr;
 		m_Scene->SetSelectedObject(nullptr);
 		selected = -1;
-
-		m_DebugSettings.DrawBoundingBox = false;
 	}
 
 	ImGui::End();
@@ -125,14 +100,11 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 
 	if (object)
 	{
-		ImGui::Text(("Name: " + object->GetDebugName()).c_str());
-		ImGui::Text("UUID: %ull", object->GetUUID());
 
-		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_None))
+		Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
+		if (transformComponent && ImGui::CollapsingHeader("Transform"))
 		{
-			Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
 			glm::mat4& transform = transformComponent->GetTransform();
-
 			glm::vec3 scale;
 			glm::quat rotation;
 			glm::vec3 translation;
@@ -144,61 +116,40 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 
 			ImGui::DragFloat3("Translation", glm::value_ptr(translation), 0.1f);
 			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
-		//	ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
+			//	ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
 
-			glm::mat4 rotationMatrix = glm::toMat4(glm::quat(euler));
+		
 
-			if (ImGui::DragFloat("Rotation X", &euler.y))
+			if (ImGui::DragFloat("Rotation Y", &euler.y))
 			{
-				rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(euler.y), glm::vec3(1.0f, 0.0f, 0.0f)) * 
-					glm::rotate(glm::mat4(1.0f), glm::radians(euler.x), glm::vec3(0.0f, 1.0f, 0.0f)) * 
-					glm::rotate(glm::mat4(1.0f), glm::radians(euler.z), glm::vec3(0.0f, 0.0f, 1.0f));
+				glm::mat4 rotationMatrix = glm::toMat4(glm::quat(glm::radians(euler)));
+
+			//	rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(euler.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
+			//		glm::rotate(glm::mat4(1.0f), glm::radians(euler.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+			//		glm::rotate(glm::mat4(1.0f), glm::radians(euler.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
 				glm::mat4 newTransform = glm::translate(glm::mat4(1.0f), translation) * rotationMatrix * glm::scale(glm::mat4(1.0f), scale);
 
 				transform = newTransform;
 			}
 
+		
 			euler = glm::radians(euler);
-		//	glm::mat4 rotationMatrix = glm::eulerAngleYXZ(euler.y, euler.x, euler.z);
-			
-
+			//	glm::mat4 rotationMatrix = glm::eulerAngleYXZ(euler.y, euler.x, euler.z);
 
 		}
 
-		if (ImGui::CollapsingHeader("Model", ImGuiTreeNodeFlags_None))
+		Ref<MeshComponent> meshComponent = object->GetComponent<MeshComponent>();
+		if (meshComponent && ImGui::CollapsingHeader("Mesh"))
 		{
-			Ref<MeshComponent> meshComponent = object->GetComponent<MeshComponent>();
 			Ref<Mesh> mesh = meshComponent->GetMesh();
-
-			ImGui::Text(("Path: " + mesh->GetPath()).c_str());
-			ImGui::Text("UUID: %ull", meshComponent->Get().GetUUID());
-
-			if (ImGui::Button("Load New Mesh"))
-			{
-				String& path = OpenFileExplorer();
-				std::transform(path.begin(), path.end(), path.begin(), ::tolower);
-				if (path != "" && path.find(".fbx") != String::npos)
-					AssetManager::SwapAsset<Mesh>(meshComponent->Get().GetUUID(), path);
-			}
-
-			if (ImGui::Button("Reload Mesh"))
-				AssetManager::Load<Mesh>(mesh->GetPath());
-
-			static bool RenderNodeGraph = false;
-
-			if (ImGui::Button("View Node Graph"))
-				RenderNodeGraph = !RenderNodeGraph;
-
-			if (RenderNodeGraph)
-				mesh->RenderImGuiNodeHierarchy(RenderNodeGraph);
 		}
 
-		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_None))
+		Ref<MaterialComponent> materialComponent = object->GetComponent<MaterialComponent>();
+		if (materialComponent && ImGui::CollapsingHeader("Material"))
 		{
-			ImGui::Checkbox("Draw Bounding Box", &m_DebugSettings.DrawBoundingBox);
+			Ref<Material> material = materialComponent->GetMaterial();
 		}
-
 	}
 
 	ImGui::End();
@@ -207,56 +158,6 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 void EditorLayer::RenderSceneSettingsWindow()
 {
 	ImGui::Begin("Scene Settings");
-
-	ImGui::Text("Light");
-	ImGui::DragFloat3("Light Direction", glm::value_ptr(m_SceneLight->direction), 0.01f, -1.0f, 1.0f);
-	ImGui::DragFloat3("Light Radiance", glm::value_ptr(m_SceneLight->radiance), 0.01f, 0.0f, 1.0f);
-	ImGui::Separator();
-	ImGui::NewLine();
-
-	ImGui::Text("Camera");
-	ImGui::DragFloat("Exposure", m_Camera->GetExposure(), 0.01f, 0.0f, 5.0f);
-	ImGui::Checkbox("Enable Exposure", m_Camera->GetExposureActive());
-	ImGui::Separator();
-	ImGui::NewLine();
-
-	ImGui::Text("Skybox");
-
-	UUID radianceMapID = m_Skybox->radianceMap.GetUUID();
-	ImGui::Text("Radiance Map (UUID: %ull)", radianceMapID.GetUUID());
-
-	if (ImGui::Button("Change"))
-	{
-		String& path = OpenFileExplorer();
-		std::transform(path.begin(), path.end(), path.begin(), ::tolower);
-		if (path != "" && (path.find(".png") != String::npos || path.find(".tga") != String::npos))
-			AssetManager::SwapAsset<TextureCube>(radianceMapID, path);
-		
-	}
-	ImGui::SameLine();
-	ImGui::Text(AssetManager::GetByUUID<TextureCube>(m_Skybox->radianceMap.GetUUID())->GetPath().c_str());
-
-	UUID irradianceMapID = m_Skybox->irradianceMap.GetUUID();
-	ImGui::Text("Irradiance Map (UUID: %ull)", irradianceMapID);
-
-	if (ImGui::Button("Change"))
-	{
-		String& path = OpenFileExplorer();
-		std::transform(path.begin(), path.end(), path.begin(), ::tolower);
-		if (path != "" && (path.find(".png") != String::npos || path.find(".tga") != String::npos))
-			AssetManager::SwapAsset<TextureCube>(irradianceMapID, path);
-	}
-	ImGui::SameLine();
-	ImGui::Text(AssetManager::GetByUUID<TextureCube>(irradianceMapID)->GetPath().c_str());
-
-	ImGui::Separator();
-	ImGui::NewLine();
-
-	ImGui::Text("Debug");
-	ImGui::Checkbox("Draw Mouse Ray", &m_DebugSettings.DrawMouseRay);
-	ImGui::Separator();
-	ImGui::NewLine();
-
 	ImGui::End();
 }
 
@@ -265,7 +166,7 @@ void EditorLayer::RenderViewport()
 	ImGuiIO io = ImGui::GetIO();
 
 	bool open = true;
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
@@ -294,6 +195,8 @@ void EditorLayer::RenderViewport()
 
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
+
+	m_MouseOverViewport = ImGui::IsWindowHovered();
 
 	if (m_SelectedObject)
 		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::WORLD, glm::value_ptr(m_SelectedObject->GetComponent<TransformComponent>()->m_Transform));

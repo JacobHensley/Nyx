@@ -1,7 +1,7 @@
 #pragma once
 #include "nyx/Common.h"
 #include "Nyx/Application.h"
-#include "sol/sol.hpp"
+//#include "sol/sol.hpp"
 #include "Nyx/Asset.h"
 
 namespace Nyx {
@@ -24,7 +24,7 @@ namespace Nyx {
 		}
 
 	private:
-		sol::load_result m_Script;
+	//	sol::load_result m_Script;
 	};
 
 }

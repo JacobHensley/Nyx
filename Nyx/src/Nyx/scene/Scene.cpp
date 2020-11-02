@@ -35,10 +35,7 @@ namespace Nyx {
 
 		for (auto object : m_SceneObjects)
 		{
-			if (object != m_SelectedObject)
-				object->Render();
-			else
-				object->RenderSelected();
+			object->Render();
 		}
 
 		SceneRenderer::End();
@@ -105,7 +102,7 @@ namespace Nyx {
 			out << YAML::Value;
 			out << YAML::BeginMap;
 			out << YAML::Key << "Name";
-			out << YAML::Value << object->GetDebugName();
+			out << YAML::Value << object->GetObjectName();
 			out << YAML::Key << "UUID";
 			out << YAML::Value << object->GetUUID().GetUUID();
 			out << YAML::Key << "Components";

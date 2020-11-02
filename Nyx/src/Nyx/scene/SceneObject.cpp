@@ -8,17 +8,17 @@
 namespace Nyx {
 
 	SceneObject::SceneObject()
-		: m_DebugName("No name")
+		: m_ObjectName("No name")
 	{
 	}
 
 	SceneObject::SceneObject(const String& debugName)
-		: m_DebugName(debugName)
+		: m_ObjectName(debugName)
 	{
 	}
 
 	SceneObject::SceneObject(const SceneObject& other)
-		: m_DebugName(other.m_DebugName)
+		: m_ObjectName(other.m_ObjectName)
 	{
 	}
 

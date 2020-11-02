@@ -36,7 +36,7 @@ namespace Nyx {
 		Ref<Window> m_Window;
 		Ref<LayerStack> m_LayerStack;
 		Ref<ImGUILayer> m_ImGUILayer;
-		sol::state m_LuaState;
+	//	sol::state m_LuaState;
 
 	private:
 		static Application* s_Instance;
