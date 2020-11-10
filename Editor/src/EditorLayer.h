@@ -4,10 +4,13 @@
 #include "Nyx/graphics/renderer/SceneRenderer.h"
 #include "Nyx/scene/component/MeshComponent.h"
 #include "Nyx/scene/component/MaterialComponent.h"
+#include "Nyx/graphics/renderer/PBRMaterial.h"
 #include "Nyx/graphics/renderer/DebugRenderer.h"
 #include "Nyx/graphics/renderer/Renderer.h"
 #include "Nyx/Utilities.h"
 
+#include <imgui/imgui_internal.h>
+#include "ImGui/misc/cpp/imgui_stdlib.h"
 #include "ImGui/ImGuizmo.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -60,4 +63,6 @@ private:
 	Ref<EnvironmentMap> m_Skybox;
 	Ref<LightEnvironment> m_LightEnvironment;
 	Ref<DirectionalLight> m_SceneLight;
+
+	AssetHandle defaultMesh;
 };

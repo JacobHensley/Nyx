@@ -196,6 +196,8 @@ namespace Nyx {
 
 		if (e != m_SceneObjects.end())
 		{
+			if (sceneObject == m_SelectedObject)
+				m_SelectedObject = nullptr;
 			m_SceneObjects.erase(e);
 			return;
 		}

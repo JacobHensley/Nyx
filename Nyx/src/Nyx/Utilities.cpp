@@ -3,7 +3,7 @@
 
 namespace Nyx {
 
-	String OpenFileExplorer()
+	String OpenFileExplorer(const char* filter)
 	{
 		OPENFILENAMEA ofn;
 		char szFile[100];
@@ -13,7 +13,8 @@ namespace Nyx {
 		ofn.lpstrFile = szFile;
 		ofn.lpstrFile[0] = '\0';
 		ofn.nMaxFile = sizeof(szFile);
-		ofn.lpstrFilter = "All\0*.*\0FBX\0*.FBX\0";
+		ofn.lpstrFilter = filter;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 		GetOpenFileNameA(&ofn);
 
 		return (String)(ofn.lpstrFile);

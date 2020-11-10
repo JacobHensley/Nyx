@@ -29,7 +29,7 @@ namespace Nyx {
 
 		inline Ref<ImGUILayer> GetImGUILayer() { return m_ImGUILayer; }
 		inline Ref<Window> GetWindow() { return m_Window; }
-		inline static sol::state& GetLuaState() { return s_Instance->m_LuaState; }
+	//	inline static sol::state& GetLuaState() { return s_Instance->m_LuaState; }
 		inline static Application& GetApp() { return *s_Instance; }
 
 	private:

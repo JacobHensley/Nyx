@@ -47,12 +47,14 @@ namespace Nyx {
 			Ref<MaterialComponent> materialComponent = GetComponent<MaterialComponent>();
 
 		//	SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
-			SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
-		//	if (materialComponent)
-		//		SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
-		//	else
-		//		SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
-		
+		//	SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
+			if (meshComponent && transformComponent)
+			{
+				if (materialComponent)
+					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform(), materialComponent->GetMaterial());
+				else
+					SceneRenderer::SubmitMesh(meshComponent->GetMesh(), transformComponent->GetTransform());
+			}
 
 			for (auto const& x : m_Components)
 			{

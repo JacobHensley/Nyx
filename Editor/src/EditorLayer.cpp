@@ -1,7 +1,7 @@
 #include "EditorLayer.h"
 
 EditorLayer::EditorLayer()
-	:	Layer("Editor")
+	: Layer("Editor")
 {
 	Init();
 }
@@ -16,7 +16,9 @@ void EditorLayer::Init()
 	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
 	m_Scene = CreateRef<Scene>(m_Camera, m_Skybox, m_LightEnvironment);
-	
+
+	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
+
 	CreateObject("Default Object", "assets/models/backpack/backpack.fbx", glm::mat4(1.0f));
 }
 
@@ -33,6 +35,8 @@ void EditorLayer::Render()
 
 void EditorLayer::ImGUIRender()
 {
+	m_SelectedObject = m_Scene->GetSelectedObject();
+
 	RenderViewport();
 	RenderSceneWindow();
 	RenderPropertiesWindow(m_SelectedObject);
@@ -44,7 +48,7 @@ void EditorLayer::OnEvent(Event& e)
 	if (e.GetEventType() == EventType::MouseButtonPressed)
 	{
 		MouseButtonEvent& mousePressed = static_cast<MouseButtonEvent&>(e);
-		if (mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT && m_MouseOverViewport)
+		if (mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT && m_MouseOverViewport && !Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver())
 			MousePick();
 	}
 }
@@ -68,8 +72,16 @@ void EditorLayer::RenderSceneWindow()
 
 	std::vector<Ref<SceneObject>>& objects = m_Scene->GetSceneObjects();
 
-	static int selected = -1;
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+	if (ImGui::Button("+", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetTextLineHeightWithSpacing())))
+	{
+		m_Scene->CreateObject("New Object");
+	}
+	ImGui::PopStyleVar();
 
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+	static int selected = -1;
 	for (int i = 0; i < objects.size(); i++)
 	{
 		if (objects[i] == m_SelectedObject)
@@ -81,7 +93,20 @@ void EditorLayer::RenderSceneWindow()
 			m_Scene->SetSelectedObject(objects[i]);
 			selected = i;
 		}
-			
+
+		ImGui::OpenPopupOnItemClick(("ContextMenu##" + std::to_string(i)).c_str(), 1);
+		if (ImGui::BeginPopup(("ContextMenu##" + std::to_string(i)).c_str()))
+		{
+			ImGui::Text(objects[i]->GetObjectName().c_str());
+			ImGui::Separator();
+
+			if (ImGui::Selectable("Delete"))
+			{
+				m_Scene->Remove(objects[i]);
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject == nullptr)
@@ -100,6 +125,54 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 
 	if (object)
 	{
+		const String& name = object->GetObjectName();
+		String nameInput = name;
+		if (ImGui::InputText("##NameInput", &nameInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+		{
+			if (nameInput != name)
+				object->SetObjectName(nameInput);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Add Component"))
+		{
+			ImGui::OpenPopup("AddComponents");
+		}
+
+		if (ImGui::BeginPopup("AddComponents"))
+		{
+			ImGui::Text("Components");
+			ImGui::Separator();
+
+			if (ImGui::Selectable("Transform"))
+			{
+				Ref<TransformComponent> transformComponent = CreateRef<TransformComponent>(glm::mat4(1.0f));
+				object->AddComponent(transformComponent);
+			}
+
+			if (ImGui::Selectable("Mesh"))
+			{
+				Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(defaultMesh);
+				object->AddComponent(meshComponent);
+			}
+
+			if (ImGui::Selectable("Material"))
+			{
+				if (!object->GetComponent<MaterialComponent>())
+				{
+					Ref<PBRMaterial> material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+					AssetHandle materialHandle = AssetManager::Insert(material);
+
+					Ref<MaterialComponent> materialComponent = CreateRef<MaterialComponent>(materialHandle);
+					object->AddComponent(materialComponent);
+				}
+			}
+
+			ImGui::EndPopup();
+		}
+
+		ImGui::SameLine();
 
 		Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
 		if (transformComponent && ImGui::CollapsingHeader("Transform"))
@@ -116,33 +189,31 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 
 			ImGui::DragFloat3("Translation", glm::value_ptr(translation), 0.1f);
 			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
-			//	ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
-
-		
-
-			if (ImGui::DragFloat("Rotation Y", &euler.y))
-			{
-				glm::mat4 rotationMatrix = glm::toMat4(glm::quat(glm::radians(euler)));
-
-			//	rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(euler.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
-			//		glm::rotate(glm::mat4(1.0f), glm::radians(euler.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
-			//		glm::rotate(glm::mat4(1.0f), glm::radians(euler.x), glm::vec3(1.0f, 0.0f, 0.0f));
-
-				glm::mat4 newTransform = glm::translate(glm::mat4(1.0f), translation) * rotationMatrix * glm::scale(glm::mat4(1.0f), scale);
-
-				transform = newTransform;
-			}
-
-		
-			euler = glm::radians(euler);
-			//	glm::mat4 rotationMatrix = glm::eulerAngleYXZ(euler.y, euler.x, euler.z);
-
+			ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
 		}
 
 		Ref<MeshComponent> meshComponent = object->GetComponent<MeshComponent>();
 		if (meshComponent && ImGui::CollapsingHeader("Mesh"))
 		{
 			Ref<Mesh> mesh = meshComponent->GetMesh();
+			const String& path = mesh->GetPath();
+			String meshInput = path;
+
+			if (ImGui::Button(" ... "))
+			{
+				String file = OpenFileExplorer("FBX\0*.FBX\0");
+				if (file != "")
+					mesh->Reload(file);
+			}
+
+			ImGui::SameLine();
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 70);
+			if (ImGui::InputText("##MeshInput", &meshInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			{
+				if (meshInput != path)
+					mesh->Reload(meshInput);
+			}
 		}
 
 		Ref<MaterialComponent> materialComponent = object->GetComponent<MaterialComponent>();
@@ -150,6 +221,7 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 		{
 			Ref<Material> material = materialComponent->GetMaterial();
 		}
+
 	}
 
 	ImGui::End();
@@ -198,8 +270,14 @@ void EditorLayer::RenderViewport()
 
 	m_MouseOverViewport = ImGui::IsWindowHovered();
 
+	
 	if (m_SelectedObject)
-		ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::WORLD, glm::value_ptr(m_SelectedObject->GetComponent<TransformComponent>()->m_Transform));
+	{
+		Ref<TransformComponent> transformComponent = m_SelectedObject->GetComponent<TransformComponent>();
+		if (transformComponent)
+			ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::WORLD, glm::value_ptr(transformComponent->m_Transform));
+	}
+		
 
 	ImGui::End();
 	ImGui::PopStyleVar();

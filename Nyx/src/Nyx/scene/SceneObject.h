@@ -31,16 +31,27 @@ namespace Nyx {
 			return nullptr;
 		}
 
+		template<typename T>
+		bool RemoveComponent()
+		{
+			if (m_Components.find(T::GetStaticType()) != m_Components.end())
+			{
+				m_Components.erase(T::GetStaticType());
+				return true;
+			}
+
+			return false;
+		}
+
 		inline void SetActive(bool value) { m_IsActive = value; }
 		inline bool IsActive() { return m_IsActive; }
 
 		inline UUID GetUUID() { return m_UUID; }
 
 		inline const std::unordered_map<Component::Type*, Ref<Component>>& GetComponents() { return m_Components; }
-
+		
+		inline void SetObjectName(const String& name) { m_ObjectName = name; }
 		inline const String& GetObjectName() { return m_ObjectName; }
-
-
 
 	private:
 		Scene* m_Scene = nullptr;

@@ -14,13 +14,13 @@ namespace Nyx {
 		template<typename... Args>
 		void Run(Args&&... args)
 		{
-			m_Script.call(args...);
+		//	m_Script.call(args...);
 		}
 
 		template<typename... Args>
 		void CallFunction(const String& functionName, Args&&... args)
 		{
-			Application::GetLuaState()[functionName](args...);
+		//	Application::GetLuaState()[functionName](args...);
 		}
 
 	private:

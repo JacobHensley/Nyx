@@ -235,6 +235,9 @@ namespace Nyx {
 		m_Indices.clear();
 		m_SubMeshes.clear();
 
+		m_BaseIndexPointer = 0;
+		m_BaseVertexPointer = 0;
+
 		if (!Load(path)) 
 		{
 			Load(m_Path);

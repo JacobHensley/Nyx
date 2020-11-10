@@ -34,6 +34,8 @@ namespace Nyx {
 		
 		bool SetSelectedObject(const Ref<SceneObject>& sceneObject);
 
+		Ref<SceneObject> GetSelectedObject() { return m_SelectedObject; }
+
 		void Save(const String& filename);
 
 		void Remove(const Ref<SceneObject>& sceneObject);
