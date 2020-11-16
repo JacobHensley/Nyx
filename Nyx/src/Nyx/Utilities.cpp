@@ -20,6 +20,25 @@ namespace Nyx {
 		return (String)(ofn.lpstrFile);
 	}
 
+	String SaveFileExplorer(const char* filter)
+	{
+		OPENFILENAMEA ofn;
+		CHAR szFile[260] = { 0 };
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.lpstrFile = szFile;
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = filter;
+		ofn.nFilterIndex = 1;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
+
+		GetSaveFileNameA(&ofn);
+
+		return (String)(ofn.lpstrFile);
+	}
+
 	std::vector<String> Tokenize(const String& str, const char delimiter)
 	{
 		std::vector<String> tokens;

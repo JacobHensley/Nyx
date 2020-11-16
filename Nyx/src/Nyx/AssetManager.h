@@ -36,6 +36,10 @@ namespace Nyx {
 				return "Mesh";
 			else if (type == AssetType::TEXTURE)
 				return "Texture";
+			else if (type == AssetType::TEXTURE_CUBE)
+				return "TextureCube";
+			else if (type == AssetType::MATERIAL)
+				return "Material";
 			else if (type == AssetType::SCRIPT)
 				return "Script";
 

@@ -41,6 +41,7 @@ void EditorLayer::ImGUIRender()
 	RenderSceneWindow();
 	RenderPropertiesWindow(m_SelectedObject);
 	RenderSceneSettingsWindow();
+	RenderMainMenu();
 }
 
 void EditorLayer::OnEvent(Event& e)
@@ -172,8 +173,6 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			ImGui::EndPopup();
 		}
 
-		ImGui::SameLine();
-
 		Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
 		if (transformComponent && ImGui::CollapsingHeader("Transform"))
 		{
@@ -231,6 +230,56 @@ void EditorLayer::RenderSceneSettingsWindow()
 {
 	ImGui::Begin("Scene Settings");
 	ImGui::End();
+}
+
+void EditorLayer::RenderMainMenu()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New")) 
+			{
+				//First check if scene has been saved
+				//Create new scene with no path
+			}
+			if (ImGui::MenuItem("Open")) 
+			{
+				//First check if scene has been saved
+				String path = OpenFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+				if (path != "")
+				{
+					//Create scene from file and replace current scene with it
+				}
+			}
+			if (ImGui::MenuItem("Save")) 
+			{
+				if (m_Scene->GetPath().empty())
+				{
+					String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+					if (path != "")
+					{
+						m_Scene->Save(path);
+						m_Scene->SetPath(path);
+					}
+				} 
+				else 
+				{
+					m_Scene->Save(m_Scene->GetPath());
+				}
+			}
+			if (ImGui::MenuItem("Save As")) 
+			{
+				String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+				if (path != "")
+				{
+					m_Scene->Save(path);
+				}
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
 }
 
 void EditorLayer::RenderViewport()

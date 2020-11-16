@@ -1,0 +1,26 @@
+Objects:
+  - Object UUID: 8901520093766083564
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Rotation: [1, 0, 0, 0]
+    MeshComponent: 12295994385367130077
+    MaterialComponent: 1822272255185308821
+---
+Assets:
+  - 19260189949776685:
+      Asset Type: TextureCube
+      Path: assets/textures/canyon_irradiance.png
+  - 12295994385367130077:
+      Asset Type: Mesh
+      Path: assets/models/backpack/backpack.fbx
+  - 1822272255185308821:
+      Asset Type: Material
+  - 7334306070982563472:
+      Asset Type: TextureCube
+      Path: assets/textures/canyon_Radiance.png
+  - 15398257569138757566:
+      Asset Type: Mesh
+      Path: assets/models/backpack/backpack.fbx
+  - 5301438571345565268:
+      Asset Type: Material

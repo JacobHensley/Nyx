@@ -34,12 +34,15 @@ namespace Nyx {
 		
 		bool SetSelectedObject(const Ref<SceneObject>& sceneObject);
 
-		Ref<SceneObject> GetSelectedObject() { return m_SelectedObject; }
+		inline Ref<SceneObject> GetSelectedObject() { return m_SelectedObject; }
 
 		void Save(const String& filename);
 
 		void Remove(const Ref<SceneObject>& sceneObject);
 		void RemoveObject(uint index);
+
+		inline const String& GetPath() { return m_Path; }
+		inline void SetPath(const String& path) { m_Path = path; }
 
 		inline std::vector<Ref<SceneObject>>& GetSceneObjects() { return m_SceneObjects; }
 		const Ref<Camera> GetCamera() { return m_Camera; }
@@ -57,6 +60,6 @@ namespace Nyx {
 		Ref<Camera> m_Camera;
 		Ref<EnvironmentMap> m_EnvironmentMap;
 		Ref<LightEnvironment> m_LightEnvironment;
-
+		String m_Path;
 	};
 }

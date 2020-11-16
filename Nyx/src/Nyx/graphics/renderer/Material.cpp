@@ -7,6 +7,8 @@ namespace Nyx {
 	Material::Material(Ref<Shader> shader)
 		:	m_Shader(shader)
 	{
+		m_AssetType = AssetType::MATERIAL;
+
 		std::vector<UniformBuffer*> uniformBuffers = m_Shader->GetUniformBuffers(UniformSystemType::MATERIAL);
 		for (UniformBuffer* uniformBuffer : uniformBuffers)
 		{

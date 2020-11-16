@@ -5,7 +5,7 @@ namespace Nyx {
 
 	enum class AssetType
 	{
-		INVAILD = 0, MESH, TEXTURE, TEXTURE_CUBE, SCRIPT
+		INVAILD = 0, MESH, TEXTURE, TEXTURE_CUBE, SCRIPT, MATERIAL
 	};
 
     class Asset

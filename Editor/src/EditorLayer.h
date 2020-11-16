@@ -40,6 +40,7 @@ private:
 	void RenderSceneWindow();
 	void RenderPropertiesWindow(Ref<SceneObject> object);
 	void RenderSceneSettingsWindow();
+	void RenderMainMenu();
 	void RenderViewport();
 
 	void UpdateGizmoMode();
