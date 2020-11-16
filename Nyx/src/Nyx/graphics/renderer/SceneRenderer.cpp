@@ -44,6 +44,15 @@ namespace Nyx {
 		// Create MSAA buffer
 		// sample depth buffer
 
+		TextureParameters params;
+		params.format = TextureFormat::RGBA16F;
+
+		FramebufferSpecification fbSpec;
+		fbSpec.Scale = 1.0f;
+		fbSpec.ColorAttachments.emplace_back(params);
+		fbSpec.DepthAttachments.emplace_back(params);
+		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(fbSpec);
+
 		s_Data.m_GeometryPass = CreateRef<RenderPass>();
 		s_Data.m_CompositePass = CreateRef<RenderPass>(TextureParameters(TextureFormat::RGBA16F, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
 
@@ -55,8 +64,7 @@ namespace Nyx {
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 
-		TextureParameters params;
-		params.format = TextureFormat::RGBA16F;
+
 		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(1280, 720, params);
 		s_Data.m_TempBuffer0->Bind();
 		s_Data.m_TempBuffer0->Attach(BufferAtachment::COLOR);
@@ -74,6 +82,12 @@ namespace Nyx {
 		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::COLOR);
 		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::DEPTH);
 		s_Data.m_JumpFloodBuffer->Unbind();
+
+
+
+
+
+
 
 		s_Data.m_JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFloodInit.shader");
 		s_Data.m_JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood.shader");

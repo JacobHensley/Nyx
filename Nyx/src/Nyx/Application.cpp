@@ -2,6 +2,8 @@
 #include "Application.h"
 
 #include "Nyx/graphics/renderer/DebugRenderer.h"
+#include "Nyx/graphics/renderer/SceneRenderer.h"
+#include "Nyx/graphics/renderer/Renderer.h"
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -21,6 +23,8 @@ namespace Nyx {
 		m_Window = CreateRef<Window>("Nyx Engine", 1280, 720);
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
+		SceneRenderer::Init();
+		Renderer::Init();
 		DebugRenderer::Init();
 
 		m_LayerStack =  CreateRef<LayerStack>();

@@ -2,7 +2,7 @@
 #include "Nyx/graphics/Window.h"
 #include "Nyx/graphics/Layers/LayerStack.h"
 #include "Nyx/graphics/ImGUI/ImGUILayer.h"
-#include "sol/sol.hpp"
+//#include "sol/sol.hpp"
 
 namespace Nyx {
 

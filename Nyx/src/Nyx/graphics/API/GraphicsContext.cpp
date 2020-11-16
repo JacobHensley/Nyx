@@ -41,8 +41,6 @@ namespace Nyx {
 		NX_CORE_INFO("Renderer: {0}", glGetString(GL_RENDERER));
 		NX_CORE_INFO("Version:  {0}", glGetString(GL_VERSION));
 
-		SceneRenderer::Init();
-		Renderer::Init();
 	}
 
 	void GraphicsContext::SwapBuffers()
