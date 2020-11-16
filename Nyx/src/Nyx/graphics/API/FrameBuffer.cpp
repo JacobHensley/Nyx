@@ -31,25 +31,25 @@ namespace Nyx {
 	FrameBuffer::~FrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_FrameBufferID);
-		glDeleteRenderbuffers(1, &m_RenderBufferID);
+	//	glDeleteRenderbuffers(1, &m_RenderBufferID);
 	}
 
 	void FrameBuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
-		glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBufferID);
-		glViewport(0, 0, m_Texture->GetWidth(), m_Texture->GetHeight());
+	//	glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBufferID);
+		glViewport(0, 0, m_Width, m_Height);
 	}
 
 	void FrameBuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	//	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	void FrameBuffer::Attach(BufferAtachment attachment)
 	{
-		if (attachment == BufferAtachment::COLOR && !m_HasColorBuffer)
+	/*	if (attachment == BufferAtachment::COLOR && !m_HasColorBuffer)
 		{
 			glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_Texture->GetTextureID(), 0);
 			m_HasColorBuffer = true;
@@ -60,7 +60,7 @@ namespace Nyx {
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_Texture->GetWidth(), m_Texture->GetHeight());
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_RenderBufferID);
 			m_HasDepthBuffer = true;
-		}
+		} */
 	}
 
 	void FrameBuffer::Clear()
@@ -97,7 +97,7 @@ namespace Nyx {
 			{
 				auto& textureSpec = m_Specification.ColorAttachments[i];
 
-				GLuint textureID = m_ColorAttachments.emplace_back();
+				GLuint& textureID = m_ColorAttachments.emplace_back();
 				glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
 				glBindTexture(GL_TEXTURE_2D, textureID);
 

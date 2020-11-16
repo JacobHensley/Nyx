@@ -45,7 +45,7 @@ namespace Nyx {
 
 		inline Ref<Texture> GetTexture() const { return m_Texture; }
 		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
-		inline uint GetRenderBufferID() const { return m_RenderBufferID; }
+		inline std::vector<uint>& const GetColorAttachments() { return m_ColorAttachments; }
 
 	private:
 		bool m_HasColorBuffer = false;
@@ -54,7 +54,6 @@ namespace Nyx {
 		uint32_t m_Width = 0, m_Height = 0;
 
 		uint m_FrameBufferID = 0;
-		uint m_RenderBufferID = 0;
 
 		FramebufferSpecification m_Specification;
 		std::vector<uint> m_ColorAttachments;

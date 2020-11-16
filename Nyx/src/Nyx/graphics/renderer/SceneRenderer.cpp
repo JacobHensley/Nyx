@@ -65,29 +65,9 @@ namespace Nyx {
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 
 
-		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(1280, 720, params);
-		s_Data.m_TempBuffer0->Bind();
-		s_Data.m_TempBuffer0->Attach(BufferAtachment::COLOR);
-		s_Data.m_TempBuffer0->Attach(BufferAtachment::DEPTH);
-		s_Data.m_TempBuffer0->Unbind();
-
-		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(1280, 720, params);
-		s_Data.m_TempBuffer1->Bind();
-		s_Data.m_TempBuffer1->Attach(BufferAtachment::COLOR);
-		s_Data.m_TempBuffer1->Attach(BufferAtachment::DEPTH);
-		s_Data.m_TempBuffer1->Unbind();
-
-		s_Data.m_JumpFloodBuffer = CreateRef<FrameBuffer>(1280, 720);
-		s_Data.m_JumpFloodBuffer->Bind();
-		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::COLOR);
-		s_Data.m_JumpFloodBuffer->Attach(BufferAtachment::DEPTH);
-		s_Data.m_JumpFloodBuffer->Unbind();
-
-
-
-
-
-
+		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(fbSpec);
+		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(fbSpec);
+		s_Data.m_JumpFloodBuffer = CreateRef<FrameBuffer>(fbSpec);
 
 		s_Data.m_JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFloodInit.shader");
 		s_Data.m_JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood.shader");
@@ -217,7 +197,8 @@ namespace Nyx {
 		shader->Bind();
 		shader->SetUniform1i("r_InputTexture", 5);
 
-		src->GetTexture()->Bind(5);
+		glBindTextureUnit(5, src->GetColorAttachments()[0]);
+		//src->GetTexture()->Bind(5);
 
 		s_Data.m_FullscreenQuad->Render(true);
 
@@ -234,7 +215,8 @@ namespace Nyx {
 		s_Data.m_CompositeShader->SetUniform1f("r_ExposureActive", *s_Data.m_ActiveScene->GetCamera()->GetExposureActive());
 		s_Data.m_CompositeShader->SetUniform1i("r_InputTexture", 5);
 
-		s_Data.m_GeometryPass->GetFrameBuffer()->GetTexture()->Bind(5);
+		glBindTextureUnit(5, s_Data.m_GeometryPass->GetFrameBuffer()->GetColorAttachments()[0]);
+		//s_Data.m_GeometryPass->GetFrameBuffer()->GetTexture()->Bind(5);
 
 		s_Data.m_FullscreenQuad->Render(true);
 

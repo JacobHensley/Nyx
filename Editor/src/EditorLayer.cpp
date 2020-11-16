@@ -304,7 +304,7 @@ void EditorLayer::RenderViewport()
 	m_ViewportPosition.x += viewportOffset.x;
 	m_ViewportPosition.y += viewportOffset.y;
 
-	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetTexture()->GetTextureID(), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
+	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetColorAttachments()[0], ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	if (m_LastViewportSize != m_ViewportSize)
 	{

@@ -10,20 +10,23 @@ namespace Nyx {
 	public:
 		RenderPass()
 		{
-			m_FrameBuffer = CreateRef<FrameBuffer>(1280, 720);
-			m_FrameBuffer->Bind();
-			m_FrameBuffer->Attach(BufferAtachment::COLOR);
-			m_FrameBuffer->Attach(BufferAtachment::DEPTH);
-			m_FrameBuffer->Unbind();
+			TextureParameters params;
+			params.format = TextureFormat::RGBA16F;
+
+			FramebufferSpecification fbSpec;
+			fbSpec.Scale = 1.0f;
+			fbSpec.ColorAttachments.emplace_back(params);
+			fbSpec.DepthAttachments.emplace_back(params);
+			m_FrameBuffer = CreateRef<FrameBuffer>(fbSpec);
 		}
 
 		RenderPass(TextureParameters& textureParameters)
 		{
-			m_FrameBuffer = CreateRef<FrameBuffer>(1280, 720, textureParameters);
-			m_FrameBuffer->Bind();
-			m_FrameBuffer->Attach(BufferAtachment::COLOR);
-			m_FrameBuffer->Attach(BufferAtachment::DEPTH);
-			m_FrameBuffer->Unbind();
+			FramebufferSpecification fbSpec;
+			fbSpec.Scale = 1.0f;
+			fbSpec.ColorAttachments.emplace_back(textureParameters);
+			fbSpec.DepthAttachments.emplace_back(textureParameters);
+			m_FrameBuffer = CreateRef<FrameBuffer>(fbSpec);
 		}
 
 		void Bind()
