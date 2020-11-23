@@ -29,7 +29,7 @@ void main()
 	const float gamma = 2.2;
 	const float pureWhite = 1.0;
 
-	vec3 color = texture(r_InputTexture, v_TexCoords).rgb * r_Exposure;
+	vec3 color = texture(r_InputTexture, v_TexCoords).rgb * 1.0;
 	// Reinhard tonemapping operator.
 	// see: "Photographic Tone Reproduction for Digital Images", eq. 4
 	float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
@@ -39,7 +39,5 @@ void main()
 	vec3 mappedColor = (mappedLuminance / luminance) * color;
 
 	// Gamma correction.
-	outColor = vec4(texture(r_InputTexture, v_TexCoords).rgb, 1.0f);
-	if (r_ExposureActive)
-		outColor = vec4(pow(mappedColor, vec3(1.0 / gamma)), 1.0);
+	outColor = vec4(pow(mappedColor, vec3(1.0 / gamma)), 1.0);
 }

@@ -111,7 +111,7 @@ namespace Nyx {
 		}	
 		else 
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8, width, height, 0, TextureFormatToGL(m_Parameters.format), GL_UNSIGNED_BYTE, imageData);
 		}
 
 		GLenum filter = TextureFilterToGL(m_Parameters.filter);

@@ -377,7 +377,11 @@ bool EditorLayer::SelectObject()
 {
 	for (Ref<SceneObject> object : m_Scene->GetSceneObjects())
 	{
-		Ref<Mesh> mesh = object->GetComponent<MeshComponent>()->GetMesh();
+		auto meshComponent = object->GetComponent<MeshComponent>();
+		if (!meshComponent)
+			continue;
+
+		Ref<Mesh> mesh = meshComponent->GetMesh();
 		glm::mat4& objectTransform = object->GetComponent<TransformComponent>()->GetTransform();
 
 		for (auto subMesh : mesh->GetSubMeshs())

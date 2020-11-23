@@ -65,6 +65,7 @@ namespace Nyx {
 
 	void FrameBuffer::Clear()
 	{
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -126,7 +127,7 @@ namespace Nyx {
 			{
 				auto& textureSpec = m_Specification.DepthAttachments[i];
 
-				GLuint textureID = m_ColorAttachments.emplace_back();
+				GLuint& textureID = m_DepthAttachment;
 				glCreateTextures(GL_TEXTURE_2D, 1, &textureID);
 				glBindTexture(GL_TEXTURE_2D, textureID);
 

@@ -54,7 +54,7 @@ namespace Nyx {
 		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(fbSpec);
 
 		s_Data.m_GeometryPass = CreateRef<RenderPass>();
-		s_Data.m_CompositePass = CreateRef<RenderPass>(TextureParameters(TextureFormat::RGBA16F, TextureFilter::NEAREST, TextureWrap::CLAMP_TO_EDGE));
+		s_Data.m_CompositePass = CreateRef<RenderPass>(TextureParameters(TextureFormat::RGBA, TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE));
 
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
 		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
@@ -115,8 +115,8 @@ namespace Nyx {
 
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
-		return s_Data.m_JumpFloodBuffer;
-		//return s_Data.m_GeometryPass->GetFrameBuffer();
+		//return s_Data.m_JumpFloodBuffer;
+		return s_Data.m_CompositePass->GetFrameBuffer();
 	}
 
 	void Nyx::SceneRenderer::Resize(uint width, uint height)
@@ -136,7 +136,7 @@ namespace Nyx {
 
 		//Scene level sorting
 
-	//	Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
+		Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
 
 		for (RenderCommand command : s_Data.m_RenderCommands)
 		{
@@ -178,13 +178,6 @@ namespace Nyx {
 			step /= 2;
 		}
 
-		// Restore state
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader, true);
-		Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader, false);
-
-		
 	}
 
 	void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader, bool clear = true)
@@ -192,7 +185,6 @@ namespace Nyx {
 		dest->Bind();
 		if (clear)
 			dest->Clear();
-		glClear(GL_DEPTH_BUFFER_BIT);
 
 		shader->Bind();
 		shader->SetUniform1i("r_InputTexture", 5);
@@ -208,11 +200,18 @@ namespace Nyx {
 
 	void SceneRenderer::CompositePass()
 	{
+		// Restore state
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//
+		//Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader, true);
+		//Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader, false);
+
+		s_Data.m_ActiveScene->GetCamera()->SetExposure(0.2f);
+
 		s_Data.m_CompositePass->Bind();
 
 		s_Data.m_CompositeShader->Bind();
 		s_Data.m_CompositeShader->SetUniform1f("r_Exposure", *s_Data.m_ActiveScene->GetCamera()->GetExposure());
-		s_Data.m_CompositeShader->SetUniform1f("r_ExposureActive", *s_Data.m_ActiveScene->GetCamera()->GetExposureActive());
 		s_Data.m_CompositeShader->SetUniform1i("r_InputTexture", 5);
 
 		glBindTextureUnit(5, s_Data.m_GeometryPass->GetFrameBuffer()->GetColorAttachments()[0]);
@@ -221,6 +220,11 @@ namespace Nyx {
 		s_Data.m_FullscreenQuad->Render(true);
 
 		s_Data.m_CompositePass->Unbind();
+
+		glDisable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Blit(s_Data.m_TempBuffer0, s_Data.m_CompositePass->GetFrameBuffer(), s_Data.m_FinalJumpFloodShader, false);
+		glEnable(GL_DEPTH_TEST);
 	}
 
 }
