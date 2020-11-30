@@ -1,28 +1,35 @@
-IrradianceMap: 959665276901045801
-RadianceMap: 17498843885251801021
+IrradianceMap: 10142776187614774193
+RadianceMap: 16701751816901336466
 ---
 Objects:
-  - Object UUID: 17673900589583084667
-    Name: New Object
+  - Object UUID: 13918398690295563906
+    Name: Default Object
     TransformComponent:
       Translation: [0, 0, 0]
       Scale: [1, 1, 1]
       Rotation: [1, 0, 0, 0]
-    MeshComponent: 7621686650279765329
-    MaterialComponent: 7689656273151581772
+    MeshComponent: 17174205196414077888
+  - Object UUID: 4915674125284105406
+    Name: New Object
+    TransformComponent:
+      Translation: [-3.70865154, -0.0145177795, 3.68813229]
+      Scale: [1, 1, 1]
+      Rotation: [1, 0, 0, 0]
+    MeshComponent: 13986703835833109728
+    MaterialComponent: 3667678857735699593
 ---
 Assets:
-  - UUID: 959665276901045801
+  - UUID: 10142776187614774193
     Asset Type: TextureCube
     Path: assets/textures/canyon_irradiance.png
-  - UUID: 666946040196871705
-    Asset Type: Mesh
-    Path: assets/models/backpack/backpack.fbx
-  - UUID: 7621686650279765329
-    Asset Type: Mesh
-    Path: C:\dev\Nyx\Editor\assets\models\Sphere1m.fbx
-  - UUID: 17498843885251801021
+  - UUID: 3667678857735699593
+    Asset Type: Material
+  - UUID: 16701751816901336466
     Asset Type: TextureCube
     Path: assets/textures/canyon_Radiance.png
-  - UUID: 7689656273151581772
-    Asset Type: Material
+  - UUID: 17174205196414077888
+    Asset Type: Mesh
+    Path: assets/models/backpack/backpack.fbx
+  - UUID: 13986703835833109728
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\Sphere1m.fbx

@@ -23,9 +23,9 @@ struct YAML::convert<glm::vec3> {
 			return false;
 		}
 
-		rhs.x = node[0].as<double>();
-		rhs.y = node[1].as<double>();
-		rhs.z = node[2].as<double>();
+		rhs.x = node[0].as<float>();
+		rhs.y = node[1].as<float>();
+		rhs.z = node[2].as<float>();
 		return true;
 	}
 };
@@ -46,12 +46,38 @@ struct YAML::convert<glm::vec4> {
 			return false;
 		}
 
-		rhs.x = node[0].as<double>();
-		rhs.y = node[1].as<double>();
-		rhs.z = node[2].as<double>();
-		rhs.w = node[2].as<double>();
+		rhs.x = node[0].as<float>();
+		rhs.y = node[1].as<float>();
+		rhs.z = node[2].as<float>();
+		rhs.w = node[3].as<float>();
 		return true;
 	}
+
+};
+
+template<>
+struct YAML::convert<glm::quat> {
+	static YAML::Node encode(const glm::quat& rhs) {
+		YAML::Node node;
+		node.push_back(rhs.w);
+		node.push_back(rhs.x);
+		node.push_back(rhs.y);
+		node.push_back(rhs.z);
+		return node;
+	}
+
+	static bool decode(const YAML::Node& node, glm::quat& rhs) {
+		if (!node.IsSequence() || node.size() != 4) {
+			return false;
+		}
+
+		rhs.w = node[0].as<float>();
+		rhs.x = node[1].as<float>();
+		rhs.y = node[2].as<float>();
+		rhs.z = node[3].as<float>();
+		return true;
+	}
+
 };
 
 namespace Nyx
@@ -185,13 +211,15 @@ namespace Nyx
 		for (int i = 0; i < assets.size(); i++)
 		{
 			uint64_t UUID = assets[i]["UUID"].as<uint64_t>();
-			String path = assets[i]["Path"].as<String>();
+			String path = assets[i]["Path"] ? assets[i]["Path"].as<String>() : "";
 
 			if (path != "")
 			{
 				String type = assets[i]["Asset Type"].as<String>();
 				if (type == "Mesh")
 					AssetManager::InsertAndLoad<Mesh>(UUID, path);
+				if (type == "TextureCube")
+					AssetManager::InsertAndLoad<TextureCube>(UUID, path);
 			}
 
 		}
@@ -201,7 +229,8 @@ namespace Nyx
 		uint64_t radianceMapUUID = envMap["RadianceMap"].as<uint64_t>();
 
 		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
-		Ref<EnvironmentMap> map = CreateRef<EnvironmentMap>(AssetHandle(irradianceMapUUID), AssetHandle(radianceMapUUID));
+		lightEnvironment->SetDirectionalLight(CreateRef<DirectionalLight>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f)));
+		Ref<EnvironmentMap> map = CreateRef<EnvironmentMap>(AssetHandle(radianceMapUUID), AssetHandle(irradianceMapUUID));
 		Ref<Camera> cam = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 		Ref<Scene> scene = CreateRef<Scene>(cam, map, lightEnvironment);
 
@@ -221,12 +250,13 @@ namespace Nyx
 			{
 				glm::vec3 translation = transformComponent["Translation"].as<glm::vec3>();
 				glm::vec3 scale = transformComponent["Scale"].as<glm::vec3>();
-				glm::vec4 rotation = transformComponent["Rotation"].as<glm::vec4>();
+				glm::quat rotation = transformComponent["Rotation"].as<glm::quat>();
 
 				glm::mat4 transform = glm::mat4(1.0f);
-				transform = glm::translate(transform, translation);
-				transform = glm::scale(transform, scale);
-				//Rotation
+			//	transform = glm::translate(transform, translation);
+			//	transform = glm::scale(transform, scale);
+				glm::mat4 rot = glm::toMat4(rotation);
+				transform = glm::translate(glm::mat4(1.0f), translation) * rot * glm::translate(glm::mat4(1.0f), scale);
 
 				Ref<TransformComponent> component = CreateRef<TransformComponent>(transform);
 				object->AddComponent(component);

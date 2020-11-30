@@ -198,6 +198,7 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			Ref<Mesh> mesh = meshComponent->GetMesh();
 			const String& path = mesh->GetPath();
 			String meshInput = path;
+			meshInput.reserve(128);
 
 			if (ImGui::Button(" ... "))
 			{
@@ -218,7 +219,8 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			{
 				if (meshInput != path)
 				{
-					meshComponent->Set(AssetManager::Load<Mesh>(meshInput));
+					std::string newString = meshInput.c_str();
+					meshComponent->Set(AssetManager::Load<Mesh>(newString));
 				}
 			}
 		}
@@ -258,9 +260,7 @@ void EditorLayer::RenderMainMenu()
 				String path = OpenFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 				if (path != "")
 				{
-				//	m_Scene->Load(path);
 					m_Scene = SceneSerializer::Load(path);
-					//Create scene from file and replace current scene with it
 				}
 			}
 			if (ImGui::MenuItem("Save")) 
@@ -270,14 +270,12 @@ void EditorLayer::RenderMainMenu()
 					String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 					if (path != "")
 					{
-					//	m_Scene->Save(path);
 						SceneSerializer::Save(m_Scene, path);
 						m_Scene->SetPath(path);
 					}
 				} 
 				else 
 				{
-				//	m_Scene->Save(m_Scene->GetPath());
 					SceneSerializer::Save(m_Scene, m_Scene->GetPath());
 				}
 			}

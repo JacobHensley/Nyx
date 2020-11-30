@@ -14,7 +14,7 @@ namespace Nyx {
 		ofn.lpstrFile[0] = '\0';
 		ofn.nMaxFile = sizeof(szFile);
 		ofn.lpstrFilter = filter;
-		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 		GetOpenFileNameA(&ofn);
 
 		return (String)(ofn.lpstrFile);
