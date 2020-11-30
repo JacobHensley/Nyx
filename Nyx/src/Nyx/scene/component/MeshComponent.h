@@ -12,6 +12,8 @@ namespace Nyx {
 
 	public:
 		AssetHandle Get() { return m_Mesh; }
+		void Set(AssetHandle handle) { m_Mesh = handle; }
+
 		Ref<Mesh> GetMesh() { return m_Mesh.Get<Mesh>(); }
 
 		UUID GetUUID() { return m_Mesh.GetUUID(); }

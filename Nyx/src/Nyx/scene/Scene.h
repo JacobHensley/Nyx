@@ -36,8 +36,6 @@ namespace Nyx {
 
 		inline Ref<SceneObject> GetSelectedObject() { return m_SelectedObject; }
 
-		void Save(const String& filename);
-
 		void Remove(const Ref<SceneObject>& sceneObject);
 		void RemoveObject(uint index);
 

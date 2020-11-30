@@ -47,6 +47,7 @@ namespace Nyx {
 		inline bool IsActive() { return m_IsActive; }
 
 		inline UUID GetUUID() { return m_UUID; }
+		inline void SetUUID(uint64_t id) { m_UUID = id; }
 
 		inline const std::unordered_map<Component::Type*, Ref<Component>>& GetComponents() { return m_Components; }
 		

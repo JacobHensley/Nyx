@@ -50,6 +50,15 @@ namespace Nyx {
 		template<typename T>
 		static AssetHandle Load(const std::string& path)
 		{
+			//better way?
+			for (auto const& [uuid, filepath] : m_AssetPaths)
+			{
+				if (path == filepath) 
+				{
+					return AssetHandle(uuid);
+				}
+			}
+
 			UUID uuid; // Generate a new UUID for the asset
 			return InsertAndLoad<T>(uuid, path);
 		}

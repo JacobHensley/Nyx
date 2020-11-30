@@ -209,6 +209,10 @@ namespace Nyx {
 		{
 			return RendererID::DIRECTIONAL_LIGHT;
 		}
+		else if (name == "PLight")
+		{
+			return RendererID::POINT_LIGHT;
+		}
 
 		return RendererID::NONE;
 	}
@@ -312,6 +316,9 @@ namespace Nyx {
 
 	Ref<ShaderResource> Shader::FindShaderResource(const String& name, UniformSystemType type)
 	{
+		if (m_Resources.find(type) == m_Resources.end())
+			return nullptr;
+
 		for (Ref<ShaderResource> resource : m_Resources.at(type))
 		{
 			if (resource->GetName() == name)

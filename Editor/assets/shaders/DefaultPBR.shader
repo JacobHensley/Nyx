@@ -69,11 +69,18 @@ struct DirectionalLight
 	float lightActive;
 };
 
+struct PointLight
+{
+	vec3 position;
+	vec4 radiance; // rgb = color, a = intensity
+};
+
 // Index 1
 layout(std140, binding = 2) uniform r_FragmentRendererBuffer
 {
 	vec3 CameraPosition;
 	DirectionalLight DirectionLight;
+	PointLight PLight;
 
 } FragmentRendererBuffer;
 
@@ -166,6 +173,30 @@ vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float Ndot
 	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
 }
 
+vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
+{
+	vec3 Li = normalize(FragmentRendererBuffer.PLight.position - v_WorldPosition);
+	vec3 Lh = normalize(Li + V);
+
+	float distance = length(FragmentRendererBuffer.PLight.position - v_WorldPosition);
+	float attenuation = 1.0 / (distance * distance);
+	vec3 Lradiance = FragmentRendererBuffer.PLight.radiance.rgb * FragmentRendererBuffer.PLight.radiance.a * attenuation;
+
+	float cosLi = max(0.0, dot(N, Li));
+	float cosLh = max(0.0, dot(N, Lh));
+	
+	vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, V)));
+	float D = ndfGGX(cosLh, R);
+	float G = gaSchlickGGX(cosLi, NdotV, R);
+	
+	vec3 kd = (1.0 - F) * (1.0 - M);
+	vec3 diffuseBRDF = kd * albedo;
+	
+	vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * NdotV);
+	
+	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+}
+
 vec3 IBL(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, float NdotV, vec3 F0)
 {
 	vec3 irradiance = texture(r_IrradianceTexture, N).rgb;
@@ -203,7 +234,8 @@ void main()
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV);
+	vec3 pLightContribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
-	color = vec4(lightContribution + iblContribution, 1.0f);
+	color = vec4(pLightContribution + lightContribution + iblContribution, 1.0f);
 }

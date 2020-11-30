@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include "Nyx/scene/SceneSerializer.h"
 
 EditorLayer::EditorLayer()
 	: Layer("Editor")
@@ -202,7 +203,12 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			{
 				String file = OpenFileExplorer("FBX\0*.FBX\0");
 				if (file != "")
-					mesh->Reload(file);
+				{
+					if (file != path)
+						meshComponent->Set(AssetManager::Load<Mesh>(file));
+					else
+						mesh->Reload(file);
+				}
 			}
 
 			ImGui::SameLine();
@@ -211,7 +217,9 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			if (ImGui::InputText("##MeshInput", &meshInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 			{
 				if (meshInput != path)
-					mesh->Reload(meshInput);
+				{
+					meshComponent->Set(AssetManager::Load<Mesh>(meshInput));
+				}
 			}
 		}
 
@@ -229,6 +237,7 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 void EditorLayer::RenderSceneSettingsWindow()
 {
 	ImGui::Begin("Scene Settings");
+	ImGui::SliderFloat3("Light", glm::value_ptr(m_LightEnvironment->GetPointLight().position), -1, 1);
 	ImGui::End();
 }
 
@@ -249,6 +258,8 @@ void EditorLayer::RenderMainMenu()
 				String path = OpenFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 				if (path != "")
 				{
+				//	m_Scene->Load(path);
+					m_Scene = SceneSerializer::Load(path);
 					//Create scene from file and replace current scene with it
 				}
 			}
@@ -259,13 +270,15 @@ void EditorLayer::RenderMainMenu()
 					String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 					if (path != "")
 					{
-						m_Scene->Save(path);
+					//	m_Scene->Save(path);
+						SceneSerializer::Save(m_Scene, path);
 						m_Scene->SetPath(path);
 					}
 				} 
 				else 
 				{
-					m_Scene->Save(m_Scene->GetPath());
+				//	m_Scene->Save(m_Scene->GetPath());
+					SceneSerializer::Save(m_Scene, m_Scene->GetPath());
 				}
 			}
 			if (ImGui::MenuItem("Save As")) 
@@ -273,7 +286,7 @@ void EditorLayer::RenderMainMenu()
 				String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 				if (path != "")
 				{
-					m_Scene->Save(path);
+					SceneSerializer::Save(m_Scene, path);
 				}
 			}
 			ImGui::EndMenu();

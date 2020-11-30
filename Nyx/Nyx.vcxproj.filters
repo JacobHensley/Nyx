@@ -199,6 +199,7 @@
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\math\Triangle.h" />
+    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
@@ -316,5 +317,6 @@
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Asset.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
   </ItemGroup>
 </Project>

@@ -110,6 +110,7 @@
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
     <ClInclude Include="src\Nyx\math\Triangle.h" />
+    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
     <ClInclude Include="src\Nyx\Script.h" />
     <ClInclude Include="src\Nyx\UUID.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Nyx\Application.cpp" />
     <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\UUID.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />

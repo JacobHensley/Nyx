@@ -255,6 +255,13 @@ namespace Nyx {
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4, &l.direction, sizeof(glm::vec3));
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4 + sizeof(glm::vec3) + 4, &l.active, sizeof(float));
 		};
+		s_Data.m_RendererUniformFuncs[RendererID::POINT_LIGHT] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
+		{
+			auto light = scene->GetLightEnvironment()->GetPointLight();
+			glm::vec4 radiance = glm::vec4(light.radiance, light.intensity);
+			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &light.position, sizeof(glm::vec3));
+			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4, &radiance, sizeof(glm::vec4));
+		};
 	}
 	void Renderer::InitRenderResourceFunFunctions()
 	{

@@ -22,6 +22,13 @@ namespace Nyx {
 		}
 	};
 
+	struct PointLight
+	{
+		glm::vec3 position = { 1.0f, 1.0f, 0.0f };
+		glm::vec3 radiance = { 1.0f, 1.0f, 1.0f };
+		float intensity = 1.0f;
+	};
+
 	class LightEnvironment 
 	{
 	public:
@@ -31,8 +38,10 @@ namespace Nyx {
 		inline void SetDirectionalLight(Ref<DirectionalLight>& light) { m_DirectionalLight = light; }
 		inline Ref<DirectionalLight> GetDirectionalLight() { return m_DirectionalLight; }
 
+		PointLight& GetPointLight() { return m_PointLight; }
 	private:
 		Ref<DirectionalLight> m_DirectionalLight;
+		PointLight m_PointLight;
 
 	};
 
