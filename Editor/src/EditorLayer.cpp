@@ -13,14 +13,17 @@ void EditorLayer::Init()
 	m_SceneLight = CreateRef<DirectionalLight>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));
 	m_LightEnvironment->SetDirectionalLight(m_SceneLight);
 
+	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
+#if 1
 	m_Skybox = CreateRef<EnvironmentMap>(AssetManager::Load<TextureCube>("assets/textures/canyon_Radiance.png"), AssetManager::Load<TextureCube>("assets/textures/canyon_irradiance.png"));
-	m_Camera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 
-	m_Scene = CreateRef<Scene>(m_Camera, m_Skybox, m_LightEnvironment);
+	m_Scene = CreateRef<Scene>(m_EditorCamera, m_Skybox, m_LightEnvironment);
 
 	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
 
 	CreateObject("Default Object", "assets/models/backpack/backpack.fbx", glm::mat4(1.0f));
+#endif
+//	m_Scene = SceneSerializer::Load("assets/scenes/Sphere.nyx");
 }
 
 void EditorLayer::Update()
@@ -309,6 +312,9 @@ void EditorLayer::RenderViewport()
 	m_ViewportSize.x = ImGui::GetWindowWidth();
 	m_ViewportSize.y = ImGui::GetWindowHeight() - viewportOffset.y;
 
+	auto viewportSize = ImGui::GetContentRegionAvail();
+	m_ViewportSize = { viewportSize.x, viewportSize.y };
+
 	m_ViewportPosition.x = ImGui::GetWindowPos().x;
 	m_ViewportPosition.y = ImGui::GetWindowPos().y;
 
@@ -317,25 +323,28 @@ void EditorLayer::RenderViewport()
 
 	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetColorAttachments()[0], ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
+	auto camera = m_Scene->GetCamera();
 	if (m_LastViewportSize != m_ViewportSize)
 	{
 		SceneRenderer::Resize(m_ViewportSize.x, m_ViewportSize.y);
 		m_LastViewportSize = m_ViewportSize;
+		camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), (float)m_ViewportSize.x, (float)m_ViewportSize.y, 0.01f, 1000.0f));
 	}
 
-	m_Camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), (float)m_ViewportSize.x, (float)m_ViewportSize.y, 0.01f, 1000.0f));
-
+	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
+	float rw = (float)ImGui::GetWindowWidth();
+	float rh = (float)ImGui::GetWindowHeight();
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + viewportOffset.y, rw, rh - viewportOffset.y);
 
 	m_MouseOverViewport = ImGui::IsWindowHovered();
 
-	
 	if (m_SelectedObject)
-	{
+	{float rw = (float)ImGui::GetWindowWidth();
+			float rh = (float)ImGui::GetWindowHeight();
 		Ref<TransformComponent> transformComponent = m_SelectedObject->GetComponent<TransformComponent>();
 		if (transformComponent)
-			ImGuizmo::Manipulate(glm::value_ptr(m_Camera->GetViewMatrix()), glm::value_ptr(m_Camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::WORLD, glm::value_ptr(transformComponent->m_Transform));
+			ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::LOCAL, glm::value_ptr(transformComponent->m_Transform));
 	}
 		
 

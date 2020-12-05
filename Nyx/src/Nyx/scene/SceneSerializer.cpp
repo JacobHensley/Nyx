@@ -256,7 +256,7 @@ namespace Nyx
 			//	transform = glm::translate(transform, translation);
 			//	transform = glm::scale(transform, scale);
 				glm::mat4 rot = glm::toMat4(rotation);
-				transform = glm::translate(glm::mat4(1.0f), translation) * rot * glm::translate(glm::mat4(1.0f), scale);
+				transform = glm::translate(glm::mat4(1.0f), translation) * rot * glm::scale(glm::mat4(1.0f), scale);
 
 				Ref<TransformComponent> component = CreateRef<TransformComponent>(transform);
 				object->AddComponent(component);

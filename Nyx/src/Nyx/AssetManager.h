@@ -109,7 +109,7 @@ namespace Nyx {
 		static AssetHandle InsertAndLoad(UUID uuid, const std::string& path)
 		{
 			// Loading
-			NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
+		//	NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
 
 			Insert(LoadAsset<T>(path), path, uuid);
 			return uuid;

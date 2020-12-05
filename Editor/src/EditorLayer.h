@@ -59,7 +59,7 @@ private:
 	Ref<SceneObject> m_SelectedObject;
 
 	Ref<Scene> m_Scene;
-	Ref<Camera> m_Camera;
+	Ref<Camera> m_EditorCamera;
 
 	Ref<EnvironmentMap> m_Skybox;
 	Ref<LightEnvironment> m_LightEnvironment;
