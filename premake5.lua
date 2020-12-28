@@ -26,7 +26,8 @@ IncludeDir["sol2"] =      "Nyx/vendor/sol2/include"
 IncludeDir["lua"] =       "Nyx/vendor/sol2/lua/src"
 IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross"
 IncludeDir["Shaderc"] =   "Nyx/vendor/shaderc/libshaderc/include"
-IncludeDir["yamlCPP"] =  "Nyx/vendor/yaml-cpp/include"
+IncludeDir["yamlCPP"] =   "Nyx/vendor/yaml-cpp/include"
+IncludeDir["EnTT"] =      "Nyx/vendor/entt/include"
 
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
@@ -69,7 +70,8 @@ project "Nyx"
 		"%{IncludeDir.lua}",
 		"%{IncludeDir.SPVCross}",
 		"%{IncludeDir.Shaderc}",
-		"%{IncludeDir.yamlCPP}"
+		"%{IncludeDir.yamlCPP}",
+		"%{IncludeDir.EnTT}"
 	}
 
 	filter "system:windows"
@@ -137,7 +139,8 @@ project "Editor"
 		"%{IncludeDir.lua}",
 		"%{IncludeDir.SPVCross}",
 		"%{IncludeDir.Shaderc}",
-		"%{IncludeDir.yamlCPP}"
+		"%{IncludeDir.yamlCPP}",
+		"%{IncludeDir.EnTT}"
 	}
 
 	links 

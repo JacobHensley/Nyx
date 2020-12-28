@@ -11,6 +11,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include "Nyx/Asset.h"
+#include "nyx/graphics/renderer/Material.h"
 
 namespace Nyx {
 

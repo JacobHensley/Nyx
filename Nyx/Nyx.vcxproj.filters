@@ -34,9 +34,6 @@
     <Filter Include="src\Nyx\scene">
       <UniqueIdentifier>{D8F026E6-44B1-A21C-0DEC-EB99796BE7F8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Nyx\scene\component">
-      <UniqueIdentifier>{5AD74BCC-C60E-9463-CF18-F8863BCFBA5C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -174,38 +171,33 @@
     <ClInclude Include="src\Nyx\math\Ray.h">
       <Filter>src\Nyx\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\Nyx\math\Triangle.h">
+      <Filter>src\Nyx\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Nyx\scene\Components.h">
+      <Filter>src\Nyx\scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Nyx\scene\Scene.h">
       <Filter>src\Nyx\scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Nyx\scene\SceneObject.h">
       <Filter>src\Nyx\scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\Component.h">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\MeshComponent.h">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\ScriptComponent.h">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Nyx\scene\component\TransformComponent.h">
-      <Filter>src\Nyx\scene\component</Filter>
+    <ClInclude Include="src\Nyx\scene\SceneSerializer.h">
+      <Filter>src\Nyx\scene</Filter>
     </ClInclude>
     <ClInclude Include="vendor\stbimage\stb_image.h">
       <Filter>vendor\stbimage</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\math\Triangle.h" />
-    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\NXpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Application.cpp">
+      <Filter>src\Nyx</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Nyx\Asset.cpp">
       <Filter>src\Nyx</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Log.cpp">
@@ -298,25 +290,12 @@
     <ClCompile Include="src\Nyx\scene\Scene.cpp">
       <Filter>src\Nyx\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\scene\SceneObject.cpp">
+    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp">
       <Filter>src\Nyx\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\scene\component\MaterialComponent.cpp">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp">
-      <Filter>src\Nyx\scene\component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp">
-      <Filter>src\Nyx\scene\component</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stbimage\stb_image.cpp">
       <Filter>vendor\stbimage</Filter>
     </ClCompile>
-    <ClCompile Include="src\Nyx\Asset.cpp" />
-    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneObject.cpp" />
   </ItemGroup>
 </Project>

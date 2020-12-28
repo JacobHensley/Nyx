@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;NX_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -109,8 +109,6 @@
     <ClInclude Include="src\Nyx\Common.h" />
     <ClInclude Include="src\Nyx\GLError.h" />
     <ClInclude Include="src\Nyx\Log.h" />
-    <ClInclude Include="src\Nyx\math\Triangle.h" />
-    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
     <ClInclude Include="src\Nyx\Script.h" />
     <ClInclude Include="src\Nyx\UUID.h" />
     <ClInclude Include="src\Nyx\Utilities.h" />
@@ -145,13 +143,11 @@
     <ClInclude Include="src\Nyx\input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\math\AABB.h" />
     <ClInclude Include="src\Nyx\math\Ray.h" />
+    <ClInclude Include="src\Nyx\math\Triangle.h" />
+    <ClInclude Include="src\Nyx\scene\Components.h" />
     <ClInclude Include="src\Nyx\scene\Scene.h" />
     <ClInclude Include="src\Nyx\scene\SceneObject.h" />
-    <ClInclude Include="src\Nyx\scene\component\Component.h" />
-    <ClInclude Include="src\Nyx\scene\component\MaterialComponent.h" />
-    <ClInclude Include="src\Nyx\scene\component\MeshComponent.h" />
-    <ClInclude Include="src\Nyx\scene\component\ScriptComponent.h" />
-    <ClInclude Include="src\Nyx\scene\component\TransformComponent.h" />
+    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +157,7 @@
     <ClCompile Include="src\Nyx\Application.cpp" />
     <ClCompile Include="src\Nyx\Asset.cpp" />
     <ClCompile Include="src\Nyx\Log.cpp" />
-    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneObject.cpp" />
     <ClCompile Include="src\Nyx\Script.cpp" />
     <ClCompile Include="src\Nyx\UUID.cpp" />
     <ClCompile Include="src\Nyx\Utilities.cpp" />
@@ -191,11 +187,7 @@
     <ClCompile Include="src\Nyx\graphics\renderer\ShaderUniform.cpp" />
     <ClCompile Include="src\Nyx\input\Input.cpp" />
     <ClCompile Include="src\Nyx\scene\Scene.cpp" />
-    <ClCompile Include="src\Nyx\scene\SceneObject.cpp" />
-    <ClCompile Include="src\Nyx\scene\component\MaterialComponent.cpp" />
-    <ClCompile Include="src\Nyx\scene\component\MeshComponent.cpp" />
-    <ClCompile Include="src\Nyx\scene\component\ScriptComponent.cpp" />
-    <ClCompile Include="src\Nyx\scene\component\TransformComponent.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -31,7 +31,7 @@ namespace Nyx {
 		{
 		}
 
-		UUID GetUUID() { return m_UUID; }
+		UUID GetUUID() const { return m_UUID; }
 
 		template<typename T>
 		Ref<T> Get() { NX_CORE_ASSERT(IsValid(), "Invalid asset handle!"); return std::dynamic_pointer_cast<T>(GetAssetFromManager(*this)); }

@@ -1,100 +1,53 @@
 #include "NXpch.h"
 #include "Scene.h"
-#include "component/MeshComponent.h"
-#include "component/TransformComponent.h"
-#include "component/MaterialComponent.h"
-#include "component/ScriptComponent.h"
 #include "Nyx/graphics/renderer/SceneRenderer.h"
-#include "Nyx/graphics/MeshFactory.h"
+#include "Components.h"
 #include "glm/gtx/matrix_decompose.hpp"
 #include "glm/gtx/quaternion.hpp"
 
 namespace Nyx {
 
-	Scene::Scene(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
-		: m_Camera(camera), m_EnvironmentMap(environmentMap), m_LightEnvironment(lightEnvironment)
+	Scene::Scene(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
+		: m_EnvironmentMap(environmentMap), m_LightEnvironment(lightEnvironment)
 	{
 	}
 
 	void Scene::Update()
 	{
-		m_Camera->Update();
-
-		if (m_SceneObjects.size() > 0)
-		{
-			for (auto object : m_SceneObjects)
-			{
-				object->Update();
-			}
-		}
 	}
 
-	void Scene::Render()
+	void Scene::Render(Ref<Camera> camera)
 	{
-		SceneRenderer::Begin(this);
+		SceneRenderer::Begin(this, camera);
 
-		for (auto object : m_SceneObjects)
+		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
+
+		for (auto object : group)
 		{
-			object->Render();
+			auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(object);
+			SceneRenderer::SubmitMesh(mesh.GetMesh(), transform.GetTransform());
 		}
 
 		SceneRenderer::End();
 		SceneRenderer::Flush();
 	}
 
-	Ref<SceneObject> Scene::CreateObject(const String& debugName)
+	SceneObject Scene::CreateObject(const String& tag)
 	{
-		Ref<SceneObject> object = CreateRef<SceneObject>(debugName);
-		m_SceneObjects.push_back(object);
-
-		AddObject(object);
-		return object;
+		SceneObject sceneObject(m_Registry.create(), this);
+		sceneObject.AddComponent<TagComponent>(tag);
+		sceneObject.AddComponent<TransformComponent>();
+		return sceneObject;
 	}
 
-	Ref<SceneObject> Scene::CreateObject(const String& debugName, std::initializer_list<Ref<Component>> components)
+	SceneObject Scene::CreateObject()
 	{
-		Ref<SceneObject> object = CreateRef<SceneObject>(debugName);
-		m_SceneObjects.push_back(object);
-
-		AddObject(object);
-
-		for (auto component : components)
-		{
-			object->AddComponent(component);
-		}
-
-		return object;
+		SceneObject sceneObject(m_Registry.create(), this);
+		return sceneObject;
 	}
 
-	bool Scene::SetSelectedObject(const Ref<SceneObject>& sceneObject)
+	void Scene::Remove(SceneObject& sceneObject)
 	{
-		auto e = std::find(m_SceneObjects.begin(), m_SceneObjects.end(), sceneObject);
-
-		m_SelectedObject = sceneObject;
-
-		return false;
-	}
-
-	void Scene::Remove(const Ref<SceneObject>& sceneObject)
-	{
-		auto e = std::find(m_SceneObjects.begin(), m_SceneObjects.end(), sceneObject);
-
-		if (e != m_SceneObjects.end())
-		{
-			if (sceneObject == m_SelectedObject)
-				m_SelectedObject = nullptr;
-			m_SceneObjects.erase(e);
-			return;
-		}
-	}
-
-	void Scene::RemoveObject(uint index)
-	{
-		m_SceneObjects.erase(m_SceneObjects.begin() + index);
-	}
-
-	void Scene::AddObject(Ref<SceneObject> object)
-	{
-		object->Init(this);
+		m_Registry.destroy(sceneObject);
 	}
 }

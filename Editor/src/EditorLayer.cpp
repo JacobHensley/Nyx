@@ -1,5 +1,7 @@
 #include "EditorLayer.h"
 #include "Nyx/scene/SceneSerializer.h"
+#include "Nyx/AssetManager.h"
+#include "Nyx/scene/Components.h"
 
 EditorLayer::EditorLayer()
 	: Layer("Editor")
@@ -9,32 +11,21 @@ EditorLayer::EditorLayer()
 
 void EditorLayer::Init()
 {
-	m_LightEnvironment = CreateRef<LightEnvironment>();
-	m_SceneLight = CreateRef<DirectionalLight>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));
-	m_LightEnvironment->SetDirectionalLight(m_SceneLight);
-
 	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-#if 1
-	m_Skybox = CreateRef<EnvironmentMap>(AssetManager::Load<TextureCube>("assets/textures/canyon_Radiance.png"), AssetManager::Load<TextureCube>("assets/textures/canyon_irradiance.png"));
-
-	m_Scene = CreateRef<Scene>(m_EditorCamera, m_Skybox, m_LightEnvironment);
-
 	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
-
-	CreateObject("Default Object", "assets/models/backpack/backpack.fbx", glm::mat4(1.0f));
-#endif
-//	m_Scene = SceneSerializer::Load("assets/scenes/Sphere.nyx");
+	m_Scene = SceneSerializer::Load("assets/scenes/Test.nyx");
 }
 
 void EditorLayer::Update()
 {
 	m_Scene->Update();
+	m_EditorCamera->Update();
 	UpdateGizmoMode();
 }
 
 void EditorLayer::Render()
 {
-	m_Scene->Render();
+	m_Scene->Render(m_EditorCamera);
 }
 
 void EditorLayer::ImGUIRender()
@@ -60,22 +51,14 @@ void EditorLayer::OnEvent(Event& e)
 
 void EditorLayer::CreateObject(const String& name, const String& meshPath, glm::mat4& transform)
 {
+	SceneObject object = m_Scene->CreateObject(name);
 	AssetHandle meshHandle = AssetManager::Load<Mesh>(meshPath);
-
-	Ref<SceneObject> object = m_Scene->CreateObject(name);
-
-	Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(meshHandle);
-	object->AddComponent(meshComponent);
-
-	Ref<TransformComponent> transformComponent = CreateRef<TransformComponent>(transform);
-	object->AddComponent(transformComponent);
+	object.AddComponent<MeshComponent>(meshHandle);
 }
 
 void EditorLayer::RenderSceneWindow()
 {
 	ImGui::Begin("Scene");
-
-	std::vector<Ref<SceneObject>>& objects = m_Scene->GetSceneObjects();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 	if (ImGui::Button("+", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetTextLineHeightWithSpacing())))
@@ -87,55 +70,66 @@ void EditorLayer::RenderSceneWindow()
 	ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 	static int selected = -1;
-	for (int i = 0; i < objects.size(); i++)
+	int i = 0;
+	m_Scene->GetRegistry().each([&](auto objectID)
 	{
-		if (objects[i] == m_SelectedObject)
+		SceneObject object = { objectID, m_Scene.get() };
+		if (!object)
+			return;
+
+		if (object == m_SelectedObject)
 			selected = i;
 
-		if (ImGui::Selectable((objects[i]->GetObjectName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
+		if (ImGui::Selectable((object.GetObjectName() + "##" + std::to_string(i)).c_str(), selected == i) && selected != i)
 		{
-			m_SelectedObject = objects[i];
-			m_Scene->SetSelectedObject(objects[i]);
+			m_SelectedObject = object;
+			m_Scene->SetSelectedObject(object);
 			selected = i;
 		}
 
 		ImGui::OpenPopupOnItemClick(("ContextMenu##" + std::to_string(i)).c_str(), 1);
 		if (ImGui::BeginPopup(("ContextMenu##" + std::to_string(i)).c_str()))
 		{
-			ImGui::Text(objects[i]->GetObjectName().c_str());
+			ImGui::Text(object.GetObjectName().c_str());
 			ImGui::Separator();
 
 			if (ImGui::Selectable("Delete"))
 			{
-				m_Scene->Remove(objects[i]);
+				m_Scene->Remove(object);
 			}
 
 			ImGui::EndPopup();
 		}
-	}
+		i++;
+	});
 
-	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject == nullptr)
+
+	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject)
 	{
-		m_SelectedObject = nullptr;
-		m_Scene->SetSelectedObject(nullptr);
+	//	m_Scene->SetSelectedObject(entt::null);
 		selected = -1;
 	}
 
 	ImGui::End();
 }
 
-void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
+void EditorLayer::RenderPropertiesWindow(SceneObject object)
 {
 	ImGui::Begin("Object Properties");
 
 	if (object)
 	{
-		const String& name = object->GetObjectName();
+		String name = "Untitled Object";
+		if (object.HasComponent<TagComponent>())
+		{
+			name = object.GetComponent<TagComponent>();
+		}
+		
 		String nameInput = name;
 		if (ImGui::InputText("##NameInput", &nameInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 		{
-			if (nameInput != name)
-				object->SetObjectName(nameInput);
+			if (nameInput != name && object.HasComponent<TagComponent>())
+				object.GetComponent<TagComponent>().Tag = nameInput;
 		}
 
 		ImGui::SameLine();
@@ -152,35 +146,32 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 
 			if (ImGui::Selectable("Transform"))
 			{
-				Ref<TransformComponent> transformComponent = CreateRef<TransformComponent>(glm::mat4(1.0f));
-				object->AddComponent(transformComponent);
+				object.AddComponent<TransformComponent>();
 			}
 
 			if (ImGui::Selectable("Mesh"))
 			{
-				Ref<MeshComponent> meshComponent = CreateRef<MeshComponent>(defaultMesh);
-				object->AddComponent(meshComponent);
+				object.AddComponent<MeshComponent>(defaultMesh);
 			}
 
 			if (ImGui::Selectable("Material"))
 			{
-				if (!object->GetComponent<MaterialComponent>())
+				if (!object.HasComponent<MaterialComponent>())
 				{
 					Ref<PBRMaterial> material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
 					AssetHandle materialHandle = AssetManager::Insert(material);
 
-					Ref<MaterialComponent> materialComponent = CreateRef<MaterialComponent>(materialHandle);
-					object->AddComponent(materialComponent);
+					object.AddComponent<MaterialComponent>(materialHandle);
 				}
 			}
 
 			ImGui::EndPopup();
 		}
 
-		Ref<TransformComponent> transformComponent = object->GetComponent<TransformComponent>();
-		if (transformComponent && ImGui::CollapsingHeader("Transform"))
+		if (object.HasComponent<TransformComponent>() && ImGui::CollapsingHeader("Transform"))
 		{
-			glm::mat4& transform = transformComponent->GetTransform();
+			TransformComponent& transformComponent = object.GetComponent<TransformComponent>();
+			glm::mat4& transform = transformComponent.GetTransform();
 			glm::vec3 scale;
 			glm::quat rotation;
 			glm::vec3 translation;
@@ -195,10 +186,11 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 			ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
 		}
 
-		Ref<MeshComponent> meshComponent = object->GetComponent<MeshComponent>();
-		if (meshComponent && ImGui::CollapsingHeader("Mesh"))
+		if (object.HasComponent<MeshComponent>() && ImGui::CollapsingHeader("Mesh"))
 		{
-			Ref<Mesh> mesh = meshComponent->GetMesh();
+			MeshComponent& meshComponent = object.GetComponent<MeshComponent>();
+
+			Ref<Mesh> mesh = meshComponent.GetMesh();
 			const String& path = mesh->GetPath();
 			String meshInput = path;
 			meshInput.reserve(128);
@@ -209,7 +201,7 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 				if (file != "")
 				{
 					if (file != path)
-						meshComponent->Set(AssetManager::Load<Mesh>(file));
+						meshComponent.Mesh = AssetManager::Load<Mesh>(file);
 					else
 						mesh->Reload(file);
 				}
@@ -223,15 +215,15 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 				if (meshInput != path)
 				{
 					std::string newString = meshInput.c_str();
-					meshComponent->Set(AssetManager::Load<Mesh>(newString));
+					meshComponent.Mesh = AssetManager::Load<Mesh>(newString);
 				}
 			}
 		}
 
-		Ref<MaterialComponent> materialComponent = object->GetComponent<MaterialComponent>();
-		if (materialComponent && ImGui::CollapsingHeader("Material"))
+		if (object.HasComponent<MaterialComponent>() && ImGui::CollapsingHeader("Material"))
 		{
-			Ref<Material> material = materialComponent->GetMaterial();
+			MaterialComponent& materialComponent = object.GetComponent<MaterialComponent>();
+			Ref<Material> material = materialComponent.GetMaterial();
 		}
 
 	}
@@ -242,7 +234,7 @@ void EditorLayer::RenderPropertiesWindow(Ref<SceneObject> object)
 void EditorLayer::RenderSceneSettingsWindow()
 {
 	ImGui::Begin("Scene Settings");
-	ImGui::SliderFloat3("Light", glm::value_ptr(m_LightEnvironment->GetPointLight().position), -1, 1);
+	ImGui::SliderFloat3("Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetPointLight().position), -1, 1);
 	ImGui::End();
 }
 
@@ -323,7 +315,7 @@ void EditorLayer::RenderViewport()
 
 	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetColorAttachments()[0], ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
-	auto camera = m_Scene->GetCamera();
+	auto camera = m_EditorCamera;
 	if (m_LastViewportSize != m_ViewportSize)
 	{
 		SceneRenderer::Resize(m_ViewportSize.x, m_ViewportSize.y);
@@ -340,11 +332,17 @@ void EditorLayer::RenderViewport()
 	m_MouseOverViewport = ImGui::IsWindowHovered();
 
 	if (m_SelectedObject)
-	{float rw = (float)ImGui::GetWindowWidth();
-			float rh = (float)ImGui::GetWindowHeight();
-		Ref<TransformComponent> transformComponent = m_SelectedObject->GetComponent<TransformComponent>();
-		if (transformComponent)
-			ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::LOCAL, glm::value_ptr(transformComponent->m_Transform));
+	{
+		float rw = (float)ImGui::GetWindowWidth();
+		float rh = (float)ImGui::GetWindowHeight();
+		
+		if (m_SelectedObject.HasComponent<TransformComponent>())
+		{
+			TransformComponent& transformComponent = m_SelectedObject.GetComponent<TransformComponent>();
+			glm::mat4 transform = transformComponent.GetTransform();
+			ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::LOCAL, glm::value_ptr(transform));
+		}
+			
 	}
 		
 
@@ -379,10 +377,10 @@ void EditorLayer::MousePick()
 
 	glm::vec4 mouseClipPos = { NDC.x, NDC.y, -1.0f, 1.0f };
 
-	auto inverseProj = glm::inverse(m_Scene->GetCamera()->GetProjectionMatrix());
-	auto inverseView = glm::inverse(glm::mat3(m_Scene->GetCamera()->GetViewMatrix()));
+	auto inverseProj = glm::inverse(m_EditorCamera->GetProjectionMatrix());
+	auto inverseView = glm::inverse(glm::mat3(m_EditorCamera->GetViewMatrix()));
 
-	auto pos = glm::inverse(m_Scene->GetCamera()->GetViewMatrix())[3];
+	auto pos = glm::inverse(m_EditorCamera->GetViewMatrix())[3];
 
 	glm::vec4 ray = inverseProj * mouseClipPos;
 	glm::vec3 rayPos = pos;
@@ -395,14 +393,21 @@ void EditorLayer::MousePick()
 
 bool EditorLayer::SelectObject()
 {
-	for (Ref<SceneObject> object : m_Scene->GetSceneObjects())
-	{
-		auto meshComponent = object->GetComponent<MeshComponent>();
-		if (!meshComponent)
-			continue;
+	bool result = false;
 
-		Ref<Mesh> mesh = meshComponent->GetMesh();
-		glm::mat4& objectTransform = object->GetComponent<TransformComponent>()->GetTransform();
+	m_Scene->GetRegistry().each([&](auto objectID)
+	{
+		SceneObject object = { objectID, m_Scene.get() };
+		if (!object)
+			return;
+
+		if (!object.HasComponent<MeshComponent>())
+			return;
+
+		MeshComponent meshComponent = object.GetComponent<MeshComponent>();
+
+		Ref<Mesh> mesh = meshComponent.GetMesh();
+		glm::mat4& objectTransform = object.GetComponent<TransformComponent>().GetTransform();
 
 		for (auto subMesh : mesh->GetSubMeshs())
 		{
@@ -420,7 +425,7 @@ bool EditorLayer::SelectObject()
 				Ray localRay = m_MouseRay;
 				localRay.Origin = glm::inverse(finalTransform) * glm::vec4(localRay.Origin, 1.0f);
 				localRay.Direction = glm::inverse(glm::mat3(finalTransform)) * localRay.Direction;
-				
+
 				for (auto& triangle : subMesh.triangles)
 				{
 					bool triangleIntersection = localRay.IntersectsTriangle(triangle);
@@ -429,17 +434,16 @@ bool EditorLayer::SelectObject()
 					{
 						m_SelectedObject = object;
 						m_Scene->SetSelectedObject(object);
-						return true;
+						result = true;
 					}
 				}
 			}
-			
-		}
-		
-	}
 
-	m_SelectedObject = nullptr;
-	m_Scene->SetSelectedObject(nullptr);
-	return false;
-	
+		}
+	});
+
+	//m_SelectedObject = nullptr;
+	m_Scene->SetSelectedObject(entt::null);
+	result = false;
+	return result;
 }

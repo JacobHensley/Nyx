@@ -63,23 +63,20 @@ namespace Nyx {
 		Ref<Material> materialOverride;
 	};
 
-	enum class MaterialFilter
-	{
-		NONE = -1, NORMALS, TEXTURE_COORDS
-	};
 
 	class SceneRenderer
 	{
 	public:
 		static void Init();
 
-		static void Begin(Scene* scene);
+		static void Begin(Scene* scene, Ref<Camera> camera);
 		static void Flush();
 		static void End();
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
 		static void SubmitSelectedMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
+
 		static Ref<FrameBuffer> GetFinalBuffer();
 
 		// Temp functions

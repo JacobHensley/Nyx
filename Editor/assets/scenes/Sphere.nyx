@@ -1,0 +1,22 @@
+Assets:
+  - UUID: 11423109414790551001
+    Asset Type: TextureCube
+    Path: assets/textures/canyon_irradiance.png
+  - UUID: 8195323430844478351
+    Asset Type: TextureCube
+    Path: assets/textures/canyon_Radiance.png
+  - UUID: 9890502302894862502
+    Asset Type: Mesh
+    Path: assets/models/Sphere1m.fbx
+---
+IrradianceMap UUID: 11423109414790551001
+RadianceMap UUID: 8195323430844478351
+---
+Objects:
+  - Object UUID: 14123657495088916067
+    Name: New Object
+    TransformComponent:
+      Translation: [-2.67077851, 1.44291806, -5.30506706]
+      Scale: [1.00000048, 1.00000024, 2.60987306]
+      Rotation: [0.0692224652, 0.214504138, 0.710909247, 0.666186392]
+    MeshComponent: 9890502302894862502

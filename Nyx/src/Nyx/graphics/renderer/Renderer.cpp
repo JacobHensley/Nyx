@@ -14,6 +14,8 @@ namespace Nyx {
 		Ref<Texture> m_BRDFLutTexture;
 		Ref<Shader> m_OutlineShader;
 
+		Ref<Camera> m_ActiveCamera;
+
 		std::unordered_map<RendererID, std::function<void(const Ref<ShaderUniform>&, SubMesh&, Scene*, glm::mat4 transform)>> m_RendererUniformFuncs;
 		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, Scene*)>> m_RendererResourceFuncs;
 	};
@@ -27,7 +29,12 @@ namespace Nyx {
 
 		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.m_OutlineShader = CreateRef<Shader>("assets/shaders/outlineShader.shader");
+		
+	}
 
+	void Renderer::Begin(Ref<Camera> camera)
+	{
+		s_Data.m_ActiveCamera = camera;
 	}
 
 	// Material sorting... but on a mesh level -> per SCENE
@@ -86,8 +93,7 @@ namespace Nyx {
 						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
 					//	delete s_Data.m_UniformBuffer;
 					}
-				//	DrawWireframe(scene, mesh, transform);
-				//	shader->Bind();
+
 					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);
 				}
 			}
@@ -145,105 +151,40 @@ namespace Nyx {
 		}
 	}
 
-	void Renderer::DrawWireframe(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform)
+	void Renderer::End()
 	{
-		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
-
-		mesh->GetVertexArray()->Bind();
-		mesh->GetIndexBuffer()->Bind();
-
-		transform = glm::translate(transform, glm::vec3(1.0f, 1.0f, 1.0f));
-
-		for (SubMesh subMesh : subMeshes)
-		{
-			Ref<Shader> shader = s_Data.m_OutlineShader;
-			shader->Bind();
-			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
-
-			for (UniformBuffer* uniformBuffer : uniformBuffers)
-			{
-				//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
-				{
-					//	delete[] s_Data.m_UniformBuffer;
-					s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
-					s_Data.m_UniformBufferSize = uniformBuffer->size;
-				}
-
-				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
-
-				for (Ref<ShaderUniform> uniform : uniforms)
-				{
-					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, subMesh, scene, transform);
-				}
-
-				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-				//	delete s_Data.m_UniformBuffer;
-			}
-
-			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
-			for (Ref<ShaderResource> resource : resources)
-			{
-				RendererID rendererID = resource->GetRendererID();
-				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
-			}
-
-			glDisable(GL_DEPTH_TEST);
-			
-			// Push the GL attribute bits so that we don't wreck any settings
-			glPushAttrib(GL_ALL_ATTRIB_BITS);
-			// Enable polygon offsets, and offset filled polygons forward by 2.5
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			glPolygonOffset(-2.5f, -2.5f);
-			// Set the render mode to be line rendering with a thick line width
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glLineWidth(10.0f);
-			// Set the colour to be white
-			glColor3f(1.0f, 1.0f, 1.0f);
-			// Render the object
-			glDrawElementsBaseVertex(GL_TRIANGLES, subMesh.indexCount, GL_UNSIGNED_INT, (void*)(subMesh.indexOffset * sizeof(uint)), subMesh.vertexOffset);
-			// Set the polygon mode to be filled triangles 
-
-			// Pop the state changes off the attribute stack
-			// to set things back how they were
-			glPopAttrib();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			glEnable(GL_LIGHTING);
-			// Set the colour to the background
-			glColor3f(0.0f, 0.0f, 0.0f);
-			glEnable(GL_DEPTH_TEST);
-		}
 	}
 
 	void Renderer::InitRenderFunctions()
 	{
 		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto finalTransform = transform * mesh.transform; // 
+			auto finalTransform = transform * mesh.transform;
  			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &finalTransform, uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto view = scene->GetCamera()->GetViewMatrix();
+			auto view = s_Data.m_ActiveCamera->GetViewMatrix();
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(view), uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::PROJ_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto proj = scene->GetCamera()->GetProjectionMatrix();
+			auto proj = s_Data.m_ActiveCamera->GetProjectionMatrix();
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(proj), uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::INVERSE_VP] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto ivp = glm::inverse(scene->GetCamera()->GetViewMatrix() * scene->GetCamera()->GetProjectionMatrix());
+			auto ivp = glm::inverse(s_Data.m_ActiveCamera->GetViewMatrix() * s_Data.m_ActiveCamera->GetProjectionMatrix());
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(ivp), uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::MVP] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto mvp = scene->GetCamera()->GetProjectionMatrix() * scene->GetCamera()->GetViewMatrix() * (transform * mesh.transform);
+			auto mvp = s_Data.m_ActiveCamera->GetProjectionMatrix() * s_Data.m_ActiveCamera->GetViewMatrix() * (transform * mesh.transform);
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &mvp, uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::CAMERA_POSITION] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
 		{
-			auto pos = scene->GetCamera()->GetPosition();
+			auto pos = s_Data.m_ActiveCamera->GetPosition();
 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(pos), uniform->GetSize());
 		};
 		s_Data.m_RendererUniformFuncs[RendererID::DIRECTIONAL_LIGHT] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)

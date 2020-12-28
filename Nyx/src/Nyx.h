@@ -45,7 +45,3 @@
 
 #include "Nyx/scene/Scene.h"
 #include "Nyx/scene/SceneObject.h"
-
-#include "Nyx/scene/component/Component.h"
-//#include "Nyx/scene/component/MeshComponent.h"
-#include "Nyx/scene/component/TransformComponent.h"

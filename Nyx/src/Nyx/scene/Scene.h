@@ -1,13 +1,11 @@
 #pragma once
 #include "SceneObject.h"
+#include "Nyx/Asset.h"
 #include "Nyx/graphics/renderer/Camera.h"
 #include "Nyx/graphics/renderer/LightEnvironment.h"
-#include "Nyx/Asset.h"
+#include "entt.hpp"
 
 namespace Nyx {
-
-	class Mesh;
-	class Material;
 
 	struct EnvironmentMap
 	{
@@ -23,41 +21,38 @@ namespace Nyx {
 	class Scene
 	{
 	public:
-		Scene(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
+		Scene(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
 
 	public:
 		void Update();
-		void Render();
+		void Render(Ref<Camera> camera);
 
-		Ref<SceneObject> CreateObject(const String& debugName);
-		Ref<SceneObject> CreateObject(const String& debugName, std::initializer_list<Ref<Component>> components);
-		
-		bool SetSelectedObject(const Ref<SceneObject>& sceneObject);
+		SceneObject CreateObject(const String& tag);
+		SceneObject CreateObject();
+		void Remove(SceneObject& sceneObject);
 
-		inline Ref<SceneObject> GetSelectedObject() { return m_SelectedObject; }
+		inline entt::registry& GetRegistry() { return m_Registry; }
 
-		void Remove(const Ref<SceneObject>& sceneObject);
-		void RemoveObject(uint index);
+		inline SceneObject GetSelectedObject() { return m_SelectedObject; };
+		inline void SetSelectedObject(entt::entity object) { m_SelectedObject = SceneObject(object, this); };
 
 		inline const String& GetPath() { return m_Path; }
 		inline void SetPath(const String& path) { m_Path = path; }
 
-		inline std::vector<Ref<SceneObject>>& GetSceneObjects() { return m_SceneObjects; }
-		const Ref<Camera> GetCamera() { return m_Camera; }
 		Ref<LightEnvironment> GetLightEnvironment() { return m_LightEnvironment; }
 
 		Ref<EnvironmentMap> GetEnvironmentMap() { return m_EnvironmentMap; }
 		inline void SetEnvironmentMap(Ref<EnvironmentMap> environmentMap) { m_EnvironmentMap = environmentMap; }
-		
-	private:
-		void AddObject(Ref<SceneObject> object);
 
 	private:
-		std::vector<Ref<SceneObject>> m_SceneObjects;
-		Ref<SceneObject> m_SelectedObject;
-		Ref<Camera> m_Camera;
+		entt::registry m_Registry;
+		String m_Path;
+
 		Ref<EnvironmentMap> m_EnvironmentMap;
 		Ref<LightEnvironment> m_LightEnvironment;
-		String m_Path;
+		
+		SceneObject m_SelectedObject;
+		
+		friend class SceneObject;
 	};
 }

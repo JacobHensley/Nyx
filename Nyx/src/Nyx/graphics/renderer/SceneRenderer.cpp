@@ -11,6 +11,8 @@ namespace Nyx {
 	struct SceneRendererData
 	{
 		Scene* m_ActiveScene;
+		Ref<Camera> m_ActiveCamera;
+
 
 		std::vector<RenderCommand> m_RenderCommands;
 		Ref<RenderPass> m_GeometryPass;
@@ -39,11 +41,6 @@ namespace Nyx {
 
 	void SceneRenderer::Init()
 	{
-		//Create buffer size as ratio of size of window
-		// screen size App > Renderer > framebuffer
-		// Create MSAA buffer
-		// sample depth buffer
-
 		TextureParameters params;
 		params.format = TextureFormat::RGBA16F;
 
@@ -75,9 +72,10 @@ namespace Nyx {
 		s_Data.m_CopyShader = CreateRef<Shader>("assets/shaders/CopyShader.shader");
 	}
 
-	void SceneRenderer::Begin(Scene* scene)
+	void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
 	{
 		s_Data.m_ActiveScene = scene;
+		s_Data.m_ActiveCamera = camera;
 
 		s_Data.m_EnvironmentMaterial->SetTexture("u_SkyboxTexture", AssetManager::GetByUUID<TextureCube>(s_Data.m_ActiveScene->GetEnvironmentMap()->irradianceMap.GetUUID()));
 	}
@@ -115,7 +113,6 @@ namespace Nyx {
 
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
-		//return s_Data.m_JumpFloodBuffer;
 		return s_Data.m_CompositePass->GetFrameBuffer();
 	}
 
@@ -132,6 +129,8 @@ namespace Nyx {
 
 	void SceneRenderer::GeometryPass()
 	{
+		Renderer::Begin(s_Data.m_ActiveCamera);
+
 		s_Data.m_GeometryPass->Bind();
 
 		//Scene level sorting
@@ -155,9 +154,7 @@ namespace Nyx {
 	{
 		steps = std::clamp(steps, 0, 32);
 
-		// Jump flood state
-		//glDepthMask(GL_FALSE); // ZWrite Off
-		glBlendFunc(GL_ONE, GL_ZERO); // Blend One Zero
+		glBlendFunc(GL_ONE, GL_ZERO);
 
 		s_Data.m_JumpFloodInitShader->Bind();
 		s_Data.m_JumpFloodInitShader->SetUniform2f("u_TextureSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
@@ -190,7 +187,6 @@ namespace Nyx {
 		shader->SetUniform1i("r_InputTexture", 5);
 
 		glBindTextureUnit(5, src->GetColorAttachments()[0]);
-		//src->GetTexture()->Bind(5);
 
 		s_Data.m_FullscreenQuad->Render(true);
 
@@ -200,22 +196,15 @@ namespace Nyx {
 
 	void SceneRenderer::CompositePass()
 	{
-		// Restore state
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//
-		//Blit(s_Data.m_GeometryPass->GetFrameBuffer(), s_Data.m_JumpFloodBuffer, s_Data.m_CopyShader, true);
-		//Blit(s_Data.m_TempBuffer0, s_Data.m_JumpFloodBuffer, s_Data.m_FinalJumpFloodShader, false);
-
-		s_Data.m_ActiveScene->GetCamera()->SetExposure(0.2f);
+		s_Data.m_ActiveCamera->SetExposure(0.2f);
 
 		s_Data.m_CompositePass->Bind();
 
 		s_Data.m_CompositeShader->Bind();
-		s_Data.m_CompositeShader->SetUniform1f("r_Exposure", *s_Data.m_ActiveScene->GetCamera()->GetExposure());
+		s_Data.m_CompositeShader->SetUniform1f("r_Exposure", *s_Data.m_ActiveCamera->GetExposure());
 		s_Data.m_CompositeShader->SetUniform1i("r_InputTexture", 5);
 
 		glBindTextureUnit(5, s_Data.m_GeometryPass->GetFrameBuffer()->GetColorAttachments()[0]);
-		//s_Data.m_GeometryPass->GetFrameBuffer()->GetTexture()->Bind(5);
 
 		s_Data.m_FullscreenQuad->Render(true);
 

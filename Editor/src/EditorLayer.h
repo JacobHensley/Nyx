@@ -2,8 +2,6 @@
 #include "Nyx.h"
 
 #include "Nyx/graphics/renderer/SceneRenderer.h"
-#include "Nyx/scene/component/MeshComponent.h"
-#include "Nyx/scene/component/MaterialComponent.h"
 #include "Nyx/graphics/renderer/PBRMaterial.h"
 #include "Nyx/graphics/renderer/DebugRenderer.h"
 #include "Nyx/graphics/renderer/Renderer.h"
@@ -38,7 +36,7 @@ private:
 
 private:
 	void RenderSceneWindow();
-	void RenderPropertiesWindow(Ref<SceneObject> object);
+	void RenderPropertiesWindow(SceneObject object);
 	void RenderSceneSettingsWindow();
 	void RenderMainMenu();
 	void RenderViewport();
@@ -56,7 +54,7 @@ private:
 	ImGuizmo::OPERATION m_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
 	Ray m_MouseRay;
 
-	Ref<SceneObject> m_SelectedObject;
+	SceneObject m_SelectedObject;
 
 	Ref<Scene> m_Scene;
 	Ref<Camera> m_EditorCamera;

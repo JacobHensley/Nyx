@@ -1,5 +1,5 @@
 #pragma once
-#include "component/Component.h"
+#include "entt/include/entt.hpp"
 
 namespace Nyx {
 
@@ -8,61 +8,61 @@ namespace Nyx {
 	class SceneObject
 	{
 	public:
-		SceneObject();
-		SceneObject(const String& debugName);
-		SceneObject(const SceneObject& other);
+		SceneObject(entt::entity handle, Scene* scene)
+			: m_Handle(handle), m_Scene(scene)
+		{
+		}
+
+		SceneObject() = default;
+		SceneObject(const SceneObject& other) = default;
 
 	public:
-		void Init(Scene* Scene);
-
-		void Update();
-		void Render();
-
-		void RenderSelected();
-
-		void AddComponent(Ref<Component> component);
-
-		template<typename T>
-		Ref<T> GetComponent()
+		template<typename T, typename... Args>
+		T& AddComponent(Args&&... args)
 		{
-			if (m_Components.find(T::GetStaticType()) != m_Components.end())
-				return std::static_pointer_cast<T>(m_Components[T::GetStaticType()]);
-
-			return nullptr;
+			NX_ASSERT(!HasComponent<T>(), "Entity already has Component");
+			return m_Scene->m_Registry.emplace<T>(m_Handle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
-		bool RemoveComponent()
+		bool HasComponent()
 		{
-			if (m_Components.find(T::GetStaticType()) != m_Components.end())
-			{
-				m_Components.erase(T::GetStaticType());
-				return true;
-			}
-
-			return false;
+			return m_Scene->m_Registry.has<T>(m_Handle);
 		}
 
-		inline void SetActive(bool value) { m_IsActive = value; }
-		inline bool IsActive() { return m_IsActive; }
+		template<typename T>
+		T& GetComponent()
+		{
+			NX_ASSERT(HasComponent<T>(), "Entity does not have Component");
+			return m_Scene->m_Registry.get<T>(m_Handle);
+		}
 
-		inline UUID GetUUID() { return m_UUID; }
-		inline void SetUUID(uint64_t id) { m_UUID = id; }
+		template<typename T>
+		void RemoveComponent()
+		{
+			NX_ASSERT(HasComponent<T>(), "Entity does not have Component");
+			m_Scene->m_Registry.remove<T>(m_Handle);
+		}
 
-		inline const std::unordered_map<Component::Type*, Ref<Component>>& GetComponents() { return m_Components; }
-		
-		inline void SetObjectName(const String& name) { m_ObjectName = name; }
-		inline const String& GetObjectName() { return m_ObjectName; }
+		const String& GetObjectName();
+
+		operator bool() const { return m_Handle != entt::null; }
+		operator entt::entity() const { return m_Handle; }
+		operator uint32_t() const { return (uint32_t)m_Handle; }
+
+		bool operator==(const SceneObject& other) const
+		{
+			return m_Handle == other.m_Handle && m_Scene == other.m_Scene;
+		}
+
+		bool operator!=(const SceneObject& other) const
+		{
+			return !(*this == other);
+		}
 
 	private:
+		entt::entity m_Handle = entt::null; // Should objects also have a UUID for saving?
 		Scene* m_Scene = nullptr;
-		String m_ObjectName;
-
-		UUID m_UUID;
-
-		bool m_IsActive = true;
-
-		std::unordered_map<Component::Type*, Ref<Component>> m_Components;
 	};
 
 }
