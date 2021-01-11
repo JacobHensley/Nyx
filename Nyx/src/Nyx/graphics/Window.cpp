@@ -1,14 +1,15 @@
 ﻿#include "NXpch.h"
 #include "Window.h"
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
 #include "Nyx/Events/AppEvent.h"
 #include "Nyx/Events/KeyEvent.h"
 #include "Nyx/Events/MouseEvent.h"
 
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
 namespace Nyx {
 
-	Window::Window(const String& name, int width, int height)
+	Window::Window(const std::string& name, int width, int height)
 		: m_Name(name), m_Width(width), m_Height(height)
 	{
 		Init();

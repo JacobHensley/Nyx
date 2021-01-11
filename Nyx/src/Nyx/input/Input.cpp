@@ -1,7 +1,7 @@
 #include "NXpch.h"
 #include "Input.h"
+#include "Nyx/Core/Application.h"
 #include <GLFW/glfw3.h>
-#include "Nyx/Application.h"
 
 namespace Nyx {
 

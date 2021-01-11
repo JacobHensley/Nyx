@@ -1,10 +1,11 @@
 #include "NXpch.h"
 #include "SceneObject.h"
-#include "Components.h"
+#include "Nyx/Scene/Components.h"
+#include "Nyx/Scene/Scene.h"
 
 namespace Nyx 
 {
-	const String& SceneObject::GetObjectName()
+	const std::string& SceneObject::GetObjectName()
 	{
 		if (HasComponent<TagComponent>())
 		{

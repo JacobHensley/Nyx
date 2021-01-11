@@ -1,11 +1,11 @@
 #include "NXpch.h"
 #include "Texture.h"
-#include "glad/glad.h"
-#include "stbimage/stb_image.h"
+#include <glad/glad.h>
+#include <stbimage/stb_image.h>
 
 namespace Nyx {
 
-	Texture::Texture(const String& path, TextureParameters parameters /*= TextureParameters()*/)
+	Texture::Texture(const std::string& path, TextureParameters parameters /*= TextureParameters()*/)
 		:	m_Path(path), m_Parameters(parameters)
 	{
 		m_TextureID = LoadFromFile(path);
@@ -34,7 +34,7 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	bool Texture::Reload(const String& path)
+	bool Texture::Reload(const std::string& path)
 	{
 		uint reloadedTextureID = LoadFromFile(path);
 		if (reloadedTextureID == -1) 
@@ -72,7 +72,7 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	uint Texture::LoadFromFile(const String& path)
+	uint Texture::LoadFromFile(const std::string& path)
 	{
 		int bpp;
 		byte* imageData = stbi_load(path.c_str(), &m_Width, &m_Height, &bpp, 0);

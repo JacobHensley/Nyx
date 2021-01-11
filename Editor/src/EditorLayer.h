@@ -1,19 +1,23 @@
 #pragma once
 #include "Nyx.h"
 
-#include "Nyx/graphics/renderer/SceneRenderer.h"
-#include "Nyx/graphics/renderer/PBRMaterial.h"
-#include "Nyx/graphics/renderer/DebugRenderer.h"
-#include "Nyx/graphics/renderer/Renderer.h"
-#include "Nyx/Utilities.h"
-
+#include "Nyx/graphics/SceneRenderer.h"
+#include "Nyx/graphics/PBRMaterial.h"
+#include "Nyx/graphics/Debug/DebugRenderer.h"
+#include "Nyx/graphics/Renderer.h"
+#include "Nyx/Utilities/Utilities.h"
+#include "Nyx/Math/Ray.h"
+#include "Nyx/Core/Layer.h"
+#include "imgui/imgui.h"
 #include <imgui/imgui_internal.h>
-#include "ImGui/misc/cpp/imgui_stdlib.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
 #include "ImGui/ImGuizmo.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/euler_angles.hpp>
+
+#include <String>
 
 using namespace Nyx;
 
@@ -32,7 +36,7 @@ public:
 	void OnEvent(Event& e);
 
 private:
-	void CreateObject(const String& name, const String& meshPath, glm::mat4& transform);
+	void CreateObject(const std::string& name, const std::string& meshPath, glm::mat4& transform);
 
 private:
 	void RenderSceneWindow();

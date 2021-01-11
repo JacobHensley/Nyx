@@ -1,5 +1,6 @@
 #pragma once
 #include "Event.h"
+#include <sstream>
 
 namespace Nyx {
 
@@ -12,7 +13,7 @@ namespace Nyx {
 		inline float GetX() const { return m_X; }
 		inline float GetY() const { return m_Y; }
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseMovedEvent: " << m_X << ", " << m_Y;
@@ -34,7 +35,7 @@ namespace Nyx {
 		inline float GetXOffset() const { return m_XOffset; }
 		inline float GetYOffset() const { return m_YOffset; }
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
@@ -65,7 +66,7 @@ namespace Nyx {
 		MouseButtonPressedEvent(int button)
 			: MouseButtonEvent(button) {}
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << m_Button;
@@ -81,7 +82,7 @@ namespace Nyx {
 		MouseButtonReleasedEvent(int button)
 			: MouseButtonEvent(button) {}
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << m_Button;

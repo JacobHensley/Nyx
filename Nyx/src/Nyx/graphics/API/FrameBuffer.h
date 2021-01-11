@@ -1,6 +1,6 @@
 #pragma once
-#include "Nyx/graphics/API/Texture.h"
-
+#include "Nyx/Core/Core.h"
+#include "Nyx/Graphics/API/Texture.h"
 #include <glm/glm.hpp>
 #include <vector>
 

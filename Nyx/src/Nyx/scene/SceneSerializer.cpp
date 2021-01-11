@@ -1,9 +1,9 @@
 #include "NXpch.h"
 #include "SceneSerializer.h"
-#include "Components.h"
-#include "yaml-cpp/yaml.h"
-#include "glm/gtx/matrix_decompose.hpp"
-#include "glm/gtx/quaternion.hpp"
+#include "Nyx/Scene/Components.h"
+#include <yaml-cpp/yaml.h>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 template<>
 struct YAML::convert<glm::vec3> {
@@ -91,7 +91,7 @@ namespace Nyx
 		return out;
 	}
 
-	void SceneSerializer::Save(Ref<Scene>& scene, const String& path)
+	void SceneSerializer::Save(Ref<Scene>& scene, const std::string& path)
 	{
 		YAML::Emitter out;
 
@@ -206,7 +206,7 @@ namespace Nyx
 		out << YAML::EndMap; // Object
 	}
 
-	Ref<Scene> SceneSerializer::Load(const String& path)
+	Ref<Scene> SceneSerializer::Load(const std::string& path)
 	{
 		std::vector<YAML::Node> nodes = YAML::LoadAllFromFile(path);
 
@@ -214,11 +214,11 @@ namespace Nyx
 		for (int i = 0; i < assets.size(); i++)
 		{
 			uint64_t UUID = assets[i]["UUID"].as<uint64_t>();
-			String path = assets[i]["Path"] ? assets[i]["Path"].as<String>() : "";
+			std::string path = assets[i]["Path"] ? assets[i]["Path"].as<std::string>() : "";
 
 			if (path != "")
 			{
-				String type = assets[i]["Asset Type"].as<String>();
+				std::string type = assets[i]["Asset Type"].as<std::string>();
 				if (type == "Mesh")
 					AssetManager::InsertAndLoad<Mesh>(UUID, path);
 				else if (type == "Texture")

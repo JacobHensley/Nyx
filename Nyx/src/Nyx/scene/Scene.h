@@ -1,9 +1,10 @@
 #pragma once
-#include "SceneObject.h"
-#include "Nyx/Asset.h"
-#include "Nyx/graphics/renderer/Camera.h"
-#include "Nyx/graphics/renderer/LightEnvironment.h"
-#include "entt.hpp"
+#include "Nyx/Scene/SceneObject.h"
+#include "Nyx/Asset/Asset.h"
+#include "Nyx/Graphics/Camera.h"
+#include "Nyx/Graphics/LightEnvironment.h"
+#include <entt/include/entt.hpp>
+#include <String>
 
 namespace Nyx {
 
@@ -27,8 +28,8 @@ namespace Nyx {
 		void Update();
 		void Render(Ref<Camera> camera);
 
-		SceneObject CreateObject(const String& tag);
 		SceneObject CreateObject();
+		SceneObject CreateObject(const std::string& tag);
 		void Remove(SceneObject& sceneObject);
 
 		inline entt::registry& GetRegistry() { return m_Registry; }
@@ -36,8 +37,8 @@ namespace Nyx {
 		inline SceneObject GetSelectedObject() { return m_SelectedObject; };
 		inline void SetSelectedObject(entt::entity object) { m_SelectedObject = SceneObject(object, this); };
 
-		inline const String& GetPath() { return m_Path; }
-		inline void SetPath(const String& path) { m_Path = path; }
+		inline const std::string& GetPath() { return m_Path; }
+		inline void SetPath(const std::string& path) { m_Path = path; }
 
 		Ref<LightEnvironment> GetLightEnvironment() { return m_LightEnvironment; }
 
@@ -46,7 +47,7 @@ namespace Nyx {
 
 	private:
 		entt::registry m_Registry;
-		String m_Path;
+		std::string m_Path;
 
 		Ref<EnvironmentMap> m_EnvironmentMap;
 		Ref<LightEnvironment> m_LightEnvironment;

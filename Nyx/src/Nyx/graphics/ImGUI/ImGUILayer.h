@@ -1,14 +1,13 @@
 #pragma once
-#include "NXpch.h"
-#include "Nyx/Graphics/Layers/Layer.h"
-#include "Nyx/graphics/API/FrameBuffer.h"
-#include "Nyx/graphics/renderer/Camera.h"
+#include "Nyx/Core/Layer.h"
+#include <String>
+
 namespace Nyx {
 
 	class ImGUILayer : public Layer
 	{
 	public:
-		ImGUILayer(const String& name);
+		ImGUILayer(const std::string& name);
 		~ImGUILayer();
 
 	public:

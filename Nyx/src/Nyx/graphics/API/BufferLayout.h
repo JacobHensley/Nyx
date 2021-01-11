@@ -1,6 +1,8 @@
 #pragma once
-#include "NXpch.h"
+#include "Nyx/Core/Core.h"
 #include <glm/glm.hpp>
+#include <String>
+#include <vector>
 
 namespace Nyx {
 
@@ -32,7 +34,7 @@ namespace Nyx {
 
 	struct BufferElement
 	{
-		String name;
+		std::string name;
 		ShaderDataType type;
 		byte count;
 		byte size;

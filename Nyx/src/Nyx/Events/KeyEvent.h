@@ -23,7 +23,7 @@ namespace Nyx {
 
 		inline int GetRepeatCount() { return m_RepeatCount; }
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << m_Keycode << " (" << m_RepeatCount << " repeats)";
@@ -42,7 +42,7 @@ namespace Nyx {
 		KeyReleasedEvent(int keycode)
 			: KeyEvent(keycode) {}
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent: " << m_Keycode;
@@ -58,7 +58,7 @@ namespace Nyx {
 		KeyTypedEvent(int keycode)
 			: KeyEvent(keycode) {}
 
-		String ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyTypedEvent: " << m_Keycode;

@@ -1,4 +1,4 @@
-#include "Nyx.h"
+#include "Nyx/Core/Application.h"
 #include "EditorLayer.h"
 
 int main()

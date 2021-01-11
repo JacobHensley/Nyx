@@ -1,5 +1,5 @@
 #pragma once
-#include "Nyx/Common.h"
+#include "Nyx/Core/Core.h"
 #include "BufferLayout.h"
 
 namespace Nyx {

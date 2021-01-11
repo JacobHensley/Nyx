@@ -1,7 +1,6 @@
 #include "NXpch.h"
 #include "MeshFactory.h"
-#include "Nyx/graphics/renderer/Shader.h"
-#include "Nyx/graphics/renderer/Mesh.h"
+#include "Nyx/Graphics/Mesh.h"
 
 namespace Nyx {
 

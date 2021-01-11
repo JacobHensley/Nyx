@@ -1,9 +1,9 @@
 #pragma once
-#include "glm/glm.hpp"
+#include "Nyx/Asset/AssetManager.h"
+#include "Nyx/Graphics/Material.h"
+#include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
-#include "Nyx/AssetManager.h"
-#include "Nyx/graphics/renderer/Material.h"
 
 namespace Nyx {
 

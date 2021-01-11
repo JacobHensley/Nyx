@@ -1,8 +1,7 @@
 #pragma once
-
-#include <glm/glm.hpp>
 #include "AABB.h"
 #include "Triangle.h"
+#include <glm/glm.hpp>
 
 namespace Nyx {
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "Nyx/Core/Core.h"
 #include "VertexBuffer.h"
 #include "BufferLayout.h"
 

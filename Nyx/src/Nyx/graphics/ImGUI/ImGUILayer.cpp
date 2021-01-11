@@ -1,14 +1,14 @@
 #include "NXpch.h"
 #include "ImGUILayer.h"
-#include "imgui.h"
-#include "examples/imgui_impl_opengl3.h"
-#include "examples/imgui_impl_glfw.h"
-#include "Nyx/Application.h"
-#include "imgui/ImGuizmo.h"
+#include "Nyx/Core/Application.h"
+#include <imgui.h>
+#include <examples/imgui_impl_opengl3.h>
+#include <examples/imgui_impl_glfw.h>
+#include <imgui/ImGuizmo.h>
 
 namespace Nyx {
 
-	ImGUILayer::ImGUILayer(const String& name)
+	ImGUILayer::ImGUILayer(const std::string& name)
 		: Layer(name)
 	{
 	}

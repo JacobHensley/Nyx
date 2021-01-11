@@ -1,26 +1,27 @@
 #pragma once
-#include "Nyx/Common.h"
-#include "Nyx/Asset.h"
+#include "Nyx/Core/Core.h"
+#include "Nyx/Asset/Asset.h"
+#include <String>
 
 namespace Nyx {
 
 	class TextureCube : public Asset
 	{
 	public:
-		TextureCube(const String& path);
+		TextureCube(const std::string& path);
 		~TextureCube();
 
 	public:
 		void Bind(uint slot);
 		void Unbind();
 
-		inline const String& GetPath() { return m_Path; }
+		inline const std::string& GetPath() { return m_Path; }
 		inline const uint GetTextureID() const { return m_TextureID; }
 
 	private:
-		uint LoadFromFile(const String& path);
+		uint LoadFromFile(const std::string& path);
 
-		String m_Path;
+		std::string m_Path;
 		uint m_TextureID;
 		int m_Width;
 		int m_Height;

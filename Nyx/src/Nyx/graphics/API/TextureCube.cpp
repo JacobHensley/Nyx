@@ -1,11 +1,11 @@
 #include "NXpch.h"
 #include "TextureCube.h"
-#include "Glad/glad.h"
-#include "stbimage/stb_image.h"
+#include <Glad/glad.h>
+#include <stbimage/stb_image.h>
 
 namespace Nyx {
 
-	TextureCube::TextureCube(const String& path)
+	TextureCube::TextureCube(const std::string& path)
 		: m_Path(path)
 	{
 		LoadFromFile(path);
@@ -26,7 +26,7 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	uint TextureCube::LoadFromFile(const String& path)
+	uint TextureCube::LoadFromFile(const std::string& path)
 	{
 		int bpp;
 		byte* imageData = stbi_load(path.c_str(), &m_Width, &m_Height, &bpp, STBI_rgb);

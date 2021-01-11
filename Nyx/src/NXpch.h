@@ -2,6 +2,12 @@
 
 /* Nyx pre-compiled header */
 
+#ifdef NX_PLATFORM_WINDOWS
+	#define NOMINMAX // what?
+	#include <windows.h>
+	#include <Commdlg.h>
+#endif
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -16,11 +22,3 @@
 #include <unordered_set>
 #include <initializer_list>
 #include <queue>
-
-#include "Nyx/Log.h"
-#include "Nyx/Common.h"
-
-#ifdef NX_PLATFORM_WINDOWS
-	#include <Commdlg.h>
-	#include <windows.h>
-#endif

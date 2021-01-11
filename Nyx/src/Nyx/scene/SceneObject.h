@@ -1,5 +1,7 @@
 #pragma once
-#include "entt/include/entt.hpp"
+#include "Nyx/Core/Core.h"
+#include <entt/include/entt.hpp>
+#include <String>
 
 namespace Nyx {
 
@@ -44,7 +46,7 @@ namespace Nyx {
 			m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 
-		const String& GetObjectName();
+		const std::string& GetObjectName();
 
 		operator bool() const { return m_Handle != entt::null; }
 		operator entt::entity() const { return m_Handle; }

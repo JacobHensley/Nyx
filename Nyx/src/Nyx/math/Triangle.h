@@ -1,5 +1,4 @@
 #pragma once
-#include "Nyx/Common.h"
 #include <glm/glm.hpp>
 
 struct Triangle

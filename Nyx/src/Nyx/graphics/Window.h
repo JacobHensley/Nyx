@@ -1,9 +1,10 @@
 #pragma once
-#include "NXpch.h"
-#include "GLFW/glfw3.h"
+#include "Nyx/Core/Core.h"
 #include "Nyx/Input/Input.h"
 #include "Nyx/Events/Event.h"
-#include "Nyx/graphics/API/GraphicsContext.h"
+#include "Nyx/Graphics/GraphicsContext.h"
+#include <GLFW/glfw3.h>
+#include <String>
 
 namespace Nyx {
 
@@ -12,7 +13,7 @@ namespace Nyx {
 	class Window
 	{
 	public:
-		Window(const String& name, int width, int height);
+		Window(const std::string& name, int width, int height);
 		~Window();
 
 	public:
@@ -42,7 +43,7 @@ namespace Nyx {
 		Ref<GraphicsContext> m_Context;
 
 		bool m_RenderContext = false;
-		const String m_Name;
+		const std::string m_Name;
 		int m_Width, m_Height;
 
 		glm::vec2 m_WindowPos;

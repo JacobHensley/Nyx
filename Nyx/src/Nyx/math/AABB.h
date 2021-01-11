@@ -1,6 +1,5 @@
 #pragma once
-
-#include "Nyx/Common.h"
+#include "Nyx/Core/Core.h"
 #include <glm/glm.hpp>
 
 namespace Nyx {

@@ -1,8 +1,7 @@
 #include "NXpch.h"
 #include "FrameBuffer.h"
-#include "glad/glad.h"
-
-#include "Nyx/Application.h"
+#include "Nyx/Core/Application.h"
+#include <glad/glad.h>
 
 namespace Nyx {
 

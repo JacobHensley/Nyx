@@ -1,7 +1,13 @@
 #include "EditorLayer.h"
 #include "Nyx/scene/SceneSerializer.h"
-#include "Nyx/AssetManager.h"
+#include "Nyx/Asset/AssetManager.h"
 #include "Nyx/scene/Components.h"
+#include "Nyx/Events/MouseEvent.h"
+#include "Nyx/Input/Input.h"
+#include "Nyx/Input/KeyCodes.h"
+#include "imgui/imgui.h"
+#include <imgui/imgui_internal.h>
+#include "imgui/misc/cpp/imgui_stdlib.h"
 
 EditorLayer::EditorLayer()
 	: Layer("Editor")
@@ -49,7 +55,7 @@ void EditorLayer::OnEvent(Event& e)
 	}
 }
 
-void EditorLayer::CreateObject(const String& name, const String& meshPath, glm::mat4& transform)
+void EditorLayer::CreateObject(const std::string& name, const std::string& meshPath, glm::mat4& transform)
 {
 	SceneObject object = m_Scene->CreateObject(name);
 	AssetHandle meshHandle = AssetManager::Load<Mesh>(meshPath);
@@ -119,13 +125,13 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 
 	if (object)
 	{
-		String name = "Untitled Object";
+		std::string name = "Untitled Object";
 		if (object.HasComponent<TagComponent>())
 		{
 			name = object.GetComponent<TagComponent>();
 		}
 		
-		String nameInput = name;
+		std::string nameInput = name;
 		if (ImGui::InputText("##NameInput", &nameInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 		{
 			if (nameInput != name && object.HasComponent<TagComponent>())
@@ -191,13 +197,13 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 			MeshComponent& meshComponent = object.GetComponent<MeshComponent>();
 
 			Ref<Mesh> mesh = meshComponent.GetMesh();
-			const String& path = mesh->GetPath();
-			String meshInput = path;
+			const std::string& path = mesh->GetPath();
+			std::string meshInput = path;
 			meshInput.reserve(128);
 
 			if (ImGui::Button(" ... "))
 			{
-				String file = OpenFileExplorer("FBX\0*.FBX\0");
+				std::string file = OpenFileExplorer("FBX\0*.FBX\0");
 				if (file != "")
 				{
 					if (file != path)
@@ -252,7 +258,7 @@ void EditorLayer::RenderMainMenu()
 			if (ImGui::MenuItem("Open")) 
 			{
 				//First check if scene has been saved
-				String path = OpenFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+				std::string path = OpenFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 				if (path != "")
 				{
 					m_Scene = SceneSerializer::Load(path);
@@ -262,7 +268,7 @@ void EditorLayer::RenderMainMenu()
 			{
 				if (m_Scene->GetPath().empty())
 				{
-					String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+					std::string path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 					if (path != "")
 					{
 						SceneSerializer::Save(m_Scene, path);
@@ -276,7 +282,7 @@ void EditorLayer::RenderMainMenu()
 			}
 			if (ImGui::MenuItem("Save As")) 
 			{
-				String path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
+				std::string path = SaveFileExplorer("Nyx Scene (*.nyx)\0*.nyx\0");
 				if (path != "")
 				{
 					SceneSerializer::Save(m_Scene, path);

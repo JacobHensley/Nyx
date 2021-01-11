@@ -1,6 +1,7 @@
 #pragma once
-#include "Nyx/Common.h"
-#include "Nyx/Asset.h"
+#include "Nyx/Core/Core.h"
+#include "Nyx/Asset/Asset.h"
+#include <String>
 
 namespace Nyx {
 
@@ -49,7 +50,7 @@ namespace Nyx {
 	class Texture : public Asset
 	{
 	public:
-		Texture(const String& path, TextureParameters parameters = TextureParameters());
+		Texture(const std::string& path, TextureParameters parameters = TextureParameters());
 		Texture(int width, int height, TextureParameters parameters = TextureParameters());
 		~Texture();
 
@@ -59,21 +60,21 @@ namespace Nyx {
 
 		void SetData(byte* imageData, uint size);
 
-		bool Reload(const String& path);
+		bool Reload(const std::string& path);
 
 		inline const int GetWidth() const { return m_Width; }
 		inline const int GetHeight() const { return m_Height; }
 
 		inline const uint GetTextureID() const { return m_TextureID; }
-		inline const String& GetPath() const { return m_Path; }
+		inline const std::string& GetPath() const { return m_Path; }
 
 	private:
-		String m_Path;
+		std::string m_Path;
 		int m_Width, m_Height;
 		TextureParameters m_Parameters;
 		uint m_TextureID;
 
-		uint LoadFromFile(const String& path);
+		uint LoadFromFile(const std::string& path);
 		uint Init(byte* imageData, uint width, uint height);
 
 		byte GetStrideFromFormat(TextureFormat format);

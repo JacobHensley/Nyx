@@ -1,9 +1,7 @@
 #include "NXpch.h"
-#include "Scene.h"
-#include "Nyx/graphics/renderer/SceneRenderer.h"
-#include "Components.h"
-#include "glm/gtx/matrix_decompose.hpp"
-#include "glm/gtx/quaternion.hpp"
+#include "Nyx/Scene/SceneObject.h"
+#include "Nyx/Scene/Components.h"
+#include "Nyx/Graphics/SceneRenderer.h"
 
 namespace Nyx {
 
@@ -32,7 +30,7 @@ namespace Nyx {
 		SceneRenderer::Flush();
 	}
 
-	SceneObject Scene::CreateObject(const String& tag)
+	SceneObject Scene::CreateObject(const std::string& tag)
 	{
 		SceneObject sceneObject(m_Registry.create(), this);
 		sceneObject.AddComponent<TagComponent>(tag);
