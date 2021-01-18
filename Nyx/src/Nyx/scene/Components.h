@@ -56,7 +56,7 @@ namespace Nyx {
 	struct MaterialComponent
 	{
 		AssetHandle Material;
-
+	
 		MaterialComponent() = default;
 		MaterialComponent(const MaterialComponent&) = default;
 		MaterialComponent(AssetHandle material)
@@ -70,15 +70,7 @@ namespace Nyx {
 
 	struct SelectedComponent
 	{
-		bool Selected; //Do I even need this variable? or just if it has the component it is selected?
-
 		SelectedComponent() = default;
 		SelectedComponent(const SelectedComponent&) = default;
-		SelectedComponent(bool selected)
-			: Selected(selected)
-		{
-		}
-
-		operator bool() { return Selected; }
 	};
 }

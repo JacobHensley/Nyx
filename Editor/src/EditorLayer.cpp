@@ -5,9 +5,10 @@
 #include "Nyx/Events/MouseEvent.h"
 #include "Nyx/Input/Input.h"
 #include "Nyx/Input/KeyCodes.h"
-#include "imgui/imgui.h"
+#include "Nyx/Math/Math.h"
+#include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
-#include "imgui/misc/cpp/imgui_stdlib.h"
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 EditorLayer::EditorLayer()
 	: Layer("Editor")
@@ -19,7 +20,11 @@ void EditorLayer::Init()
 {
 	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
 	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
+	defaultMesh = AssetManager::Load<Mesh>("assets/models/../models/backpack/backpack.fbx");
+	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
 	m_Scene = SceneSerializer::Load("assets/scenes/Test.nyx");
+
+	m_Viewport = ::ViewportPanel();
 }
 
 void EditorLayer::Update()
@@ -38,7 +43,10 @@ void EditorLayer::ImGUIRender()
 {
 	m_SelectedObject = m_Scene->GetSelectedObject();
 
-	RenderViewport();
+	m_Viewport.SetGizmoObject(m_SelectedObject);
+	m_Viewport.Draw(m_EditorCamera);
+
+//	RenderViewport();
 	RenderSceneWindow();
 	RenderPropertiesWindow(m_SelectedObject);
 	RenderSceneSettingsWindow();
@@ -50,7 +58,7 @@ void EditorLayer::OnEvent(Event& e)
 	if (e.GetEventType() == EventType::MouseButtonPressed)
 	{
 		MouseButtonEvent& mousePressed = static_cast<MouseButtonEvent&>(e);
-		if (mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT && m_MouseOverViewport && !Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver())
+		if (mousePressed.GetMouseButton() == NX_MOUSE_BUTTON_LEFT && m_Viewport.IsHovered() && !Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver())
 			MousePick();
 	}
 }
@@ -102,6 +110,8 @@ void EditorLayer::RenderSceneWindow()
 			if (ImGui::Selectable("Delete"))
 			{
 				m_Scene->Remove(object);
+				if (m_SelectedObject == object)
+					m_SelectedObject = {};
 			}
 
 			ImGui::EndPopup();
@@ -110,9 +120,9 @@ void EditorLayer::RenderSceneWindow()
 	});
 
 
-	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered() || m_SelectedObject)
+	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
 	{
-	//	m_Scene->SetSelectedObject(entt::null);
+		m_Scene->SetSelectedObject(entt::null);
 		selected = -1;
 	}
 
@@ -177,19 +187,10 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 		if (object.HasComponent<TransformComponent>() && ImGui::CollapsingHeader("Transform"))
 		{
 			TransformComponent& transformComponent = object.GetComponent<TransformComponent>();
-			glm::mat4& transform = transformComponent.GetTransform();
-			glm::vec3 scale;
-			glm::quat rotation;
-			glm::vec3 translation;
-			glm::vec3 skew;
-			glm::vec4 perspective;
-			glm::decompose(transform, scale, rotation, translation, skew, perspective);
 
-			glm::vec3 euler = glm::degrees(glm::eulerAngles(rotation));
-
-			ImGui::DragFloat3("Translation", glm::value_ptr(translation), 0.1f);
-			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
-			ImGui::DragFloat3("Rotation", glm::value_ptr(euler), 0.1f);
+			ImGui::DragFloat3("Translation", glm::value_ptr(transformComponent.Translation), 0.1f);
+			ImGui::DragFloat3("Scale", glm::value_ptr(transformComponent.Scale), 0.1f);
+			ImGui::DragFloat3("Rotation", glm::value_ptr(transformComponent.Rotation), 0.1f);
 		}
 
 		if (object.HasComponent<MeshComponent>() && ImGui::CollapsingHeader("Mesh"))
@@ -303,7 +304,7 @@ void EditorLayer::RenderViewport()
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
-	ImGui::Begin("Editor", &open, flags);
+	ImGui::Begin("Editor OLD", &open, flags);
 
 	auto viewportOffset = ImGui::GetCursorPos();
 
@@ -322,6 +323,7 @@ void EditorLayer::RenderViewport()
 	ImGui::Image((void*)(uint64_t)SceneRenderer::GetFinalBuffer()->GetColorAttachments()[0], ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	auto camera = m_EditorCamera;
+
 	if (m_LastViewportSize != m_ViewportSize)
 	{
 		SceneRenderer::Resize(m_ViewportSize.x, m_ViewportSize.y);
@@ -345,8 +347,16 @@ void EditorLayer::RenderViewport()
 		if (m_SelectedObject.HasComponent<TransformComponent>())
 		{
 			TransformComponent& transformComponent = m_SelectedObject.GetComponent<TransformComponent>();
-			glm::mat4 transform = transformComponent.GetTransform();
+			glm::mat4& transform = transformComponent.GetTransform();
 			ImGuizmo::Manipulate(glm::value_ptr(camera->GetViewMatrix()), glm::value_ptr(camera->GetProjectionMatrix()), m_GizmoMode, ImGuizmo::LOCAL, glm::value_ptr(transform));
+			
+			glm::vec3 translation;
+			glm::vec3 rotation;
+			glm::vec3 scale;
+			DecomposeTransform(transform, translation, rotation, scale);
+			transformComponent.Translation = translation;
+			transformComponent.Rotation = rotation;
+			transformComponent.Scale = scale;
 		}
 			
 	}
@@ -368,18 +378,7 @@ void EditorLayer::UpdateGizmoMode()
 
 void EditorLayer::MousePick()
 {
-	auto [mx, my] = ImGui::GetMousePos();
-	mx -= m_ViewportPosition.x;
-	my -= m_ViewportPosition.y;
-
-	glm::vec2 maxBounds;
-	maxBounds.x = m_ViewportPosition.x + m_ViewportSize.x;
-	maxBounds.y = m_ViewportPosition.y + m_ViewportSize.y;
-
-	auto viewportWidth = maxBounds.x - m_ViewportPosition.x;
-	auto viewportHeight = maxBounds.y - m_ViewportPosition.y;
-
-	glm::vec2 NDC = { (mx / viewportWidth) * 2.0f - 1.0f, ((my / viewportHeight) * 2.0f - 1.0f) * -1.0f };
+	glm::vec2 NDC = m_Viewport.GetNDC();
 
 	glm::vec4 mouseClipPos = { NDC.x, NDC.y, -1.0f, 1.0f };
 
@@ -448,8 +447,10 @@ bool EditorLayer::SelectObject()
 		}
 	});
 
-	//m_SelectedObject = nullptr;
-	m_Scene->SetSelectedObject(entt::null);
-	result = false;
+	if (!result)
+	{
+		m_Scene->SetSelectedObject(entt::null);
+	}
+
 	return result;
 }

@@ -138,6 +138,7 @@
     <ClInclude Include="src\Nyx\Input\Input.h" />
     <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
     <ClInclude Include="src\Nyx\Math\AABB.h" />
+    <ClInclude Include="src\Nyx\Math\Math.h" />
     <ClInclude Include="src\Nyx\Math\Ray.h" />
     <ClInclude Include="src\Nyx\Math\Triangle.h" />
     <ClInclude Include="src\Nyx\Scene\Components.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="src\Nyx\Graphics\ShaderUniform.cpp" />
     <ClCompile Include="src\Nyx\Graphics\Window.cpp" />
     <ClCompile Include="src\Nyx\Input\Input.cpp" />
+    <ClCompile Include="src\Nyx\Math\Math.cpp" />
     <ClCompile Include="src\Nyx\Scene\Scene.cpp" />
     <ClCompile Include="src\Nyx\Scene\SceneObject.cpp" />
     <ClCompile Include="src\Nyx\Scene\SceneSerializer.cpp" />

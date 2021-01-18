@@ -4,18 +4,19 @@
 #include "Nyx/Graphics/API/Texture.h"
 #include "Nyx/Graphics/API/TextureCube.h"
 #include <String>
+#include <filesystem>
+#include <memory>
 
 namespace Nyx {
-
-	class AssetLoader;
 
 	class AssetManager
 	{
 		inline static std::unordered_map<UUID, Ref<Asset>, UUIDHash> m_Assets;
 		inline static std::unordered_map<UUID, std::string, UUIDHash> m_AssetPaths;
+		inline static std::unordered_map<std::string, UUID> m_Paths;
 
 		friend struct AssetHandle;
-		friend class AssetLoader;
+		friend class SceneSerializer;
 
 	public:
 		static const std::unordered_map<UUID, Ref<Asset>, UUIDHash>& GetAssets()
@@ -27,7 +28,6 @@ namespace Nyx {
 		{
 			return m_AssetPaths;
 		}
-
 	public:
 		static std::string GetAssetTypeName(AssetType type)
 		{
@@ -49,27 +49,49 @@ namespace Nyx {
 		template<typename T>
 		static AssetHandle Load(const std::string& path)
 		{
-			//better way?
-			for (auto const& [uuid, filepath] : m_AssetPaths)
+			std::string absolutePath = GetAbsolutePath(path);
+			if (m_Paths.find(absolutePath) != m_Paths.end())
 			{
-				if (path == filepath) 
-				{
-					return AssetHandle(uuid);
-				}
+				AssetHandle handle = (m_Paths[absolutePath]);
+				NX_CORE_TRACE("Found existing asset [{0}] ({1})", (uint64_t)handle.GetUUID(), path);
+				return handle;
 			}
 
 			UUID uuid; // Generate a new UUID for the asset
-			return InsertAndLoad<T>(uuid, path);
+			return InsertAndLoad<T>(uuid, absolutePath);
 		}
 
-		static AssetHandle Insert(Ref<Asset> asset, const std::string& path = "", UUID uuid = UUID())
+		static Ref<Asset> Get(AssetHandle handle)
 		{
+			NX_CORE_ASSERT(m_Assets.find(handle) != m_Assets.end(), "Asset not found!");
+			return m_Assets.at(handle);
+		}
+
+		template<typename T>
+		static Ref<T> Get(AssetHandle handle)
+		{
+			NX_CORE_ASSERT(m_Assets.find(handle) != m_Assets.end(), "Asset not found!");
+			return std::dynamic_pointer_cast<T>(m_Assets.at(handle));
+		}
+
+		static Ref<Asset> GetByUUID(UUID id)
+		{
+			return m_Assets.at(id);
+		}
+
+		template<typename T>
+		static Ref<T> GetByUUID(UUID id)
+		{
+			return std::dynamic_pointer_cast<T>(m_Assets.at(id));
+		}
+
+		static AssetHandle Insert(Ref<Asset> asset)
+		{
+			UUID uuid;
 			m_Assets[uuid] = asset;
-			if (path != "")
-				m_AssetPaths[uuid] = path;
 			return uuid;
 		}
-
+	private:
 		template<typename T>
 		static Ref<Asset> LoadAsset(const std::string& filepath)
 		{
@@ -103,14 +125,37 @@ namespace Nyx {
 			return asset;
 		}
 
+		static AssetHandle Insert(Ref<Asset> asset, const std::string& path, UUID uuid)
+		{
+			NX_CORE_ASSERT(!path.empty(), "Path cannot be empty");
+
+			std::string absolutePath = GetAbsolutePath(path);
+
+			m_Assets[uuid] = asset;
+			m_AssetPaths[uuid] = absolutePath;
+			m_Paths[absolutePath] = uuid;
+			return uuid;
+		}
+
 		// Deserialization function
 		template<typename T>
 		static AssetHandle InsertAndLoad(UUID uuid, const std::string& path)
 		{
 			// Loading
-		//	NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
+			NX_CORE_ASSERT(m_Assets.find(uuid) == m_Assets.end(), "Asset UUID already exists in map!");
 
-			Insert(LoadAsset<T>(path), path, uuid);
+			std::string absolutePath = GetAbsolutePath(path);
+			AssetHandle handle;
+			if (m_Paths.find(absolutePath) != m_Paths.end())
+			{
+				handle = AssetHandle(m_Paths[absolutePath]);
+				Insert(m_Assets[handle.GetUUID()], path, uuid);
+				NX_CORE_TRACE("Found existing asset [{0}], inserting as [{1}] ({2})", (uint64_t)handle.GetUUID(), (uint64_t)uuid, path);
+			}
+			else
+			{
+				Insert(LoadAsset<T>(path), path, uuid);
+			}
 			return uuid;
 		}
 
@@ -124,21 +169,13 @@ namespace Nyx {
 			return uuid;
 		}
 
-		static Ref<Asset> Get(AssetHandle handle)
+		static std::string GetAbsolutePath(const std::string& path)
 		{
-			NX_CORE_ASSERT(m_Assets.find(handle) != m_Assets.end(), "Asset not found!");
-			return m_Assets.at(handle);
-		}
+			std::filesystem::path absolutePath = std::filesystem::canonical(path);
+			if (std::filesystem::exists(absolutePath))
+				return absolutePath.string();
 
-		static Ref<Asset> GetByUUID(UUID id)
-		{
-			return m_Assets.at(id);
-		}
-
-		template<typename T>
-		static Ref<T> GetByUUID(UUID id)
-		{
-			return std::dynamic_pointer_cast<T>(m_Assets.at(id));
+			return std::string();
 		}
 
 	};

@@ -1,6 +1,7 @@
 #pragma once
-#include "Nyx.h"
+#include "Panels/ViewportPanel.h"
 
+#include "Nyx.h"
 #include "Nyx/graphics/SceneRenderer.h"
 #include "Nyx/graphics/PBRMaterial.h"
 #include "Nyx/graphics/Debug/DebugRenderer.h"
@@ -50,6 +51,8 @@ private:
 	bool SelectObject();
 
 private:
+	::ViewportPanel m_Viewport;
+
 	glm::vec2 m_ViewportSize;
 	glm::vec2 m_ViewportPosition;
 	glm::vec2 m_LastViewportSize;

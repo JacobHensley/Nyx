@@ -53,7 +53,8 @@ namespace Nyx {
 		Ref<LightEnvironment> m_LightEnvironment;
 		
 		SceneObject m_SelectedObject;
-		
+
+		friend class ViewportPanel;
 		friend class SceneObject;
 	};
 }

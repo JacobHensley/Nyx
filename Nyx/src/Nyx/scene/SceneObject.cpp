@@ -13,7 +13,8 @@ namespace Nyx
 		}
 		else
 		{
-			return "Untitled Object";
+			static std::string untitled = "Untitled Object";
+			return untitled;
 		}
 	}
 }
