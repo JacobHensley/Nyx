@@ -238,4 +238,5 @@ void main()
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	color = vec4(pLightContribution + lightContribution + iblContribution, 1.0f);
+//	color = vec4(normal, 1.0f);
 }
