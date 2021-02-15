@@ -220,11 +220,11 @@ namespace Nyx
 			{
 				std::string type = assets[i]["Asset Type"].as<std::string>();
 				if (type == "Mesh")
-					AssetManager::InsertAndLoad<Mesh>(UUID, path);
+					AssetManager::TryInsertAndLoad<Mesh>(UUID, path);
 				else if (type == "Texture")
-					AssetManager::InsertAndLoad<Texture>(UUID, path);
+					AssetManager::TryInsertAndLoad<Texture>(UUID, path);
 				else if (type == "TextureCube")
-					AssetManager::InsertAndLoad<TextureCube>(UUID, path);
+					AssetManager::TryInsertAndLoad<TextureCube>(UUID, path);
 			}
 
 		}

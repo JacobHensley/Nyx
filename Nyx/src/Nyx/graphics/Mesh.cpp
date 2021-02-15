@@ -466,24 +466,39 @@ namespace Nyx {
 
 				if (!foundAlbedoMap)
 				{
+					glm::vec3 albedo = glm::vec3(0.8f);
+
 					aiColor3D aiColor;
-					aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor);
-					material->Set("AlbedoValue", glm::vec3(aiColor.r, aiColor.g, aiColor.b));
+					if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
+					{
+						albedo = glm::vec3(aiColor.r, aiColor.g, aiColor.b);
+					}
+
+					material->Set("AlbedoValue", albedo);
 					material->Set("UsingAlbedoMap", false);
 				}
 				if (!foundRoughnessMap)
 				{
+					float roughness = 0.5f;
 					float shininess;
-					aiMaterial->Get(AI_MATKEY_SHININESS, shininess);
 
-					float roughness = 1 - sqrt(shininess / 100);
+					if (aiMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
+					{
+						roughness = 1 - sqrt(shininess / 100);
+					} 
+
 					material->Set("RoughnessValue", roughness);
 					material->Set("UsingRoughnessMap", false);
 				}
 				if (!foundMetalnessMap)
 				{
-					float metalness;
-					aiMaterial->Get(AI_MATKEY_REFLECTIVITY, metalness);
+					float metalness = 0.0f;
+					float aiMetalness;
+					if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, aiMetalness) == AI_SUCCESS)
+					{
+						metalness = aiMetalness;
+					}
+
 					material->Set("MetalnessValue", metalness);
 					material->Set("UsingMetalnessMap", false);
 				}

@@ -1,0 +1,47 @@
+Assets:
+  - UUID: 8906187144176209011
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\backpack\Backpack.fbx
+  - UUID: 4600096373465280542
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\backpack\Backpack.fbx
+  - UUID: 9890502302894862502
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\Sphere1m.fbx
+  - UUID: 11423109414790551001
+    Asset Type: TextureCube
+    Path: C:\dev\Nyx\Editor\assets\textures\Canyon_Irradiance.png
+  - UUID: 8195323430844478351
+    Asset Type: TextureCube
+    Path: C:\dev\Nyx\Editor\assets\textures\Canyon_Radiance.png
+  - UUID: 11206823123623585759
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\Cube 2.fbx
+  - UUID: 4378671512813310988
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\Cube.fbx
+  - UUID: 12319559491821141384
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\Cone.fbx
+---
+RadianceMap UUID: 8195323430844478351
+IrradianceMap UUID: 11423109414790551001
+Objects:
+  - TagComponent:
+      Tag: New Object
+    TransformComponent:
+      Translation: [-2.89103842, 0.062580049, -0.0632061958]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      UUID: 11206823123623585759
+      Path: C:\dev\Nyx\Editor\assets\models\Cube 2.fbx
+  - TagComponent:
+      Tag: "Test\x00bject"
+    TransformComponent:
+      Translation: [1.53002048, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      UUID: 4600096373465280542
+      Path: C:\dev\Nyx\Editor\assets\models\backpack\Backpack.fbx

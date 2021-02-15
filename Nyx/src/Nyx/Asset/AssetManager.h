@@ -160,6 +160,15 @@ namespace Nyx {
 		}
 
 		template<typename T>
+		static AssetHandle TryInsertAndLoad(UUID uuid, const std::string& path)
+		{
+			if (m_Assets.find(uuid) != m_Assets.end())
+				return uuid;
+			
+			return InsertAndLoad<T>(uuid, path);
+		}
+
+		template<typename T>
 		static AssetHandle SwapAsset(UUID uuid, const std::string& path)
 		{
 			// Loading
