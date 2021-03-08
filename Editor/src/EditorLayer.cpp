@@ -19,12 +19,8 @@ EditorLayer::EditorLayer()
 void EditorLayer::Init()
 {
 	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
-	AssetManager::Load<Mesh>("assets/Glass.gltf");
-	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
-	defaultMesh = AssetManager::Load<Mesh>("assets/models/../models/backpack/backpack.fbx");
-	defaultMesh = AssetManager::Load<Mesh>("assets/models/backpack/backpack.fbx");
-	m_Scene = SceneSerializer::Load("assets/scenes/Test.nyx");
-
+	defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
+	m_Scene = SceneSerializer::Load("assets/scenes/GlassTest.nyx");
 
 	m_Viewport = ::ViewportPanel();
 }

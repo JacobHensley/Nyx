@@ -4,8 +4,8 @@
 
 namespace Nyx {
 
-	Material::Material(Ref<Shader> shader, uint32_t materialSortKey)
-		:	m_Shader(shader), m_MaterialSortKey(materialSortKey)
+	Material::Material(Ref<Shader> shader, uint32_t materialSortKey, bool opaque)
+		:	m_Shader(shader), m_MaterialSortKey(materialSortKey), m_Opaque(opaque)
 	{
 		m_AssetType = AssetType::MATERIAL;
 

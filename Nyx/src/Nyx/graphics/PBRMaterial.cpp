@@ -3,12 +3,20 @@
 
 namespace Nyx {
 
-	PBRMaterial::PBRMaterial(Ref<Shader> shader, uint32_t materialSortKey)
-		: Material(shader, materialSortKey)
+	PBRMaterial::PBRMaterial(Ref<Shader> shader, uint32_t materialSortKey, bool opaque)
+		: Material(shader, materialSortKey, opaque)
 	{
 		SetAlbedo(glm::vec3(1.0f, 1.0f, 1.0f));
 		SetMetalness(0.0f);
 		SetRoughness(0.5f);
+
+		//Super temp to get rid of warnings
+		Ref<Texture> test = CreateRef<Texture>(1, 1);
+		test->SetData(new byte[4], 4);
+		SetAlbedoMap(test);
+		SetMetalnessMap(test);
+		SetRoughnessMap(test);
+		SetNormalMap(test);
 
 		UsingAlbedoMap(false);
 		UsingMetalnessMap(false);

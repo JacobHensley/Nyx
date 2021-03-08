@@ -1,0 +1,23 @@
+Assets:
+  - UUID: 11423109414790551001
+    Asset Type: TextureCube
+    Path: C:\dev\Nyx\Editor\assets\textures\Canyon_Irradiance.png
+  - UUID: 8195323430844478351
+    Asset Type: TextureCube
+    Path: C:\dev\Nyx\Editor\assets\textures\Canyon_Radiance.png
+  - UUID: 12756129269548589263
+    Asset Type: Mesh
+    Path: C:\dev\Nyx\Editor\assets\models\GlassTest.fbx
+---
+RadianceMap UUID: 8195323430844478351
+IrradianceMap UUID: 11423109414790551001
+Objects:
+  - TagComponent:
+      Tag: Glass Test
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      UUID: 12756129269548589263
+      Path: C:\dev\Nyx\Editor\assets\models\GlassTest.fbx

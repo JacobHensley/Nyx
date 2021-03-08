@@ -405,9 +405,6 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
-			//	auto material = CreateRef<PBRMaterial>(m_BaseShader);
-			//	m_Materials[i] = material;
-
 				Ref<Texture> albedoMap, normalMap, roughnessMap, metalnessMap;
 
 				for (uint32_t i = 0; i < aiMaterial->mNumProperties; i++)
@@ -421,41 +418,21 @@ namespace Nyx {
 						if ((std::string)(prop->mKey.data) == "$raw.DiffuseColor|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
-							if (texture)
-							{
-							//	material->SetAlbedoMap(texture);
-							//	material->UsingAlbedoMap(true);
-							}
 							albedoMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ShininessExponent|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
-							if (texture)
-							{
-							//	material->SetRoughnessMap(texture);
-							//	material->UsingRoughnessMap(true);
-							}
 							roughnessMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.NormalMap|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
-							if (texture)
-							{
-							//	material->SetNormalMap(texture);
-							//	material->UsingNormalMap(true);
-							}
 							normalMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ReflectionFactor|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
-							if (texture)
-							{
-							//	material->SetMetalnessMap(texture);
-							//	material->UsingMetalnessMap(true);
-							}
 							metalnessMap = LoadMaterialTexture(str);
 						}
 					}
@@ -472,7 +449,12 @@ namespace Nyx {
 					if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
 					{
 						albedo = glm::vec3(aiColor.r, aiColor.g, aiColor.b);
-						alpha = aiColor.a;
+					}
+
+					float opacity;
+					if (aiMaterial->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
+					{
+						alpha = opacity;
 					}
 				}
 
@@ -495,19 +477,18 @@ namespace Nyx {
 				}
 
 				Ref<PBRMaterial> material;
-				if (alpha < 1.0f && false)
+				if (alpha < 1.0f)
 				{
-					material = CreateRef<PBRMaterial>(SceneRenderer::GetGlassShader(), 100);
+					material = CreateRef<PBRMaterial>(SceneRenderer::GetGlassShader(), 100, false);
 					material->Set("u_Alpha", alpha);
 				}
 				else
 				{
-					material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+					material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader(), true);
 				}
 
 				if (albedoMap)
 				{
-
 					albedo = { 1.0f, 1.0f, 1.0f };
 					material->SetAlbedoMap(albedoMap);
 				}
@@ -517,9 +498,11 @@ namespace Nyx {
 					material->SetRoughnessMap(roughnessMap);
 				if (metalnessMap)
 					material->SetMetalnessMap(metalnessMap);
+
 				material->Set("AlbedoValue", albedo);
 				material->Set("RoughnessValue", roughness);
 				material->Set("MetalnessValue", metalness);
+
 				material->UsingAlbedoMap((bool)albedoMap);
 				material->UsingNormalMap((bool)normalMap);
 				material->UsingRoughnessMap((bool)roughnessMap);

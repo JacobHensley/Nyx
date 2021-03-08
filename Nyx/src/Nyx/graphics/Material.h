@@ -18,7 +18,7 @@ namespace Nyx {
 	class Material : public Asset
 	{
 	public:
-		Material(Ref<Shader> shader, uint32_t materialSortKey = 0);
+		Material(Ref<Shader> shader, uint32_t materialSortKey = 0, bool opaque = true);
 		~Material();
 
 	public:
@@ -68,6 +68,7 @@ namespace Nyx {
 		std::vector<Ref<TextureCube>> m_TextureCubes;
 
 		bool m_DepthTesting = true;
+		bool m_Opaque = true;
 		uint32_t m_MaterialSortKey = 0;
 	};
 }

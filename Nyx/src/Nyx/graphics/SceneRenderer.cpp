@@ -61,7 +61,6 @@ namespace Nyx {
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 
-
 		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(fbSpec);
 		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(fbSpec);
 		s_Data.m_JumpFloodBuffer = CreateRef<FrameBuffer>(fbSpec);
