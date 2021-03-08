@@ -6,7 +6,7 @@ namespace Nyx {
 	class PBRMaterial : public Material
 	{
 	public:
-		PBRMaterial(Ref<Shader> shader);
+		PBRMaterial(Ref<Shader> shader, uint32_t materialSortKey = 0);
 		~PBRMaterial();
 
 		void SetAlbedo(glm::vec3 albedoValue, Ref<Texture> albedoMap, bool usingMap);

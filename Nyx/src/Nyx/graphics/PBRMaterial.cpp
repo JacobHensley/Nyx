@@ -3,8 +3,8 @@
 
 namespace Nyx {
 
-	PBRMaterial::PBRMaterial(Ref<Shader> shader)
-		: Material(shader)
+	PBRMaterial::PBRMaterial(Ref<Shader> shader, uint32_t materialSortKey)
+		: Material(shader, materialSortKey)
 	{
 		SetAlbedo(glm::vec3(1.0f, 1.0f, 1.0f));
 		SetMetalness(0.0f);

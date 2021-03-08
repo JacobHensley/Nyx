@@ -18,7 +18,7 @@ namespace Nyx {
 	class Material : public Asset
 	{
 	public:
-		Material(Ref<Shader> shader);
+		Material(Ref<Shader> shader, uint32_t materialSortKey = 0);
 		~Material();
 
 	public:
@@ -35,6 +35,8 @@ namespace Nyx {
 
 		inline void SetDepthTesting(bool value) { m_DepthTesting = value; }
 		inline bool GetDepthTesting() { return m_DepthTesting; }
+
+		uint32_t GetMaterialSortKey() const { return m_MaterialSortKey; }
 
 		template<typename T>
 		void Set(const std::string& name, const T& data)
@@ -66,5 +68,6 @@ namespace Nyx {
 		std::vector<Ref<TextureCube>> m_TextureCubes;
 
 		bool m_DepthTesting = true;
+		uint32_t m_MaterialSortKey = 0;
 	};
 }

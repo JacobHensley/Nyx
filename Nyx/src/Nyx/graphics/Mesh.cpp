@@ -405,13 +405,10 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
-				auto material = CreateRef<PBRMaterial>(m_BaseShader);
-				m_Materials[i] = material;
+			//	auto material = CreateRef<PBRMaterial>(m_BaseShader);
+			//	m_Materials[i] = material;
 
-				bool foundAlbedoMap = false;
-				bool foundRoughnessMap = false;
-				bool foundNormalMap = false;
-				bool foundMetalnessMap = false;
+				Ref<Texture> albedoMap, normalMap, roughnessMap, metalnessMap;
 
 				for (uint32_t i = 0; i < aiMaterial->mNumProperties; i++)
 				{
@@ -426,86 +423,109 @@ namespace Nyx {
 							Ref<Texture> texture = LoadMaterialTexture(str);
 							if (texture)
 							{
-								material->SetAlbedoMap(texture);
-								material->UsingAlbedoMap(true);
-								foundAlbedoMap = true;
+							//	material->SetAlbedoMap(texture);
+							//	material->UsingAlbedoMap(true);
 							}
+							albedoMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ShininessExponent|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
 							if (texture)
 							{
-								material->SetRoughnessMap(texture);
-								material->UsingRoughnessMap(true);
-								foundRoughnessMap = true;
+							//	material->SetRoughnessMap(texture);
+							//	material->UsingRoughnessMap(true);
 							}
+							roughnessMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.NormalMap|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
 							if (texture)
 							{
-								material->SetNormalMap(texture);
-								material->UsingNormalMap(true);
-								foundNormalMap = true;
+							//	material->SetNormalMap(texture);
+							//	material->UsingNormalMap(true);
 							}
+							normalMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ReflectionFactor|file")
 						{
 							Ref<Texture> texture = LoadMaterialTexture(str);
 							if (texture)
 							{
-								material->SetMetalnessMap(texture);
-								material->UsingMetalnessMap(true);
-								foundMetalnessMap = true;
+							//	material->SetMetalnessMap(texture);
+							//	material->UsingMetalnessMap(true);
 							}
+							metalnessMap = LoadMaterialTexture(str);
 						}
 					}
 				}
 
-				if (!foundAlbedoMap)
-				{
-					glm::vec3 albedo = glm::vec3(0.8f);
+				glm::vec3 albedo = glm::vec3(0.8f);
+				float alpha = 1.0f;
+				float roughness = 0.5f;
+				float metalness = 0.0f;
 
-					aiColor3D aiColor;
+				if (!albedoMap)
+				{
+					aiColor4D aiColor;
 					if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
 					{
 						albedo = glm::vec3(aiColor.r, aiColor.g, aiColor.b);
+						alpha = aiColor.a;
 					}
-
-					material->Set("AlbedoValue", albedo);
-					material->Set("UsingAlbedoMap", false);
 				}
-				if (!foundRoughnessMap)
+
+				if (!roughnessMap)
 				{
-					float roughness = 0.5f;
 					float shininess;
 
 					if (aiMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
 					{
 						roughness = 1 - sqrt(shininess / 100);
 					} 
-
-					material->Set("RoughnessValue", roughness);
-					material->Set("UsingRoughnessMap", false);
 				}
-				if (!foundMetalnessMap)
+				if (!metalnessMap)
 				{
-					float metalness = 0.0f;
 					float aiMetalness;
 					if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, aiMetalness) == AI_SUCCESS)
 					{
 						metalness = aiMetalness;
 					}
+				}
 
-					material->Set("MetalnessValue", metalness);
-					material->Set("UsingMetalnessMap", false);
-				}
-				if (!foundNormalMap)
+				Ref<PBRMaterial> material;
+				if (alpha < 1.0f && false)
 				{
-					material->Set("UsingNormalMap", false);
+					material = CreateRef<PBRMaterial>(SceneRenderer::GetGlassShader(), 100);
+					material->Set("u_Alpha", alpha);
 				}
+				else
+				{
+					material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+				}
+
+				if (albedoMap)
+				{
+
+					albedo = { 1.0f, 1.0f, 1.0f };
+					material->SetAlbedoMap(albedoMap);
+				}
+				if (normalMap)
+					material->SetNormalMap(normalMap);
+				if (roughnessMap)
+					material->SetRoughnessMap(roughnessMap);
+				if (metalnessMap)
+					material->SetMetalnessMap(metalnessMap);
+				material->Set("AlbedoValue", albedo);
+				material->Set("RoughnessValue", roughness);
+				material->Set("MetalnessValue", metalness);
+				material->UsingAlbedoMap((bool)albedoMap);
+				material->UsingNormalMap((bool)normalMap);
+				material->UsingRoughnessMap((bool)roughnessMap);
+				material->UsingMetalnessMap((bool)metalnessMap);
+
+				m_Materials[i] = material;
 			}
 		}
 

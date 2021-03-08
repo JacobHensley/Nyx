@@ -30,7 +30,7 @@ namespace Nyx {
 		Ref<Shader> m_CopyShader;
 
 		Ref<Mesh> m_FullscreenQuad;
-		Ref<Shader> m_PBRShader;
+		Ref<Shader> m_PBRShader, m_GlassShader;
 
 		Ref<Material> m_EnvironmentMaterial;
 		Ref<Shader> m_SkyboxShader;
@@ -55,6 +55,7 @@ namespace Nyx {
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
 		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
 		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+		s_Data.m_GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
 
 		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
@@ -110,6 +111,11 @@ namespace Nyx {
 
 	}
 
+	Ref<Shader> SceneRenderer::GetGlassShader()
+	{
+		return s_Data.m_GlassShader;
+	}
+
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
 		return s_Data.m_CompositePass->GetFrameBuffer();
@@ -135,6 +141,9 @@ namespace Nyx {
 		//Scene level sorting
 
 		Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
+
+		// 1. render opaque materials
+		// 2. render transparent/translucent stuff (glass)
 
 		for (RenderCommand command : s_Data.m_RenderCommands)
 		{

@@ -84,12 +84,14 @@ namespace Nyx {
 		// Temp functions
 		static void Resize(uint width, uint height);
 		static Ref<Shader> GetPBRShader();
-
+		static Ref<Shader> GetGlassShader();
 	private:
 		static void GeometryPass();
 		static void CompositePass();
 		static void JumpFloodPass();
 
 		static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& dest, Ref<Shader>& shader, bool clear);
+
+		std::vector<SubMesh> m_Meshs;
 	};
 }
