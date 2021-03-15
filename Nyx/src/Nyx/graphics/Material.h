@@ -59,6 +59,30 @@ namespace Nyx {
 			memcpy(m_MaterialBuffers[bufferIndex].data + uniform->GetOffset(), &intData, uniform->GetSize());
 		}
 
+		uint64_t GetHash() const
+		{
+			m_Shader->GetHash() + m_MaterialSortKey;
+		}
+
+		bool operator==(const Material& other) const
+		{
+			return GetHash() == other.GetHash();
+		}
+
+		bool operator!=(const Material& other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const Material& other) const
+		{
+			if (m_Opaque == other.m_Opaque)
+				return m_MaterialSortKey < other.m_MaterialSortKey;
+
+			return m_Opaque;
+		}
+
+		bool IsOpaque() const { return m_Opaque; }
 	private:
 		Ref<Shader> m_Shader;
 		std::unordered_map<uint, MaterialBuffer> m_MaterialBuffers;

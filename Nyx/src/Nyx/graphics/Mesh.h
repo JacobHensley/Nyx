@@ -72,6 +72,7 @@ namespace Nyx {
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; }
 		std::vector<SubMesh>& GetSubMeshs() { return m_SubMeshes; }
 
+		std::vector<Ref<Material>>& GetMaterials() { return m_Materials; }
 		const std::vector<Ref<Material>>& GetMaterials() const { return m_Materials; }
 
 		const std::string& GetPath() const { return m_Path; }

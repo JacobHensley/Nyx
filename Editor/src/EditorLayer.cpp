@@ -22,6 +22,7 @@ void EditorLayer::Init()
 	defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
 	m_Scene = SceneSerializer::Load("assets/scenes/GlassTest.nyx");
 
+
 	m_Viewport = ::ViewportPanel();
 }
 

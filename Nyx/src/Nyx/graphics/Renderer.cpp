@@ -15,6 +15,37 @@ namespace Nyx {
 		Ref<Shader> m_OutlineShader;
 
 		Ref<Camera> m_ActiveCamera;
+		Scene* ActiveScene = nullptr; // TEMP
+
+		struct MaterialRef
+		{
+			Ref<Nyx::Material> Material;
+
+			MaterialRef(const Ref<Nyx::Material>& material)
+				: Material(material)
+			{
+			}
+
+			bool operator<(const MaterialRef& other) const
+			{
+				return *Material.get() < *other.Material.get();
+			}
+
+			Nyx::Material& operator->()
+			{
+				return *Material.get();
+			}
+		};
+
+		struct SubmeshDrawCommand
+		{
+			Nyx::SubMesh SubMesh;
+			Ref<VertexArray> VA;
+			Ref<IndexBuffer> IB;
+			glm::mat4 Transform;
+		};
+
+		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList;
 
 		std::unordered_map<RendererID, std::function<void(const Ref<ShaderUniform>&, SubMesh&, Scene*, glm::mat4 transform)>> m_RendererUniformFuncs;
 		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, Scene*)>> m_RendererResourceFuncs;
@@ -29,17 +60,28 @@ namespace Nyx {
 
 		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.m_OutlineShader = CreateRef<Shader>("assets/shaders/outlineShader.shader");
-		
 	}
 
-	void Renderer::Begin(Ref<Camera> camera)
+	void Renderer::Begin(Ref<Camera> camera, Scene* scene)
 	{
 		s_Data.m_ActiveCamera = camera;
+		s_Data.ActiveScene = scene;
 	}
 
 	// Material sorting... but on a mesh level -> per SCENE
 	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform)
 	{
+		auto& subMeshes = mesh->GetSubMeshs();
+		const auto& materials = mesh->GetMaterials();
+
+		for (SubMesh& subMesh : subMeshes)
+		{
+			Ref<Material> material = materials[subMesh.materialIndex];
+			// submit all submeshes
+			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
+		}
+
+#if 0
 		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
 
 		mesh->GetVertexArray()->Bind();
@@ -98,11 +140,22 @@ namespace Nyx {
 				}
 			}
 		}
+#endif
 	}
 
 	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
 	{
-		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
+		auto& subMeshes = mesh->GetSubMeshs();
+		const auto& materials = mesh->GetMaterials();
+
+		for (SubMesh& subMesh : subMeshes)
+		{
+			Ref<Material> material = materials[subMesh.materialIndex];
+			// submit all submeshes
+			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
+		}
+
+#if 0
 
 		mesh->GetVertexArray()->Bind();
 		mesh->GetIndexBuffer()->Bind();
@@ -149,10 +202,71 @@ namespace Nyx {
 			if (!material->GetDepthTesting())
 				glEnable(GL_DEPTH_TEST);
 		}
+#endif
 	}
 
 	void Renderer::End()
 	{
+		Flush();
+	}
+
+	void Renderer::Flush()
+	{
+		for (auto& [materialRef, meshList] : s_Data.DrawList)
+		{
+			auto cameraPosition = s_Data.m_ActiveCamera->GetPosition();
+			Ref<Material> material = materialRef.Material;
+			std::sort(meshList.begin(), meshList.end(), [material, cameraPosition](auto& a, auto& b)
+			{
+				float camMeshA = glm::length(cameraPosition - glm::vec3(a.Transform[3]));
+				float camMeshB = glm::length(cameraPosition - glm::vec3(b.Transform[3]));
+				if (!material->IsOpaque())
+					return camMeshA > camMeshB;
+
+				return camMeshA < camMeshB;
+			});
+
+			auto shader = material->GetShader();
+			shader->Bind();
+
+			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
+
+			material->Bind();
+
+			for (auto& submeshDC : meshList)
+			{
+				SubMesh& submesh = submeshDC.SubMesh;
+
+				submeshDC.VA->Bind();
+				submeshDC.IB->Bind();
+
+				glm::mat4& transform = submeshDC.Transform;
+
+				for (UniformBuffer* uniformBuffer : uniformBuffers)
+				{
+					//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
+					{
+						//	delete[] s_Data.m_UniformBuffer;
+						s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
+						s_Data.m_UniformBufferSize = uniformBuffer->size;
+					}
+
+					std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
+
+					for (Ref<ShaderUniform> uniform : uniforms)
+					{
+						s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, submesh, s_Data.ActiveScene, transform);
+					}
+
+					shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
+					//	delete s_Data.m_UniformBuffer;
+				}
+
+				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(submesh.indexOffset * sizeof(uint)), submesh.vertexOffset);
+
+			}
+
+		}
 	}
 
 	void Renderer::InitRenderFunctions()

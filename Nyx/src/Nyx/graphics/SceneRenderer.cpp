@@ -34,12 +34,24 @@ namespace Nyx {
 
 		Ref<Material> m_EnvironmentMaterial;
 		Ref<Shader> m_SkyboxShader;
+
+		//std::map<Material, std::vector<SubMesh>> 
+			
 	};
 
 	static struct SceneRendererData s_Data;
 
 	void SceneRenderer::Init()
 	{
+		s_Data.m_JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFloodInit.shader");
+		s_Data.m_JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood.shader");
+		s_Data.m_FinalJumpFloodShader = CreateRef<Shader>("assets/shaders/FinalJumpFlood.shader");
+		s_Data.m_CopyShader = CreateRef<Shader>("assets/shaders/CopyShader.shader");
+		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
+		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+		s_Data.m_GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
+		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+
 		TextureParameters params;
 		params.format = TextureFormat::RGBA16F;
 
@@ -53,22 +65,13 @@ namespace Nyx {
 		s_Data.m_CompositePass = CreateRef<RenderPass>(TextureParameters(TextureFormat::RGBA, TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE));
 
 		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
-		s_Data.m_CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
-		s_Data.m_PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
-		s_Data.m_GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
-
-		s_Data.m_SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+		
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
 
 		s_Data.m_TempBuffer0 = CreateRef<FrameBuffer>(fbSpec);
 		s_Data.m_TempBuffer1 = CreateRef<FrameBuffer>(fbSpec);
 		s_Data.m_JumpFloodBuffer = CreateRef<FrameBuffer>(fbSpec);
-
-		s_Data.m_JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFloodInit.shader");
-		s_Data.m_JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood.shader");
-		s_Data.m_FinalJumpFloodShader = CreateRef<Shader>("assets/shaders/FinalJumpFlood.shader");
-		s_Data.m_CopyShader = CreateRef<Shader>("assets/shaders/CopyShader.shader");
 	}
 
 	void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -89,6 +92,8 @@ namespace Nyx {
 
 		glDepthMask(GL_TRUE);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		Renderer::End();
 	}
 
 	void SceneRenderer::End()
@@ -133,7 +138,7 @@ namespace Nyx {
 
 	void SceneRenderer::GeometryPass()
 	{
-		Renderer::Begin(s_Data.m_ActiveCamera);
+		Renderer::Begin(s_Data.m_ActiveCamera, s_Data.m_ActiveScene);
 
 		s_Data.m_GeometryPass->Bind();
 

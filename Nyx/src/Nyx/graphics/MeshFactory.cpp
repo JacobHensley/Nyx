@@ -1,6 +1,8 @@
 #include "NXpch.h"
 #include "MeshFactory.h"
 #include "Nyx/Graphics/Mesh.h"
+#include "Nyx/Graphics/PBRMaterial.h"
+#include "Nyx/Graphics/SceneRenderer.h"
 
 namespace Nyx {
 
@@ -43,7 +45,9 @@ namespace Nyx {
 		Ref<VertexArray> vertexArray = CreateRef<VertexArray>();
 		vertexArray->PushVertexBuffer(vertexBuffer);
 
-		return CreateRef<Mesh>(indexBuffer, vertexBuffer, vertexArray);
+		Ref<Mesh> mesh = CreateRef<Mesh>(indexBuffer, vertexBuffer, vertexArray);
+		mesh->GetMaterials().push_back(CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader()));
+		return mesh;
 	}
 
 }

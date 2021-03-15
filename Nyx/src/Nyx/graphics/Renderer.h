@@ -9,12 +9,14 @@ namespace Nyx {
 	class Renderer
 	{
 	public:
-		static void Begin(Ref<Camera> camera);
+		static void Begin(Ref<Camera> camera, Scene* scene);
 
 		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform);
 		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material);
 
 		static void End();
+
+		static void Flush();
 
 		static void Init();
 

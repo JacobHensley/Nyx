@@ -60,6 +60,10 @@ namespace Nyx {
 		void SetUniform4f(const std::string& name, const glm::vec4& vec);
 		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
 
+		uint64_t GetHash() const
+		{
+			return std::hash<std::string>{}(m_Path);
+		}
 	private:
 		void Init();
 		std::unordered_map<ShaderType, std::string> SplitShaders(const std::string& path);
