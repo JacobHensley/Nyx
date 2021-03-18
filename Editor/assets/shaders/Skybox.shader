@@ -6,8 +6,9 @@ layout(location = 1) in vec2 a_TexCoord;
 
 layout(location = 2) out vec3 v_Position;
 
-layout(binding = 0) uniform r_RendererBuffer
+layout(std140, binding = 0) uniform r_RendererBuffer
 {
+	mat4 ViewProjection;
 	mat4 InverseVP;
 } RendererBuffer;
 

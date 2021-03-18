@@ -4,6 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
+#include "SceneRenderer.h"
+
 namespace Nyx {
 
 	struct RendererData
@@ -16,6 +18,9 @@ namespace Nyx {
 
 		Ref<Camera> m_ActiveCamera;
 		Scene* ActiveScene = nullptr; // TEMP
+
+		Ref<VertexArray> FullscreenQuadVA;
+		Ref<IndexBuffer> FullscreenQuadIB;
 
 		struct MaterialRef
 		{
@@ -60,16 +65,58 @@ namespace Nyx {
 
 		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.m_OutlineShader = CreateRef<Shader>("assets/shaders/outlineShader.shader");
+
+		// Fullscreen Quad
+		{
+			s_Data.FullscreenQuadVA = CreateRef<VertexArray>();
+
+			struct QuadVertex
+			{
+				glm::vec2 Position;
+				glm::vec2 TexCoord;
+			};
+
+			std::array<QuadVertex, 4> vertices;
+
+			vertices[0].Position = { -1.0f, -1.0f };
+			vertices[0].TexCoord = { 0.0f, 0.0f };
+
+			vertices[1].Position = { 1.0f, -1.0f };
+			vertices[1].TexCoord = { 1.0f, 0.0f };
+
+			vertices[2].Position = { 1.0f,  1.0f };
+			vertices[2].TexCoord = { 1.0f, 1.0f };
+
+			vertices[3].Position = { -1.0f,  1.0f };
+			vertices[3].TexCoord = { 0.0f, 1.0f };
+
+			Ref<VertexBuffer> fullscreenQuadVB = CreateRef<VertexBuffer>(vertices.data(), vertices.size() * sizeof(QuadVertex));
+			s_Data.FullscreenQuadVA->PushVertexBuffer(fullscreenQuadVB);
+
+			uint32_t fullscreenQuadIndices[] = { 0, 1, 2, 2, 3, 0 };
+			s_Data.FullscreenQuadIB = CreateRef<IndexBuffer>(fullscreenQuadIndices, 6);
+		}
+
 	}
 
 	void Renderer::Begin(Ref<Camera> camera, Scene* scene)
 	{
 		s_Data.m_ActiveCamera = camera;
 		s_Data.ActiveScene = scene;
+
+		struct UB
+		{
+			glm::mat4 ViewProjection;
+			glm::mat4 InverseVP;
+		} ub;
+		ub.ViewProjection = camera->GetViewMatrix();
+		ub.InverseVP = glm::inverse(ub.ViewProjection);
+
+		Shader::UploadUniformBuffer(0, (byte*)&ub, sizeof(UB));
 	}
 
 	// Material sorting... but on a mesh level -> per SCENE
-	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform)
+	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, const glm::mat4& transform)
 	{
 		auto& subMeshes = mesh->GetSubMeshs();
 		const auto& materials = mesh->GetMaterials();
@@ -143,14 +190,14 @@ namespace Nyx {
 #endif
 	}
 
-	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
+	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, const glm::mat4& transform, Ref<Material> material)
 	{
 		auto& subMeshes = mesh->GetSubMeshs();
 		const auto& materials = mesh->GetMaterials();
 
 		for (SubMesh& subMesh : subMeshes)
 		{
-			Ref<Material> material = materials[subMesh.materialIndex];
+			Ref<Material> submeshMaterial = material ? material : materials[subMesh.materialIndex];
 			// submit all submeshes
 			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
 		}
@@ -205,6 +252,17 @@ namespace Nyx {
 #endif
 	}
 
+	void Renderer::SubmitFullscreenQuad(Ref<Material> material)
+	{
+		material->Bind();
+
+		s_Data.FullscreenQuadVA->Bind();
+		s_Data.FullscreenQuadIB->Bind();
+		//glDepthMask(GL_FALSE);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		//glDepthMask(GL_TRUE);
+	}
+
 	void Renderer::End()
 	{
 		Flush();
@@ -242,6 +300,7 @@ namespace Nyx {
 
 				glm::mat4& transform = submeshDC.Transform;
 
+#if 0
 				for (UniformBuffer* uniformBuffer : uniformBuffers)
 				{
 					//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
@@ -261,12 +320,22 @@ namespace Nyx {
 					shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
 					//	delete s_Data.m_UniformBuffer;
 				}
+#endif
+
+				std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
+				for (Ref<ShaderResource> resource : resources)
+				{
+					RendererID rendererID = resource->GetRendererID();
+					s_Data.m_RendererResourceFuncs[rendererID](resource, s_Data.ActiveScene);
+				}
 
 				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(submesh.indexOffset * sizeof(uint)), submesh.vertexOffset);
 
 			}
 
 		}
+
+		s_Data.DrawList.clear();
 	}
 
 	void Renderer::InitRenderFunctions()

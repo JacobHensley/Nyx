@@ -104,6 +104,8 @@ namespace Nyx {
 		return program;
 	}
 
+	static std::vector<UniformBuffer> s_UniformBuffers;
+
 	void Shader::SpirvReflect(std::vector<uint32_t>& data)
 	{
 		spirv_cross::Compiler comp(data);
@@ -114,33 +116,40 @@ namespace Nyx {
 		{
 			auto& bufferType = comp.get_type(resource.base_type_id);
 			int memberCount = bufferType.member_types.size();
+			auto binding = comp.get_decoration(resource.id, spv::DecorationBinding);
 
-			UniformBuffer& buffer = m_UniformBuffers.emplace_back();
-			buffer.name = resource.name;
-			buffer.bindingPoint = comp.get_decoration(resource.id, spv::DecorationBinding);
-			buffer.size = comp.get_declared_struct_size(bufferType);
-			buffer.index = m_UniformBuffers.size() - 1;
-
-			buffer.uniforms.reserve(memberCount);
-
-			for (int i = 0; i < memberCount; i++)
+			static std::unordered_set<uint32_t> uniformBuffers;
+			if (uniformBuffers.find(binding) == uniformBuffers.end())
 			{
-				auto& type = comp.get_type(bufferType.member_types[i]);
-				int size = comp.get_declared_struct_member_size(bufferType, i);
-				int offset = comp.type_struct_member_offset(bufferType, i);
-				const std::string& name = comp.get_member_name(bufferType.self, i);
+				UniformBuffer& buffer = s_UniformBuffers.emplace_back();
+				buffer.name = resource.name;
+				buffer.bindingPoint = binding;
+				buffer.size = comp.get_declared_struct_size(bufferType);
+				buffer.index = s_UniformBuffers.size() - 1;
 
-				UniformType uniformType = ShaderUniform::SpirvTypeToUniformType(type);
-				RendererID rendererID = GetRendererUniformID(name);
+				buffer.uniforms.reserve(memberCount);
 
-				buffer.uniforms.emplace_back(CreateRef<ShaderUniform>(name, uniformType, size, offset, rendererID));
+				for (int i = 0; i < memberCount; i++)
+				{
+					auto& type = comp.get_type(bufferType.member_types[i]);
+					int size = comp.get_declared_struct_member_size(bufferType, i);
+					int offset = comp.type_struct_member_offset(bufferType, i);
+					const std::string& name = comp.get_member_name(bufferType.self, i);
+
+					UniformType uniformType = ShaderUniform::SpirvTypeToUniformType(type);
+					RendererID rendererID = GetRendererUniformID(name);
+
+					buffer.uniforms.emplace_back(CreateRef<ShaderUniform>(name, uniformType, size, offset, rendererID));
+				}
+			
+				glUseProgram(m_ShaderID);
+				glCreateBuffers(1, &buffer.openGLID);
+				glBindBuffer(GL_UNIFORM_BUFFER, buffer.openGLID);
+				glBufferData(GL_UNIFORM_BUFFER, buffer.size, nullptr, GL_DYNAMIC_DRAW);
+				glBindBufferBase(GL_UNIFORM_BUFFER, buffer.bindingPoint, buffer.openGLID);
+
+				uniformBuffers.insert(buffer.bindingPoint);
 			}
-
-			glUseProgram(m_ShaderID);
-			glCreateBuffers(1, &buffer.openGLID);
-			glBindBuffer(GL_UNIFORM_BUFFER, buffer.openGLID);
-			glBufferData(GL_UNIFORM_BUFFER, buffer.size, nullptr, GL_DYNAMIC_DRAW);
-			glBindBufferBase(GL_UNIFORM_BUFFER, buffer.bindingPoint, buffer.openGLID);
 		}
 
 		glUseProgram(m_ShaderID);
@@ -280,7 +289,7 @@ namespace Nyx {
 
 	void Shader::UploadUniformBuffer(uint index, byte* buffer, uint size) //asserts 
 	{
-		UniformBuffer& ub = m_UniformBuffers[index];
+		UniformBuffer& ub = s_UniformBuffers[index];
 		glBindBuffer(GL_UNIFORM_BUFFER, ub.openGLID);
 		glBindBufferBase(GL_UNIFORM_BUFFER, ub.bindingPoint, ub.openGLID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, (const void*)buffer);
@@ -297,11 +306,11 @@ namespace Nyx {
 
 		std::vector<UniformBuffer*> result;
 
-		for (int i = 0; i < m_UniformBuffers.size(); i++)
+		for (int i = 0; i < s_UniformBuffers.size(); i++)
 		{
-			const std::string& name = m_UniformBuffers[i].name;
+			const std::string& name = s_UniformBuffers[i].name;
 			if (name.front() == identifier)
-				result.push_back(&m_UniformBuffers[i]);
+				result.push_back(&s_UniformBuffers[i]);
 		}
 
 		return result;

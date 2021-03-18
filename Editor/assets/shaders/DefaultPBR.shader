@@ -12,21 +12,22 @@ layout(location = 6) out vec3 v_WorldPosition;
 layout(location = 7) out vec2 v_TexCoords;
 layout(location = 8) out mat3 v_WorldNormals;
 
-// Index 0
 layout(std140, binding = 0) uniform r_RendererBuffer
 {
-	mat4 MVP;
-	mat4 ModelMatrix;
+	mat4 ViewProjection;
+	mat4 InverseVP;
 } RendererBuffer;
+
+layout (location = 0) uniform mat4 u_Transform;
 
 void main()
 {
-	gl_Position = RendererBuffer.MVP * vec4(a_Position, 1.0f);
-
-	v_Normal = mat3(RendererBuffer.ModelMatrix) * a_Normal;
-	v_WorldPosition = vec3(RendererBuffer.ModelMatrix * vec4(a_Position, 1.0f));
+	v_Normal = mat3(u_Transform) * a_Normal;
+	v_WorldPosition = vec3(u_Transform * vec4(a_Position, 1.0f));
 	v_TexCoords = a_TexCoords;
-	v_WorldNormals = mat3(RendererBuffer.ModelMatrix) * mat3(a_Tangent, a_Binormals, a_Normal);
+	v_WorldNormals = mat3(u_Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
+	
+	gl_Position = RendererBuffer.ViewProjection * v_WorldPosition;
 }
 
 #Shader Fragment

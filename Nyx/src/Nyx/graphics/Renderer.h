@@ -11,8 +11,9 @@ namespace Nyx {
 	public:
 		static void Begin(Ref<Camera> camera, Scene* scene);
 
-		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform);
-		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material);
+		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, const glm::mat4& transform);
+		static void SubmitMesh(Scene* scene, Ref<Mesh> mesh, const glm::mat4& transform, Ref<Material> material);
+		static void SubmitFullscreenQuad(Ref<Material> material);
 
 		static void End();
 

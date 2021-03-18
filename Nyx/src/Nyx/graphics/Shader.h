@@ -44,7 +44,7 @@ namespace Nyx {
 
 		void Reload();
 
-		void UploadUniformBuffer(uint index, byte* buffer, uint size);
+		static void UploadUniformBuffer(uint index, byte* buffer, uint size);
 
 		std::vector<UniformBuffer*> GetUniformBuffers(UniformSystemType type);
 		const std::vector<Ref<ShaderResource>>& GetResources(UniformSystemType type);
@@ -81,7 +81,6 @@ namespace Nyx {
 		uint m_ShaderID;
 
 		std::unordered_map<ShaderType, std::string> m_ShaderSrc;
-		std::vector<UniformBuffer> m_UniformBuffers;
 		std::unordered_map<UniformSystemType, std::vector<Ref<ShaderResource>>> m_Resources;
 	};
 

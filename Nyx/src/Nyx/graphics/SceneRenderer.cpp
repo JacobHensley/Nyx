@@ -29,8 +29,8 @@ namespace Nyx {
 		Ref<Shader> m_FinalJumpFloodShader;
 		Ref<Shader> m_CopyShader;
 
-		Ref<Mesh> m_FullscreenQuad;
 		Ref<Shader> m_PBRShader, m_GlassShader;
+
 
 		Ref<Material> m_EnvironmentMaterial;
 		Ref<Shader> m_SkyboxShader;
@@ -64,7 +64,6 @@ namespace Nyx {
 		s_Data.m_GeometryPass = CreateRef<RenderPass>();
 		s_Data.m_CompositePass = CreateRef<RenderPass>(TextureParameters(TextureFormat::RGBA, TextureFilter::LINEAR, TextureWrap::CLAMP_TO_EDGE));
 
-		s_Data.m_FullscreenQuad = MeshFactory::GenQuad(-1.0f, -1.0f, 0.0f, 2.0f, 2.0f); //create mesh cache
 		
 		s_Data.m_EnvironmentMaterial = CreateRef<Material>(s_Data.m_SkyboxShader);
 		s_Data.m_EnvironmentMaterial->SetDepthTesting(false);
@@ -87,8 +86,8 @@ namespace Nyx {
 		GeometryPass();
 		s_Data.m_RenderCommands.clear();
 
-		JumpFloodPass();
-		CompositePass();
+		//JumpFloodPass();
+		//CompositePass();
 
 		glDepthMask(GL_TRUE);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -122,7 +121,7 @@ namespace Nyx {
 
 	Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
 	{
-		return s_Data.m_CompositePass->GetFrameBuffer();
+		return s_Data.m_GeometryPass->GetFrameBuffer();
 	}
 
 	void Nyx::SceneRenderer::Resize(uint width, uint height)
@@ -144,7 +143,7 @@ namespace Nyx {
 
 		//Scene level sorting
 
-		Renderer::SubmitMesh(s_Data.m_ActiveScene, s_Data.m_FullscreenQuad, glm::mat4(1.0f), s_Data.m_EnvironmentMaterial);
+		Renderer::SubmitFullscreenQuad(s_Data.m_EnvironmentMaterial);
 
 		// 1. render opaque materials
 		// 2. render transparent/translucent stuff (glass)
@@ -156,6 +155,8 @@ namespace Nyx {
 			else
 				Renderer::SubmitMesh(s_Data.m_ActiveScene, command.mesh, command.transform, command.materialOverride);
 		}
+
+		Renderer::Flush();
 
 		s_Data.m_GeometryPass->Unbind();
 	}
@@ -200,7 +201,7 @@ namespace Nyx {
 
 		glBindTextureUnit(5, src->GetColorAttachments()[0]);
 
-		s_Data.m_FullscreenQuad->Render(true);
+		//s_Data.m_FullscreenQuad->Render(true);
 
 		shader->Unbind();
 		dest->Unbind();
@@ -218,7 +219,7 @@ namespace Nyx {
 
 		glBindTextureUnit(5, s_Data.m_GeometryPass->GetFrameBuffer()->GetColorAttachments()[0]);
 
-		s_Data.m_FullscreenQuad->Render(true);
+		// s_Data.m_FullscreenQuad->Render(true);
 
 		s_Data.m_CompositePass->Unbind();
 
