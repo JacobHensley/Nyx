@@ -1,4 +1,4 @@
-#include "NXpch.h"
+﻿#include "NXpch.h"
 #include "Shader.h"
 #include "Nyx/Utilities/Utilities.h"
 #include <glm/gtc/type_ptr.hpp>
@@ -15,50 +15,42 @@ namespace Nyx {
 	void Shader::Init()
 	{
 		m_ShaderSrc = SplitShaders(m_Path);
-		CompileShaders(m_ShaderSrc);
-
+		m_ShaderProgram = CompileShaders(m_ShaderSrc);
+		ShaderProgramReflect();
 	}
 
-	//check new calls
-	//create buffer class
-	uint Shader::CompileShaders(const std::unordered_map<ShaderType, std::string>& shaderSrc) // take by ref
+	uint32_t Shader::CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc)
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 
 		const int shaderVersion = 430;
-
 		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderVersion);
 
 		GLuint program = glCreateProgram();
-		m_ShaderID = program;
-
-		std::vector<GLuint> shaderIDs;
-		shaderIDs.reserve(shaderSrc.size());
-
-		uint32_t shaderDataIndex = 0;
-		std::vector<uint32_t> shaderData[2];
+		GLuint shaderIDs[2];
+		uint32_t index = 0;
 
 		for (auto const& shader : shaderSrc)
 		{
-			ShaderType type = shader.first;
+			ShaderStage stage = shader.first;
 			const std::string& src = shader.second;
 
-			auto compilationResult = compiler.CompileGlslToSpv(src, ShaderTypeToShaderc(type), m_Path.c_str(), options);
+			auto compilationResult = compiler.CompileGlslToSpv(src, ShaderStageToShaderc(stage), m_Path.c_str(), options);
 			if (compilationResult.GetCompilationStatus() != shaderc_compilation_status_success)
+			{
 				NX_CORE_ERROR("Warnings ({0}), Errors ({1}) \n{2}", compilationResult.GetNumWarnings(), compilationResult.GetNumErrors(), compilationResult.GetErrorMessage());
+			}
 
 			const uint8_t* data = reinterpret_cast<const uint8_t*>(compilationResult.cbegin());
 			const uint8_t* dataEnd = reinterpret_cast<const uint8_t*>(compilationResult.cend());
 			uint32_t size = dataEnd - data;
-			shaderData[shaderDataIndex++] = std::vector<uint32_t>(compilationResult.cbegin(), compilationResult.cend());
 
-			GLuint shader = glCreateShader(ShaderTypeToGL(type));
+			GLuint shader = glCreateShader(ShaderStageToGL(stage));
 			glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, data, size);
 			glSpecializeShader(shader, (const GLchar*)"main", 0, nullptr, nullptr);
 
-			shaderIDs.push_back(shader);
-
+			shaderIDs[index++] = shader;
 			glAttachShader(program, shader);
 		}
 
@@ -79,15 +71,7 @@ namespace Nyx {
 				NX_CORE_ERROR("{0}", &infoLog[0]);
 			}
 
-
 			glDeleteProgram(program);
-
-			for (GLuint shader : shaderIDs)
-			{
-				glDeleteShader(shader);
-			}
-
-			return -1;
 		}
 
 		for (GLuint shader : shaderIDs)
@@ -95,137 +79,19 @@ namespace Nyx {
 			glDetachShader(program, shader);
 		}
 
-		for (uint32_t i = 0; i < 2; i++)
-		{
-			SpirvReflect(shaderData[i]);
-		}
-
-
 		return program;
 	}
 
-	void Shader::SpirvReflect(std::vector<uint32_t>& data)
-	{
-		spirv_cross::Compiler comp(data);
-		spirv_cross::ShaderResources res = comp.get_shader_resources();
-
-		uint32_t bufferIndex = 0;
-		for (const spirv_cross::Resource& resource : res.uniform_buffers)
-		{
-			auto& bufferType = comp.get_type(resource.base_type_id);
-			int memberCount = bufferType.member_types.size();
-
-			UniformBuffer& buffer = m_UniformBuffers.emplace_back();
-			buffer.name = resource.name;
-			buffer.bindingPoint = comp.get_decoration(resource.id, spv::DecorationBinding);
-			buffer.size = comp.get_declared_struct_size(bufferType);
-			buffer.index = m_UniformBuffers.size() - 1;
-
-			buffer.uniforms.reserve(memberCount);
-
-			for (int i = 0; i < memberCount; i++)
-			{
-				auto& type = comp.get_type(bufferType.member_types[i]);
-				int size = comp.get_declared_struct_member_size(bufferType, i);
-				int offset = comp.type_struct_member_offset(bufferType, i);
-				const std::string& name = comp.get_member_name(bufferType.self, i);
-
-				UniformType uniformType = ShaderUniform::SpirvTypeToUniformType(type);
-				RendererID rendererID = GetRendererUniformID(name);
-
-				buffer.uniforms.emplace_back(CreateRef<ShaderUniform>(name, uniformType, size, offset, rendererID));
-			}
-
-			glUseProgram(m_ShaderID);
-			glCreateBuffers(1, &buffer.openGLID);
-			glBindBuffer(GL_UNIFORM_BUFFER, buffer.openGLID);
-			glBufferData(GL_UNIFORM_BUFFER, buffer.size, nullptr, GL_DYNAMIC_DRAW);
-			glBindBufferBase(GL_UNIFORM_BUFFER, buffer.bindingPoint, buffer.openGLID);
-		}
-
-		glUseProgram(m_ShaderID);
-		int32_t sampler = 0;
-		for (const spirv_cross::Resource& resource : res.sampled_images)
-		{
-			auto& type = comp.get_type(resource.base_type_id);
-			auto location = comp.get_decoration(resource.id, spv::DecorationLocation);
-			const std::string& name = resource.name;
-			uint dimension = type.image.dim;
-
-			RendererID rendererID = GetRendererUniformID(name);
-			Ref<ShaderResource> resource = CreateRef<ShaderResource>(name, dimension, location, rendererID, sampler);
-			glUniform1i(location, sampler);
-
-			if (rendererID != RendererID::NONE)
-				m_Resources[UniformSystemType::RENDERER].push_back(resource);
-			else
-				m_Resources[UniformSystemType::MATERIAL].push_back(resource);
-			
-			sampler++;
-		}
-	}
-
-	RendererID Shader::GetRendererUniformID(const std::string& name)
-	{
-		if (name == "ModelMatrix")
-		{
-			return RendererID::MODEL_MATRIX;
-		}
-		else if (name == "ViewMatrix")
-		{
-			return RendererID::VIEW_MATRIX;
-		}
-		else if (name == "ProjMatrix")
-		{
-			return RendererID::PROJ_MATRIX;
-		}	
-		else if (name == "InverseVP")
-		{
-			return RendererID::INVERSE_VP;
-		}
-		else if (name == "MVP")
-		{
-			return RendererID::MVP;
-		}
-		else if (name == "CameraPosition")
-		{
-			return RendererID::CAMERA_POSITION;
-		}
-		else if (name == "r_BRDFLutTexture")
-		{
-			return RendererID::BRDF_LUT;
-		}	
-		else if (name == "r_IrradianceTexture")
-		{
-			return RendererID::IRRADIANCE_TEXTURE;
-		}	
-		else if (name == "r_RadianceTexture")
-		{
-			return RendererID::RADIANCE_TEXTURE;
-		}
-		else if (name == "DirectionLight")
-		{
-			return RendererID::DIRECTIONAL_LIGHT;
-		}
-		else if (name == "PLight")
-		{
-			return RendererID::POINT_LIGHT;
-		}
-
-		return RendererID::NONE;
-	}
-
-	std::unordered_map<ShaderType, std::string> Shader::SplitShaders(const std::string& path)
+	//Add #Line as to reset error message line number for each shader stage
+	std::unordered_map<ShaderStage, std::string> Shader::SplitShaders(const std::string& path)
 	{
 		std::ifstream stream(path);
 
-		std::unordered_map<ShaderType, std::string> result;
+		std::unordered_map<ShaderStage, std::string> result;
 
-		ShaderType type = ShaderType::NONE;
-		std::stringstream ss[4];
+		ShaderStage stage = ShaderStage::NONE;
+		std::stringstream ss[2];
 		std::string line;
-
-		int lineNumber = 1;
 
 		while (getline(stream, line))
 		{
@@ -233,40 +99,237 @@ namespace Nyx {
 			{
 				if (line.find("Vertex") != std::string::npos)
 				{
-					type = ShaderType::VERTEX;
+					stage = ShaderStage::VERTEX;
 				}
 				else if (line.find("Fragment") != std::string::npos)
 				{
-					type = ShaderType::FRAGMENT;
-				}
-				else if (line.find("Compute") != std::string::npos)
-				{
-					type = ShaderType::COMPUTE;
-				}
-				else if (line.find("Geometry") != std::string::npos)
-				{
-					type = ShaderType::GEOMETRY;
+					stage = ShaderStage::FRAGMENT;
 				}
 			}
 			else
 			{
-				result[type] += line + '\n';
-
-				if (line.find("#version") != std::string::npos)
-				{
-					ss[(int)type] << "#line " + std::to_string(lineNumber + 3) << '\n';
-				}
-
-				lineNumber++;
+				result[stage] += line + '\n';
 			}
 		}
 
 		return result;
 	}
 
+	//May have to adjust sizing and offset for bools
+	void Shader::ShaderProgramReflect()
+	{
+		GLint numBlocks;
+		glGetProgramiv(m_ShaderProgram, GL_ACTIVE_UNIFORM_BLOCKS, &numBlocks);
+		std::vector<std::string> blockNames;
+		blockNames.reserve(numBlocks);
+
+		for (int i = 0; i < numBlocks; i++)
+		{
+			GLint nameLength;
+			glGetActiveUniformBlockiv(m_ShaderProgram, i, GL_UNIFORM_BLOCK_NAME_LENGTH, &nameLength);
+
+			std::vector<GLchar> name;
+			name.resize(nameLength);
+			glGetActiveUniformBlockName(m_ShaderProgram, i, nameLength, NULL, &name[0]);
+
+			blockNames.push_back(std::string());
+			blockNames.back().assign(name.begin(), name.end() - 1);
+		}
+
+		const GLsizei nameBufferSize = 128;
+		GLchar name[nameBufferSize];
+		GLint size;
+		GLenum type;
+		uint32_t offset = 0;
+		uint32_t sampler = 0;
+		GLsizei nameLength;
+
+		int numUniforms;
+		glGetProgramiv(m_ShaderProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
+
+		for (int i = 0; i < numUniforms; i++)
+		{
+			bool uniformInBlock = false;
+			glGetActiveUniform(m_ShaderProgram, (GLuint)i, nameBufferSize, &nameLength, &size, &type, name);
+			const std::string strName = name;
+			size_t n = std::count(strName.begin(), strName.end(), '.');
+
+			if (n >= 2)
+			{
+				continue;
+			}
+
+			RendererUniformID id = GetRendererUniformID(name);
+			Ref<ShaderUniform> uniform = CreateRef<ShaderUniform>(name, UniformTypeFromGL(type), size, offset, sampler, id);
+			if (uniform->ID != RendererUniformID::NONE)
+			{
+				m_RendererUniforms[id] = uniform;
+			}
+			else
+			{
+				m_MaterialUniforms[name] = uniform;
+			}
+
+			sampler += 1;
+			offset += size;
+			m_MaterialUniformBufferSize += size;
+		}
+
+	}
+
+	shaderc_shader_kind Shader::ShaderStageToShaderc(ShaderStage type)
+	{
+		if (type == ShaderStage::VERTEX)
+		{
+			return shaderc_vertex_shader;
+		}
+		else if (type == ShaderStage::FRAGMENT)
+		{
+			return shaderc_fragment_shader;
+		}
+	}
+
+	GLenum Shader::ShaderStageToGL(ShaderStage type)
+	{
+		if (type == ShaderStage::VERTEX)
+		{
+			return GL_VERTEX_SHADER;
+		}
+		else if (type == ShaderStage::FRAGMENT)
+		{
+			return GL_FRAGMENT_SHADER;
+		}
+	}
+
+	UniformType Shader::UniformTypeFromGL(GLenum type)
+	{
+		if (type == GL_BOOL)
+		{
+			return UniformType::BOOL;
+		}
+		else if (type == GL_INT)
+		{
+			return UniformType::INT;
+		}
+		else if (type == GL_FLOAT)
+		{
+			return UniformType::FLOAT;
+		}
+		else if (type == GL_FLOAT_VEC2)
+		{
+			return UniformType::FLOAT2;
+		}
+		else if (type == GL_FLOAT_VEC3)
+		{
+			return UniformType::FLOAT3;
+		}
+		else if (type == GL_FLOAT_VEC4)
+		{
+			return UniformType::FLOAT4;
+		}
+		else if (type == GL_FLOAT_MAT4)
+		{
+			return UniformType::MAT4;
+		}
+		else if (type == GL_TEXTURE_2D)
+		{
+			return UniformType::TEXTURE_2D;
+		}
+		else if (type == GL_TEXTURE_CUBE_MAP)
+		{
+			return UniformType::TEXTURE_CUBE;
+		}
+	}
+
+	RendererUniformID Shader::GetRendererUniformID(const std::string name)
+	{
+		if (name == "r_Transform")
+		{
+			return RendererUniformID::TRANSFORM;
+		}
+		else if (name == "r_ViewMatrix")
+		{
+			return RendererUniformID::VIEW_MATRIX;
+		}
+		else if (name == "r_ProjMatrix")
+		{
+			return RendererUniformID::PROJ_MATRIX;
+		}
+		else if (name == "r_InverseVP")
+		{
+			return RendererUniformID::INVERSE_VP;
+		}
+		else if (name == "r_MVP")
+		{
+			return RendererUniformID::MVP;
+		}
+		else if (name == "r_CameraPosition")
+		{
+			return RendererUniformID::CAMERA_POSITION;
+		}
+		else if (name == "r_BRDFLutTexture")
+		{
+			return RendererUniformID::BRDF_LUT;
+		}
+		else if (name == "r_IrradianceTexture")
+		{
+			return RendererUniformID::IRRADIANCE_TEXTURE;
+		}
+		else if (name == "r_RadianceTexture")
+		{
+			return RendererUniformID::RADIANCE_TEXTURE;
+		}
+		else if (name.find("r_DirectionLight") != std::string::npos)
+		{
+			return RendererUniformID::DIRECTIONAL_LIGHT;
+		}
+		else if (name.find("r_PointLight") != std::string::npos)
+		{
+			return RendererUniformID::POINT_LIGHT;
+		}
+
+		return RendererUniformID::NONE;
+	}
+
+	uint32_t Shader::GetUniformSizeFromType(UniformType type)
+	{
+		if (type == UniformType::BOOL)
+		{
+			return 1;
+		}
+		else if (type == UniformType::INT)
+		{
+			return 4;
+		}
+		else if (type == UniformType::FLOAT)
+		{
+			return 4;
+		}
+		else if (type == UniformType::FLOAT2)
+		{
+			return 4 * 2;
+		}
+		else if (type == UniformType::FLOAT3)
+		{
+			return 4 * 3;
+		}
+		else if (type == UniformType::FLOAT4)
+		{
+			return 4 * 4;
+		}
+		else if (type == UniformType::MAT4)
+		{
+			return 64;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
 	void Shader::Bind()
 	{
-		glUseProgram(m_ShaderID);
+		glUseProgram(m_ShaderProgram);
 	}
 
 	void Shader::Unbind()
@@ -274,142 +337,50 @@ namespace Nyx {
 		glUseProgram(0);
 	}
 
-	void Shader::Reload()
+	bool Shader::Reload()
 	{
+		return false;
 	}
 
-	void Shader::UploadUniformBuffer(uint index, byte* buffer, uint size) //asserts 
+	void Shader::SetUniformInt(const std::string& name, int value)
 	{
-		UniformBuffer& ub = m_UniformBuffers[index];
-		glBindBuffer(GL_UNIFORM_BUFFER, ub.openGLID);
-		glBindBufferBase(GL_UNIFORM_BUFFER, ub.bindingPoint, ub.openGLID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, (const void*)buffer);
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform1i(location, value);
 	}
 
-	//store as array of vector
-	std::vector<UniformBuffer*> Shader::GetUniformBuffers(UniformSystemType type) //return const ref
+	void Shader::SetUniformIntArray(const std::string& name, int* values, uint32_t count)
 	{
-		char identifier = 0;
-		if (type == UniformSystemType::MATERIAL)
-			identifier = 'm';
-		else if (type == UniformSystemType::RENDERER)
-			identifier = 'r';
-
-		std::vector<UniformBuffer*> result;
-
-		for (int i = 0; i < m_UniformBuffers.size(); i++)
-		{
-			const std::string& name = m_UniformBuffers[i].name;
-			if (name.front() == identifier)
-				result.push_back(&m_UniformBuffers[i]);
-		}
-
-		return result;
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
-	const std::vector<Ref<ShaderResource>>& Shader::GetResources(UniformSystemType type)
+	void Shader::SetUniformFloat(const std::string& name, float value)
 	{
-		return m_Resources[type];
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform1f(location, value);
 	}
 
-	Ref<ShaderResource> Shader::FindShaderResource(const std::string& name, UniformSystemType type)
+	void Shader::SetUniformFloat2(const std::string& name, const glm::vec2& value)
 	{
-		if (m_Resources.find(type) == m_Resources.end())
-			return nullptr;
-
-		for (Ref<ShaderResource> resource : m_Resources.at(type))
-		{
-			if (resource->GetName() == name)
-				return resource;
-		}
-		return nullptr;
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform2f(location, value.x, value.y);
 	}
 
-	shaderc_shader_kind Shader::ShaderTypeToShaderc(ShaderType type)
+	void Shader::SetUniformFloat3(const std::string& name, const glm::vec3& value)
 	{
-		if (type == ShaderType::VERTEX)
-		{
-			return shaderc_vertex_shader;
-		}
-		else if (type == ShaderType::FRAGMENT)
-		{
-			return shaderc_fragment_shader;
-		}
-		else if (type == ShaderType::COMPUTE)
-		{
-			return shaderc_compute_shader;
-		}
-		else if (type == ShaderType::GEOMETRY)
-		{
-			return shaderc_geometry_shader;
-		}
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform3f(location, value.x, value.y, value.z);
 	}
 
-	GLenum Shader::ShaderTypeToGL(ShaderType type)
+	void Shader::SetUniformFloat4(const std::string& name, const glm::vec4& value)
 	{
-		if (type == ShaderType::VERTEX)
-		{
-			return GL_VERTEX_SHADER;
-		}
-		else if (type == ShaderType::FRAGMENT)
-		{
-			return GL_FRAGMENT_SHADER;
-		}
-		else if (type == ShaderType::COMPUTE)
-		{
-			return GL_COMPUTE_SHADER;
-		}
-		else if (type == ShaderType::GEOMETRY)
-		{
-			return GL_GEOMETRY_SHADER;
-		}
-	}
-
-	const std::string& Shader::ShaderTypeToString(ShaderType type)
-	{
-		if (type == ShaderType::VERTEX)
-		{
-			return "Vertex";
-		}
-		else if (type == ShaderType::FRAGMENT)
-		{
-			return "Fragment";
-		}
-		else if (type == ShaderType::COMPUTE)
-		{
-			return "Compute";
-		}
-		else if (type == ShaderType::GEOMETRY)
-		{
-			return "Geometry";
-		}
-	}
-
-	void Shader::SetUniform1i(const std::string& name, int value)
-	{
-		glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), value);
-	}
-
-	void Shader::SetUniform1f(const std::string& name, float value)
-	{
-		glUniform1f(glGetUniformLocation(m_ShaderID, name.c_str()), value);
-	}
-
-	void Shader::SetUniform2f(const std::string& name, const glm::vec2& vec)
-	{
-		glUniform2f(glGetUniformLocation(m_ShaderID, name.c_str()), vec.x, vec.y);
-	}
-
-	void Shader::SetUniform3f(const std::string& name, const glm::vec3& vec)
-	{
-	}
-
-	void Shader::SetUniform4f(const std::string& name, const glm::vec4& vec)
-	{
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
 	void Shader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
+		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
-
 }

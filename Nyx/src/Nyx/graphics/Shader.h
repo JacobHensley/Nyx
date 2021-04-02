@@ -1,11 +1,9 @@
 #pragma once
 #include "Nyx/Core/Core.h"
 #include "Nyx/Asset/Asset.h"
-#include "Nyx/Graphics/ShaderUniform.h"
 
 #include <glm/glm.hpp>
 #include <shaderc/shaderc.hpp>
-#include <spirv_cross.hpp>
 
 #include <String>
 #include <unordered_map>
@@ -14,71 +12,88 @@ typedef unsigned int GLenum;
 
 namespace Nyx {
 
-	enum class ShaderType
+	enum class ShaderStage
 	{
-		NONE = -1, VERTEX, FRAGMENT, COMPUTE, GEOMETRY
+		NONE = -1, VERTEX, FRAGMENT
 	};
 
-	enum class UniformSystemType
+	enum class RendererUniformID
 	{
-		NONE = -1, MATERIAL, RENDERER
+		NONE = -1, TRANSFORM, VIEW_MATRIX, PROJ_MATRIX, INVERSE_VP, MVP, CAMERA_POSITION, BRDF_LUT, IRRADIANCE_TEXTURE, RADIANCE_TEXTURE, DIRECTIONAL_LIGHT, POINT_LIGHT
 	};
 
-	struct UniformBuffer
+	enum class UniformType
 	{
-		std::string name;
-		uint index;
-		uint bindingPoint;
-		uint size;
-		uint openGLID;
-		std::vector<Ref<ShaderUniform>> uniforms;
+		NONE = -1, BOOL, INT, FLOAT, FLOAT2, FLOAT3, FLOAT4, MAT4, TEXTURE_2D, TEXTURE_CUBE
+	};
+
+	struct ShaderUniform
+	{
+		ShaderUniform(const std::string name, UniformType type, uint32_t size, uint32_t offset, uint32_t sampler, RendererUniformID id)
+			: Name(name), Type(type), Size(size), Offset(offset), Sampler(sampler), ID(id)
+		{
+		}
+
+		const std::string Name;
+		UniformType Type;
+		RendererUniformID ID;
+		uint32_t Size;
+		uint32_t Offset;
+		uint32_t Sampler;
 	};
 
 	class Shader : public Asset
 	{
 	public:
 		Shader(const std::string& path);
-		
+
 		void Bind();
 		void Unbind();
-
-		void Reload();
-
-		void UploadUniformBuffer(uint index, byte* buffer, uint size);
-
-		std::vector<UniformBuffer*> GetUniformBuffers(UniformSystemType type);
-		const std::vector<Ref<ShaderResource>>& GetResources(UniformSystemType type);
-
-		Ref<ShaderResource> FindShaderResource(const std::string& name, UniformSystemType type);
+		bool Reload(); // This function is not implemented as of now
 
 		inline const std::string& GetPath() const { return m_Path; }
+		inline uint32_t GetShaderProgram() const { return m_ShaderProgram; }
 
-		void SetUniform1i(const std::string& name, int value);
-		void SetUniform1f(const std::string& name, float value);
-		void SetUniform2f(const std::string& name, const glm::vec2& vec);
-		void SetUniform3f(const std::string& name, const glm::vec3& vec);
-		void SetUniform4f(const std::string& name, const glm::vec4& vec);
-		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
+		inline const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& GetRendererUniforms() const { return m_RendererUniforms; }
+		inline const std::unordered_map<std::string, Ref<ShaderUniform>>& GetMaterialUniforms() const { return m_MaterialUniforms; }
+
+		inline uint32_t GetMaterialUniformBufferSize() { return m_MaterialUniformBufferSize; }
+		static uint32_t GetUniformSizeFromType(UniformType type);
+
+		void SetUniformInt(const std::string& name, int value);
+		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
+		void SetUniformFloat(const std::string& name, float value);
+		void SetUniformFloat2(const std::string& name, const glm::vec2& value);
+		void SetUniformFloat3(const std::string& name, const glm::vec3& value);
+		void SetUniformFloat4(const std::string& name, const glm::vec4& value);
+		void SetUniformMat4(const std::string& name, const glm::mat4& value);
+
+		uint64_t GetHash() const
+		{
+			return std::hash<std::string>{}(m_Path);
+		}
 
 	private:
 		void Init();
-		std::unordered_map<ShaderType, std::string> SplitShaders(const std::string& path);
-		uint CompileShaders(const std::unordered_map<ShaderType, std::string>& shaderSrc);
-		void SpirvReflect(std::vector<uint32_t>& data);
 
-		RendererID GetRendererUniformID(const std::string& name);
+		std::unordered_map<ShaderStage, std::string> SplitShaders(const std::string& path);
+		uint32_t CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc);
+		void ShaderProgramReflect();
 
-		shaderc_shader_kind ShaderTypeToShaderc(ShaderType type);
-		GLenum ShaderTypeToGL(ShaderType type);
-		const std::string& ShaderTypeToString(ShaderType type);
+		shaderc_shader_kind ShaderStageToShaderc(ShaderStage type);
+		GLenum ShaderStageToGL(ShaderStage type);
+		UniformType UniformTypeFromGL(GLenum type);
+		RendererUniformID GetRendererUniformID(const std::string name);
 
 	private:
 		std::string m_Path;
-		uint m_ShaderID;
+		uint32_t m_ShaderProgram;
 
-		std::unordered_map<ShaderType, std::string> m_ShaderSrc;
-		std::vector<UniformBuffer> m_UniformBuffers;
-		std::unordered_map<UniformSystemType, std::vector<Ref<ShaderResource>>> m_Resources;
+		std::unordered_map<ShaderStage, std::string> m_ShaderSrc;
+
+		std::unordered_map<RendererUniformID, Ref<ShaderUniform>> m_RendererUniforms;
+		std::unordered_map<std::string, Ref<ShaderUniform>> m_MaterialUniforms;
+		uint32_t m_MaterialUniformBufferSize = 0;
 	};
 
 }

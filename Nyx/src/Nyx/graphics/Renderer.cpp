@@ -5,219 +5,207 @@
 #include <glad/glad.h>
 
 namespace Nyx {
+	
+	struct MaterialRef
+	{
+		Ref<Nyx::Material> Material;
+
+		MaterialRef(const Ref<Nyx::Material>& material)
+			: Material(material)
+		{
+		}
+
+		bool operator<(const MaterialRef& other) const
+		{
+			return *Material.get() < *other.Material.get();
+		}
+
+		Nyx::Material& operator->()
+		{
+			return *Material.get();
+		}
+	};
+
+	struct SubmeshDrawCommand
+	{
+		Nyx::SubMesh SubMesh;
+		Ref<VertexArray> MeshVA;
+		Ref<IndexBuffer> MeshIB;
+		glm::mat4 Transform;
+	};
+
+	enum UniformBufferID
+	{
+		NONE = -1, CAMERA_BUFFER = 0
+	};
+
+	struct UniformSlot
+	{
+		UniformSlot(UniformType type)
+			:	Type(type)
+		{
+		}
+
+		uint32_t Size;
+		uint32_t Offset;
+		UniformType Type;
+	};
+
+	struct UniformBuffer
+	{
+		UniformBuffer(const std::string& name, uint32_t bindingPoint, std::unordered_map<RendererUniformID, Ref<UniformSlot>>& layout)
+			: Name(name), BindingPoint(bindingPoint), Size(0), BufferLayout(layout)
+		{
+			glCreateBuffers(1, &OpenGLID);
+			glBindBuffer(GL_UNIFORM_BUFFER, OpenGLID);
+			glBufferData(GL_UNIFORM_BUFFER, Size, nullptr, GL_DYNAMIC_DRAW);
+			glBindBufferBase(GL_UNIFORM_BUFFER, BindingPoint, OpenGLID);
+
+			uint32_t offset = 0;
+			for (auto& [rendererID, uniformSlot] : BufferLayout)
+			{
+				uniformSlot->Size += Shader::GetUniformSizeFromType(uniformSlot->Type);
+				offset += uniformSlot->Size;
+				Size = offset + uniformSlot->Size;
+			}
+		}
+
+		template<typename T>
+		void Set(RendererUniformID id, const T& data)
+		{
+			Ref<UniformSlot> uniform = BufferLayout.at(id);
+			if (uniform == nullptr)
+			{
+				NX_CORE_WARN("Uniform {0} is not setup in uniform buffer {1}", uniform->Name, Name);
+			}
+
+			memcpy(BufferData + uniform->Offset, &data, uniform->Size);
+		}
+
+		const std::string Name;
+		uint32_t BindingPoint;
+		uint32_t OpenGLID;
+		uint32_t Size;
+		byte* BufferData;
+		std::unordered_map<RendererUniformID, Ref<UniformSlot>> BufferLayout;
+	};
 
 	struct RendererData
 	{
-		byte* m_UniformBuffer = nullptr;
-		uint m_UniformBufferSize = 0;
+		Ref<Camera> ActiveCamera;
+		Ref<EnvironmentMap> ActiveEnvironmentMap;
 
-		Ref<Texture> m_BRDFLutTexture;
-		Ref<Shader> m_OutlineShader;
-
-		Ref<Camera> m_ActiveCamera;
-
-		std::unordered_map<RendererID, std::function<void(const Ref<ShaderUniform>&, SubMesh&, Scene*, glm::mat4 transform)>> m_RendererUniformFuncs;
-		std::unordered_map<RendererID, std::function<void(const Ref<ShaderResource>&, Scene*)>> m_RendererResourceFuncs;
+		Ref<Texture> BRDFLutTexture;
+		Ref<FullscreenQaud> FullscreenQaud;
+		
+		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList;
+		std::vector<Ref<UniformBuffer>> UniformBuffers;
+		std::unordered_map<RendererUniformID, std::function<void(const Ref<ShaderUniform>&)>> RendererUniformFunctions;
 	};
 
 	static RendererData s_Data;
 
 	void Renderer::Init()
 	{
-		InitRenderFunctions();
-		InitRenderResourceFunFunctions();
-
-		s_Data.m_BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
-		s_Data.m_OutlineShader = CreateRef<Shader>("assets/shaders/outlineShader.shader");
-		
+		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
+		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
 	}
 
-	void Renderer::Begin(Ref<Camera> camera)
+	void Renderer::Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap)
 	{
-		s_Data.m_ActiveCamera = camera;
-	}
-
-	// Material sorting... but on a mesh level -> per SCENE
-	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform)
-	{
-		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
-
-		mesh->GetVertexArray()->Bind();
-		mesh->GetIndexBuffer()->Bind();
-
-		const auto & meshMaterials = mesh->GetMaterials();
-		std::unordered_map<Ref<Shader>, std::unordered_map<uint32_t, std::vector<SubMesh*>>> materials;
-		for (SubMesh& subMesh : subMeshes)
-		{
-			const auto & submeshMaterial = meshMaterials[subMesh.materialIndex];
-			materials[submeshMaterial->GetShader()][subMesh.materialIndex].emplace_back(&subMesh);
-		}
-		
-		for (auto& [shader, materialMap] : materials)
-		{
-			shader->Bind();
-			
-			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
-			
-			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
-			for (Ref<ShaderResource> resource : resources)
-			{
-				RendererID rendererID = resource->GetRendererID();
-				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
-			}
-			
-			for (auto& [materialIndex, submeshList] : materialMap)
-			{
-				auto & material = meshMaterials[materialIndex];
-				material->BindTextures();
-				material->UploadUniformBuffers();
-				
-				for (SubMesh* subMesh : submeshList)
-				{
-					for (UniformBuffer* uniformBuffer : uniformBuffers)
-					{
-					//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
-						{
-						//	delete[] s_Data.m_UniformBuffer;
-							s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
-							s_Data.m_UniformBufferSize = uniformBuffer->size;
-						}
-						
-						std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
-						
-						for (Ref<ShaderUniform> uniform : uniforms)
-						{
-							s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, *subMesh, scene, transform);
-						}
-						
-						shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-					//	delete s_Data.m_UniformBuffer;
-					}
-
-					glDrawElementsBaseVertex(GL_TRIANGLES, subMesh->indexCount, GL_UNSIGNED_INT, (void*)(subMesh->indexOffset * sizeof(uint)), subMesh->vertexOffset);
-				}
-			}
-		}
-	}
-
-	void Renderer::SubmitMesh(Scene* scene, Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> material)
-	{
-		std::vector<SubMesh>& subMeshes = mesh->GetSubMeshs();
-
-		mesh->GetVertexArray()->Bind();
-		mesh->GetIndexBuffer()->Bind();
-
-		for (SubMesh subMesh : subMeshes)
-		{
-			material->Bind();
-			Ref<Shader> shader = material->GetShader();
-
-			std::vector<UniformBuffer*> uniformBuffers = shader->GetUniformBuffers(UniformSystemType::RENDERER);
-
-			for (UniformBuffer* uniformBuffer : uniformBuffers)
-			{
-			//	if (!s_Data.m_UniformBuffer || s_Data.m_UniformBufferSize < uniformBuffer->size)
-				{
-				//	delete[] s_Data.m_UniformBuffer;
-					s_Data.m_UniformBuffer = new byte[uniformBuffer->size];
-					s_Data.m_UniformBufferSize = uniformBuffer->size;
-				}
-
-				std::vector<Ref<ShaderUniform>> uniforms = uniformBuffer->uniforms;
-
-				for (Ref<ShaderUniform> uniform : uniforms)
-				{
-					s_Data.m_RendererUniformFuncs[uniform->GetRendererID()](uniform, subMesh, scene, transform);
-				}
-
-				shader->UploadUniformBuffer(uniformBuffer->index, s_Data.m_UniformBuffer, s_Data.m_UniformBufferSize);
-			//	delete s_Data.m_UniformBuffer;
-			}
-
-			std::vector<Ref<ShaderResource>> resources = shader->GetResources(UniformSystemType::RENDERER);
-			for (Ref<ShaderResource> resource : resources)
-			{
-				RendererID rendererID = resource->GetRendererID();
-				s_Data.m_RendererResourceFuncs[rendererID](resource, scene);
-			}
-
-			if (!material->GetDepthTesting())
-				glDisable(GL_DEPTH_TEST);
-
-			glDrawElementsBaseVertex(GL_TRIANGLES, subMesh.indexCount, GL_UNSIGNED_INT, (void*)(subMesh.indexOffset * sizeof(uint)), subMesh.vertexOffset);
-
-			if (!material->GetDepthTesting())
-				glEnable(GL_DEPTH_TEST);
-		}
+		s_Data.ActiveCamera = camera;
+		s_Data.ActiveEnvironmentMap = environmentMap;
 	}
 
 	void Renderer::End()
 	{
+		for (auto& [materialRef, meshList] : s_Data.DrawList)
+		{
+			Ref<Material> material = materialRef.Material;
+			glm::vec3 cameraPosition = s_Data.ActiveCamera->GetPosition();
+
+			std::sort(meshList.begin(), meshList.end(), [material, cameraPosition](auto& a, auto& b)
+			{
+				float MeshADistance = glm::length(cameraPosition - glm::vec3(a.Transform[3]));
+				float MeshBDistance = glm::length(cameraPosition - glm::vec3(b.Transform[3]));
+				if (!material->IsOpaque())
+					return MeshADistance > MeshBDistance;
+
+				return MeshADistance < MeshBDistance;
+			});
+
+			material->Bind();
+
+			Ref<Shader> shader = material->GetShader();
+			const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& rendererUniforms = shader->GetRendererUniforms();
+			for (auto const& [rendererID, uniform] : rendererUniforms)
+			{
+				if (uniform->Type == UniformType::TEXTURE_2D || uniform->Type == UniformType::TEXTURE_CUBE)
+				{
+					s_Data.RendererUniformFunctions[rendererID](uniform);
+				}
+			}
+			
+			for (auto& submeshDC : meshList)
+			{
+				SubMesh& submesh = submeshDC.SubMesh;
+				glm::mat4& transform = submeshDC.Transform;
+				
+				if (rendererUniforms.find(RendererUniformID::TRANSFORM) != rendererUniforms.end())
+				{
+					Ref<ShaderUniform> transformUniform = rendererUniforms.at(RendererUniformID::TRANSFORM);
+					shader->SetUniformMat4(transformUniform->Name, transform);
+				}
+
+				submeshDC.MeshVA->Bind();
+				submeshDC.MeshIB->Bind();
+
+				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(submesh.indexOffset * sizeof(uint)), submesh.vertexOffset);
+			}
+		}
+
+		s_Data.DrawList.clear();
 	}
 
-	void Renderer::InitRenderFunctions()
+	void Renderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride)
 	{
-		s_Data.m_RendererUniformFuncs[RendererID::MODEL_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
+		auto& subMeshes = mesh->GetSubMeshs();
+		const auto& materials = mesh->GetMaterials();
+
+		for (SubMesh& subMesh : subMeshes)
 		{
-			auto finalTransform = transform * mesh.transform;
- 			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &finalTransform, uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::VIEW_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto view = s_Data.m_ActiveCamera->GetViewMatrix();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(view), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::PROJ_MATRIX] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto proj = s_Data.m_ActiveCamera->GetProjectionMatrix();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(proj), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::INVERSE_VP] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto ivp = glm::inverse(s_Data.m_ActiveCamera->GetViewMatrix() * s_Data.m_ActiveCamera->GetProjectionMatrix());
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(ivp), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::MVP] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto mvp = s_Data.m_ActiveCamera->GetProjectionMatrix() * s_Data.m_ActiveCamera->GetViewMatrix() * (transform * mesh.transform);
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &mvp, uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::CAMERA_POSITION] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto pos = s_Data.m_ActiveCamera->GetPosition();
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), glm::value_ptr(pos), uniform->GetSize());
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::DIRECTIONAL_LIGHT] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto light = scene->GetLightEnvironment()->GetDirectionalLight();
-			DirectionalLight l = *light;
-			uint s = sizeof(DirectionalLight);
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &l.radiance, sizeof(glm::vec3));
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4, &l.direction, sizeof(glm::vec3));
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4 + sizeof(glm::vec3) + 4, &l.active, sizeof(float));
-		};
-		s_Data.m_RendererUniformFuncs[RendererID::POINT_LIGHT] = [&](const Ref<ShaderUniform>& uniform, SubMesh& mesh, Scene* scene, glm::mat4 transform)
-		{
-			auto light = scene->GetLightEnvironment()->GetPointLight();
-			glm::vec4 radiance = glm::vec4(light.radiance, light.intensity);
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset(), &light.position, sizeof(glm::vec3));
-			memcpy(s_Data.m_UniformBuffer + uniform->GetOffset() + sizeof(glm::vec3) + 4, &radiance, sizeof(glm::vec4));
-		};
+			Ref<Material> material = materialOverride ? materialOverride : materials[subMesh.materialIndex];
+			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
+		}
 	}
-	void Renderer::InitRenderResourceFunFunctions()
+
+	void Renderer::SubmitFullscreenQuad(Ref<Material> material)
 	{
-		s_Data.m_RendererResourceFuncs[RendererID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, Scene* scene)
+		material->Bind();
+		s_Data.FullscreenQaud->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void Renderer::InitRendererUniformFunctions()
+	{
+		s_Data.RendererUniformFunctions[RendererUniformID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderUniform>& uniform)
 		{
-			AssetManager::GetByUUID<TextureCube>(scene->GetEnvironmentMap()->irradianceMap.GetUUID())->Bind(uniform->GetSampler());
+			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->irradianceMap.GetUUID())->Bind(uniform->Sampler);
 		};
-		s_Data.m_RendererResourceFuncs[RendererID::RADIANCE_TEXTURE] = [&](const Ref<ShaderResource>& uniform, Scene* scene)
+		s_Data.RendererUniformFunctions[RendererUniformID::RADIANCE_TEXTURE] = [&](const Ref<ShaderUniform>& uniform)
 		{
-			AssetManager::GetByUUID<TextureCube>(scene->GetEnvironmentMap()->radianceMap.GetUUID())->Bind(uniform->GetSampler());
+			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->radianceMap.GetUUID())->Bind(uniform->Sampler);
 		};
-		s_Data.m_RendererResourceFuncs[RendererID::BRDF_LUT] = [&](const Ref<ShaderResource>& uniform, Scene* scene)
+		s_Data.RendererUniformFunctions[RendererUniformID::BRDF_LUT] = [&](const Ref<ShaderUniform>& uniform)
 		{
-			s_Data.m_BRDFLutTexture->Bind(uniform->GetSampler());
+			s_Data.BRDFLutTexture->Bind(uniform->Sampler);
 		};
 	}
 
+	void Renderer::UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer, byte* buffer)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer->OpenGLID);
+		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBuffer->BindingPoint, uniformBuffer->OpenGLID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuffer->Size, (const void*)buffer);
+	}
 }

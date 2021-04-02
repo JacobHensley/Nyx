@@ -27,8 +27,6 @@ namespace Nyx {
 		}
 
 		SceneRenderer::End();
-		SceneRenderer::Flush();
-
 	}
 
 	SceneObject Scene::CreateObject(const std::string& tag)

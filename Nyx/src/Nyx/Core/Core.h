@@ -12,6 +12,8 @@ using byte = unsigned char;
 #define NX_CORE_ASSERT(x, ...) x
 #endif
 
+#define BIT(x) (1 << x)
+
 namespace Nyx {
 
 	template<typename T>

@@ -58,8 +58,8 @@ namespace Nyx {
 		buffer = new byte[64];
 		glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
 		memcpy(buffer, glm::value_ptr(vp), 64);
-		m_LineShader->UploadUniformBuffer(0, buffer, 64);
-		m_LineShader->GetUniformBuffers(UniformSystemType::RENDERER);
+	//	m_LineShader->UploadUniformBuffer(0, buffer, 64);
+	//	m_LineShader->GetUniformBuffers(UniformSystemType::RENDERER);
 	//	m_LineShader->SetUniformMat4("u_VP", camera.GetProjectionMatrix() * camera.GetViewMatrix());
 	}
 

@@ -150,9 +150,6 @@
     <ClInclude Include="src\Nyx\Graphics\Shader.h">
       <Filter>src\Nyx\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Nyx\Graphics\ShaderUniform.h">
-      <Filter>src\Nyx\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Nyx\Graphics\Window.h">
       <Filter>src\Nyx\Graphics</Filter>
     </ClInclude>
@@ -277,9 +274,6 @@
       <Filter>src\Nyx\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Graphics\Shader.cpp">
-      <Filter>src\Nyx\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Nyx\Graphics\ShaderUniform.cpp">
       <Filter>src\Nyx\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Nyx\Graphics\Window.cpp">
