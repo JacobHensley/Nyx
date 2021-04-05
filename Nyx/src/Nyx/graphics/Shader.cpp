@@ -160,7 +160,9 @@ namespace Nyx {
 			}
 
 			RendererUniformID id = GetRendererUniformID(name);
-			Ref<ShaderUniform> uniform = CreateRef<ShaderUniform>(name, UniformTypeFromGL(type), size, offset, sampler, id);
+			UniformType uniformType = UniformTypeFromGL(type);
+			uint32_t uniformSize = GetUniformSizeFromType(uniformType);
+			Ref<ShaderUniform> uniform = CreateRef<ShaderUniform>(name, uniformType, uniformSize, offset, sampler, id);
 			if (uniform->ID != RendererUniformID::NONE)
 			{
 				m_RendererUniforms[id] = uniform;
@@ -231,13 +233,17 @@ namespace Nyx {
 		{
 			return UniformType::MAT4;
 		}
-		else if (type == GL_TEXTURE_2D)
+		else if (type == GL_SAMPLER_2D)
 		{
 			return UniformType::TEXTURE_2D;
 		}
-		else if (type == GL_TEXTURE_CUBE_MAP)
+		else if (type == GL_SAMPLER_CUBE)
 		{
 			return UniformType::TEXTURE_CUBE;
+		}
+		else
+		{
+			return UniformType::NONE;
 		}
 	}
 
@@ -251,9 +257,13 @@ namespace Nyx {
 		{
 			return RendererUniformID::VIEW_MATRIX;
 		}
+		else if (name == "r_ViewProjection")
+		{
+			return RendererUniformID::VIEW_PROJECTION;
+		}
 		else if (name == "r_ProjMatrix")
 		{
-			return RendererUniformID::PROJ_MATRIX;
+			return RendererUniformID::PROJECTION_MATRIX;
 		}
 		else if (name == "r_InverseVP")
 		{
@@ -321,10 +331,8 @@ namespace Nyx {
 		{
 			return 64;
 		}
-		else
-		{
-			return -1;
-		}
+
+		return 1;
 	}
 
 	void Shader::Bind()

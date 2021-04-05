@@ -1,5 +1,7 @@
 #include "Nyx/Core/Application.h"
 #include "EditorLayer.h"
+#include <iostream>
+#include <memory>
 
 int main()
 {

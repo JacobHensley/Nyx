@@ -1,20 +1,19 @@
 #Shader Vertex
 #version 450 core
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec2 a_TexCoord;
+layout(location = 0) in vec2 a_Position;
+layout(location = 0) out vec3 v_Position;
 
-layout(location = 2) out vec3 v_Position;
-
-layout(binding = 0) uniform r_RendererBuffer
+layout(std140, binding = 0) uniform CameraBuffer
 {
+	mat4 ViewProjection;
 	mat4 InverseVP;
-} RendererBuffer;
+} r_CameraBuffer;
 
 void main()
 {
-	vec4 position = vec4(a_Position.xy, 1.0, 1.0);
-	v_Position = (RendererBuffer.InverseVP * position).xyz;
+	vec4 position = vec4(a_Position.xy, 0.0f, 1.0f);
+	v_Position = (r_CameraBuffer.InverseVP * position).xyz;
 
 	gl_Position = position;
 }
@@ -22,13 +21,12 @@ void main()
 #Shader Fragment
 #version 450 core
 
-layout(location = 2) in vec3 v_Position;
-
-uniform samplerCube u_SkyboxTexture;
-
+layout(location = 0) in vec3 v_Position;
 layout(location = 0) out vec4 color;
+
+uniform samplerCube r_RadianceTexture;
 
 void main()
 {
-	color = texture(u_SkyboxTexture, v_Position);
+	color = texture(r_RadianceTexture, v_Position);
 }

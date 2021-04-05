@@ -56,18 +56,22 @@ namespace Nyx {
 		UniformBuffer(const std::string& name, uint32_t bindingPoint, std::unordered_map<RendererUniformID, Ref<UniformSlot>>& layout)
 			: Name(name), BindingPoint(bindingPoint), Size(0), BufferLayout(layout)
 		{
+			uint32_t offset = 0;
+			for (auto& [rendererID, uniformSlot] : BufferLayout)
+			{
+				uniformSlot->Size = Shader::GetUniformSizeFromType(uniformSlot->Type);
+				Size = offset + uniformSlot->Size;
+				uniformSlot->Offset = offset;
+				offset += uniformSlot->Size;
+			}
+
 			glCreateBuffers(1, &OpenGLID);
 			glBindBuffer(GL_UNIFORM_BUFFER, OpenGLID);
 			glBufferData(GL_UNIFORM_BUFFER, Size, nullptr, GL_DYNAMIC_DRAW);
 			glBindBufferBase(GL_UNIFORM_BUFFER, BindingPoint, OpenGLID);
 
-			uint32_t offset = 0;
-			for (auto& [rendererID, uniformSlot] : BufferLayout)
-			{
-				uniformSlot->Size += Shader::GetUniformSizeFromType(uniformSlot->Type);
-				offset += uniformSlot->Size;
-				Size = offset + uniformSlot->Size;
-			}
+			BufferData = (byte*)malloc(Size);
+			memset(BufferData, 0, Size);
 		}
 
 		template<typename T>
@@ -76,7 +80,7 @@ namespace Nyx {
 			Ref<UniformSlot> uniform = BufferLayout.at(id);
 			if (uniform == nullptr)
 			{
-				NX_CORE_WARN("Uniform {0} is not setup in uniform buffer {1}", uniform->Name, Name);
+				NX_CORE_WARN("Uniform {0} is not setup in uniform buffer", Name);
 			}
 
 			memcpy(BufferData + uniform->Offset, &data, uniform->Size);
@@ -107,14 +111,25 @@ namespace Nyx {
 
 	void Renderer::Init()
 	{
+		InitRendererUniformFunctions();
+
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
+
+		std::unordered_map<RendererUniformID, Ref<UniformSlot>> cameraBufferLayout;
+		cameraBufferLayout[RendererUniformID::VIEW_PROJECTION] = CreateRef<UniformSlot>(UniformType::MAT4);
+		cameraBufferLayout[RendererUniformID::INVERSE_VP] = CreateRef<UniformSlot>(UniformType::MAT4);
+		s_Data.UniformBuffers.push_back(CreateRef<UniformBuffer>("r_CameraBuffer", 0, cameraBufferLayout));
 	}
 
 	void Renderer::Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap)
 	{
 		s_Data.ActiveCamera = camera;
 		s_Data.ActiveEnvironmentMap = environmentMap;
+
+		s_Data.UniformBuffers[CAMERA_BUFFER]->Set(RendererUniformID::VIEW_PROJECTION, s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix());
+		s_Data.UniformBuffers[CAMERA_BUFFER]->Set(RendererUniformID::INVERSE_VP, glm::inverse(s_Data.ActiveCamera->GetViewMatrix() * s_Data.ActiveCamera->GetProjectionMatrix()));
+		UploadUniformBuffer(s_Data.UniformBuffers[CAMERA_BUFFER]);
 	}
 
 	void Renderer::End()
@@ -174,7 +189,16 @@ namespace Nyx {
 
 		for (SubMesh& subMesh : subMeshes)
 		{
-			Ref<Material> material = materialOverride ? materialOverride : materials[subMesh.materialIndex];
+			Ref<Material> material;
+			if (materialOverride != nullptr)
+			{
+				material = materialOverride;
+			}
+			else
+			{
+				material = materials[subMesh.materialIndex];
+			}
+
 			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
 		}
 	}
@@ -183,6 +207,17 @@ namespace Nyx {
 	{
 		material->Bind();
 		s_Data.FullscreenQaud->Bind();
+
+		Ref<Shader> shader = material->GetShader();
+		const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& rendererUniforms = shader->GetRendererUniforms();
+		for (auto const& [rendererID, uniform] : rendererUniforms)
+		{
+			if (uniform->Type == UniformType::TEXTURE_2D || uniform->Type == UniformType::TEXTURE_CUBE)
+			{
+				s_Data.RendererUniformFunctions[rendererID](uniform);
+			}
+		}
+
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
 
@@ -202,10 +237,10 @@ namespace Nyx {
 		};
 	}
 
-	void Renderer::UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer, byte* buffer)
+	void Renderer::UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer->OpenGLID);
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBuffer->BindingPoint, uniformBuffer->OpenGLID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuffer->Size, (const void*)buffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuffer->Size, (const void*)uniformBuffer->BufferData);
 	}
 }

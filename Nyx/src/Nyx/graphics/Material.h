@@ -49,7 +49,7 @@ namespace Nyx {
             {
                 Ref<ShaderUniform> uniform = uniforms.at(name);
                 int intData = (int)data;
-                memcpy(m_UniformDataBuffer + uniform->Offset, &intData, uniform->Size);
+                memcpy(m_UniformDataBuffer + uniform->Offset, &data, uniform->Size);
             }
             else
             {

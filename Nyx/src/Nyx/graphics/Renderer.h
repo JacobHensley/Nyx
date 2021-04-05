@@ -35,6 +35,10 @@ namespace Nyx {
 			vertices[3].TexCoord = { 0.0f, 1.0f };
 
 			Ref<VertexBuffer> vertexBuffer = CreateRef<VertexBuffer>(vertices.data(), vertices.size() * sizeof(QuadVertex));
+			vertexBuffer->SetLayout({
+				{ShaderDataType::Vec2, "a_Position"},
+				{ShaderDataType::Vec2, "a_TextureCoords"}
+			});
 			m_VertexArray->PushVertexBuffer(vertexBuffer);
 
 			uint32_t fullscreenQuadIndices[] = { 0, 1, 2, 2, 3, 0 };
@@ -71,7 +75,7 @@ namespace Nyx {
 		static void SubmitFullscreenQuad(Ref<Material> material);
 		
 	private:
-		void InitRendererUniformFunctions();
-		void UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer, byte* buffer);
+		static void InitRendererUniformFunctions();
+		static void UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer);
 	};
 }

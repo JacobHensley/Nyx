@@ -58,7 +58,9 @@ namespace Nyx
         CompositePass();
         s_Data.RenderCommands.clear();
 
+        s_Data.GeometryPass->Bind();
         Renderer::End();
+        s_Data.GeometryPass->Unbind();
     }
 
     void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
@@ -99,7 +101,7 @@ namespace Nyx
 
     Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
     {
-        return s_Data.CompositePass->GetFrameBuffer();
+        return s_Data.GeometryPass->GetFrameBuffer();
     }
 
     Ref<Shader> Nyx::SceneRenderer::GetPBRShader()

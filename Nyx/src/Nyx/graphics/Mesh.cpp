@@ -18,7 +18,7 @@ namespace Nyx {
 	Mesh::Mesh(const std::string& path)
 		:	m_Path(path)
 	{
-		NX_CORE_ASSERT(Load(path), "Failed to load model");	
+		NX_CORE_ASSERT(Load(path), "Failed to load model");
 		NX_CORE_INFO("Created Mesh at Path: {0}", m_Path);
 	}
 
@@ -487,7 +487,7 @@ namespace Nyx {
 					material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader(), true);
 				}
 
-				if (albedoMap)
+		/*		if (albedoMap)
 				{
 					albedo = { 1.0f, 1.0f, 1.0f };
 					material->SetAlbedoMap(albedoMap);
@@ -499,18 +499,18 @@ namespace Nyx {
 				if (metalnessMap)
 					material->SetMetalnessMap(metalnessMap);
 
-				material->Set("AlbedoValue", albedo);
-				material->Set("RoughnessValue", roughness);
-				material->Set("MetalnessValue", metalness);
+				material->Set("u_AlbedoValue", albedo);
+				material->Set("u_RoughnessValue", roughness);
+				material->Set("u_MetalnessValue", metalness);
 
 				material->UsingAlbedoMap((bool)albedoMap);
 				material->UsingNormalMap((bool)normalMap);
 				material->UsingRoughnessMap((bool)roughnessMap);
 				material->UsingMetalnessMap((bool)metalnessMap);
 
-				m_Materials[i] = material;
+				m_Materials[i] = material;*/
 			}
-		}
+		} 
 
 		uint baseVertex = m_BaseVertexPointer;
 		m_BaseVertexPointer += mesh->mNumVertices;

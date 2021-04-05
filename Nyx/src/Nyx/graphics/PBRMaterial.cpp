@@ -10,13 +10,7 @@ namespace Nyx {
 		SetMetalness(0.0f);
 		SetRoughness(0.5f);
 
-		//Super temp to get rid of warnings
-		Ref<Texture> test = CreateRef<Texture>(1, 1);
-		test->SetData(new byte[4], 4);
-		SetAlbedoMap(test);
-		SetMetalnessMap(test);
-		SetRoughnessMap(test);
-		SetNormalMap(test);
+
 
 		UsingAlbedoMap(false);
 		UsingMetalnessMap(false);
@@ -57,57 +51,57 @@ namespace Nyx {
 
 	void PBRMaterial::SetAlbedo(glm::vec3 albedoValue)
 	{
-		Set("AlbedoValue", albedoValue);
+		Set("u_AlbedoValue", albedoValue);
 	}
 
 	void PBRMaterial::SetMetalness(float metalnessValue)
 	{
-		Set("MetalnessValue", metalnessValue);
+		Set("u_MetalnessValue", metalnessValue);
 	}
 
 	void PBRMaterial::SetRoughness(float roughnessValue)
 	{
-		Set("RoughnessValue", roughnessValue);
+		Set("u_RoughnessValue", roughnessValue);
 	}
 
 	void PBRMaterial::SetAlbedoMap(Ref<Texture> albedoMap)
 	{
-		SetTexture("m_AlbedoMap", albedoMap);
+		SetTexture("u_AlbedoMap", albedoMap);
 	}
 
 	void PBRMaterial::SetMetalnessMap(Ref<Texture> metalnessMap)
 	{
-		SetTexture("m_MetalnessMap", metalnessMap);
+		SetTexture("u_MetalnessMap", metalnessMap);
 	}
 
 	void PBRMaterial::SetRoughnessMap(Ref<Texture> roughnessMap)
 	{
-		SetTexture("m_RoughnessMap", roughnessMap);
+		SetTexture("u_RoughnessMap", roughnessMap);
 	}
 
 	void PBRMaterial::SetNormalMap(Ref<Texture> noramlMap)
 	{
-		SetTexture("m_NormalMap", noramlMap);
+		SetTexture("u_NormalMap", noramlMap);
 	}
 
 	void PBRMaterial::UsingAlbedoMap(bool value)
 	{
-		Set("UsingAlbedoMap", value ? true : false);
+		Set("u_UsingAlbedoMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingMetalnessMap(bool value)
 	{
-		Set("UsingMetalnessMap", value ? true : false);
+		Set("u_UsingMetalnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingRoughnessMap(bool value)
 	{
-		Set("UsingRoughnessMap", value ? true : false);
+		Set("u_UsingRoughnessMap", value ? true : false);
 	}
 
 	void PBRMaterial::UsingNormalMap(bool value)
 	{
-		Set("UsingNormalMap", value ? true : false);
+		Set("u_UsingNormalMap", value ? true : false);
 	}
 
 }
