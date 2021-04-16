@@ -17,11 +17,6 @@ namespace Nyx {
 		NONE = -1, VERTEX, FRAGMENT
 	};
 
-	enum class RendererUniformID
-	{
-		NONE = -1, TRANSFORM, VIEW_MATRIX, VIEW_PROJECTION, PROJECTION_MATRIX, INVERSE_VP, MVP, CAMERA_POSITION, BRDF_LUT, IRRADIANCE_TEXTURE, RADIANCE_TEXTURE, DIRECTIONAL_LIGHT, POINT_LIGHT
-	};
-
 	enum class UniformType
 	{
 		NONE = -1, BOOL, INT, FLOAT, FLOAT2, FLOAT3, FLOAT4, MAT4, TEXTURE_2D, TEXTURE_CUBE
@@ -29,17 +24,29 @@ namespace Nyx {
 
 	struct ShaderUniform
 	{
-		ShaderUniform(const std::string name, UniformType type, uint32_t size, uint32_t offset, uint32_t sampler, RendererUniformID id)
-			: Name(name), Type(type), Size(size), Offset(offset), Sampler(sampler), ID(id)
+		ShaderUniform() = default;
+		ShaderUniform(const std::string name, UniformType type, uint32_t size, uint32_t offset)
+			: Name(name), Type(type), Size(size), Offset(offset)
 		{
 		}
 
-		const std::string Name;
+		std::string Name;
 		UniformType Type;
-		RendererUniformID ID;
 		uint32_t Size;
 		uint32_t Offset;
-		uint32_t Sampler;
+	};
+
+	struct ShaderResource
+	{
+		ShaderResource() = default;
+		ShaderResource(const std::string name, UniformType type, uint32_t textureUnit)
+			: Name(name), Type(type), TextureUnit(textureUnit)
+		{
+		}
+
+		std::string Name;
+		UniformType Type;
+		uint32_t TextureUnit;
 	};
 
 	class Shader : public Asset
@@ -54,8 +61,9 @@ namespace Nyx {
 		inline const std::string& GetPath() const { return m_Path; }
 		inline uint32_t GetShaderProgram() const { return m_ShaderProgram; }
 
-		inline const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& GetRendererUniforms() const { return m_RendererUniforms; }
-		inline const std::unordered_map<std::string, Ref<ShaderUniform>>& GetMaterialUniforms() const { return m_MaterialUniforms; }
+		inline const std::unordered_map<std::string, ShaderUniform>& GetRendererUniforms() const { return m_RendererUniforms; }
+		inline const std::unordered_map<std::string, ShaderUniform>& GetMaterialUniforms() const { return m_MaterialUniforms; }
+		inline const std::unordered_map<std::string, ShaderResource>& GetResources() const { return m_Resources; }
 
 		inline uint32_t GetMaterialUniformBufferSize() { return m_MaterialUniformBufferSize; }
 		static uint32_t GetUniformSizeFromType(UniformType type);
@@ -80,19 +88,16 @@ namespace Nyx {
 		uint32_t CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc);
 		void ShaderProgramReflect();
 
-		shaderc_shader_kind ShaderStageToShaderc(ShaderStage type);
-		GLenum ShaderStageToGL(ShaderStage type);
-		UniformType UniformTypeFromGL(GLenum type);
-		RendererUniformID GetRendererUniformID(const std::string name);
-
 	private:
 		std::string m_Path;
 		uint32_t m_ShaderProgram;
 
 		std::unordered_map<ShaderStage, std::string> m_ShaderSrc;
 
-		std::unordered_map<RendererUniformID, Ref<ShaderUniform>> m_RendererUniforms;
-		std::unordered_map<std::string, Ref<ShaderUniform>> m_MaterialUniforms;
+		std::unordered_map<std::string, ShaderUniform> m_RendererUniforms;
+		std::unordered_map<std::string, ShaderUniform> m_MaterialUniforms;
+		std::unordered_map<std::string,ShaderResource> m_Resources;
+
 		uint32_t m_MaterialUniformBufferSize = 0;
 	};
 

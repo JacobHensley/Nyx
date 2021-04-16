@@ -1,46 +1,54 @@
 #pragma once
-#include "Nyx/Core/Core.h"
 #include <glm/glm.hpp>
 
 namespace Nyx {
 
 	struct DirectionalLight
 	{
-		glm::vec3 radiance;
-		glm::vec3 direction;
+		glm::vec3 Radiance;
+		float padding01;
+		glm::vec3 Direction;
+		float padding02;
 
-		float active = true;
-
-		DirectionalLight(glm::vec3 radiance, glm::vec3 direction, bool active = true)
-			: radiance(radiance), direction(direction), active(1.0f)
-		{
-		}
-
-		DirectionalLight()
-			: radiance(glm::vec3()), direction(glm::vec3()), active(1.0f)
+		DirectionalLight() = default;
+		DirectionalLight(glm::vec3 radiance, glm::vec3 direction)
+			: Radiance(radiance), Direction(direction)
 		{
 		}
 	};
 
 	struct PointLight
 	{
-		glm::vec3 position = { 1.0f, 1.0f, 0.0f };
-		glm::vec3 radiance = { 1.0f, 1.0f, 1.0f };
-		float intensity = 1.0f;
+		glm::vec3 Position;
+		float padding03;
+		glm::vec3 Radiance;
+		float padding04;
+		float Intensity;
+		float padding05;
+		float padding06;
+		float padding07;
+
+		PointLight() = default;
+		PointLight(glm::vec3 position, glm::vec3 radiance, float intensity)
+			: Position(position), Radiance(radiance), Intensity(intensity)
+		{
+		}
 	};
 
 	class LightEnvironment 
 	{
 	public:
-		LightEnvironment();
-		~LightEnvironment();
+		LightEnvironment() = default;
+		~LightEnvironment() = default;
 
-		inline void SetDirectionalLight(Ref<DirectionalLight>& light) { m_DirectionalLight = light; }
-		inline Ref<DirectionalLight> GetDirectionalLight() { return m_DirectionalLight; }
+		inline void SetDirectionalLight(DirectionalLight light) { m_DirectionalLight = light; }
+		inline DirectionalLight& GetDirectionalLight() { return m_DirectionalLight; }
 
+		inline void SetPointLight(PointLight light) { m_PointLight = light;}
 		PointLight& GetPointLight() { return m_PointLight; }
+
 	private:
-		Ref<DirectionalLight> m_DirectionalLight;
+		DirectionalLight m_DirectionalLight;
 		PointLight m_PointLight;
 
 	};

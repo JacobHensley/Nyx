@@ -58,7 +58,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;NX_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>NXpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\sol2\include;vendor\sol2\lua\src;vendor\SPIRV-Cross;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor;vendor\spdlog\include;vendor\glm;vendor\assimp\include;vendor\GLFW\include;vendor\glad\include;vendor\imgui;vendor\shaderc\libshaderc\include;vendor\yaml-cpp\include;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -114,39 +114,36 @@
     <ClInclude Include="src\Nyx\Events\Event.h" />
     <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
     <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\BufferLayout.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\FrameBuffer.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\IndexBuffer.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\Texture.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\TextureCube.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\VertexArray.h" />
-    <ClInclude Include="src\Nyx\Graphics\API\VertexBuffer.h" />
-    <ClInclude Include="src\Nyx\Graphics\Camera.h" />
-    <ClInclude Include="src\Nyx\Graphics\Debug\DebugRenderer.h" />
-    <ClInclude Include="src\Nyx\Graphics\GraphicsContext.h" />
-    <ClInclude Include="src\Nyx\Graphics\ImGUI\ImGUILayer.h" />
-    <ClInclude Include="src\Nyx\Graphics\LightEnvironment.h" />
-    <ClInclude Include="src\Nyx\Graphics\Material.h" />
-    <ClInclude Include="src\Nyx\Graphics\Mesh.h" />
-    <ClInclude Include="src\Nyx\Graphics\MeshFactory.h" />
-    <ClInclude Include="src\Nyx\Graphics\PBRMaterial.h" />
-    <ClInclude Include="src\Nyx\Graphics\Renderer.h" />
-    <ClInclude Include="src\Nyx\Graphics\SceneRenderer.h" />
-    <ClInclude Include="src\Nyx\Graphics\Shader.h" />
-    <ClInclude Include="src\Nyx\Graphics\Window.h" />
-    <ClInclude Include="src\Nyx\Input\Input.h" />
-    <ClInclude Include="src\Nyx\Input\KeyCodes.h" />
-    <ClInclude Include="src\Nyx\Math\AABB.h" />
-    <ClInclude Include="src\Nyx\Math\Math.h" />
-    <ClInclude Include="src\Nyx\Math\Ray.h" />
-    <ClInclude Include="src\Nyx\Math\Triangle.h" />
-    <ClInclude Include="src\Nyx\Scene\Components.h" />
-    <ClInclude Include="src\Nyx\Scene\Scene.h" />
-    <ClInclude Include="src\Nyx\Scene\SceneObject.h" />
-    <ClInclude Include="src\Nyx\Scene\SceneSerializer.h" />
-    <ClInclude Include="src\Nyx\Script\Script.h" />
     <ClInclude Include="src\Nyx\Utilities\GLError.h" />
     <ClInclude Include="src\Nyx\Utilities\Utilities.h" />
+    <ClInclude Include="src\Nyx\graphics\API\BufferLayout.h" />
+    <ClInclude Include="src\Nyx\graphics\API\FrameBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\API\IndexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\API\Texture.h" />
+    <ClInclude Include="src\Nyx\graphics\API\TextureCube.h" />
+    <ClInclude Include="src\Nyx\graphics\API\VertexArray.h" />
+    <ClInclude Include="src\Nyx\graphics\API\VertexBuffer.h" />
+    <ClInclude Include="src\Nyx\graphics\Camera.h" />
+    <ClInclude Include="src\Nyx\graphics\Debug\DebugRenderer.h" />
+    <ClInclude Include="src\Nyx\graphics\GraphicsContext.h" />
+    <ClInclude Include="src\Nyx\graphics\ImGUI\ImGUILayer.h" />
+    <ClInclude Include="src\Nyx\graphics\LightEnvironment.h" />
+    <ClInclude Include="src\Nyx\graphics\Material.h" />
+    <ClInclude Include="src\Nyx\graphics\Mesh.h" />
+    <ClInclude Include="src\Nyx\graphics\Renderer.h" />
+    <ClInclude Include="src\Nyx\graphics\SceneRenderer.h" />
+    <ClInclude Include="src\Nyx\graphics\Shader.h" />
+    <ClInclude Include="src\Nyx\graphics\Window.h" />
+    <ClInclude Include="src\Nyx\input\Input.h" />
+    <ClInclude Include="src\Nyx\input\KeyCodes.h" />
+    <ClInclude Include="src\Nyx\math\AABB.h" />
+    <ClInclude Include="src\Nyx\math\Math.h" />
+    <ClInclude Include="src\Nyx\math\Ray.h" />
+    <ClInclude Include="src\Nyx\math\Triangle.h" />
+    <ClInclude Include="src\Nyx\scene\Components.h" />
+    <ClInclude Include="src\Nyx\scene\Scene.h" />
+    <ClInclude Include="src\Nyx\scene\SceneObject.h" />
+    <ClInclude Include="src\Nyx\scene\SceneSerializer.h" />
     <ClInclude Include="vendor\stbimage\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -159,34 +156,30 @@
     <ClCompile Include="src\Nyx\Core\Layer.cpp" />
     <ClCompile Include="src\Nyx\Core\LayerStack.cpp" />
     <ClCompile Include="src\Nyx\Core\Log.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\BufferLayout.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\FrameBuffer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\IndexBuffer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\Texture.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\TextureCube.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\VertexArray.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\API\VertexBuffer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Camera.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Debug\DebugRenderer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\GraphicsContext.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUIBuild.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\ImGUI\ImGUILayer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\LightEnvironment.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Material.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Mesh.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\MeshFactory.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\PBRMaterial.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Renderer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\SceneRenderer.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Shader.cpp" />
-    <ClCompile Include="src\Nyx\Graphics\Window.cpp" />
-    <ClCompile Include="src\Nyx\Input\Input.cpp" />
-    <ClCompile Include="src\Nyx\Math\Math.cpp" />
-    <ClCompile Include="src\Nyx\Scene\Scene.cpp" />
-    <ClCompile Include="src\Nyx\Scene\SceneObject.cpp" />
-    <ClCompile Include="src\Nyx\Scene\SceneSerializer.cpp" />
-    <ClCompile Include="src\Nyx\Script\Script.cpp" />
     <ClCompile Include="src\Nyx\Utilities\Utilities.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\BufferLayout.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\FrameBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\IndexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\Texture.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\TextureCube.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\VertexArray.cpp" />
+    <ClCompile Include="src\Nyx\graphics\API\VertexBuffer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Camera.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Debug\DebugRenderer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\GraphicsContext.cpp" />
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUIBuild.cpp" />
+    <ClCompile Include="src\Nyx\graphics\ImGUI\ImGUILayer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Material.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Mesh.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Renderer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\SceneRenderer.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Shader.cpp" />
+    <ClCompile Include="src\Nyx\graphics\Window.cpp" />
+    <ClCompile Include="src\Nyx\input\Input.cpp" />
+    <ClCompile Include="src\Nyx\math\Math.cpp" />
+    <ClCompile Include="src\Nyx\scene\Scene.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneObject.cpp" />
+    <ClCompile Include="src\Nyx\scene\SceneSerializer.cpp" />
     <ClCompile Include="vendor\stbimage\stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

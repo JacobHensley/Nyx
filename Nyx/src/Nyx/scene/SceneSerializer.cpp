@@ -235,9 +235,12 @@ namespace Nyx
 		Ref<EnvironmentMap> environmentMap = CreateRef<EnvironmentMap>(UUID(radianceMapUUID), UUID(irradianceMapUUID));
 
 		//Load lights
-		Ref<DirectionalLight> directionalLight = CreateRef<DirectionalLight>(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));
 		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
+
+		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));
 		lightEnvironment->SetDirectionalLight(directionalLight);
+		PointLight pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+		lightEnvironment->SetPointLight(pointLight);
 
 		Ref<Scene> scene = CreateRef<Scene>(environmentMap, lightEnvironment);
 

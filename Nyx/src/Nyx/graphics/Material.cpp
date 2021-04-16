@@ -32,50 +32,46 @@ namespace Nyx
 
 	void Material::SetTexture(const std::string& name, Ref<Texture>& texture)
 	{
-		const std::unordered_map<std::string, Ref<ShaderUniform>>& uniforms = m_Shader->GetMaterialUniforms();
+		const std::unordered_map<std::string, ShaderResource>& uniforms = m_Shader->GetResources();
 		
 		if (uniforms.find(name) != uniforms.end())
 		{
-			Ref<ShaderUniform> resource = m_Shader->GetMaterialUniforms().at(name);
-			if (resource->Type == UniformType::TEXTURE_2D)
-			{
-				uint slot = resource->Sampler;
-				if (m_Textures.size() <= slot)
-				{
-					m_Textures.resize(slot + 1);
-				}
+			ShaderResource resource = m_Shader->GetResources().at(name);
+			NX_CORE_ASSERT(resource.Type == UniformType::TEXTURE_2D, "Resource is not type of TEXTURE_2D");
 
-				m_Textures[slot] = texture;
+			uint slot = resource.TextureUnit;
+			if (m_Textures.size() <= slot)
+			{
+				m_Textures.resize(slot + 1);
 			}
+
+			m_Textures[slot] = texture;
+			return;
 		}
-		else
-		{
-		//	NX_CORE_WARN("Texture {0} is not active or does not exist in shader {1}", name, m_Shader->GetPath());
-		}
+
+		NX_CORE_WARN("Texture {0} is not active or does not exist in shader {1}", name, m_Shader->GetPath());
 	}
 
 	void Material::SetTexture(const std::string& name, Ref<TextureCube>& texture)
 	{
-		const std::unordered_map<std::string, Ref<ShaderUniform>>& uniforms = m_Shader->GetMaterialUniforms();
+		const std::unordered_map<std::string, ShaderResource>& uniforms = m_Shader->GetResources();
 
 		if (uniforms.find(name) != uniforms.end())
 		{
-			Ref<ShaderUniform> resource = m_Shader->GetMaterialUniforms().at(name);
-			if (resource->Type == UniformType::TEXTURE_CUBE)
-			{
-				uint slot = resource->Sampler;
-				if (m_TextureCubes.size() <= slot)
-				{
-					m_TextureCubes.resize(slot + 1);
-				}
+			ShaderResource resource = m_Shader->GetResources().at(name);
+			NX_CORE_ASSERT(resource.Type == UniformType::TEXTURE_CUBE, "Resource is not type of TEXTURE_CUBE");
 
-				m_TextureCubes[slot] = texture;
+			uint slot = resource.TextureUnit;
+			if (m_TextureCubes.size() <= slot)
+			{
+				m_TextureCubes.resize(slot + 1);
 			}
+
+			m_TextureCubes[slot] = texture;
+			return;
 		}
-		else
-		{
-		//	NX_CORE_WARN("TextureCube {0} is not active or does not exist in shader {1}", name, m_Shader->GetPath());
-		}
+
+		NX_CORE_WARN("Texture Cube {0} is not active or does not exist in shader {1}", name, m_Shader->GetPath());
 	}
 
 	void Material::BindTextures()
@@ -97,47 +93,38 @@ namespace Nyx
 		}
 	}
 
-	//May have to adjust sizing and offset for bools
 	void Material::UploadUniforms()
 	{
-		const std::unordered_map<std::string, Ref<ShaderUniform>>& uniforms = m_Shader->GetMaterialUniforms();
+		const std::unordered_map<std::string, ShaderUniform>& uniforms = m_Shader->GetMaterialUniforms();
 
 		for (auto const& [name, uniform] : uniforms)
 		{
-			int offset = uniform->Offset;
-			switch (uniform->Type)
+			int offset = uniform.Offset;
+			switch (uniform.Type)
 			{
-			case UniformType::FLOAT:
-				m_Shader->SetUniformFloat(name, *(float*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::INT:
-				m_Shader->SetUniformInt(name, *(int*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::FLOAT2:
-				m_Shader->SetUniformFloat2(name, *(glm::vec2*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::FLOAT3:
-				m_Shader->SetUniformFloat3(name, *(glm::vec3*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::FLOAT4:
-				m_Shader->SetUniformFloat4(name, *(glm::vec4*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::MAT4:
-				m_Shader->SetUniformMat4(name, *(glm::mat4*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::BOOL:
-				m_Shader->SetUniformInt(name, *(bool*)&m_UniformDataBuffer[offset]);
-				break;
-			case UniformType::TEXTURE_2D:
-				if (m_Textures[uniform->Sampler])
-					m_Textures[uniform->Sampler]->Bind(uniform->Sampler);
-				break;
-			case UniformType::TEXTURE_CUBE:
-				if (m_TextureCubes[uniform->Sampler])
-					m_TextureCubes[uniform->Sampler]->Bind(uniform->Sampler);
-				break;
-			default:
-				NX_CORE_ASSERT(false, "Unknown type");
+				case UniformType::FLOAT:
+					m_Shader->SetUniformFloat(name, *(float*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::INT:
+					m_Shader->SetUniformInt(name, *(int*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::FLOAT2:
+					m_Shader->SetUniformFloat2(name, *(glm::vec2*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::FLOAT3:
+					m_Shader->SetUniformFloat3(name, *(glm::vec3*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::FLOAT4:
+					m_Shader->SetUniformFloat4(name, *(glm::vec4*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::MAT4:
+					m_Shader->SetUniformMat4(name, *(glm::mat4*)&m_UniformDataBuffer[offset]);
+					break;
+				case UniformType::BOOL:
+					m_Shader->SetUniformInt(name, *(bool*)&m_UniformDataBuffer[offset]);
+					break;
+				default:
+					NX_CORE_ASSERT(false, "Unknown type");
 			}
 		}
 	}

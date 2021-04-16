@@ -63,7 +63,7 @@ namespace Nyx {
 		}
 
 	private:
-		entt::entity m_Handle = entt::null; // Should objects also have a UUID for saving?
+		entt::entity m_Handle = entt::null;
 		Scene* m_Scene = nullptr;
 	};
 

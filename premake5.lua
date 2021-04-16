@@ -22,9 +22,7 @@ IncludeDir["assimp"] =    "Nyx/vendor/assimp/include"
 IncludeDir["GLFW"] =      "Nyx/vendor/GLFW/include"
 IncludeDir["glad"] =      "Nyx/vendor/glad/include"
 IncludeDir["imgui"] =     "Nyx/vendor/imgui"
-IncludeDir["sol2"] =      "Nyx/vendor/sol2/include"
 IncludeDir["lua"] =       "Nyx/vendor/sol2/lua/src"
-IncludeDir["SPVCross"] =  "Nyx/vendor/SPIRV-Cross"
 IncludeDir["Shaderc"] =   "Nyx/vendor/shaderc/libshaderc/include"
 IncludeDir["yamlCPP"] =   "Nyx/vendor/yaml-cpp/include"
 IncludeDir["EnTT"] =      "Nyx/vendor/entt/include"
@@ -32,8 +30,6 @@ IncludeDir["EnTT"] =      "Nyx/vendor/entt/include"
 include "Nyx/vendor/GLFW"
 include "Nyx/vendor/glad"
 include "Nyx/vendor/imgui"
-include "Nyx/vendor/sol2"
-include "Nyx/vendor/SPIRV-Cross"
 include "Nyx/vendor/yaml-cpp"
 
 project "Nyx"
@@ -66,9 +62,6 @@ project "Nyx"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.sol2}",
-		"%{IncludeDir.lua}",
-		"%{IncludeDir.SPVCross}",
 		"%{IncludeDir.Shaderc}",
 		"%{IncludeDir.yamlCPP}",
 		"%{IncludeDir.EnTT}"
@@ -135,9 +128,6 @@ project "Editor"
 		"%{IncludeDir.assimp}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.imgui}",
-		"%{IncludeDir.sol2}",
-		"%{IncludeDir.lua}",
-		"%{IncludeDir.SPVCross}",
 		"%{IncludeDir.Shaderc}",
 		"%{IncludeDir.yamlCPP}",
 		"%{IncludeDir.EnTT}"
@@ -149,8 +139,6 @@ project "Editor"
 		"GLFW",
 		"glad",
 		"imgui",
-		"sol2",
-		"SPIRV-Cross",
 		"yaml-cpp",
 		"opengl32.lib"
 	}
@@ -171,14 +159,12 @@ project "Editor"
 		links 
 		{ 
 			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib",
-		--	"Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.lib",
 			"Nyx/vendor/shaderc/build/libshaderc/Debug/shaderc_combined.lib"
 		}
 
 		postbuildcommands
 		{
 			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Editor/\""),
-		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Debug/spirv-cross-c-sharedd.dll \"../bin/" .. outputdir .. "/Editor/\"")
 		}
 
 	filter "configurations:Release"
@@ -188,12 +174,10 @@ project "Editor"
 		links 
 		{ 
 			"Nyx/vendor/assimp/lib/assimp-vc141-mt.lib",
-		--	"Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.lib",
 			"Nyx/vendor/shaderc/build/libshaderc/Release/shaderc_combined.lib"
 		}
 
 		postbuildcommands
 		{
 			("{COPY} ../Nyx/vendor/assimp/lib/assimp-vc141-mt.dll \"../bin/" .. outputdir .. "/Editor/\""),
-		--	("{COPY} ../Nyx/vendor/SPIRV-Cross/build/Release/spirv-cross-c-shared.dll \"../bin/" .. outputdir .. "/Editor/\"")
 		}

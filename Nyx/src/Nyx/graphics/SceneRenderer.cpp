@@ -1,7 +1,6 @@
 #include "NXpch.h"
 #include "SceneRenderer.h"
 #include "Nyx/Graphics/Renderer.h"
-#include "Nyx/Graphics/MeshFactory.h"
 #include "Nyx/Asset/AssetManager.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
@@ -52,15 +51,9 @@ namespace Nyx
 
     void SceneRenderer::End()
     {
-        Renderer::Begin(s_Data.ActiveCamera, s_Data.ActiveScene->GetEnvironmentMap());
-
         GeometryPass();
         CompositePass();
         s_Data.RenderCommands.clear();
-
-        s_Data.GeometryPass->Bind();
-        Renderer::End();
-        s_Data.GeometryPass->Unbind();
     }
 
     void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
@@ -71,7 +64,8 @@ namespace Nyx
     void SceneRenderer::GeometryPass()
     {   
         s_Data.GeometryPass->Bind();
-
+        Renderer::Begin(s_Data.ActiveCamera, s_Data.ActiveScene->GetEnvironmentMap(), s_Data.ActiveScene->GetLightEnvironment());
+        
         Renderer::SubmitFullscreenQuad(s_Data.EnvironmentMaterial);
 
         for (RenderCommand command : s_Data.RenderCommands)
@@ -79,13 +73,13 @@ namespace Nyx
             Renderer::SubmitMesh(command.Mesh, command.Transform, command.MaterialOverride);
         }
 
+        Renderer::End();
         s_Data.GeometryPass->Unbind();
     }
 
     void SceneRenderer::CompositePass()
     {
         s_Data.CompositePass->Bind();
-        
         s_Data.CompositePass->Unbind();
     }
 

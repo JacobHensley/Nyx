@@ -2,7 +2,6 @@
 #include "Mesh.h"
 #include "Nyx/Graphics/Debug/DebugRenderer.h"
 #include "Nyx/Graphics/SceneRenderer.h"
-#include "Nyx/Graphics/PBRMaterial.h"
 
 #include <assimp/pbrmaterial.h>
 #include <assimp/postprocess.h>
@@ -476,39 +475,40 @@ namespace Nyx {
 					}
 				}
 
-				Ref<PBRMaterial> material;
+				Ref<Material> material;
 				if (alpha < 1.0f)
 				{
-					material = CreateRef<PBRMaterial>(SceneRenderer::GetGlassShader(), 100, false);
+					material = CreateRef<Material>(SceneRenderer::GetGlassShader());
+					material->SetMaterialSortKey(100);
 					material->Set("u_Alpha", alpha);
 				}
 				else
 				{
-					material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader(), true);
+					material = CreateRef<Material>(SceneRenderer::GetPBRShader());
 				}
 
-		/*		if (albedoMap)
+				if (albedoMap)
 				{
 					albedo = { 1.0f, 1.0f, 1.0f };
-					material->SetAlbedoMap(albedoMap);
+					material->SetTexture("u_AlbedoMap", albedoMap);
 				}
 				if (normalMap)
-					material->SetNormalMap(normalMap);
+					material->SetTexture("u_MetalnessMap", normalMap);
 				if (roughnessMap)
-					material->SetRoughnessMap(roughnessMap);
+					material->SetTexture("u_RoughnessMap", roughnessMap);
 				if (metalnessMap)
-					material->SetMetalnessMap(metalnessMap);
+					material->SetTexture("u_NormalMap", metalnessMap);
 
-				material->Set("u_AlbedoValue", albedo);
-				material->Set("u_RoughnessValue", roughness);
-				material->Set("u_MetalnessValue", metalness);
+				material->Set("u_Material.AlbedoValue", albedo);
+				material->Set("u_Material.MetalnessValue", metalness);
+				material->Set("u_Material.RoughnessValue", roughness);
+				
+				material->Set("u_Material.UsingAlbedoMap", (bool)albedoMap);
+				material->Set("u_Material.UsingMetalnessMap", (bool)metalnessMap);
+				material->Set("u_Material.UsingRoughnessMap", (bool)roughnessMap);
+				material->Set("u_Material.UsingNormalMap", (bool)normalMap);
 
-				material->UsingAlbedoMap((bool)albedoMap);
-				material->UsingNormalMap((bool)normalMap);
-				material->UsingRoughnessMap((bool)roughnessMap);
-				material->UsingMetalnessMap((bool)metalnessMap);
-
-				m_Materials[i] = material;*/
+				m_Materials[i] = material;
 			}
 		} 
 

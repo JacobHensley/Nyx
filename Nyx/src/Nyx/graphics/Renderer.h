@@ -62,20 +62,19 @@ namespace Nyx {
 		Ref<IndexBuffer> m_IndexBuffer;
 	};
 
-	class UniformBuffer;
-
 	class Renderer
 	{
 	public:
 		static void Init();
-		static void Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap);
+		static void Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
 		static void End();
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
 		static void SubmitFullscreenQuad(Ref<Material> material);
 		
 	private:
-		static void InitRendererUniformFunctions();
-		static void UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer);
+		static void InitRendereResourceFunctions();
+		static void GenerateUniformBuffer(uint32_t& bufferID, uint32_t bindingPoint, uint32_t size);
+		static void UploadUniformBuffer(uint32_t bufferID, uint32_t bindingPoint, uint32_t size, const void* data);
 	};
 }

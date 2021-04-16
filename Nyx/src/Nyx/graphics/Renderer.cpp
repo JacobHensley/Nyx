@@ -5,7 +5,28 @@
 #include <glad/glad.h>
 
 namespace Nyx {
-	
+
+	namespace UniformBuffer {
+
+		enum UniformBufferBinding
+		{
+			NONE = -1, CAMERA_BUFFER, LIGHT_BUFFER
+		};
+
+		struct CameraBuffer
+		{
+			glm::mat4 ViewProjection;
+			glm::mat4 InverseViewProjection;
+			glm::vec3 CameraPosition;
+		};
+
+		struct LightBuffer
+		{
+			DirectionalLight DirectionalLight;
+			PointLight PointLight;
+		};
+	}
+
 	struct MaterialRef
 	{
 		Ref<Nyx::Material> Material;
@@ -29,69 +50,9 @@ namespace Nyx {
 	struct SubmeshDrawCommand
 	{
 		Nyx::SubMesh SubMesh;
+		glm::mat4 Transform;
 		Ref<VertexArray> MeshVA;
 		Ref<IndexBuffer> MeshIB;
-		glm::mat4 Transform;
-	};
-
-	enum UniformBufferID
-	{
-		NONE = -1, CAMERA_BUFFER = 0
-	};
-
-	struct UniformSlot
-	{
-		UniformSlot(UniformType type)
-			:	Type(type)
-		{
-		}
-
-		uint32_t Size;
-		uint32_t Offset;
-		UniformType Type;
-	};
-
-	struct UniformBuffer
-	{
-		UniformBuffer(const std::string& name, uint32_t bindingPoint, std::unordered_map<RendererUniformID, Ref<UniformSlot>>& layout)
-			: Name(name), BindingPoint(bindingPoint), Size(0), BufferLayout(layout)
-		{
-			uint32_t offset = 0;
-			for (auto& [rendererID, uniformSlot] : BufferLayout)
-			{
-				uniformSlot->Size = Shader::GetUniformSizeFromType(uniformSlot->Type);
-				Size = offset + uniformSlot->Size;
-				uniformSlot->Offset = offset;
-				offset += uniformSlot->Size;
-			}
-
-			glCreateBuffers(1, &OpenGLID);
-			glBindBuffer(GL_UNIFORM_BUFFER, OpenGLID);
-			glBufferData(GL_UNIFORM_BUFFER, Size, nullptr, GL_DYNAMIC_DRAW);
-			glBindBufferBase(GL_UNIFORM_BUFFER, BindingPoint, OpenGLID);
-
-			BufferData = (byte*)malloc(Size);
-			memset(BufferData, 0, Size);
-		}
-
-		template<typename T>
-		void Set(RendererUniformID id, const T& data)
-		{
-			Ref<UniformSlot> uniform = BufferLayout.at(id);
-			if (uniform == nullptr)
-			{
-				NX_CORE_WARN("Uniform {0} is not setup in uniform buffer", Name);
-			}
-
-			memcpy(BufferData + uniform->Offset, &data, uniform->Size);
-		}
-
-		const std::string Name;
-		uint32_t BindingPoint;
-		uint32_t OpenGLID;
-		uint32_t Size;
-		byte* BufferData;
-		std::unordered_map<RendererUniformID, Ref<UniformSlot>> BufferLayout;
 	};
 
 	struct RendererData
@@ -102,34 +63,42 @@ namespace Nyx {
 		Ref<Texture> BRDFLutTexture;
 		Ref<FullscreenQaud> FullscreenQaud;
 		
+		UniformBuffer::CameraBuffer CameraBuffer;
+		uint32_t CameraBufferID = 0;
+
+		UniformBuffer::LightBuffer LightBuffer;
+		uint32_t LightBufferID = 1;
+
 		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList;
-		std::vector<Ref<UniformBuffer>> UniformBuffers;
-		std::unordered_map<RendererUniformID, std::function<void(const Ref<ShaderUniform>&)>> RendererUniformFunctions;
+		std::unordered_map<std::string, std::function<void(const ShaderResource&)>> RendereResourceFunctions;
 	};
 
 	static RendererData s_Data;
 
 	void Renderer::Init()
 	{
-		InitRendererUniformFunctions();
+		InitRendereResourceFunctions();
+
+		GenerateUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer));
+		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
 
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
-
-		std::unordered_map<RendererUniformID, Ref<UniformSlot>> cameraBufferLayout;
-		cameraBufferLayout[RendererUniformID::VIEW_PROJECTION] = CreateRef<UniformSlot>(UniformType::MAT4);
-		cameraBufferLayout[RendererUniformID::INVERSE_VP] = CreateRef<UniformSlot>(UniformType::MAT4);
-		s_Data.UniformBuffers.push_back(CreateRef<UniformBuffer>("r_CameraBuffer", 0, cameraBufferLayout));
 	}
 
-	void Renderer::Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap)
+	void Renderer::Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 	{
 		s_Data.ActiveCamera = camera;
 		s_Data.ActiveEnvironmentMap = environmentMap;
 
-		s_Data.UniformBuffers[CAMERA_BUFFER]->Set(RendererUniformID::VIEW_PROJECTION, s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix());
-		s_Data.UniformBuffers[CAMERA_BUFFER]->Set(RendererUniformID::INVERSE_VP, glm::inverse(s_Data.ActiveCamera->GetViewMatrix() * s_Data.ActiveCamera->GetProjectionMatrix()));
-		UploadUniformBuffer(s_Data.UniformBuffers[CAMERA_BUFFER]);
+		s_Data.CameraBuffer.ViewProjection = s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix();
+		s_Data.CameraBuffer.InverseViewProjection = glm::inverse(s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix());
+		s_Data.CameraBuffer.CameraPosition = s_Data.ActiveCamera->GetPosition();
+		UploadUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer), &s_Data.CameraBuffer);
+
+		s_Data.LightBuffer.DirectionalLight = lightEnvironment->GetDirectionalLight();
+		s_Data.LightBuffer.PointLight = lightEnvironment->GetPointLight();
+		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
 	}
 
 	void Renderer::End()
@@ -152,29 +121,29 @@ namespace Nyx {
 			material->Bind();
 
 			Ref<Shader> shader = material->GetShader();
-			const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& rendererUniforms = shader->GetRendererUniforms();
-			for (auto const& [rendererID, uniform] : rendererUniforms)
+			const std::unordered_map<std::string,ShaderResource>& resources = shader->GetResources();
+			for (auto const& [name, resource] : resources)
 			{
-				if (uniform->Type == UniformType::TEXTURE_2D || uniform->Type == UniformType::TEXTURE_CUBE)
-				{
-					s_Data.RendererUniformFunctions[rendererID](uniform);
-				}
+				if (resource.Name.find("r_") != std::string::npos)
+					s_Data.RendereResourceFunctions[name](resource);
 			}
 			
+			const std::unordered_map<std::string, ShaderUniform>& rendererUniforms = shader->GetRendererUniforms();
 			for (auto& submeshDC : meshList)
 			{
 				SubMesh& submesh = submeshDC.SubMesh;
 				glm::mat4& transform = submeshDC.Transform;
-				
-				if (rendererUniforms.find(RendererUniformID::TRANSFORM) != rendererUniforms.end())
+
+				if (rendererUniforms.find("u_Renderer.r_Transform") != rendererUniforms.end())
 				{
-					Ref<ShaderUniform> transformUniform = rendererUniforms.at(RendererUniformID::TRANSFORM);
-					shader->SetUniformMat4(transformUniform->Name, transform);
+					ShaderUniform transformUniform = rendererUniforms.at("u_Renderer.r_Transform");
+					shader->SetUniformMat4(transformUniform.Name, transform);
 				}
 
 				submeshDC.MeshVA->Bind();
 				submeshDC.MeshIB->Bind();
 
+				glEnable(GL_DEPTH_TEST);
 				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(submesh.indexOffset * sizeof(uint)), submesh.vertexOffset);
 			}
 		}
@@ -199,7 +168,7 @@ namespace Nyx {
 				material = materials[subMesh.materialIndex];
 			}
 
-			s_Data.DrawList[material].push_back({ subMesh, mesh->GetVertexArray(), mesh->GetIndexBuffer(), transform * subMesh.transform });
+			s_Data.DrawList[material].push_back({ subMesh, transform * subMesh.transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
 		}
 	}
 
@@ -209,38 +178,46 @@ namespace Nyx {
 		s_Data.FullscreenQaud->Bind();
 
 		Ref<Shader> shader = material->GetShader();
-		const std::unordered_map<RendererUniformID, Ref<ShaderUniform>>& rendererUniforms = shader->GetRendererUniforms();
-		for (auto const& [rendererID, uniform] : rendererUniforms)
+		const std::unordered_map<std::string,ShaderResource>& resources = shader->GetResources();
+		for (auto const& [name, resource] : resources)
 		{
-			if (uniform->Type == UniformType::TEXTURE_2D || uniform->Type == UniformType::TEXTURE_CUBE)
-			{
-				s_Data.RendererUniformFunctions[rendererID](uniform);
-			}
+			s_Data.RendereResourceFunctions[name](resource);
 		}
+
+		if (material->GetMaterialFlags() & (int)MaterialFlags::DISABLE_DEPTH_TEST)
+			glDisable(GL_DEPTH_TEST);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
 
-	void Renderer::InitRendererUniformFunctions()
+	void Renderer::InitRendereResourceFunctions()
 	{
-		s_Data.RendererUniformFunctions[RendererUniformID::IRRADIANCE_TEXTURE] = [&](const Ref<ShaderUniform>& uniform)
+		s_Data.RendereResourceFunctions["r_IrradianceTexture"] = [&](const ShaderResource& uniform)
 		{
-			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->irradianceMap.GetUUID())->Bind(uniform->Sampler);
+			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->irradianceMap.GetUUID())->Bind(uniform.TextureUnit);
 		};
-		s_Data.RendererUniformFunctions[RendererUniformID::RADIANCE_TEXTURE] = [&](const Ref<ShaderUniform>& uniform)
+		s_Data.RendereResourceFunctions["r_RadianceTexture"] = [&](const ShaderResource& uniform)
 		{
-			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->radianceMap.GetUUID())->Bind(uniform->Sampler);
+			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->radianceMap.GetUUID())->Bind(uniform.TextureUnit);
 		};
-		s_Data.RendererUniformFunctions[RendererUniformID::BRDF_LUT] = [&](const Ref<ShaderUniform>& uniform)
+		s_Data.RendereResourceFunctions["r_BRDFLutTexture"] = [&](const ShaderResource& uniform)
 		{
-			s_Data.BRDFLutTexture->Bind(uniform->Sampler);
+			s_Data.BRDFLutTexture->Bind(uniform.TextureUnit);
 		};
 	}
 
-	void Renderer::UploadUniformBuffer(const Ref<UniformBuffer>& uniformBuffer)
+	void Renderer::GenerateUniformBuffer(uint32_t& bufferID, uint32_t bindingPoint, uint32_t size)
 	{
-		glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer->OpenGLID);
-		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBuffer->BindingPoint, uniformBuffer->OpenGLID);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBuffer->Size, (const void*)uniformBuffer->BufferData);
+		glCreateBuffers(1, &bufferID);
+		glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
+		glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bufferID);
+	}
+
+	void Renderer::UploadUniformBuffer(uint32_t bufferID, uint32_t bindingPoint, uint32_t size, const void* data)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
+		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bufferID);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 	}
 }

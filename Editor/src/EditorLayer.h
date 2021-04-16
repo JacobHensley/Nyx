@@ -3,7 +3,6 @@
 
 #include "Nyx.h"
 #include "Nyx/graphics/SceneRenderer.h"
-#include "Nyx/graphics/PBRMaterial.h"
 #include "Nyx/graphics/Debug/DebugRenderer.h"
 #include "Nyx/graphics/Renderer.h"
 #include "Nyx/Utilities/Utilities.h"

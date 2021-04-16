@@ -16,19 +16,25 @@ layout(std140, binding = 0) uniform CameraBuffer
 {
 	mat4 ViewProjection;
 	mat4 InverseVP;
+	vec3 CameraPosition;
 } r_CameraBuffer;
 
-layout(location = 0) uniform mat4 r_Transform;
+struct Renderer
+{
+	mat4 r_Transform;
+};
+
+layout(location = 0) uniform Renderer u_Renderer;
 
 void main()
 {
-	mat4 MVP = r_CameraBuffer.ViewProjection * r_Transform;
+	mat4 MVP = r_CameraBuffer.ViewProjection * u_Renderer.r_Transform;
 	gl_Position = MVP * vec4(a_Position, 1.0f);
 
-	v_Normal = mat3(r_Transform) * a_Normal;
-	v_WorldPosition = vec3(r_Transform * vec4(a_Position, 1.0f));
+	v_Normal = mat3(u_Renderer.r_Transform) * a_Normal;
+	v_WorldPosition = vec3(u_Renderer.r_Transform * vec4(a_Position, 1.0f));
 	v_TexCoords = a_TexCoords;
-	v_WorldNormals = mat3(r_Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
+	v_WorldNormals = mat3(u_Renderer.r_Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
 }
 
 #Shader Fragment
@@ -41,60 +47,78 @@ layout(location = 3) in mat3 v_WorldNormals;
 
 layout(location = 0) out vec4 color;
 
-const float Epsilon = 0.00001;
-const float PI = 3.141592;
-
 struct DirectionalLight
 {
-	vec3 radiance;
-	vec3 direction;
-
-	float lightActive;
+	vec3 Radiance;
+	float padding01;
+	vec3 Direction;
+	float padding02;
 };
 
 struct PointLight
 {
-	vec3 position;
-	vec4 radiance; // rgb = color, a = intensity
+	vec3 Position;
+	float padding03;
+	vec3 Radiance;
+	float padding04;
+	float Intensity;
+	float padding05;
+	float padding06;
+	float padding07;
 };
 
+layout(std140, binding = 0) uniform CameraBuffer
+{
+	mat4 ViewProjection;
+	mat4 InverseVP;
+	vec3 CameraPosition;
+} r_CameraBuffer;
 
-layout(location = 1) uniform vec3 u_AlbedoValue;
-layout(location = 2) uniform bool u_UsingAlbedoMap;
+layout(std140, binding = 1) uniform LightBuffer
+{
+	DirectionalLight DirectionLight;
+	PointLight PLight;
+} r_LightBuffer;
 
-layout(location = 3) uniform float u_MetalnessValue;
-layout(location = 4) uniform bool u_UsingMetalnessMap;
-
-layout(location = 5) uniform float u_RoughnessValue;
-layout(location = 6) uniform bool u_UsingRoughnessMap;
-
-layout(location = 7) uniform bool u_UsingNormalMap;
+const float Epsilon = 0.00001;
+const float PI = 3.141592;
 
 layout(location = 8) uniform float u_UsingIBL;
 layout(location = 9) uniform float u_UsingLighting;
 
-layout(location = 10) uniform vec3 r_CameraPosition;
+struct Material
+{
+	vec3 AlbedoValue;
+	bool UsingAlbedoMap;
 
-layout(location = 11) uniform DirectionalLight r_DirectionLight;
-layout(location = 14) uniform PointLight r_PointLight;
+	float MetalnessValue;
+	bool UsingMetalnessMap;
 
-layout(location = 16) uniform sampler2D r_BRDFLutTexture;
-layout(location = 17) uniform samplerCube r_IrradianceTexture;
-layout(location = 18) uniform samplerCube r_RadianceTexture;
+	float RoughnessValue;
+	bool UsingRoughnessMap;
 
-layout(location = 19) uniform sampler2D u_NormalMap;
-layout(location = 20) uniform sampler2D u_AlbedoMap;
-layout(location = 21) uniform sampler2D u_RoughnessMap;
-layout(location = 22) uniform sampler2D u_MetalnessMap;
+	bool UsingNormalMap;
+};
+
+layout(location = 1) uniform Material u_Material;
+
+uniform sampler2D r_BRDFLutTexture;
+uniform samplerCube r_IrradianceTexture;
+uniform samplerCube r_RadianceTexture;
+
+uniform sampler2D u_AlbedoMap;
+uniform sampler2D u_MetalnessMap;
+uniform sampler2D u_RoughnessMap;
+uniform sampler2D u_NormalMap;
 
 vec3 GetAlbedo(vec2 texCoords)
 {
-	return u_UsingAlbedoMap ? texture(u_AlbedoMap, texCoords).rgb : u_AlbedoValue;
+	return u_Material.UsingAlbedoMap ? texture(u_AlbedoMap, texCoords).rgb : u_Material.AlbedoValue;
 }
 
 vec3 GetNormal(vec2 texCoords, vec3 normal)
 {
-	if (u_UsingNormalMap)
+	if (u_Material.UsingNormalMap)
 		return normalize(v_WorldNormals * (texture(u_NormalMap, texCoords).rgb * 2.0 - 1.0));
 
 	return normalize(normal);
@@ -102,12 +126,12 @@ vec3 GetNormal(vec2 texCoords, vec3 normal)
 
 float GetMetalness(vec2 texCoords)
 {
-	return u_UsingMetalnessMap ? texture(u_MetalnessMap, texCoords).r : u_MetalnessValue;
+	return u_Material.UsingMetalnessMap ? texture(u_MetalnessMap, texCoords).r : u_Material.MetalnessValue;
 }
 
 float GetRoughness(vec2 texCoords)
 {
-	return u_UsingRoughnessMap ? texture(u_RoughnessMap, texCoords).r : u_RoughnessValue;
+	return u_Material.UsingRoughnessMap ? texture(u_RoughnessMap, texCoords).r : u_Material.RoughnessValue;
 }
 
 // Shlick's approximation of the Fresnel factor.
@@ -148,8 +172,8 @@ float gaSchlickGGX(float cosLi, float NdotV, float roughness)
 
 vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
-	vec3 Li = -r_DirectionLight.direction;
-	vec3 Lradiance = r_DirectionLight.radiance;
+	vec3 Li = -r_LightBuffer.DirectionLight.Direction;
+	vec3 Lradiance = r_LightBuffer.DirectionLight.Radiance;
 	vec3 Lh = normalize(Li + V);
 
 	float cosLi = max(0.0, dot(N, Li));
@@ -169,12 +193,12 @@ vec3 Lighting(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float Ndot
 
 vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
-	vec3 Li = normalize(r_PointLight.position - v_WorldPosition);
+	vec3 Li = normalize(r_LightBuffer.PLight.Position - v_WorldPosition);
 	vec3 Lh = normalize(Li + V);
 
-	float distance = length(r_PointLight.position - v_WorldPosition);
+	float distance = length(r_LightBuffer.PLight.Position - v_WorldPosition);
 	float attenuation = 1.0 / (distance * distance);
-	vec3 Lradiance = r_PointLight.radiance.rgb * r_PointLight.radiance.a * attenuation;
+	vec3 Lradiance = r_LightBuffer.PLight.Radiance * r_LightBuffer.PLight.Intensity * attenuation;
 
 	float cosLi = max(0.0, dot(N, Li));
 	float cosLh = max(0.0, dot(N, Lh));
@@ -214,7 +238,7 @@ void main()
 	float metalness = GetMetalness(v_TexCoords);
 	float roughness = GetRoughness(v_TexCoords);
 
-	vec3 view = normalize(r_CameraPosition - v_WorldPosition);
+	vec3 view = normalize(r_CameraBuffer.CameraPosition - v_WorldPosition);
 	float NdotV = max(dot(normal, view), 0.0);
 
 	// I - 2.0 * dot(N, I) * N.
@@ -231,6 +255,5 @@ void main()
 	vec3 pLightContribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
-	color = vec4(pLightContribution + lightContribution + iblContribution, 1.0f);
-	color = vec4(u_AlbedoValue.rgb, 1.0f);
+	color = vec4(lightContribution + pLightContribution + iblContribution, 1.0f);
 }

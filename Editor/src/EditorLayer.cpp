@@ -172,7 +172,7 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 			{
 				if (!object.HasComponent<MaterialComponent>())
 				{
-					Ref<PBRMaterial> material = CreateRef<PBRMaterial>(SceneRenderer::GetPBRShader());
+					Ref<Material> material = CreateRef<Material>(SceneRenderer::GetPBRShader());
 					AssetHandle materialHandle = AssetManager::Insert(material);
 
 					object.AddComponent<MaterialComponent>(materialHandle);
@@ -239,7 +239,8 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 void EditorLayer::RenderSceneSettingsWindow()
 {
 	ImGui::Begin("Scene Settings");
-	ImGui::SliderFloat3("Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetPointLight().position), -1, 1);
+	ImGui::SliderFloat3("Point Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetPointLight().Position), -1, 1);
+	ImGui::SliderFloat3("Dir Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetDirectionalLight().Direction), -1, 1);
 	ImGui::End();
 }
 

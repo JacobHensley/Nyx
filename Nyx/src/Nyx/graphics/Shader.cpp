@@ -6,6 +6,52 @@
 
 namespace Nyx {
 
+	namespace Utils {
+	
+		static shaderc_shader_kind ShaderStageToShaderc(ShaderStage stage)
+		{
+			switch (stage)
+			{
+				case ShaderStage::VERTEX:	return shaderc_vertex_shader;
+				case ShaderStage::FRAGMENT: return shaderc_fragment_shader;
+			}
+
+			NX_CORE_ASSERT(false, "Unknown Type");
+			return (shaderc_shader_kind)0;
+		}
+
+		static GLenum ShaderStageToGL(ShaderStage stage)
+		{
+			switch (stage)
+			{
+				case ShaderStage::VERTEX:	return GL_VERTEX_SHADER;
+				case ShaderStage::FRAGMENT: return GL_FRAGMENT_SHADER;
+			}
+
+			NX_CORE_ASSERT(false, "Unknown Type");
+			return 0;
+		}
+
+		static UniformType UniformTypeFromGL(GLenum type)
+		{
+			switch (type)
+			{
+				case GL_BOOL:		  return UniformType::BOOL;
+				case GL_INT:		  return UniformType::INT;
+				case GL_FLOAT:		  return UniformType::FLOAT;
+				case GL_FLOAT_VEC2:	  return UniformType::FLOAT2;
+				case GL_FLOAT_VEC3:	  return UniformType::FLOAT3;
+				case GL_FLOAT_VEC4:	  return UniformType::FLOAT4;
+				case GL_FLOAT_MAT4:	  return UniformType::MAT4;
+				case GL_SAMPLER_2D:	  return UniformType::TEXTURE_2D;
+				case GL_SAMPLER_CUBE: return UniformType::TEXTURE_CUBE;
+			}
+
+			NX_CORE_ASSERT(false, "Unknown Type");
+			return UniformType::NONE;
+		}
+	}
+
 	Shader::Shader(const std::string& path)
 		:	m_Path(path)
 	{
@@ -31,22 +77,20 @@ namespace Nyx {
 		GLuint shaderIDs[2];
 		uint32_t index = 0;
 
-		for (auto const& shader : shaderSrc)
+		for (auto&& [stage, src] : shaderSrc)
 		{
-			ShaderStage stage = shader.first;
-			const std::string& src = shader.second;
-
-			auto compilationResult = compiler.CompileGlslToSpv(src, ShaderStageToShaderc(stage), m_Path.c_str(), options);
+			auto compilationResult = compiler.CompileGlslToSpv(src, Utils::ShaderStageToShaderc(stage), m_Path.c_str(), options);
 			if (compilationResult.GetCompilationStatus() != shaderc_compilation_status_success)
 			{
 				NX_CORE_ERROR("Warnings ({0}), Errors ({1}) \n{2}", compilationResult.GetNumWarnings(), compilationResult.GetNumErrors(), compilationResult.GetErrorMessage());
+				NX_CORE_ASSERT(false, "");
 			}
 
 			const uint8_t* data = reinterpret_cast<const uint8_t*>(compilationResult.cbegin());
 			const uint8_t* dataEnd = reinterpret_cast<const uint8_t*>(compilationResult.cend());
 			uint32_t size = dataEnd - data;
 
-			GLuint shader = glCreateShader(ShaderStageToGL(stage));
+			GLuint shader = glCreateShader(Utils::ShaderStageToGL(stage));
 			glShaderBinary(1, &shader, GL_SHADER_BINARY_FORMAT_SPIR_V, data, size);
 			glSpecializeShader(shader, (const GLchar*)"main", 0, nullptr, nullptr);
 
@@ -68,7 +112,7 @@ namespace Nyx {
 			if (infoLog.size() > 0)
 			{
 				glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-				NX_CORE_ERROR("{0}", &infoLog[0]);
+				NX_CORE_ASSERT(false, &infoLog[0]);
 			}
 
 			glDeleteProgram(program);
@@ -115,7 +159,6 @@ namespace Nyx {
 		return result;
 	}
 
-	//May have to adjust sizing and offset for bools
 	void Shader::ShaderProgramReflect()
 	{
 		GLint numBlocks;
@@ -137,202 +180,85 @@ namespace Nyx {
 		}
 
 		const GLsizei nameBufferSize = 128;
+		GLsizei nameLength;
 		GLchar name[nameBufferSize];
 		GLint size;
 		GLenum type;
-		uint32_t offset = 0;
-		uint32_t sampler = 0;
-		GLsizei nameLength;
+
+		uint32_t materialUniformOffset = 0;
+		uint32_t rendererUniformOffset = 0;
+		uint32_t resourceTextureUnit = 0;
 
 		int numUniforms;
 		glGetProgramiv(m_ShaderProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
-
 		for (int i = 0; i < numUniforms; i++)
 		{
-			bool uniformInBlock = false;
 			glGetActiveUniform(m_ShaderProgram, (GLuint)i, nameBufferSize, &nameLength, &size, &type, name);
+
 			const std::string strName = name;
 			size_t n = std::count(strName.begin(), strName.end(), '.');
+			if (n > 2)
+				continue;
 
-			if (n >= 2)
+			UniformType uniformType = Utils::UniformTypeFromGL(type);
+			
+			if (strName.find("u_Material") != std::string::npos)
 			{
+				NX_CORE_ASSERT(m_MaterialUniforms.find(strName) == m_MaterialUniforms.end(), "Uniform already exists");
+
+				uint32_t uniformSize = GetUniformSizeFromType(uniformType);
+				m_MaterialUniforms[strName] = ShaderUniform(strName, uniformType, uniformSize, materialUniformOffset);
+				materialUniformOffset += uniformSize;
+				m_MaterialUniformBufferSize += uniformSize;
+
 				continue;
 			}
 
-			RendererUniformID id = GetRendererUniformID(name);
-			UniformType uniformType = UniformTypeFromGL(type);
-			uint32_t uniformSize = GetUniformSizeFromType(uniformType);
-			Ref<ShaderUniform> uniform = CreateRef<ShaderUniform>(name, uniformType, uniformSize, offset, sampler, id);
-			if (uniform->ID != RendererUniformID::NONE)
+			if (strName.find("u_Renderer") != std::string::npos)
 			{
-				m_RendererUniforms[id] = uniform;
-			}
-			else
-			{
-				m_MaterialUniforms[name] = uniform;
+				NX_CORE_ASSERT(m_RendererUniforms.find(strName) == m_RendererUniforms.end(), "Uniform already exists");
+
+				uint32_t uniformSize = GetUniformSizeFromType(uniformType);
+				m_RendererUniforms[strName] = ShaderUniform(strName, uniformType, uniformSize, rendererUniformOffset);
+				rendererUniformOffset += uniformSize;
+
+				continue;
 			}
 
-			sampler += 1;
-			offset += size;
-			m_MaterialUniformBufferSize += size;
+			if (uniformType == UniformType::TEXTURE_2D || uniformType == UniformType::TEXTURE_CUBE)
+			{
+				NX_CORE_ASSERT(m_Resources.find(strName) == m_Resources.end(), "Resource already exists");
+
+				m_Resources[strName] = ShaderResource(strName, uniformType, resourceTextureUnit);
+
+				GLint location = glGetUniformLocation(m_ShaderProgram, strName.c_str());
+				NX_CORE_ASSERT(location != -1, "Cannot find Resource");
+				glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
+
+				resourceTextureUnit++;
+
+				continue;
+			}
+
 		}
 
-	}
-
-	shaderc_shader_kind Shader::ShaderStageToShaderc(ShaderStage type)
-	{
-		if (type == ShaderStage::VERTEX)
-		{
-			return shaderc_vertex_shader;
-		}
-		else if (type == ShaderStage::FRAGMENT)
-		{
-			return shaderc_fragment_shader;
-		}
-	}
-
-	GLenum Shader::ShaderStageToGL(ShaderStage type)
-	{
-		if (type == ShaderStage::VERTEX)
-		{
-			return GL_VERTEX_SHADER;
-		}
-		else if (type == ShaderStage::FRAGMENT)
-		{
-			return GL_FRAGMENT_SHADER;
-		}
-	}
-
-	UniformType Shader::UniformTypeFromGL(GLenum type)
-	{
-		if (type == GL_BOOL)
-		{
-			return UniformType::BOOL;
-		}
-		else if (type == GL_INT)
-		{
-			return UniformType::INT;
-		}
-		else if (type == GL_FLOAT)
-		{
-			return UniformType::FLOAT;
-		}
-		else if (type == GL_FLOAT_VEC2)
-		{
-			return UniformType::FLOAT2;
-		}
-		else if (type == GL_FLOAT_VEC3)
-		{
-			return UniformType::FLOAT3;
-		}
-		else if (type == GL_FLOAT_VEC4)
-		{
-			return UniformType::FLOAT4;
-		}
-		else if (type == GL_FLOAT_MAT4)
-		{
-			return UniformType::MAT4;
-		}
-		else if (type == GL_SAMPLER_2D)
-		{
-			return UniformType::TEXTURE_2D;
-		}
-		else if (type == GL_SAMPLER_CUBE)
-		{
-			return UniformType::TEXTURE_CUBE;
-		}
-		else
-		{
-			return UniformType::NONE;
-		}
-	}
-
-	RendererUniformID Shader::GetRendererUniformID(const std::string name)
-	{
-		if (name == "r_Transform")
-		{
-			return RendererUniformID::TRANSFORM;
-		}
-		else if (name == "r_ViewMatrix")
-		{
-			return RendererUniformID::VIEW_MATRIX;
-		}
-		else if (name == "r_ViewProjection")
-		{
-			return RendererUniformID::VIEW_PROJECTION;
-		}
-		else if (name == "r_ProjMatrix")
-		{
-			return RendererUniformID::PROJECTION_MATRIX;
-		}
-		else if (name == "r_InverseVP")
-		{
-			return RendererUniformID::INVERSE_VP;
-		}
-		else if (name == "r_MVP")
-		{
-			return RendererUniformID::MVP;
-		}
-		else if (name == "r_CameraPosition")
-		{
-			return RendererUniformID::CAMERA_POSITION;
-		}
-		else if (name == "r_BRDFLutTexture")
-		{
-			return RendererUniformID::BRDF_LUT;
-		}
-		else if (name == "r_IrradianceTexture")
-		{
-			return RendererUniformID::IRRADIANCE_TEXTURE;
-		}
-		else if (name == "r_RadianceTexture")
-		{
-			return RendererUniformID::RADIANCE_TEXTURE;
-		}
-		else if (name.find("r_DirectionLight") != std::string::npos)
-		{
-			return RendererUniformID::DIRECTIONAL_LIGHT;
-		}
-		else if (name.find("r_PointLight") != std::string::npos)
-		{
-			return RendererUniformID::POINT_LIGHT;
-		}
-
-		return RendererUniformID::NONE;
 	}
 
 	uint32_t Shader::GetUniformSizeFromType(UniformType type)
 	{
-		if (type == UniformType::BOOL)
+		switch (type) 
 		{
-			return 1;
-		}
-		else if (type == UniformType::INT)
-		{
-			return 4;
-		}
-		else if (type == UniformType::FLOAT)
-		{
-			return 4;
-		}
-		else if (type == UniformType::FLOAT2)
-		{
-			return 4 * 2;
-		}
-		else if (type == UniformType::FLOAT3)
-		{
-			return 4 * 3;
-		}
-		else if (type == UniformType::FLOAT4)
-		{
-			return 4 * 4;
-		}
-		else if (type == UniformType::MAT4)
-		{
-			return 64;
+			case UniformType::BOOL:	  return 4;
+			case UniformType::INT:	  return 4;
+			case UniformType::FLOAT:  return 4;
+			case UniformType::FLOAT2: return 4 * 2;
+			case UniformType::FLOAT3: return 4 * 3;
+			case UniformType::FLOAT4: return 4 * 4;
+			case UniformType::MAT4:	  return 64;
 		}
 
-		return 1;
+		NX_CORE_ASSERT(false, "Unknown Type");
+		return -1;
 	}
 
 	void Shader::Bind()
@@ -391,4 +317,5 @@ namespace Nyx {
 		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
+
 }
