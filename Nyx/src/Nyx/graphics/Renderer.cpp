@@ -143,8 +143,8 @@ namespace Nyx {
 				submeshDC.MeshVA->Bind();
 				submeshDC.MeshIB->Bind();
 
-				glEnable(GL_DEPTH_TEST);
-				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.indexCount, GL_UNSIGNED_INT, (void*)(submesh.indexOffset * sizeof(uint)), submesh.vertexOffset);
+				glEnable(GL_DEPTH_TEST); // TEMP
+				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(submesh.IndexOffset * sizeof(uint)), submesh.VertexOffset);
 			}
 		}
 
@@ -165,10 +165,10 @@ namespace Nyx {
 			}
 			else
 			{
-				material = materials[subMesh.materialIndex];
+				material = materials[subMesh.MaterialIndex];
 			}
 
-			s_Data.DrawList[material].push_back({ subMesh, transform * subMesh.transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
+			s_Data.DrawList[material].push_back({ subMesh, transform * subMesh.Transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
 		}
 	}
 

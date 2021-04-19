@@ -44,10 +44,10 @@ void ObjectPropertiesPanel::Draw(Nyx::Ref<Nyx::SceneObject> object)
 			std::string file = Nyx::OpenFileExplorer("FBX\0*.FBX\0");
 			if (file != "")
 			{
-				if (file != path)
+			/*	if (file != path)
 					meshComponent.Mesh = Nyx::AssetManager::Load<Nyx::Mesh>(file);
 				else
-					mesh->Reload(file);
+					mesh->Reload(file); */
 			}
 		}
 

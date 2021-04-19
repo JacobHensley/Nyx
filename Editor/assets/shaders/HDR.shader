@@ -38,4 +38,5 @@ void main()
 
 	// Gamma correction.
 	color = vec4(pow(mappedColor, vec3(1.0 / gamma)), 1.0);
+	color = vec4(texture(r_InputTexture, v_TexCoords).r, 0.0f, 0.0f, 0.0f);
 }

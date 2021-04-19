@@ -30,36 +30,17 @@ namespace Nyx {
 	FrameBuffer::~FrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_FrameBufferID);
-	//	glDeleteRenderbuffers(1, &m_RenderBufferID);
 	}
 
 	void FrameBuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
-	//	glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBufferID);
 		glViewport(0, 0, m_Width, m_Height);
 	}
 
 	void FrameBuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	}
-
-	void FrameBuffer::Attach(BufferAtachment attachment)
-	{
-	/*	if (attachment == BufferAtachment::COLOR && !m_HasColorBuffer)
-		{
-			glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_Texture->GetTextureID(), 0);
-			m_HasColorBuffer = true;
-		}
-			
-		else if (attachment == BufferAtachment::DEPTH && !m_HasDepthBuffer)
-		{
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_Texture->GetWidth(), m_Texture->GetHeight());
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_RenderBufferID);
-			m_HasDepthBuffer = true;
-		} */
 	}
 
 	void FrameBuffer::Clear()
@@ -80,7 +61,6 @@ namespace Nyx {
 			// TODO: delete attachments
 
 			m_ColorAttachments.clear();
-			// m_DepthAttachment = 0;
 		}
 
 		glGenFramebuffers(1, &m_FrameBufferID);
@@ -89,7 +69,7 @@ namespace Nyx {
 		bool multisample = m_Specification.Samples > 1;
 		if (multisample)
 		{
-			// TODO
+			// TODO: Multi-Sampling
 		}
 		else
 		{

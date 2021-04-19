@@ -80,10 +80,12 @@ namespace Nyx
     void SceneRenderer::CompositePass()
     {
         s_Data.CompositePass->Bind();
+    //  Renderer::Begin(s_Data.ActiveCamera, s_Data.ActiveScene->GetEnvironmentMap(), s_Data.ActiveScene->GetLightEnvironment());
+    //  Renderer::End();
         s_Data.CompositePass->Unbind();
     }
 
-    void Nyx::SceneRenderer::Resize(uint width, uint height)
+    void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)
     {
         s_Data.GeometryPass->GetFrameBuffer()->Resize(width, height);
         s_Data.CompositePass->GetFrameBuffer()->Resize(width, height);
@@ -91,6 +93,13 @@ namespace Nyx
 
     void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear = true)
     {
+        destination->Bind();
+        if (clear)
+            destination->Clear();
+
+                
+
+        destination->Unbind();
     }
 
     Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()

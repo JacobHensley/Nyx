@@ -205,10 +205,10 @@ void EditorLayer::RenderPropertiesWindow(SceneObject object)
 				std::string file = OpenFileExplorer("FBX\0*.FBX\0");
 				if (file != "")
 				{
-					if (file != path)
+				/*	if (file != path)
 						meshComponent.Mesh = AssetManager::Load<Mesh>(file);
 					else
-						mesh->Reload(file);
+						mesh->Reload(file); */
 				}
 			}
 
@@ -415,9 +415,9 @@ bool EditorLayer::SelectObject()
 
 		for (auto subMesh : mesh->GetSubMeshs())
 		{
-			glm::mat4 finalTransform = objectTransform * subMesh.transform;
+			glm::mat4 finalTransform = objectTransform * subMesh.Transform;
 
-			AABB localBoundingBox = subMesh.boundingBox;
+			AABB localBoundingBox = subMesh.BoundingBox;
 			localBoundingBox.Min = finalTransform * glm::vec4(localBoundingBox.Min, 1.0f);
 			localBoundingBox.Max = finalTransform * glm::vec4(localBoundingBox.Max, 1.0f);
 
@@ -430,7 +430,7 @@ bool EditorLayer::SelectObject()
 				localRay.Origin = glm::inverse(finalTransform) * glm::vec4(localRay.Origin, 1.0f);
 				localRay.Direction = glm::inverse(glm::mat3(finalTransform)) * localRay.Direction;
 
-				for (auto& triangle : subMesh.triangles)
+			/*	for (auto& triangle : subMesh.triangles)
 				{
 					bool triangleIntersection = localRay.IntersectsTriangle(triangle);
 
@@ -439,8 +439,8 @@ bool EditorLayer::SelectObject()
 						m_SelectedObject = object;
 						m_Scene->SetSelectedObject(object);
 						result = true;
-					}
-				}
+					} 
+				}*/
 			}
 
 		}

@@ -1,276 +1,50 @@
 #include "NXpch.h"
 #include "Mesh.h"
-#include "Nyx/Graphics/Debug/DebugRenderer.h"
-#include "Nyx/Graphics/SceneRenderer.h"
+#include "Nyx/graphics/SceneRenderer.h"
+#include "Nyx/Asset/AssetManager.h"
 
-#include <assimp/pbrmaterial.h>
+#include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-#include <imgui/imgui.h>
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glad/glad.h>
-
-#include <filesystem>
-
 namespace Nyx {
+	
+	namespace Utils {
+
+		static inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 from)
+		{
+			glm::mat4 to;
+			to[0][0] = (float)from.a1; to[0][1] = (float)from.b1;  to[0][2] = (float)from.c1; to[0][3] = (float)from.d1;
+			to[1][0] = (float)from.a2; to[1][1] = (float)from.b2;  to[1][2] = (float)from.c2; to[1][3] = (float)from.d2;
+			to[2][0] = (float)from.a3; to[2][1] = (float)from.b3;  to[2][2] = (float)from.c3; to[2][3] = (float)from.d3;
+			to[3][0] = (float)from.a4; to[3][1] = (float)from.b4;  to[3][2] = (float)from.c4; to[3][3] = (float)from.d4;
+			return to;
+		}
+
+	}
 
 	Mesh::Mesh(const std::string& path)
-		:	m_Path(path)
+		: m_Path(path)
 	{
-		NX_CORE_ASSERT(Load(path), "Failed to load model");
+		NX_CORE_INFO("Loading mesh at path {0}", m_Path);
+		bool loaded = Load(m_Path);
+		NX_CORE_ASSERT(loaded, "Failed to load model");
 		NX_CORE_INFO("Created Mesh at Path: {0}", m_Path);
-	}
-
-	Mesh::Mesh(Ref<IndexBuffer> indexBuffer, Ref<VertexBuffer> vertexBuffer, Ref<VertexArray> vertexArray)
-		:	m_IndexBuffer(indexBuffer), m_VertexBuffer(vertexBuffer), m_VertexArray(vertexArray), m_Path("GenMesh")
-	{
-		m_SubMeshes.push_back(SubMesh(0, 0, indexBuffer->GetCount()));
-	}
-
-	Mesh::~Mesh()
-	{
-	}
-
-	void Mesh::Render(bool depthTesting)
-	{
-		if (!depthTesting)
-			glDisable(GL_DEPTH_TEST);
-
-		m_VertexArray->Bind();
-		m_IndexBuffer->Bind();
-
-		glEnable(GL_BLEND);
-
-		for (SubMesh& mesh : m_SubMeshes)
-		{
-			glDrawElementsBaseVertex(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, (void*)(mesh.indexOffset * sizeof(uint)), mesh.vertexOffset);
-		}
-
-		if (!depthTesting)
-			glEnable(GL_DEPTH_TEST);
-	}
-
-	void Mesh::DebugDrawBoundingBox(const glm::mat4& transform) const
-	{	
-		for (auto& mesh : m_SubMeshes)
-		{
-			DebugRenderer::DrawAABB(mesh.boundingBox, transform * mesh.transform);
-		}
-	}
-
-	void Mesh::RenderImGuiNodeHierarchy(bool& open)
-	{
-		ImGui::Begin("Mesh Hierarchy", &open);
-		ImGuiNodeHierarchy(m_Scene->mRootNode);
-		ImGui::End();
-	}
-
-	void Mesh::RenderImGuiVertexData()
-	{
-		if (m_Vertices.size() == 0)
-		{
-			NX_CORE_ASSERT(false, "Failed to display vertex data");
-		}
-
-		aiNode* rootNode = m_Scene->mRootNode;
-		std::string id = "##" + std::to_string((UINT64)rootNode);
-		std::string name = rootNode->mName.C_Str() + id;
-
-		ImGui::Begin(name.c_str());
-
-		ImGui::Checkbox("Show Position", &m_ViewerShowPosition);
-		ImGui::Checkbox("Show Normal", &m_ViewerShowNormal);
-		ImGui::Checkbox("Show Tangent", &m_ViewerShowTangent);
-		ImGui::Checkbox("Show Binormal", &m_ViewerShowBinormal);
-		ImGui::Checkbox("Show TextureCoords", &m_ViewerShowTextureCoords);
-
-		ImGui::Text("Min X: %f.1, Y: %f.1, Z: %f.1,", m_bbMin.x, m_bbMin.y, m_bbMin.z);
-		ImGui::Text("Max X: %f.1, Y: %f.1, Z: %f.1,", m_bbMax.x, m_bbMax.y, m_bbMax.z);
-
-		ImGui::Text("Number of Vertices: %i", m_Vertices.size());
-
-		if (ImGui::ArrowButton("Previous Page", ImGuiDir_Left))
-		{
-			m_VertexViewerStart -= 25;
-			m_VertexViewerEnd -= 25;
-		}
-		ImGui::SameLine();
-		if (ImGui::ArrowButton("Next Page", ImGuiDir_Right))
-		{
-			m_VertexViewerStart += 25;
-			m_VertexViewerEnd += 25;
-		}
-
-		if (m_VertexViewerEnd >= m_Vertices.size())
-		{
-			m_VertexViewerStart = (int)m_Vertices.size();
-		}
-
-		if (m_VertexViewerEnd < 25)
-		{
-			m_VertexViewerEnd = 25;
-		}
-
-		if (m_VertexViewerStart < 0)
-		{
-			m_VertexViewerStart = 0;
-		}
-
-		for (int i = m_VertexViewerStart; i < m_VertexViewerEnd; i++)
-		{
-			Vertex vertex = m_Vertices[i];
-			ImGui::Text("Vertex Number #%i", i);
-			if (m_ViewerShowPosition)
-				ImGui::Text("Position:      X: %.2f, Y: %.2f, Z: %.2f", vertex.position.x, vertex.position.y, vertex.position.z);
-			if (m_ViewerShowNormal)
-				ImGui::Text("Normal:        X: %.2f, Y: %.2f, Z: %.2f", vertex.normal.x, vertex.normal.y, vertex.normal.z);
-			if (m_ViewerShowTangent)
-				ImGui::Text("Tangent:       X: %.2f, Y: %.2f, Z: %.2f", vertex.tangent.x, vertex.tangent.y, vertex.tangent.z);
-			if (m_ViewerShowBinormal)
-				ImGui::Text("Binormal:      X: %.2f, Y: %.2f, Z: %.2f", vertex.binormal.x, vertex.binormal.y, vertex.binormal.z);
-			if (m_ViewerShowTextureCoords)
-				ImGui::Text("TextureCoords: X: %.2f, Y: %.2f", vertex.textureCoords.x, vertex.textureCoords.y);
-			ImGui::Separator();
-		}
-
-		ImGui::End();
-	}
-
-	void Mesh::RenderImGuiNodeTree(bool isOwnWindow) const
-	{
-		if (m_Path == "GenMesh")
-		{
-			NX_CORE_ASSERT(false, "Cannot Render node graph of generated mesh");
-		}
-
-		aiNode* rootNode = m_Scene->mRootNode;
-		std::string id = "##" + std::to_string((UINT64)rootNode);
-		std::string name = rootNode->mName.C_Str() + id;
-		std::string windowName = "Node Graph" + id;
-
-		if (isOwnWindow)
-		{
-			ImGui::Begin(windowName.c_str());
-		}
-
-		if (ImGui::TreeNode(name.c_str()))
-		{
-			for (uint i = 0; i < rootNode->mNumChildren; i++)
-			{
-				if (ImGui::TreeNode((void*)(intptr_t)i, rootNode->mChildren[i]->mName.C_Str(), i))
-				{
-					//Node info here
-					DrawImGuiNode(rootNode->mChildren[i]);
-					ImGui::TreePop();
-				}
-			}
-			ImGui::TreePop();
-		}
-
-		if (isOwnWindow)
-		{
-			ImGui::End();
-		}
-	}
-
-	static std::tuple<glm::vec3, glm::quat, glm::vec3> GetTransformDecomposition(const glm::mat4& transform)
-	{
-		glm::vec3 scale, translation, skew;
-		glm::vec4 perspective;
-		glm::quat orientation;
-		glm::decompose(transform, scale, orientation, translation, skew, perspective);
-
-		return { translation, orientation, scale };
-	}
-
-	void Mesh::ImGuiNodeHierarchy(aiNode* node, const glm::mat4& parentTransform, uint32_t level)
-	{
-		glm::mat4 localTransform = aiMatrix4x4ToGlm(node->mTransformation);
-		glm::mat4 transform = parentTransform * localTransform;
-		for (uint32_t i = 0; i < node->mNumMeshes; i++)
-		{
-			uint32_t mesh = node->mMeshes[i];
-			m_SubMeshes[mesh].transform = transform;
-		}
-
-		std::string treenodeName = std::string(node->mName.C_Str()) + " (" + m_Path + ")";
-		if (ImGui::TreeNode(treenodeName.c_str()))
-		{
-			{
-				auto [translation, rotation, scale] = GetTransformDecomposition(transform);
-				ImGui::Text("World Transform");
-				ImGui::Text("  Translation: %.2f, %.2f, %.2f", translation.x, translation.y, translation.z);
-				ImGui::Text("  Scale: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
-			}
-			{
-				auto [translation, rotation, scale] = GetTransformDecomposition(localTransform);
-				ImGui::Text("Local Transform");
-				ImGui::Text("  Translation: %.2f, %.2f, %.2f", translation.x, translation.y, translation.z);
-				ImGui::Text("  Scale: %.2f, %.2f, %.2f", scale.x, scale.y, scale.z);
-			}
-
-			for (uint32_t i = 0; i < node->mNumChildren; i++)
-				ImGuiNodeHierarchy(node->mChildren[i], transform, level + 1);
-
-			ImGui::TreePop();
-		}
-	}
-
-	void Mesh::DrawImGuiNode(aiNode* node) const
-	{
-		for (uint i = 0; i < node->mNumChildren; i++)
-		{
-			if (ImGui::TreeNode((void*)(intptr_t)i, node->mChildren[i]->mName.C_Str(), i))
-			{
-				//Node info here
-				DrawImGuiNode(node->mChildren[i]);
-				ImGui::TreePop();
-			}
-		}
-	}
-
-	bool Mesh::Reload(const std::string& path)
-	{
-		m_Vertices.clear();
-		m_Indices.clear();
-		m_SubMeshes.clear();
-
-		m_BaseIndexPointer = 0;
-		m_BaseVertexPointer = 0;
-
-		if (!Load(path)) 
-		{
-			Load(m_Path);
-			NX_CORE_WARN("Failed to reload model: {0}, aborting", path);
-
-			return false;
-		}
-
-		m_Path = path;
-		return true;
 	}
 
 	bool Mesh::Load(const std::string& path)
 	{
-		// Read file via ASSIMP
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
-		// Check for errors
 		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			NX_CORE_ERROR("Error {0}", importer.GetErrorString());
+			NX_CORE_ERROR("Error loading mesh {0}: {1}", path, importer.GetErrorString());
 			return false;
 		}
-			
-		m_Scene = importer.GetOrphanedScene();
 
-		m_BaseShader = SceneRenderer::GetPBRShader();
-
-		// Process ASSIMP's root node recursively
-		processNode(scene->mRootNode, scene, scene->mRootNode->mTransformation);
-		
-	//	m_BoundingBox = CreateRef<AABB>(m_bbMin, m_bbMax);
+		LoadData(scene);
+		LoadMaterials(scene);
+		CalculateNodeTransforms(scene->mRootNode, scene, scene->mRootNode->mTransformation);
 
 		m_VertexBuffer = CreateRef<VertexBuffer>(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
 		m_IndexBuffer = CreateRef<IndexBuffer>(m_Indices.data(), (int)m_Indices.size());
@@ -281,121 +55,104 @@ namespace Nyx {
 			{ShaderDataType::Vec3, "a_Tangent"},
 			{ShaderDataType::Vec3, "a_Binormal"},
 			{ShaderDataType::Vec2, "a_TextureCoords"}
-			});
+		});
 
 		m_VertexArray->PushVertexBuffer(m_VertexBuffer);
 
 		return true;
 	}
 
-	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-	void Mesh::processNode(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
+	void Mesh::LoadData(const aiScene* scene)
 	{
-		aiMatrix4x4 transform = parentTransform * node->mTransformation;
-
-		// Process each mesh located at the current node
-		for (uint i = 0; i < node->mNumMeshes; i++)
+		for (uint i = 0; i < scene->mNumMeshes; i++)
 		{
-			// The node object only contains indices to index the actual objects in the scene.
-			// The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			SubMesh sub = processMesh(mesh, scene);
-			sub.transform = aiMatrix4x4ToGlm(transform);
-			m_SubMeshes.push_back(sub);
-		}
+			aiMesh* mesh = scene->mMeshes[i];
+			SubMesh& subMesh = m_SubMeshes.emplace_back();
 
-		
-		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
-		for (uint i = 0; i < node->mNumChildren; i++)
-		{
-		//	node->mChildren[i]->mTransformation *= node->mTransformation;
-			processNode(node->mChildren[i], scene, transform);
+			for (uint i = 0; i < mesh->mNumVertices; i++)
+			{
+				Vertex& vertex = m_Vertices.emplace_back();
+
+				// Positions
+				vertex.Position.x = mesh->mVertices[i].x;
+				vertex.Position.y = mesh->mVertices[i].y;
+				vertex.Position.z = mesh->mVertices[i].z;
+
+				// Normals
+				vertex.Normal.x = mesh->mNormals[i].x;
+				vertex.Normal.y = mesh->mNormals[i].y;
+				vertex.Normal.z = mesh->mNormals[i].z;
+
+				// Binormals
+				vertex.Binormal.x = mesh->mBitangents[i].x;
+				vertex.Binormal.y = mesh->mBitangents[i].y;
+				vertex.Binormal.z = mesh->mBitangents[i].z;
+
+				// Tangents
+				vertex.Tangent.x = mesh->mTangents[i].x;
+				vertex.Tangent.y = mesh->mTangents[i].y;
+				vertex.Tangent.z = mesh->mTangents[i].z;
+
+				// Texture Coordinates
+				if (mesh->HasTextureCoords(0))
+				{
+					vertex.TextureCoords.x = mesh->mTextureCoords[0][i].x;
+					vertex.TextureCoords.y = mesh->mTextureCoords[0][i].y;
+				}
+				else
+				{
+					vertex.TextureCoords = glm::vec2(0.0f, 0.0f);
+				}
+
+				// Bounding Box
+				subMesh.BoundingBox.Min.x = glm::min(mesh->mVertices[i].x, subMesh.BoundingBox.Min.x);
+				subMesh.BoundingBox.Min.y = glm::min(mesh->mVertices[i].y, subMesh.BoundingBox.Min.y);
+				subMesh.BoundingBox.Min.z = glm::min(mesh->mVertices[i].z, subMesh.BoundingBox.Min.z);
+
+				subMesh.BoundingBox.Max.x = glm::max(mesh->mVertices[i].x, subMesh.BoundingBox.Max.x);
+				subMesh.BoundingBox.Max.y = glm::max(mesh->mVertices[i].y, subMesh.BoundingBox.Max.y);
+				subMesh.BoundingBox.Max.z = glm::max(mesh->mVertices[i].z, subMesh.BoundingBox.Max.z);
+			}
+
+			// Triangles and Indices
+			for (uint i = 0; i < mesh->mNumFaces; i++)
+			{
+				aiFace face = mesh->mFaces[i];
+				Triangle& triangle = m_Triangles.emplace_back();
+
+				for (uint j = 0; j < face.mNumIndices; j++)
+				{
+					triangle.Points[j].x = mesh->mVertices[face.mIndices[j]].x;
+					triangle.Points[j].y = mesh->mVertices[face.mIndices[j]].y;
+					triangle.Points[j].z = mesh->mVertices[face.mIndices[j]].z;
+
+					m_Indices.push_back(face.mIndices[j]);
+				}
+			}
+			
+			// Set subMesh data
+			uint32_t baseVertex = m_BaseVertexPointer;
+			m_BaseVertexPointer += mesh->mNumVertices;
+
+			uint32_t baseIndex = m_BaseIndexPointer;
+			uint32_t indexCount = mesh->mNumFaces * 3;
+			m_BaseIndexPointer += indexCount;
+
+			uint32_t baseTriangle = m_BaseTrianglePointer;
+			uint32_t triangleCount = mesh->mNumFaces;
+			m_BaseTrianglePointer += triangleCount;
+
+			subMesh.VertexOffset = baseVertex;
+			subMesh.IndexOffset = baseIndex;
+			subMesh.IndexCount = indexCount;
+			subMesh.TriangleOffset = baseTriangle;
+			subMesh.TriangleCount = triangleCount;
+			subMesh.MaterialIndex = mesh->mMaterialIndex;
 		}
 	}
 
-	SubMesh Mesh::processMesh(aiMesh* mesh, const aiScene* scene)
+	void Mesh::LoadMaterials(const aiScene* scene)
 	{
-		// Data to fill
-		std::vector<Ref<Texture>> textures;
-
-		SubMesh submesh;
-
-		AABB boundingBox;
-		boundingBox.Min = glm::vec3(FLT_MAX);
-		boundingBox.Max = glm::vec3(-FLT_MAX);
-
-		// Walk through each of the mesh's vertices
-		for (uint i = 0; i < mesh->mNumVertices; i++)
-		{
-			Vertex vertex;
-			glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-
-			// Positions
-			vector.x = mesh->mVertices[i].x;
-			vector.y = mesh->mVertices[i].y;
-			vector.z = mesh->mVertices[i].z;
-			vertex.position = vector;
-
-			boundingBox.Min.x = glm::min(vector.x, boundingBox.Min.x);
-			boundingBox.Min.y = glm::min(vector.y, boundingBox.Min.y);
-			boundingBox.Min.z = glm::min(vector.z, boundingBox.Min.z);
-			
-			boundingBox.Max.x = glm::max(vector.x, boundingBox.Max.x);
-			boundingBox.Max.y = glm::max(vector.y, boundingBox.Max.y);
-			boundingBox.Max.z = glm::max(vector.z, boundingBox.Max.z);
-
-			// Normals
-			vector.x = mesh->mNormals[i].x;
-			vector.y = mesh->mNormals[i].y;
-			vector.z = mesh->mNormals[i].z;
-			vertex.normal = vector;
-
-			// Bi-Tangents
-			vector.x = mesh->mBitangents[i].x;
-			vector.y = mesh->mBitangents[i].y;
-			vector.z = mesh->mBitangents[i].z;
-			vertex.binormal = vector;
-
-			// Tangents
-			vector.x = mesh->mTangents[i].x;
-			vector.y = mesh->mTangents[i].y;
-			vector.z = mesh->mTangents[i].z;
-			vertex.tangent = vector;
-
-			// Texture Coordinates
-			if (mesh->HasTextureCoords(0)) // Does the mesh contain texture coordinates?
-			{
-				glm::vec2 vec;
-				// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
-				// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-				vec.x = mesh->mTextureCoords[0][i].x;
-				vec.y = mesh->mTextureCoords[0][i].y;
-				vertex.textureCoords = vec;
-			}
-			else
-			{
-				vertex.textureCoords = glm::vec2(0.0f, 0.0f);
-			}
-
-			m_Vertices.push_back(vertex);
-		}
-
-		// Now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-		for (uint i = 0; i < mesh->mNumFaces; i++)
-		{
-			aiFace face = mesh->mFaces[i];
-			// Retrieve all indices of the face and store them in the indices vector
-			Triangle triangle;
-			for (uint j = 0; j < face.mNumIndices; j++)
-			{	
-				triangle.Points[j].x = mesh->mVertices[face.mIndices[j]].x;
-				triangle.Points[j].y = mesh->mVertices[face.mIndices[j]].y;
-				triangle.Points[j].z = mesh->mVertices[face.mIndices[j]].z;
-				m_Indices.push_back(face.mIndices[j]);
-			}
-			submesh.triangles.push_back(triangle);
-		}
-
 		if (scene->HasMaterials())
 		{
 			m_Materials.resize(scene->mNumMaterials);
@@ -404,6 +161,7 @@ namespace Nyx {
 				auto aiMaterial = scene->mMaterials[i];
 				auto aiMaterialName = aiMaterial->GetName();
 
+				// Load material textures
 				Ref<Texture> albedoMap, normalMap, roughnessMap, metalnessMap;
 
 				for (uint32_t i = 0; i < aiMaterial->mNumProperties; i++)
@@ -416,65 +174,54 @@ namespace Nyx {
 
 						if ((std::string)(prop->mKey.data) == "$raw.DiffuseColor|file")
 						{
-							Ref<Texture> texture = LoadMaterialTexture(str);
 							albedoMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ShininessExponent|file")
 						{
-							Ref<Texture> texture = LoadMaterialTexture(str);
 							roughnessMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.NormalMap|file")
 						{
-							Ref<Texture> texture = LoadMaterialTexture(str);
 							normalMap = LoadMaterialTexture(str);
 						}
 						else if ((std::string)(prop->mKey.data) == "$raw.ReflectionFactor|file")
 						{
-							Ref<Texture> texture = LoadMaterialTexture(str);
 							metalnessMap = LoadMaterialTexture(str);
 						}
 					}
 				}
 
+				// Load material values
 				glm::vec3 albedo = glm::vec3(0.8f);
-				float alpha = 1.0f;
 				float roughness = 0.5f;
 				float metalness = 0.0f;
+				float alpha = 1.0f;
 
-				if (!albedoMap)
+				aiColor4D aiColor;
+				if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
 				{
-					aiColor4D aiColor;
-					if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS)
-					{
-						albedo = glm::vec3(aiColor.r, aiColor.g, aiColor.b);
-					}
-
-					float opacity;
-					if (aiMaterial->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS)
-					{
-						alpha = opacity;
-					}
+					albedo = glm::vec3(aiColor.r, aiColor.g, aiColor.b);
 				}
 
-				if (!roughnessMap)
+				float aiShininess;
+				if (aiMaterial->Get(AI_MATKEY_SHININESS, aiShininess) == AI_SUCCESS)
 				{
-					float shininess;
-
-					if (aiMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
-					{
-						roughness = 1 - sqrt(shininess / 100);
-					} 
-				}
-				if (!metalnessMap)
-				{
-					float aiMetalness;
-					if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, aiMetalness) == AI_SUCCESS)
-					{
-						metalness = aiMetalness;
-					}
+					roughness = 1 - sqrt(aiShininess / 100);
 				}
 
+				float aiMetalness;
+				if (aiMaterial->Get(AI_MATKEY_REFLECTIVITY, aiMetalness) == AI_SUCCESS)
+				{
+					metalness = aiMetalness;
+				}
+
+				float aiOpacity;
+				if (aiMaterial->Get(AI_MATKEY_OPACITY, aiOpacity) == AI_SUCCESS)
+				{
+					alpha = aiOpacity;
+				}
+
+				// Create material
 				Ref<Material> material;
 				if (alpha < 1.0f)
 				{
@@ -488,21 +235,19 @@ namespace Nyx {
 				}
 
 				if (albedoMap)
-				{
-					albedo = { 1.0f, 1.0f, 1.0f };
 					material->SetTexture("u_AlbedoMap", albedoMap);
-				}
-				if (normalMap)
-					material->SetTexture("u_MetalnessMap", normalMap);
 				if (roughnessMap)
 					material->SetTexture("u_RoughnessMap", roughnessMap);
+				if (normalMap)
+					material->SetTexture("u_MetalnessMap", normalMap);
 				if (metalnessMap)
 					material->SetTexture("u_NormalMap", metalnessMap);
 
 				material->Set("u_Material.AlbedoValue", albedo);
-				material->Set("u_Material.MetalnessValue", metalness);
 				material->Set("u_Material.RoughnessValue", roughness);
-				
+				material->Set("u_Material.MetalnessValue", metalness);
+
+				// TEMP
 				material->Set("u_Material.UsingAlbedoMap", (bool)albedoMap);
 				material->Set("u_Material.UsingMetalnessMap", (bool)metalnessMap);
 				material->Set("u_Material.UsingRoughnessMap", (bool)roughnessMap);
@@ -510,48 +255,46 @@ namespace Nyx {
 
 				m_Materials[i] = material;
 			}
-		} 
-
-		uint baseVertex = m_BaseVertexPointer;
-		m_BaseVertexPointer += mesh->mNumVertices;
-		uint baseIndex = m_BaseIndexPointer;
-		uint indexCount = mesh->mNumFaces * 3;
-		m_BaseIndexPointer += indexCount;
-		
-		submesh.vertexOffset = baseVertex;
-		submesh.indexOffset = baseIndex;
-		submesh.indexCount = indexCount;
-		submesh.boundingBox = boundingBox;
-		submesh.materialIndex = mesh->mMaterialIndex;
-
-		return submesh;
+		}
 	}
 
-	Ref<Texture> Mesh::LoadMaterialTexture(const std::string& str)
+	Ref<Texture> Mesh::LoadMaterialTexture(const std::string& path)
 	{
-		//	NX_CORE_DEBUG("Metalness Texture: {0}", str);
-
+		// Get texture path
 		std::filesystem::path meshPath = m_Path;
 		auto parentPath = meshPath.parent_path();
-		parentPath /= str;
+		parentPath /= path;
 		std::string texturePath = parentPath.string();
 
+		// Check for texture
 		if (FILE* file = fopen(texturePath.c_str(), "r"))
 			fclose(file);
 		else
 			return nullptr;
 
-		Ref<Texture> texture = m_LoadedTextures[texturePath];
-		if (texture == nullptr)
+		AssetHandle textureHandle = AssetManager::Load<Texture>(texturePath);
+
+		return AssetManager::Get<Texture>(textureHandle);
+	}
+
+	void Mesh::CalculateNodeTransforms(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
+	{
+		aiMatrix4x4 transform = parentTransform * node->mTransformation;
+
+		for (uint i = 0; i < node->mNumMeshes; i++)
 		{
-			Ref<Texture> loadedTexture = CreateRef<Texture>(texturePath);
-			m_LoadedTextures[texturePath] = loadedTexture;
-			return loadedTexture;
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+			m_SubMeshes[i].Transform = Utils::aiMatrix4x4ToGlm(transform);
 		}
-		else
+
+		for (uint i = 0; i < node->mNumChildren; i++)
 		{
-			return texture;
+			CalculateNodeTransforms(node->mChildren[i], scene, transform);
 		}
 	}
 
+	bool Mesh::Reload()
+	{
+		return false;
+	}
 }

@@ -37,30 +37,29 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
-		void Attach(BufferAtachment attachment);
-
 		void Clear();
 		void Resize(int width, int height);
 		void SetViewPortSize(int x, int y, int width, int height);
 
-		inline Ref<Texture> GetTexture() const { return m_Texture; }
-		inline uint GetFrameBufferID() const { return m_FrameBufferID; }
-		inline std::vector<uint>& const GetColorAttachments() { return m_ColorAttachments; }
+		inline uint32_t GetFrameBufferID() const { return m_FrameBufferID; }
+		inline std::vector<uint32_t>& const GetColorAttachments() { return m_ColorAttachments; }
+
+		inline uint32_t GetWidth() const { return m_Width;}
+		inline uint32_t GetHeight() const { return m_Height; }
 
 	private:
 		bool m_HasColorBuffer = false;
 		bool m_HasDepthBuffer = false;
 
-		uint32_t m_Width = 0, m_Height = 0;
-
-		uint m_FrameBufferID = 0;
+		uint32_t m_FrameBufferID = 0;
+		uint32_t m_Width = 0;
+		uint32_t m_Height = 0;
 
 		FramebufferSpecification m_Specification;
-		std::vector<uint> m_ColorAttachments;
-		uint m_DepthAttachment = 0;
-
-		Ref<Texture> m_Texture = nullptr;
 		TextureParameters m_Parameters;
+
+		std::vector<uint32_t> m_ColorAttachments;
+		uint32_t m_DepthAttachment = 0;
 	};
 
 }

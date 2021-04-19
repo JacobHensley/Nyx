@@ -68,7 +68,7 @@ namespace Nyx
         static void End();
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
-        static void Resize(uint width, uint height);
+        static void Resize(uint32_t width, uint32_t height);
 
         static Ref<FrameBuffer> GetFinalBuffer();
 

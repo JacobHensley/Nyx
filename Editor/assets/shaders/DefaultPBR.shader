@@ -50,21 +50,14 @@ layout(location = 0) out vec4 color;
 struct DirectionalLight
 {
 	vec3 Radiance;
-	float padding01;
 	vec3 Direction;
-	float padding02;
 };
 
 struct PointLight
 {
 	vec3 Position;
-	float padding03;
 	vec3 Radiance;
-	float padding04;
 	float Intensity;
-	float padding05;
-	float padding06;
-	float padding07;
 };
 
 layout(std140, binding = 0) uniform CameraBuffer

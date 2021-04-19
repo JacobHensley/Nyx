@@ -22,11 +22,7 @@ namespace Nyx {
 		glm::vec3 Position;
 		float padding03;
 		glm::vec3 Radiance;
-		float padding04;
 		float Intensity;
-		float padding05;
-		float padding06;
-		float padding07;
 
 		PointLight() = default;
 		PointLight(glm::vec3 position, glm::vec3 radiance, float intensity)

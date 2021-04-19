@@ -43,6 +43,7 @@ void ViewportPanel::Draw(Nyx::Ref<Nyx::Camera>& camera)
 	{
 		camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), m_Size.x, m_Size.y, 0.01f, 1000.0f));
 		m_LastSize = m_Size;
+		Nyx::SceneRenderer::Resize(m_Size.x, m_Size.y);
 	}
 
 	ImGui::End();
