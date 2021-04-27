@@ -17,7 +17,7 @@ namespace Nyx {
 	void Scene::Render(Ref<Camera> camera)
 	{
 		SceneRenderer::Begin(this, camera);
-
+		SceneRenderer::SetEnvironment(m_EnvironmentMap, m_LightEnvironment);
 		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
 
 		for (auto object : group)

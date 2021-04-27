@@ -29,7 +29,7 @@ layout(location = 0) uniform Renderer u_Renderer;
 void main()
 {
 	mat4 MVP = r_CameraBuffer.ViewProjection * u_Renderer.r_Transform;
-	gl_Position = MVP * vec4(a_Position, 1.0f);
+ 	gl_Position = MVP * vec4(a_Position, 1.0f);
 
 	v_Normal = mat3(u_Renderer.r_Transform) * a_Normal;
 	v_WorldPosition = vec3(u_Renderer.r_Transform * vec4(a_Position, 1.0f));
@@ -95,9 +95,9 @@ struct Material
 
 layout(location = 1) uniform Material u_Material;
 
-uniform sampler2D r_BRDFLutTexture;
-uniform samplerCube r_IrradianceTexture;
-uniform samplerCube r_RadianceTexture;
+layout(binding = 5) uniform sampler2D r_BRDFLutTexture;
+layout(binding = 6) uniform samplerCube r_RadianceTexture;
+layout(binding = 7) uniform samplerCube r_IrradianceTexture;
 
 uniform sampler2D u_AlbedoMap;
 uniform sampler2D u_MetalnessMap;
@@ -247,6 +247,6 @@ void main()
 	vec3 lightContribution = Lighting(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 pLightContribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 iblContribution = IBL(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
-
+	
 	color = vec4(lightContribution + pLightContribution + iblContribution, 1.0f);
 }

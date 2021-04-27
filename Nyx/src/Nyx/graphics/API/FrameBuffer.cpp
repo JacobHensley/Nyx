@@ -104,7 +104,7 @@ namespace Nyx {
 
 			for (size_t i = 0; i < m_Specification.DepthAttachments.size(); i++)
 			{
-				auto& textureSpec = m_Specification.DepthAttachments[i];
+				// auto& textureSpec = m_Specification.DepthAttachments[i];
 
 				GLuint& textureID = m_DepthAttachment;
 				glCreateTextures(GL_TEXTURE_2D, 1, &textureID);

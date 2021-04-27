@@ -114,6 +114,7 @@
     <ClInclude Include="src\Nyx\Events\Event.h" />
     <ClInclude Include="src\Nyx\Events\KeyEvent.h" />
     <ClInclude Include="src\Nyx\Events\MouseEvent.h" />
+    <ClInclude Include="src\Nyx\graphics\RenderPass.h" />
     <ClInclude Include="src\Nyx\Utilities\GLError.h" />
     <ClInclude Include="src\Nyx\Utilities\Utilities.h" />
     <ClInclude Include="src\Nyx\graphics\API\BufferLayout.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\Nyx\Core\Layer.cpp" />
     <ClCompile Include="src\Nyx\Core\LayerStack.cpp" />
     <ClCompile Include="src\Nyx\Core\Log.cpp" />
+    <ClCompile Include="src\Nyx\graphics\RenderPass.cpp" />
     <ClCompile Include="src\Nyx\Utilities\Utilities.cpp" />
     <ClCompile Include="src\Nyx\graphics\API\BufferLayout.cpp" />
     <ClCompile Include="src\Nyx\graphics\API\FrameBuffer.cpp" />

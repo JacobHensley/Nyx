@@ -70,7 +70,7 @@ namespace Nyx {
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
 
-		const int shaderVersion = 430;
+		const int shaderVersion = 450;
 		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderVersion);
 
 		GLuint program = glCreateProgram();
@@ -233,7 +233,7 @@ namespace Nyx {
 
 				GLint location = glGetUniformLocation(m_ShaderProgram, strName.c_str());
 				NX_CORE_ASSERT(location != -1, "Cannot find Resource");
-				glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
+			//	glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
 
 				resourceTextureUnit++;
 

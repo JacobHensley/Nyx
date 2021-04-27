@@ -6,6 +6,13 @@
 
 namespace Nyx {
 
+	namespace RenderResourceBindings
+	{
+		const uint32_t BRDFLut = 5;
+		const uint32_t RadianceMap = 6;
+		const uint32_t IrradianceMap = 7;
+	};
+
 	namespace UniformBuffer {
 
 		enum UniformBufferBinding
@@ -57,6 +64,8 @@ namespace Nyx {
 
 	struct RendererData
 	{
+		Ref<RenderPass> ActiveRenderPass;
+
 		Ref<Camera> ActiveCamera;
 		Ref<EnvironmentMap> ActiveEnvironmentMap;
 
@@ -77,8 +86,6 @@ namespace Nyx {
 
 	void Renderer::Init()
 	{
-		InitRendereResourceFunctions();
-
 		GenerateUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer));
 		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
 
@@ -86,22 +93,53 @@ namespace Nyx {
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
 	}
 
-	void Renderer::Begin(Ref<Camera> camera, Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
+	void Renderer::BeginRenderPass(Ref<RenderPass> renderPass)
+	{
+		s_Data.ActiveRenderPass = renderPass;
+		Ref<FrameBuffer> framebuffer = renderPass->GetSpecification().Framebuffer;
+		GLuint framebufferID = framebuffer->GetFrameBufferID();
+
+		glViewport(0, 0, framebuffer->GetWidth(), framebuffer->GetHeight());
+		glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void Renderer::EndRenderPass()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Renderer::BeginScene(Ref<Camera> camera)
 	{
 		s_Data.ActiveCamera = camera;
-		s_Data.ActiveEnvironmentMap = environmentMap;
 
 		s_Data.CameraBuffer.ViewProjection = s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix();
 		s_Data.CameraBuffer.InverseViewProjection = glm::inverse(s_Data.ActiveCamera->GetProjectionMatrix() * s_Data.ActiveCamera->GetViewMatrix());
 		s_Data.CameraBuffer.CameraPosition = s_Data.ActiveCamera->GetPosition();
 		UploadUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer), &s_Data.CameraBuffer);
 
+		s_Data.BRDFLutTexture->Bind(RenderResourceBindings::BRDFLut);
+	}
+
+	void Renderer::EndScene()
+	{
+		FlushDrawList();
+	}
+
+	void Renderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
+	{
+		Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
+		radiance->Bind(RenderResourceBindings::RadianceMap);
+		Ref<TextureCube> irradiance = AssetManager::GetByUUID<TextureCube>(environmentMap->irradianceMap.GetUUID());
+		irradiance->Bind(RenderResourceBindings::IrradianceMap);
+
 		s_Data.LightBuffer.DirectionalLight = lightEnvironment->GetDirectionalLight();
 		s_Data.LightBuffer.PointLight = lightEnvironment->GetPointLight();
 		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
 	}
 
-	void Renderer::End()
+	void Renderer::FlushDrawList()
 	{
 		for (auto& [materialRef, meshList] : s_Data.DrawList)
 		{
@@ -121,12 +159,6 @@ namespace Nyx {
 			material->Bind();
 
 			Ref<Shader> shader = material->GetShader();
-			const std::unordered_map<std::string,ShaderResource>& resources = shader->GetResources();
-			for (auto const& [name, resource] : resources)
-			{
-				if (resource.Name.find("r_") != std::string::npos)
-					s_Data.RendereResourceFunctions[name](resource);
-			}
 			
 			const std::unordered_map<std::string, ShaderUniform>& rendererUniforms = shader->GetRendererUniforms();
 			for (auto& submeshDC : meshList)
@@ -172,38 +204,15 @@ namespace Nyx {
 		}
 	}
 
-	void Renderer::SubmitFullscreenQuad(Ref<Material> material)
+	void Renderer::DrawFullscreenQuad(Ref<Material> material)
 	{
 		material->Bind();
 		s_Data.FullscreenQaud->Bind();
-
-		Ref<Shader> shader = material->GetShader();
-		const std::unordered_map<std::string,ShaderResource>& resources = shader->GetResources();
-		for (auto const& [name, resource] : resources)
-		{
-			s_Data.RendereResourceFunctions[name](resource);
-		}
 
 		if (material->GetMaterialFlags() & (int)MaterialFlags::DISABLE_DEPTH_TEST)
 			glDisable(GL_DEPTH_TEST);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-	}
-
-	void Renderer::InitRendereResourceFunctions()
-	{
-		s_Data.RendereResourceFunctions["r_IrradianceTexture"] = [&](const ShaderResource& uniform)
-		{
-			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->irradianceMap.GetUUID())->Bind(uniform.TextureUnit);
-		};
-		s_Data.RendereResourceFunctions["r_RadianceTexture"] = [&](const ShaderResource& uniform)
-		{
-			AssetManager::GetByUUID<TextureCube>(s_Data.ActiveEnvironmentMap->radianceMap.GetUUID())->Bind(uniform.TextureUnit);
-		};
-		s_Data.RendereResourceFunctions["r_BRDFLutTexture"] = [&](const ShaderResource& uniform)
-		{
-			s_Data.BRDFLutTexture->Bind(uniform.TextureUnit);
-		};
 	}
 
 	void Renderer::GenerateUniformBuffer(uint32_t& bufferID, uint32_t bindingPoint, uint32_t size)
