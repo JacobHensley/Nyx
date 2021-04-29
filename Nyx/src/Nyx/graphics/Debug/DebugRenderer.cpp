@@ -40,7 +40,7 @@ namespace Nyx {
 		m_IndexBuffer = std::make_unique<IndexBuffer>(indices, MAX_INDEX_COUNT);
 		m_IndexBuffer->SetData(indices, MAX_INDEX_COUNT);
 
-		m_LineShader = std::make_unique<Shader>("assets/shaders/DebugLine.shader");
+		m_LineShader = std::make_unique<Shader>("assets/shaders/Debug/DebugLine.shader");
 	} 
 
 	DebugRenderer::~DebugRenderer()

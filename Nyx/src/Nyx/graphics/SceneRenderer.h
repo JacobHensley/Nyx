@@ -28,14 +28,14 @@ namespace Nyx
         static void End();
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
+        
+        static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
 
         static Ref<FrameBuffer> GetFinalBuffer();
-
         static Ref<Shader> GetPBRShader();
         static Ref<Shader> GetGlassShader();
 
-        static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
     private:
         static void GeometryPass();
         static void CompositePass();

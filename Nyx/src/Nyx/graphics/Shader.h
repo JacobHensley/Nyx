@@ -68,7 +68,7 @@ namespace Nyx {
 		inline uint32_t GetMaterialUniformBufferSize() { return m_MaterialUniformBufferSize; }
 		static uint32_t GetUniformSizeFromType(UniformType type);
 
-		void SetUniformInt(const std::string& name, int value);
+		uint32_t SetUniformInt(const std::string& name, int value);
 		void SetUniformIntArray(const std::string& name, int* values, uint32_t count);
 		void SetUniformFloat(const std::string& name, float value);
 		void SetUniformFloat2(const std::string& name, const glm::vec2& value);

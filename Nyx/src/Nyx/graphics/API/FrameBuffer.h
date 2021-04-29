@@ -37,6 +37,8 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
+		void BindColorTexture(uint slot, uint index);
+
 		void Clear();
 		void Resize(int width, int height);
 		void SetViewPortSize(int x, int y, int width, int height);

@@ -234,24 +234,57 @@ namespace Nyx {
 					material = CreateRef<Material>(SceneRenderer::GetPBRShader());
 				}
 
+				Ref<Texture> defaultTexture = CreateRef<Texture>(1, 1);
+				defaultTexture->SetData(new byte[4], 4);
+
+				// Albedo
 				if (albedoMap)
+				{
 					material->SetTexture("u_AlbedoMap", albedoMap);
+					albedo = glm::vec3(1.0f);
+				}
+				else
+				{
+					material->SetTexture("u_AlbedoMap", defaultTexture);
+				}
+
+				// Roughness
 				if (roughnessMap)
+				{
 					material->SetTexture("u_RoughnessMap", roughnessMap);
-				if (normalMap)
-					material->SetTexture("u_MetalnessMap", normalMap);
+					roughness = 1.0f;
+				}
+				else
+				{
+					material->SetTexture("u_RoughnessMap", defaultTexture);
+				}
+				
+				// Metalness
 				if (metalnessMap)
-					material->SetTexture("u_NormalMap", metalnessMap);
+				{
+					material->SetTexture("u_MetalnessMap", metalnessMap);
+					metalness = 1.0f;
+				}
+				else
+				{
+					material->SetTexture("u_MetalnessMap", defaultTexture);
+				}
+
+				// Normal
+				if (normalMap)
+				{
+					material->SetTexture("u_NormalMap", normalMap);
+				}
+				else
+				{
+					material->SetTexture("u_NormalMap", defaultTexture);
+				}
 
 				material->Set("u_Material.AlbedoValue", albedo);
 				material->Set("u_Material.RoughnessValue", roughness);
 				material->Set("u_Material.MetalnessValue", metalness);
 
-				// TEMP
-				material->Set("u_Material.UsingAlbedoMap", (bool)albedoMap);
-				material->Set("u_Material.UsingMetalnessMap", (bool)metalnessMap);
-				material->Set("u_Material.UsingRoughnessMap", (bool)roughnessMap);
-				material->Set("u_Material.UsingNormalMap", (bool)normalMap);
+				material->Set("u_Material.UseNormalMap", (bool)normalMap);
 
 				m_Materials[i] = material;
 			}

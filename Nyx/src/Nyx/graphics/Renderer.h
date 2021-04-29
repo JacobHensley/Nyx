@@ -71,18 +71,17 @@ namespace Nyx {
 		static void BeginRenderPass(Ref<RenderPass> renderPass);
 		static void EndRenderPass();
 
-		// Scene stuff
 		static void BeginScene(Ref<Camera> camera);
 		static void EndScene();
 
 		static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
-		static void DrawFullscreenQuad(Ref<Material> material);
+		static void DrawFullscreenQuad(Ref<Shader> shader, bool depthTesting);
+
 	private:
 		static void FlushDrawList();
 
-		static void InitRendereResourceFunctions();
 		static void GenerateUniformBuffer(uint32_t& bufferID, uint32_t bindingPoint, uint32_t size);
 		static void UploadUniformBuffer(uint32_t bufferID, uint32_t bindingPoint, uint32_t size, const void* data);
 	};

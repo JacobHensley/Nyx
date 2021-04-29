@@ -26,7 +26,7 @@ void main()
 layout(location = 0) in vec3 v_Position;
 layout(location = 0) out vec4 color;
 
-uniform samplerCube r_IrradianceTexture;
+layout(binding = 2) uniform samplerCube r_IrradianceTexture;
 
 void main()
 {

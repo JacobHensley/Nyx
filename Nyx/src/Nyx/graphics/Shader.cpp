@@ -201,7 +201,7 @@ namespace Nyx {
 				continue;
 
 			UniformType uniformType = Utils::UniformTypeFromGL(type);
-			
+
 			if (strName.find("u_Material") != std::string::npos)
 			{
 				NX_CORE_ASSERT(m_MaterialUniforms.find(strName) == m_MaterialUniforms.end(), "Uniform already exists");
@@ -214,7 +214,7 @@ namespace Nyx {
 				continue;
 			}
 
-			if (strName.find("u_Renderer") != std::string::npos)
+			if (strName.find("r_Renderer") != std::string::npos)
 			{
 				NX_CORE_ASSERT(m_RendererUniforms.find(strName) == m_RendererUniforms.end(), "Uniform already exists");
 
@@ -231,12 +231,13 @@ namespace Nyx {
 
 				m_Resources[strName] = ShaderResource(strName, uniformType, resourceTextureUnit);
 
-				GLint location = glGetUniformLocation(m_ShaderProgram, strName.c_str());
-				NX_CORE_ASSERT(location != -1, "Cannot find Resource");
-			//	glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
-
+				if (strName.find("u_") != std::string::npos) {
+					GLint location = glGetUniformLocation(m_ShaderProgram, strName.c_str());
+					NX_CORE_ASSERT(location != -1, "Cannot find Resource");
+					glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
+					
+				}
 				resourceTextureUnit++;
-
 				continue;
 			}
 
@@ -276,10 +277,11 @@ namespace Nyx {
 		return false;
 	}
 
-	void Shader::SetUniformInt(const std::string& name, int value)
+	uint32_t Shader::SetUniformInt(const std::string& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_ShaderProgram, name.c_str());
 		glUniform1i(location, value);
+		return location;
 	}
 
 	void Shader::SetUniformIntArray(const std::string& name, int* values, uint32_t count)

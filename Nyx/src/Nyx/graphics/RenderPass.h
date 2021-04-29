@@ -12,6 +12,8 @@ namespace Nyx {
 	{
 	public:
 		RenderPass(const RenderPassSpecification& specification);
+	
+	public:
 		const RenderPassSpecification& GetSpecification() const { return m_Specification; }
 
 	private:

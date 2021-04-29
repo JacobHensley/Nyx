@@ -8,9 +8,9 @@ namespace Nyx {
 
 	namespace RenderResourceBindings
 	{
-		const uint32_t BRDFLut = 5;
-		const uint32_t RadianceMap = 6;
-		const uint32_t IrradianceMap = 7;
+		const uint32_t BRDFLut = 0;
+		const uint32_t RadianceMap = 1;
+		const uint32_t IrradianceMap = 2;
 	};
 
 	namespace UniformBuffer {
@@ -65,7 +65,6 @@ namespace Nyx {
 	struct RendererData
 	{
 		Ref<RenderPass> ActiveRenderPass;
-
 		Ref<Camera> ActiveCamera;
 		Ref<EnvironmentMap> ActiveEnvironmentMap;
 
@@ -166,9 +165,9 @@ namespace Nyx {
 				SubMesh& submesh = submeshDC.SubMesh;
 				glm::mat4& transform = submeshDC.Transform;
 
-				if (rendererUniforms.find("u_Renderer.r_Transform") != rendererUniforms.end())
+				if (rendererUniforms.find("r_Renderer.Transform") != rendererUniforms.end())
 				{
-					ShaderUniform transformUniform = rendererUniforms.at("u_Renderer.r_Transform");
+					ShaderUniform transformUniform = rendererUniforms.at("r_Renderer.Transform");
 					shader->SetUniformMat4(transformUniform.Name, transform);
 				}
 
@@ -204,12 +203,12 @@ namespace Nyx {
 		}
 	}
 
-	void Renderer::DrawFullscreenQuad(Ref<Material> material)
+	void Renderer::DrawFullscreenQuad(Ref<Shader> shader, bool depthTesting)
 	{
-		material->Bind();
+		shader->Bind();
 		s_Data.FullscreenQaud->Bind();
 
-		if (material->GetMaterialFlags() & (int)MaterialFlags::DISABLE_DEPTH_TEST)
+		if (!depthTesting)
 			glDisable(GL_DEPTH_TEST);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

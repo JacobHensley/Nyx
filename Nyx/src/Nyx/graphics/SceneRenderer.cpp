@@ -18,13 +18,10 @@ namespace Nyx
         Ref<RenderPass> GeometryPass;
         Ref<RenderPass> CompositePass;
 
-        Ref<Shader> SkyboxShader;
         Ref<Shader> PBRShader;
         Ref<Shader> GlassShader;
         Ref<Shader> CompositeShader;
-        Ref<Shader> CopyShader;
-
-        Ref<Material> EnvironmentMaterial;
+        Ref<Shader> SkyboxShader;
 
 		Ref<EnvironmentMap> SceneEnvironmentMap;
 		Ref<LightEnvironment> SceneLightEnvironment;
@@ -34,14 +31,10 @@ namespace Nyx
 
     void SceneRenderer::Init()
     {
-        s_Data.SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
-        s_Data.PBRShader = CreateRef<Shader>("assets/shaders/DefaultPBR.shader");
+        s_Data.PBRShader = CreateRef<Shader>("assets/shaders/PBR.shader");
         s_Data.GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
-        s_Data.CompositeShader = CreateRef<Shader>("assets/shaders/HDR.shader");
-        s_Data.CopyShader = CreateRef<Shader>("assets/shaders/CopyShader.shader");
-
-        s_Data.EnvironmentMaterial = CreateRef<Material>(s_Data.SkyboxShader);
-        s_Data.EnvironmentMaterial->SetMaterialFlag(MaterialFlags::DISABLE_DEPTH_TEST);
+        s_Data.CompositeShader = CreateRef<Shader>("assets/shaders/Composite.shader");
+        s_Data.SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
 
         {
 			FramebufferSpecification fbSpec;
@@ -89,10 +82,10 @@ namespace Nyx
     void SceneRenderer::GeometryPass()
     {   
         Renderer::BeginRenderPass(s_Data.GeometryPass);
-		Renderer::BeginScene(s_Data.ActiveCamera);
-		Renderer::SetEnvironment(s_Data.SceneEnvironmentMap, s_Data.SceneLightEnvironment);
+        Renderer::BeginScene(s_Data.ActiveCamera);
+        Renderer::SetEnvironment(s_Data.SceneEnvironmentMap, s_Data.SceneLightEnvironment);
 
-      Renderer::DrawFullscreenQuad(s_Data.EnvironmentMaterial);
+        Renderer::DrawFullscreenQuad(s_Data.SkyboxShader, false);
 
         for (RenderCommand command : s_Data.RenderCommands)
         {
@@ -105,15 +98,16 @@ namespace Nyx
 
     void SceneRenderer::CompositePass()
     {
-    //    Renderer::BeginRenderPass(s_Data.CompositePass);
-    //    Renderer::DrawFullscreenQuad(s_Data.EnvironmentMaterial);
-    //    Renderer::EndRenderPass();
-    }
+        Renderer::BeginRenderPass(s_Data.CompositePass);
 
-    void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)
-    {
-        s_Data.GeometryPass->GetSpecification().Framebuffer->Resize(width, height);
-        s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
+        // Bad desgin but not sure of any better approach
+        s_Data.CompositeShader->Bind();
+        s_Data.CompositeShader->SetUniformFloat("u_Material.Exposure", s_Data.ActiveCamera->GetExposure());
+        s_Data.GeometryPass->GetSpecification().Framebuffer->BindColorTexture(0, 0);
+
+        Renderer::DrawFullscreenQuad(s_Data.CompositeShader, false);
+
+        Renderer::EndRenderPass();
     }
 
     void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear = true)
@@ -125,9 +119,22 @@ namespace Nyx
         destination->Unbind();
     }
 
+    void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
+    {
+        NX_CORE_ASSERT(s_Data.ActiveScene, "");
+        s_Data.SceneEnvironmentMap = environmentMap;
+        s_Data.SceneLightEnvironment = lightEnvironment;
+    }
+
+    void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)
+    {
+        s_Data.GeometryPass->GetSpecification().Framebuffer->Resize(width, height);
+        s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
+    }
+
     Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
     {
-        return s_Data.GeometryPass->GetSpecification().Framebuffer;
+        return s_Data.CompositePass->GetSpecification().Framebuffer;
     }
 
     Ref<Shader> Nyx::SceneRenderer::GetPBRShader()
@@ -139,12 +146,5 @@ namespace Nyx
     {
         return s_Data.GlassShader;
     }
-
-	void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
-	{
-        NX_CORE_ASSERT(s_Data.ActiveScene, "");
-        s_Data.SceneEnvironmentMap = environmentMap;
-        s_Data.SceneLightEnvironment = lightEnvironment;
-	}
 
 }

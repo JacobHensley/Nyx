@@ -43,6 +43,11 @@ namespace Nyx {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void FrameBuffer::BindColorTexture(uint slot, uint index)
+	{
+		glBindTextureUnit(slot, m_ColorAttachments[index]);
+	}
+
 	void FrameBuffer::Clear()
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
