@@ -1,38 +1,19 @@
 #include "NXpch.h"
 #include "Camera.h"
-
 #include "Nyx/Input/Input.h"
 #include "Nyx/Input/KeyCodes.h"
-#include "Nyx/Core/Application.h"
-
 #include <imgui.h>
 #include <imgui/ImGuizmo.h>
-
-#include <glfw/glfw3.h>
-#include <glm/gtc/quaternion.hpp>
-
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#define M_PI 3.14159f
+#define PI 3.14159f
 
 namespace Nyx {
 
 	Camera::Camera(const glm::mat4& projectionMatrix)
 		: m_ProjectionMatrix(projectionMatrix)
 	{
-		m_PanSpeed = 0.001f;
-		m_RotationSpeed = 0.001f;
-		m_ZoomSpeed = 0.05f;
-
-		m_Position = { -10, 10, 10 };
-		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
-
-		m_FocalPoint = glm::vec3(0.0f);
-		m_Distance = glm::distance(m_Position, m_FocalPoint);
-
-		m_Yaw = 3.0f * (float)M_PI / 4.0f;
-		m_Pitch = M_PI / 4.0f;
+		Reset();
 	}
 
 	void Camera::Update()
@@ -43,7 +24,7 @@ namespace Nyx {
 			glm::vec2 delta = mouse - m_InitialMousePosition;
 			m_InitialMousePosition = mouse;
 
-			if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE)) 
+			if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
 				MousePan(delta);
 			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
 				MouseRotate(delta);
@@ -54,11 +35,11 @@ namespace Nyx {
 		m_Position = CalculatePosition();
 
 		glm::quat orientation = GetOrientation();
-		m_Rotation = glm::eulerAngles(orientation) * (180.0f / (float)M_PI);
+		m_Rotation = glm::eulerAngles(orientation) * (180.0f / (float)PI);
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 1)) * glm::toMat4(glm::conjugate(orientation)) * glm::translate(glm::mat4(1.0f), -m_Position);
 	}
 
-	void Camera::ResetCamera()
+	void Camera::Reset()
 	{
 		m_PanSpeed = 0.001f;
 		m_RotationSpeed = 0.001f;
@@ -70,8 +51,8 @@ namespace Nyx {
 		m_FocalPoint = glm::vec3(0.0f);
 		m_Distance = glm::distance(m_Position, m_FocalPoint);
 
-		m_Yaw = 3.0f * (float)M_PI / 4.0f;
-		m_Pitch = M_PI / 4.0f;
+		m_Yaw = 3.0f * (float)PI / 4.0f;
+		m_Pitch = PI / 4.0f;
 	}
 
 	void Camera::MousePan(const glm::vec2& delta)

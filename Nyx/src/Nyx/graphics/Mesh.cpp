@@ -227,7 +227,7 @@ namespace Nyx {
 				{
 					material = CreateRef<Material>(SceneRenderer::GetGlassShader());
 					material->SetMaterialSortKey(100);
-					material->Set("u_Alpha", alpha);
+					material->Set("u_Material.u_Alpha", alpha);
 				}
 				else
 				{

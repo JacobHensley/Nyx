@@ -39,7 +39,6 @@ namespace Nyx {
 		Mesh(const std::string& path);
 
 	public:
-
 		bool Reload(); // This function is not implemented as of now
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
