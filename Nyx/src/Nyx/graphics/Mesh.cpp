@@ -221,6 +221,8 @@ namespace Nyx {
 					alpha = aiOpacity;
 				}
 
+				alpha = 0.5f;
+
 				// Create material
 				Ref<Material> material;
 				if (alpha < 1.0f)
