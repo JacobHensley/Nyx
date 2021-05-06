@@ -18,10 +18,9 @@ EditorLayer::EditorLayer()
 
 void EditorLayer::Init()
 {
-	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.01f, 1000.0f));
+	m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 100.0f));
 	defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
 	m_Scene = SceneSerializer::Load("assets/scenes/GlassTest.nyx");
-
 
 	m_Viewport = ::ViewportPanel();
 }

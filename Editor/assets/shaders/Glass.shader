@@ -155,7 +155,7 @@ void main()
 
 	const vec3 Fdielectric = vec3(0.04);
 
-	float alpha = 0.5f;
+	float alpha = 0.3f;
 	float refractiveIndex = 1.5f;
 	float normalScale = 0.1f;
 

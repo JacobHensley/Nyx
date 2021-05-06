@@ -171,7 +171,7 @@ namespace Nyx {
 					{
 						uint32_t strLength = *(uint32_t*)prop->mData;
 						std::string str(prop->mData + 4, strLength);
-
+					
 						if ((std::string)(prop->mKey.data) == "$raw.DiffuseColor|file")
 						{
 							albedoMap = LoadMaterialTexture(str);
@@ -220,8 +220,6 @@ namespace Nyx {
 				{
 					alpha = aiOpacity;
 				}
-
-				alpha = 0.5f;
 
 				// Create material
 				Ref<Material> material;

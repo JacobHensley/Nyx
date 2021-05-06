@@ -17,14 +17,19 @@ namespace Nyx
 
         Ref<RenderPass> GeometryPass;
         Ref<RenderPass> CompositePass;
+        Ref<RenderPass> ShadowPass;
 
         Ref<Shader> PBRShader;
         Ref<Shader> GlassShader;
         Ref<Shader> CompositeShader;
         Ref<Shader> SkyboxShader;
+        Ref<Shader> DepthShader;
 
 		Ref<EnvironmentMap> SceneEnvironmentMap;
 		Ref<LightEnvironment> SceneLightEnvironment;
+
+        Ref<Camera> ShadowCamera;
+        Ref<Material> DepthMaterial;
     };
 
     static struct SceneRendererData s_Data;
@@ -35,7 +40,9 @@ namespace Nyx
         s_Data.GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
         s_Data.CompositeShader = CreateRef<Shader>("assets/shaders/Composite.shader");
         s_Data.SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
+        s_Data.DepthShader = CreateRef<Shader>("assets/shaders/Depth.shader");
 
+        // Geometry Pass
         {
 			FramebufferSpecification fbSpec;
 			fbSpec.Scale = 1.0f;
@@ -46,6 +53,7 @@ namespace Nyx
             s_Data.GeometryPass = CreateRef<RenderPass>(renderPassSpec);
         }
 
+        // Composite Pass
 		{
 			FramebufferSpecification fbSpec;
 			fbSpec.Scale = 1.0f;
@@ -55,6 +63,21 @@ namespace Nyx
 			renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
 			s_Data.CompositePass = CreateRef<RenderPass>(renderPassSpec);
 		}
+
+        // Shadow Pass
+        {
+            FramebufferSpecification fbSpec;
+            fbSpec.Scale = 1.0f;
+            fbSpec.ColorAttachments = { TextureFormat::RGBA };
+            fbSpec.DepthAttachments = { TextureFormat::RGBA };
+            RenderPassSpecification renderPassSpec;
+            renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
+            s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
+        }
+
+        s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -15.0f, 15.0f));
+    //    s_Data.ShadowCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 100.0f));
+        s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -65,7 +88,10 @@ namespace Nyx
 
     void SceneRenderer::End()
     {
+        Renderer::SetEnvironment(s_Data.SceneEnvironmentMap, s_Data.SceneLightEnvironment);
+
         // Render
+        ShadowPass();
         GeometryPass();
         CompositePass();
 
@@ -83,8 +109,7 @@ namespace Nyx
     {   
         Renderer::BeginRenderPass(s_Data.GeometryPass);
         Renderer::BeginScene(s_Data.ActiveCamera);
-        Renderer::SetEnvironment(s_Data.SceneEnvironmentMap, s_Data.SceneLightEnvironment);
-
+        
         Renderer::DrawFullscreenQuad(s_Data.SkyboxShader, false);
 
         for (RenderCommand command : s_Data.RenderCommands)
@@ -94,6 +119,25 @@ namespace Nyx
 
         Renderer::EndScene();
         Renderer::EndRenderPass();
+    }
+
+    void SceneRenderer::ShadowPass()
+    {
+        glm::vec3 lightDirection = s_Data.SceneLightEnvironment->GetDirectionalLight().Direction;
+        s_Data.ShadowCamera->SetViewMatrix(glm::lookAt(lightDirection * glm::vec3(2), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+
+        Renderer::BeginRenderPass(s_Data.ShadowPass);
+        Renderer::BeginScene(s_Data.ShadowCamera);
+
+        for (RenderCommand command : s_Data.RenderCommands)
+        {
+            Renderer::SubmitMesh(command.Mesh, command.Transform, s_Data.DepthMaterial);
+        }
+
+        Renderer::EndScene();
+        Renderer::EndRenderPass();
+
+        Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
     }
 
     void SceneRenderer::CompositePass()

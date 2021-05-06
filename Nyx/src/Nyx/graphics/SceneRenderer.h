@@ -38,6 +38,7 @@ namespace Nyx
 
     private:
         static void GeometryPass();
+        static void ShadowPass();
         static void CompositePass();
 
         static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear);

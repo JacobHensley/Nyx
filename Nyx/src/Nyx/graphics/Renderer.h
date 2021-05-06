@@ -75,6 +75,7 @@ namespace Nyx {
 		static void EndScene();
 
 		static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
+		static void SetShadowMap(const glm::mat4 viewProjection, uint32_t ID);
 
 		static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform, Ref<Material> materialOverride);
 		static void DrawFullscreenQuad(Ref<Shader> shader, bool depthTesting);

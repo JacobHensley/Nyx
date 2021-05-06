@@ -11,16 +11,22 @@ layout(location = 4) in vec2 a_TexCoords;
 // Outputs
 layout(location = 0) out vec3 v_Normal;
 layout(location = 1) out vec3 v_WorldPosition;
-layout(location = 2) out vec2 v_TexCoords;
-layout(location = 3) out mat3 v_WorldNormals;
+layout(location = 2) out vec4 v_LightSpacePosition;
+layout(location = 3) out vec2 v_TexCoords;
+layout(location = 4) out vec3 v_WorldNormals;
 
-// Uniform buffer
+// Uniform buffers
 layout(std140, binding = 0) uniform CameraBuffer
 {
 	mat4 ViewProjection;
 	mat4 InverseVP;
 	vec3 CameraPosition;
 } r_CameraBuffer;
+
+layout(std140, binding = 2) uniform ShadowBuffer
+{
+	mat4 ShadowMapViewProjection;
+} r_ShadowBuffer;
 
 // Renderer uniforms
 struct Renderer
@@ -42,7 +48,10 @@ void main()
 	v_Normal = mat3(r_Renderer.Transform) * a_Normal;
 	v_WorldPosition = vec3(r_Renderer.Transform * vec4(a_Position, 1.0f));
 	v_TexCoords = a_TexCoords;
-	v_WorldNormals = mat3(r_Renderer.Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
+//	v_WorldNormals = mat3(r_Renderer.Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
+	v_WorldNormals = inverse(transpose(mat3(r_Renderer.Transform))) * a_Normal;
+
+	v_LightSpacePosition = r_ShadowBuffer.ShadowMapViewProjection * r_Renderer.Transform * vec4(a_Position, 1.0f);
 }
 
 #Shader Fragment
@@ -52,8 +61,9 @@ void main()
 // Inputs
 layout(location = 0) in vec3 v_Normal;
 layout(location = 1) in vec3 v_WorldPosition;
-layout(location = 2) in vec2 v_TexCoords;
-layout(location = 3) in mat3 v_WorldNormals;
+layout(location = 2) in vec4 v_LightSpacePosition;
+layout(location = 3) in vec2 v_TexCoords;
+layout(location = 4) in vec3 v_WorldNormals;
 
 // Outputs
 layout(location = 0) out vec4 color;
@@ -112,6 +122,7 @@ uniform sampler2D u_NormalMap;
 layout(binding = 0) uniform sampler2D r_BRDFLutTexture;
 layout(binding = 1) uniform samplerCube r_RadianceTexture;
 layout(binding = 2) uniform samplerCube r_IrradianceTexture;
+layout(binding = 3) uniform sampler2D r_ShadowMap;
 
 //--------------------------------------------------------------------------------
 
@@ -135,7 +146,7 @@ vec3 GetNormal(vec2 texCoords, vec3 normal)
 	if (u_Material.UseNormalMap)
 		return normalize(v_WorldNormals * (texture(u_NormalMap, texCoords).rgb * 2.0 - 1.0));
 
-	return normalize(normal);
+	return normalize(v_WorldNormals);
 }
 
 //--------------------------------------------------------------------------------
@@ -239,6 +250,32 @@ vec3 IBL_Contribution(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, fl
 	return kd * diffuseIBL + specularIBL;
 }
 
+float near_plane = 0.1f;
+float far_plane = 100.0f;
+
+float LinearizeDepth(float depth)
+{
+	float z = depth * 2.0 - 1.0; // Back to NDC 
+	return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));
+}
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+	// perform perspective divide
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	// transform to [0,1] range
+	projCoords = projCoords * 0.5 + 0.5;
+	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+	float closestDepth = texture(r_ShadowMap, projCoords.xy).r;
+	// get depth of current fragment from light's perspective
+	float currentDepth = projCoords.z;
+	// check whether current frag pos is in shadow
+	float bias = max(0.05 * (1.0 - dot(v_WorldNormals, r_LightBuffer.DirectionLight.Direction)), 0.005);
+	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+	return shadow;
+}
+
 //--------------------------------------------------------------------------------
 
 void main()
@@ -262,5 +299,8 @@ void main()
 	vec3 pointLight_Contribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 IBL_Contribution = IBL_Contribution(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
+	float shadow = ShadowCalculation(v_LightSpacePosition);
+
 	color = vec4(directionalLight_Contribution + pointLight_Contribution + IBL_Contribution, 1.0f);
+//	color = vec4(vec3(1 - shadow), 1.0f);
 }

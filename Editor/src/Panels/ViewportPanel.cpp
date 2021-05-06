@@ -34,6 +34,7 @@ void ViewportPanel::Draw(Nyx::Ref<Nyx::Camera>& camera)
 	m_Focused = ImGui::IsWindowFocused();
 
 	uint64_t textureID = Nyx::SceneRenderer::GetFinalBuffer()->GetColorAttachments()[0];
+//	uint64_t textureID = Nyx::SceneRenderer::GetFinalBuffer()->GetDepthAttachment();
 	ImGui::Image((void*)textureID, ImVec2(m_Size.x, m_Size.y), ImVec2::ImVec2(0, 1), ImVec2::ImVec2(1, 0));
 
 	if (m_GizmoObject)

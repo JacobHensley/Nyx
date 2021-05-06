@@ -37,7 +37,8 @@ namespace Nyx {
 		void Bind();
 		void Unbind();
 
-		void BindColorTexture(uint slot, uint index);
+		void BindColorTexture(uint32_t slot, uint32_t index);
+		void BindDepthTexture(uint32_t slot);
 
 		void Clear();
 		void Resize(int width, int height);
@@ -45,6 +46,7 @@ namespace Nyx {
 
 		inline uint32_t GetFrameBufferID() const { return m_FrameBufferID; }
 		inline std::vector<uint32_t>& const GetColorAttachments() { return m_ColorAttachments; }
+		inline uint32_t const GetDepthAttachment() const { return m_DepthAttachment; }
 
 		inline uint32_t GetWidth() const { return m_Width;}
 		inline uint32_t GetHeight() const { return m_Height; }

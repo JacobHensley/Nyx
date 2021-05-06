@@ -231,12 +231,13 @@ namespace Nyx {
 
 				m_Resources[strName] = ShaderResource(strName, uniformType, resourceTextureUnit);
 
-				if (strName.find("u_") != std::string::npos) {
+				if (strName.find("u_") != std::string::npos) 
+				{
 					GLint location = glGetUniformLocation(m_ShaderProgram, strName.c_str());
 					NX_CORE_ASSERT(location != -1, "Cannot find Resource");
 					glProgramUniform1i(m_ShaderProgram, location, resourceTextureUnit);
-					
 				}
+
 				resourceTextureUnit++;
 				continue;
 			}

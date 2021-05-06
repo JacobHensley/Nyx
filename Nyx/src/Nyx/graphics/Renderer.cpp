@@ -11,13 +11,14 @@ namespace Nyx {
 		const uint32_t BRDFLut = 0;
 		const uint32_t RadianceMap = 1;
 		const uint32_t IrradianceMap = 2;
+		const uint32_t ShadowMap = 3;
 	};
 
 	namespace UniformBuffer {
 
 		enum UniformBufferBinding
 		{
-			NONE = -1, CAMERA_BUFFER, LIGHT_BUFFER
+			NONE = -1, CAMERA_BUFFER, LIGHT_BUFFER, SHADOW_BUFFER
 		};
 
 		struct CameraBuffer
@@ -32,7 +33,12 @@ namespace Nyx {
 			DirectionalLight DirectionalLight;
 			PointLight PointLight;
 		};
-	}
+
+		struct ShadowBuffer
+		{
+			glm::mat4 ShadowMapViewProjection;
+		};
+	} 
 
 	struct MaterialRef
 	{
@@ -72,10 +78,13 @@ namespace Nyx {
 		Ref<FullscreenQaud> FullscreenQaud;
 		
 		UniformBuffer::CameraBuffer CameraBuffer;
-		uint32_t CameraBufferID = 0;
+		uint32_t CameraBufferID = -1;
 
 		UniformBuffer::LightBuffer LightBuffer;
-		uint32_t LightBufferID = 1;
+		uint32_t LightBufferID = -1;
+
+		UniformBuffer::ShadowBuffer ShadowBuffer;
+		uint32_t ShadowBufferID = -1;
 
 		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList;
 		std::unordered_map<std::string, std::function<void(const ShaderResource&)>> RendereResourceFunctions;
@@ -87,6 +96,7 @@ namespace Nyx {
 	{
 		GenerateUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer));
 		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
+		GenerateUniformBuffer(s_Data.ShadowBufferID, UniformBuffer::UniformBufferBinding::SHADOW_BUFFER, sizeof(s_Data.ShadowBuffer));
 
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
@@ -136,6 +146,14 @@ namespace Nyx {
 		s_Data.LightBuffer.DirectionalLight = lightEnvironment->GetDirectionalLight();
 		s_Data.LightBuffer.PointLight = lightEnvironment->GetPointLight();
 		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
+	}
+
+	void Renderer::SetShadowMap(const glm::mat4 viewProjection, uint32_t ID)
+	{
+		glBindTextureUnit(RenderResourceBindings::ShadowMap, ID);
+
+		s_Data.ShadowBuffer.ShadowMapViewProjection = viewProjection;
+		UploadUniformBuffer(s_Data.ShadowBufferID, UniformBuffer::UniformBufferBinding::SHADOW_BUFFER, sizeof(s_Data.ShadowBuffer), &s_Data.ShadowBuffer);
 	}
 
 	void Renderer::FlushDrawList()

@@ -23,6 +23,7 @@ namespace Nyx {
 		inline void SetExposure(float exposure) { m_Exposure = exposure; }
 
 		inline void SetProjectionMatrix(const glm::mat4& projectionMatrix) { m_ProjectionMatrix = projectionMatrix; }
+		inline void SetViewMatrix(const glm::mat4 viewMatrix) { m_ViewMatrix = viewMatrix; }
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
