@@ -46,7 +46,5 @@ namespace Nyx {
 	void Scene::Remove(SceneObject& sceneObject)
 	{
 		m_Registry.destroy(sceneObject);
-		if (m_SelectedObject == sceneObject)
-			m_SelectedObject = {};
 	}
 }

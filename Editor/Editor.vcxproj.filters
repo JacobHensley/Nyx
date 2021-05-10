@@ -7,27 +7,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorLayer.h" />
-    <ClInclude Include="src\Panels\ObjectPropertiesPanel.h">
-      <Filter>Panels</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Panels\SceneHierarchyPanel.h">
-      <Filter>Panels</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Panels\ViewportPanel.h">
-      <Filter>Panels</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Panels\ViewportPanel.h" />
+    <ClInclude Include="src\Panels\SceneHierarchyPanel.h" />
+    <ClInclude Include="src\Panels\ObjectPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Panels\ObjectPropertiesPanel.cpp">
-      <Filter>Panels</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp">
-      <Filter>Panels</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Panels\ViewportPanel.cpp">
-      <Filter>Panels</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Panels\ViewportPanel.cpp" />
+    <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp" />
+    <ClCompile Include="src\Panels\ObjectPanel.cpp" />
   </ItemGroup>
 </Project>

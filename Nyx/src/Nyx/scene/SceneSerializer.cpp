@@ -229,12 +229,11 @@ namespace Nyx
 
 		}
 
-		//Load as one map
 		uint64_t radianceMapUUID = nodes[1]["RadianceMap UUID"].as<uint64_t>();
 		uint64_t irradianceMapUUID = nodes[1]["IrradianceMap UUID"].as<uint64_t>();
 		Ref<EnvironmentMap> environmentMap = CreateRef<EnvironmentMap>(UUID(radianceMapUUID), UUID(irradianceMapUUID));
 
-		//Load lights
+		//TODO: Load lights
 		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
 
 		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));

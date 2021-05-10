@@ -103,14 +103,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorLayer.h" />
-    <ClInclude Include="src\Panels\ObjectPropertiesPanel.h" />
+    <ClInclude Include="src\Panels\ObjectPanel.h" />
     <ClInclude Include="src\Panels\SceneHierarchyPanel.h" />
     <ClInclude Include="src\Panels\ViewportPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EditorLayer.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Panels\ObjectPropertiesPanel.cpp" />
+    <ClCompile Include="src\Panels\ObjectPanel.cpp" />
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\Panels\ViewportPanel.cpp" />
   </ItemGroup>

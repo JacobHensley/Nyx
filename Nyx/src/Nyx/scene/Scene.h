@@ -34,9 +34,6 @@ namespace Nyx {
 
 		inline entt::registry& GetRegistry() { return m_Registry; }
 
-		inline SceneObject GetSelectedObject() { return m_SelectedObject; };
-		inline void SetSelectedObject(entt::entity object) { m_SelectedObject = SceneObject(object, this); };
-
 		inline const std::string& GetPath() { return m_Path; }
 		inline void SetPath(const std::string& path) { m_Path = path; }
 
@@ -51,10 +48,7 @@ namespace Nyx {
 
 		Ref<EnvironmentMap> m_EnvironmentMap;
 		Ref<LightEnvironment> m_LightEnvironment;
-		
-		SceneObject m_SelectedObject;
 
-		friend class ViewportPanel;
 		friend class SceneObject;
 	};
 }

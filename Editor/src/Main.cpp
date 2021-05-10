@@ -1,5 +1,6 @@
-#include "Nyx/Core/Application.h"
 #include "EditorLayer.h"
+
+using namespace Nyx;
 
 int main()
 {
