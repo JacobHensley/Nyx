@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NX_PLATFORM_WINDOWS;NX_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;..\Nyx\src;..\Nyx\vendor;..\Nyx\vendor\spdlog\include;..\Nyx\vendor\glm;..\Nyx\vendor\GLFW\include;..\Nyx\vendor\assimp\include;..\Nyx\vendor\glad\include;..\Nyx\vendor\imgui;..\Nyx\vendor\shaderc\libshaderc\include;..\Nyx\vendor\yaml-cpp\include;..\Nyx\vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>

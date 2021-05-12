@@ -3,14 +3,25 @@
 
 namespace Nyx
 {
+	Material::Material(const std::string& name, Ref<Shader> shader)
+		:	m_Name(name), m_Shader(shader)
+	{
+		Init();
+	}
+
 	Material::Material(Ref<Shader> shader)
-		: m_Shader(shader)
+		: m_Name("Untitled"), m_Shader(shader)
+	{
+		Init();
+	}
+
+	void Material::Init()
 	{
 		m_UniformDataBuffer = (byte*)malloc(m_Shader->GetMaterialUniformBufferSize());
 		memset(m_UniformDataBuffer, 0, m_Shader->GetMaterialUniformBufferSize());
 
-		m_Textures.resize(32);
-		m_TextureCubes.resize(32);
+		m_Textures.reserve(32);
+		m_TextureCubes.reserve(32);
 	}
 
 	void Material::Bind()

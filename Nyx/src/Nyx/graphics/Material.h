@@ -20,11 +20,25 @@ namespace Nyx {
     class Material : public Asset
     {
     public:
+        Material(const std::string& name, Ref<Shader> shader);
         Material(Ref<Shader> shader);
 
         void Bind();
         void Unbind();
         bool Reload(); // This function is not implemented as of now
+
+        template<typename T>
+        T& Get(const std::string& name)
+        {
+            const std::unordered_map<std::string, ShaderUniform>& uniforms = m_Shader->GetMaterialUniforms();
+            if (uniforms.find(name) != uniforms.end())
+            {
+                ShaderUniform uniform = uniforms.at(name);
+                return *(T*)&m_UniformDataBuffer[uniform.Offset];
+            }
+
+            NX_CORE_WARN("Could not find uniform {0} in buffer", name);
+        }
 
         template<typename T>
         void Set(const std::string& name, const T& data)
@@ -58,7 +72,10 @@ namespace Nyx {
         void SetTexture(const std::string& name, Ref<Texture>& texture);
         void SetTexture(const std::string& name, Ref<TextureCube>& texture);
 
+        inline const std::vector<Ref<Texture>>& GetTextures() { return m_Textures; }
+
         inline Ref<Shader> GetShader() const { return m_Shader; }
+        inline const std::string& GetName() const { return m_Name; }
 
         inline int GetMaterialFlags() const { return m_MaterialFlags; }
         void SetMaterialFlags(int flags) { m_MaterialFlags = flags; }
@@ -72,7 +89,7 @@ namespace Nyx {
 
         uint64_t GetHash() const
         {
-            m_Shader->GetHash() + m_MaterialSortKey;
+            return m_Shader->GetHash() + m_MaterialSortKey;
         }
 
         bool operator==(const Material& other) const
@@ -94,17 +111,20 @@ namespace Nyx {
         }
 
     private:
+        void Init();
         void BindTextures();
         void UploadUniforms();
 
     private:
         Ref<Shader> m_Shader;
+        const std::string m_Name;
 
         int m_MaterialFlags = 0;
         uint32_t m_MaterialSortKey = 0;
         bool m_IsOpaque = false;
 
         byte* m_UniformDataBuffer;
+       
         std::vector<Ref<Texture>> m_Textures;
         std::vector<Ref<TextureCube>> m_TextureCubes;
     };

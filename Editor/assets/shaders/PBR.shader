@@ -300,5 +300,5 @@ void main()
 	float shadow = ShadowCalculation(v_LightSpacePosition);
 
 	color = vec4(directionalLight_Contribution + pointLight_Contribution + IBL_Contribution, 1.0f);
-	color = vec4(vec3(1 - shadow), 1.0f);
+//	color = vec4(vec3(1 - shadow), 1.0f);
 }

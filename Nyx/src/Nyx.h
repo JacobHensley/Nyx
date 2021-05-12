@@ -2,6 +2,9 @@
 
 /* Nyx Header File */
 
+// Utilities
+#include "Nyx/Utilities/Utilities.h"
+
 // Scene
 #include "Nyx/scene/Components.h"
 #include "Nyx/scene/Scene.h"

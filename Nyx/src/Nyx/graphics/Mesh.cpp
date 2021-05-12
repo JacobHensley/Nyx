@@ -225,13 +225,13 @@ namespace Nyx {
 				Ref<Material> material;
 				if (alpha < 1.0f)
 				{
-					material = CreateRef<Material>(SceneRenderer::GetGlassShader());
+					material = CreateRef<Material>(aiMaterialName.C_Str(), SceneRenderer::GetGlassShader());
 					material->SetMaterialSortKey(100);
 					material->Set("u_Material.u_Alpha", alpha);
 				}
 				else
 				{
-					material = CreateRef<Material>(SceneRenderer::GetPBRShader());
+					material = CreateRef<Material>(aiMaterialName.C_Str(), SceneRenderer::GetPBRShader());
 				}
 
 				Ref<Texture> defaultTexture = CreateRef<Texture>(1, 1);
@@ -330,4 +330,5 @@ namespace Nyx {
 	{
 		return false;
 	}
+
 }
