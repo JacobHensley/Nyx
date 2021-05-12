@@ -31,7 +31,8 @@ namespace Nyx {
 		RGBA16F,
 		RGBA32F,
 		LUMINANCE,
-		LUMINANCE_ALPHA
+		LUMINANCE_ALPHA,
+		DEPTH32F
 	};
 
 	struct TextureParameters

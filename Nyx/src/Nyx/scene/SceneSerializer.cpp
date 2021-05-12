@@ -104,6 +104,7 @@ namespace Nyx
 		auto assetPaths = AssetManager::GetAssetPaths();
 		auto AssetUUIDs = AssetManager::GetAssets();
 
+		// Assets
 		for (auto const& [uuid, asset] : AssetUUIDs)
 		{
 			out << YAML::BeginMap; // Asset
@@ -129,8 +130,9 @@ namespace Nyx
 		out << YAML::Key << "RadianceMap UUID" << YAML::Value << scene->GetEnvironmentMap()->radianceMap.GetUUID();
 		out << YAML::Key << "IrradianceMap UUID" << YAML::Value << scene->GetEnvironmentMap()->irradianceMap.GetUUID();
 
-		//lights
+		//TODO: lights
 
+		// Objects
 		out << YAML::Key << "Objects";
 		out << YAML::Value;
 		out << YAML::BeginSeq; // Object List
@@ -236,7 +238,7 @@ namespace Nyx
 		//TODO: Load lights
 		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
 
-		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, -0.5f, -0.75f));
+		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.5f, -0.75f));
 		lightEnvironment->SetDirectionalLight(directionalLight);
 		PointLight pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
 		lightEnvironment->SetPointLight(pointLight);

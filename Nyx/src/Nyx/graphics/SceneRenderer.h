@@ -29,6 +29,8 @@ namespace Nyx
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
         
+        static void OnImGuiRender();
+
         static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
 
@@ -37,8 +39,8 @@ namespace Nyx
         static Ref<Shader> GetGlassShader();
 
     private:
-        static void GeometryPass();
         static void ShadowPass();
+        static void GeometryPass();
         static void CompositePass();
 
         static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear);

@@ -111,6 +111,8 @@ struct Material
 };
 
 layout(location = 1) uniform Material u_Material;
+layout(location = 10) uniform float u_MaxShadowDistance;
+layout(location = 11) uniform float u_ShadowFade;
 
 // Material textures
 uniform sampler2D u_AlbedoMap;
@@ -191,7 +193,7 @@ float gaSchlickGGX(float cosLi, float NdotV, float roughness)
 
 vec3 DirectionalLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
-	vec3 Li = -r_LightBuffer.DirectionLight.Direction;
+	vec3 Li = r_LightBuffer.DirectionLight.Direction;
 	vec3 Lradiance = r_LightBuffer.DirectionLight.Radiance;
 	vec3 Lh = normalize(Li + V);
 
@@ -250,28 +252,17 @@ vec3 IBL_Contribution(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, fl
 	return kd * diffuseIBL + specularIBL;
 }
 
-float near_plane = 0.1f;
-float far_plane = 100.0f;
-
-float LinearizeDepth(float depth)
+float ShadowCalculation(vec3 shadowCoords, float shadowFade)
 {
-	float z = depth * 2.0 - 1.0; // Back to NDC 
-	return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));
-}
-
-float ShadowCalculation(vec4 fragPosLightSpace)
-{
-	// perform perspective divide
-	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-	float closestDepth = texture(r_ShadowMap, projCoords.xy * 0.5 + 0.5).r;
+	float closestDepth = texture(r_ShadowMap, shadowCoords.xy).r;
 	// get depth of current fragment from light's perspective
-	float currentDepth = projCoords.z;
+	float currentDepth = shadowCoords.z;
 	// check whether current frag pos is in shadow
-	float bias = max(0.05 * (1.0 - dot(v_WorldNormals, r_LightBuffer.DirectionLight.Direction)), 0.005);
-	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+	float bias = max(0.002 * (1.0 - dot(v_WorldNormals, r_LightBuffer.DirectionLight.Direction)), 0.002);
+	float shadow = step(closestDepth + bias, currentDepth);
 
-	return shadow;
+	return shadow * shadowFade;
 }
 
 //--------------------------------------------------------------------------------
@@ -293,12 +284,18 @@ void main()
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
+	// Calulate light contributions
 	vec3 directionalLight_Contribution = DirectionalLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 pointLight_Contribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 IBL_Contribution = IBL_Contribution(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
-	float shadow = ShadowCalculation(v_LightSpacePosition);
+	// Calulate shadow data
+	vec3 shadowCoords = v_LightSpacePosition.xyz / v_LightSpacePosition.w;
+	shadowCoords = shadowCoords * 0.5 + 0.5;
+	float distance = length(r_CameraBuffer.CameraPosition - v_WorldPosition);
+	float shadowFade = 1.0f - smoothstep(u_MaxShadowDistance - u_ShadowFade, u_MaxShadowDistance, distance);
 
-	color = vec4(directionalLight_Contribution + pointLight_Contribution + IBL_Contribution, 1.0f);
-//	color = vec4(vec3(1 - shadow), 1.0f);
+	float shadow = 1.0f - ShadowCalculation(shadowCoords, shadowFade);
+	
+	color = vec4(directionalLight_Contribution * shadow + IBL_Contribution, 1.0f);
 }

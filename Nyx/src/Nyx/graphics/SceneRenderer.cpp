@@ -5,6 +5,7 @@
 #include "Nyx/graphics/RenderPass.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
+#include <imgui/imgui.h>
 
 namespace Nyx
 {
@@ -30,6 +31,16 @@ namespace Nyx
 
         Ref<Camera> ShadowCamera;
         Ref<Material> DepthMaterial;
+
+        struct ShadowSettings
+        {
+            float Size = 16.0f;
+            float NearClip = -15.0f;
+            float FarClip = 15.0f;
+
+            float MaxShadowDistance = 20.0f;
+            float ShadowFade = 1.0f;
+        } ShadowSetting;
     };
 
     static struct SceneRendererData s_Data;
@@ -68,15 +79,16 @@ namespace Nyx
         {
             FramebufferSpecification fbSpec;
             fbSpec.Scale = 1.0f;
-            fbSpec.ColorAttachments = { TextureFormat::RGBA };
-            fbSpec.DepthAttachments = { TextureFormat::RGBA };
+            fbSpec.Width = 4096;
+            fbSpec.Height = 4096;
+            fbSpec.DepthAttachments = { TextureFormat::DEPTH32F };
             RenderPassSpecification renderPassSpec;
             renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
             s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
         }
 
-        s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -15.0f, 15.0f));
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
+        s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -104,26 +116,12 @@ namespace Nyx
         s_Data.RenderCommands.push_back(RenderCommand(mesh, transform));
     }
 
-    void SceneRenderer::GeometryPass()
-    {   
-        Renderer::BeginRenderPass(s_Data.GeometryPass);
-        Renderer::BeginScene(s_Data.ActiveCamera);
-        
-        Renderer::DrawFullscreenQuad(s_Data.SkyboxShader, false);
-
-        for (RenderCommand command : s_Data.RenderCommands)
-        {
-            Renderer::SubmitMesh(command.Mesh, command.Transform, command.MaterialOverride);
-        }
-
-        Renderer::EndScene();
-        Renderer::EndRenderPass();
-    }
-
     void SceneRenderer::ShadowPass()
     {
+        s_Data.ShadowCamera->SetProjectionMatrix(glm::ortho(-s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, -s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, s_Data.ShadowSetting.NearClip, s_Data.ShadowSetting.FarClip));
+
         glm::vec3 lightDirection = s_Data.SceneLightEnvironment->GetDirectionalLight().Direction;
-        s_Data.ShadowCamera->SetViewMatrix(glm::lookAt(lightDirection * glm::vec3(2), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+        s_Data.ShadowCamera->SetViewMatrix(glm::lookAt(lightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
         Renderer::BeginRenderPass(s_Data.ShadowPass);
         Renderer::BeginScene(s_Data.ShadowCamera);
@@ -137,6 +135,25 @@ namespace Nyx
         Renderer::EndRenderPass();
 
         Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
+    }
+
+    void SceneRenderer::GeometryPass()
+    {
+        glProgramUniform1f(s_Data.PBRShader->GetShaderProgram(), 10, s_Data.ShadowSetting.MaxShadowDistance);
+        glProgramUniform1f(s_Data.PBRShader->GetShaderProgram(), 11, s_Data.ShadowSetting.ShadowFade);
+
+        Renderer::BeginRenderPass(s_Data.GeometryPass);
+        Renderer::BeginScene(s_Data.ActiveCamera);
+
+        Renderer::DrawFullscreenQuad(s_Data.SkyboxShader, false);
+
+        for (RenderCommand command : s_Data.RenderCommands)
+        {
+            Renderer::SubmitMesh(command.Mesh, command.Transform, command.MaterialOverride);
+        }
+
+        Renderer::EndScene();
+        Renderer::EndRenderPass();
     }
 
     void SceneRenderer::CompositePass()
@@ -153,6 +170,22 @@ namespace Nyx
         Renderer::EndRenderPass();
     }
 
+    void SceneRenderer::OnImGuiRender()
+    {
+        ImGui::Begin("Scene Renderer");
+
+        ImGui::DragFloat("Size", &s_Data.ShadowSetting.Size);
+        ImGui::DragFloat("Near Clip", &s_Data.ShadowSetting.NearClip);
+        ImGui::DragFloat("Far Clip", &s_Data.ShadowSetting.FarClip);
+        ImGui::DragFloat("Max Shadow Distance", &s_Data.ShadowSetting.MaxShadowDistance);
+        ImGui::DragFloat("Shadow Fade", &s_Data.ShadowSetting.ShadowFade);
+
+        auto size = ImGui::GetContentRegionAvail();
+        ImGui::Image((ImTextureID)s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
+
+        ImGui::End();
+    }
+     
     void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear = true)
     {
         destination->Bind();
