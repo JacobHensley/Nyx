@@ -46,7 +46,15 @@ namespace Nyx {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-
+		if (e.GetEventType() == KeyPressed)
+		{
+			if (((KeyPressedEvent&)e).GetKeycode() == NX_KEY_G)
+				 m_ViewportPanel.SetGizmoMode(ImGuizmo::TRANSLATE);
+			if (((KeyPressedEvent&)e).GetKeycode() == NX_KEY_R)
+				 m_ViewportPanel.SetGizmoMode(ImGuizmo::ROTATE);
+			if (((KeyPressedEvent&)e).GetKeycode() == NX_KEY_S)
+				 m_ViewportPanel.SetGizmoMode(ImGuizmo::SCALE);
+		}		
 	}
 
 }

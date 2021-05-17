@@ -7,7 +7,7 @@ Assets:
     Path: assets\textures\Canyon_Radiance.png
   - UUID: 12756129269548589263
     Asset Type: Mesh
-    Path: assets\models\Sponza\Sponza.obj
+    Path: assets\models\backpack\Backpack.fbx
 ---
 RadianceMap UUID: 8195323430844478351
 IrradianceMap UUID: 11423109414790551001
@@ -20,4 +20,4 @@ Objects:
       Scale: [1, 1, 1]
     MeshComponent:
       UUID: 12756129269548589263
-      Path: assets\models\Sponza\Sponza.obj
+      Path: assets\models\backpack\Backpack.fbx

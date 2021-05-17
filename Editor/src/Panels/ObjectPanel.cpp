@@ -100,6 +100,8 @@ namespace Nyx {
 				// Material viewer
 				if (selectedIndex != -1)
 				{
+					ImGui::Text("%d", materials[selectedIndex]->HashBuffer());
+
 					ImGui::Text(materials[selectedIndex]->GetShader()->GetPath().c_str());
 
 					// Display all textures in material
