@@ -42,7 +42,7 @@ namespace Nyx {
 		TextureWrap wrap;
 		bool generateMips = false;
 
-		TextureParameters(TextureFormat format = TextureFormat::RGBA, TextureFilter filter = TextureFilter::LINEAR_MIPMAP, TextureWrap wrap = TextureWrap::CLAMP_TO_EDGE)
+		TextureParameters(TextureFormat format = TextureFormat::RGBA, TextureFilter filter = TextureFilter::LINEAR_MIPMAP, TextureWrap wrap = TextureWrap::REPEAT)
 			: format(format), filter(filter), wrap(wrap)
 		{
 		}
