@@ -38,7 +38,7 @@ namespace Nyx
             float NearClip = -15.0f;
             float FarClip = 15.0f;
 
-            float MaxShadowDistance = 20.0f;
+            float MaxShadowDistance = 200.0f;
             float ShadowFade = 1.0f;
         } ShadowSetting;
     };

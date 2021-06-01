@@ -43,6 +43,7 @@ namespace Nyx {
 
 		Ref<IndexBuffer> GetIndexBuffer() { return m_IndexBuffer; }
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; }
+		const std::vector<Triangle>& GetTriangles() { return m_Triangles; }
 
 		std::vector<SubMesh>& GetSubMeshs() { return m_SubMeshes; }
 		const std::vector<Ref<Material>>& GetMaterials() const { return m_Materials; }
@@ -53,7 +54,7 @@ namespace Nyx {
 		void LoadData(const aiScene* scene);
 		void LoadMaterials(const aiScene* scene);
 		Ref<Texture> LoadMaterialTexture(const std::string& path);
-		void CalculateNodeTransforms(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform);
+		void CalculateNodeTransforms(aiNode* node, const aiScene* scene, glm::mat4 parentTransform);
 
 	private:
 		std::string m_Path;

@@ -44,7 +44,7 @@ namespace Nyx {
 
 		LoadData(scene);
 		LoadMaterials(scene);
-		CalculateNodeTransforms(scene->mRootNode, scene, scene->mRootNode->mTransformation);
+		CalculateNodeTransforms(scene->mRootNode, scene, Utils::aiMatrix4x4ToGlm(scene->mRootNode->mTransformation));
 
 		m_VertexBuffer = CreateRef<VertexBuffer>(m_Vertices.data(), int(sizeof(Vertex) * m_Vertices.size()));
 		m_IndexBuffer = CreateRef<IndexBuffer>(m_Indices.data(), (int)m_Indices.size());
@@ -310,14 +310,15 @@ namespace Nyx {
 		return AssetManager::Get<Texture>(textureHandle);
 	}
 
-	void Mesh::CalculateNodeTransforms(aiNode* node, const aiScene* scene, aiMatrix4x4 parentTransform)
+	void Mesh::CalculateNodeTransforms(aiNode* node, const aiScene* scene, glm::mat4 parentTransform)
 	{
-		aiMatrix4x4 transform = parentTransform * node->mTransformation;
+		glm::mat4 transform = parentTransform * Utils::aiMatrix4x4ToGlm(node->mTransformation);
 
 		for (uint i = 0; i < node->mNumMeshes; i++)
 		{
-			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			m_SubMeshes[i].Transform = Utils::aiMatrix4x4ToGlm(transform);
+			int meshIndex = node->mMeshes[i];
+			aiMesh* mesh = scene->mMeshes[meshIndex];
+			m_SubMeshes[meshIndex].Transform = transform;
 		}
 
 		for (uint i = 0; i < node->mNumChildren; i++)

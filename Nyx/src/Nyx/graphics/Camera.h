@@ -28,6 +28,8 @@ namespace Nyx {
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
 
+		inline bool IsMoving() const { return m_Moving; }
+
 	private:
 		void MousePan(const glm::vec2& delta);
 		void MouseRotate(const glm::vec2& delta);
@@ -55,6 +57,8 @@ namespace Nyx {
 
 		float m_Exposure = 1.0f;
 		bool m_ExposureActive = false;
+
+		bool m_Moving = false;
 	};
 
 }

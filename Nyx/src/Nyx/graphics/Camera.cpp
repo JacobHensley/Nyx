@@ -23,13 +23,18 @@ namespace Nyx {
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = mouse - m_InitialMousePosition;
 			m_InitialMousePosition = mouse;
-
+			m_Moving = true;
+			
 			if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
 				MousePan(delta);
 			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
 				MouseRotate(delta);
 			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_RIGHT))
 				MouseZoom(delta.y);
+		}
+		else
+		{
+			m_Moving = false;
 		}
 
 		m_Position = CalculatePosition();

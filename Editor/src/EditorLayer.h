@@ -20,6 +20,9 @@ namespace Nyx {
 
 		void OnEvent(Event& e);
 
+		Ray CastCameraRay();
+		SceneObject PickObject(Ray& ray);
+
 	private:
 		Ref<Scene> m_Scene;
 		Ref<Camera> m_EditorCamera;

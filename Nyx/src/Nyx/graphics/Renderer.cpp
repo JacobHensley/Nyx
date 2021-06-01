@@ -86,7 +86,9 @@ namespace Nyx {
 		UniformBuffer::ShadowBuffer ShadowBuffer;
 		uint32_t ShadowBufferID = -1;
 
-		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList;
+		//Bake light
+
+		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList; // Map::<sortkey, Map::<Shader, Map::<Material, drawlist>>>
 		std::unordered_map<std::string, std::function<void(const ShaderResource&)>> RendereResourceFunctions;
 	};
 
@@ -181,12 +183,12 @@ namespace Nyx {
 			for (auto& submeshDC : meshList)
 			{
 				SubMesh& submesh = submeshDC.SubMesh;
-				glm::mat4& transform = submeshDC.Transform;
+				glm::mat4& transform = submeshDC.Transform; // Entity transform
 
 				if (rendererUniforms.find("r_Renderer.Transform") != rendererUniforms.end())
 				{
 					ShaderUniform transformUniform = rendererUniforms.at("r_Renderer.Transform");
-					shader->SetUniformMat4(transformUniform.Name, transform);
+					shader->SetUniformMat4(transformUniform.Name, transform * submesh.Transform);
 				}
 
 				submeshDC.MeshVA->Bind();
@@ -217,7 +219,7 @@ namespace Nyx {
 				material = materials[subMesh.MaterialIndex];
 			}
 
-			s_Data.DrawList[material].push_back({ subMesh, transform * subMesh.Transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
+			s_Data.DrawList[material].push_back({ subMesh, transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
 		}
 	}
 
