@@ -14,7 +14,7 @@ namespace Nyx {
 	public:
 		void Render(Ref<Camera> camera, SceneObject selectedObject);
 
-		const glm::vec2& GetMouseNDC();
+		glm::vec2 GetMouseNDC();
 
 		const glm::vec2& GetSize() const { return m_Size; }
 		const glm::vec2& GetPosition() const { return m_Position; }

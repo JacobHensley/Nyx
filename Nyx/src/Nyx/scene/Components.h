@@ -1,6 +1,7 @@
 #pragma once
 #include "Nyx/Asset/AssetManager.h"
 #include "Nyx/Graphics/Material.h"
+#include "Nyx/graphics/LightEnvironment.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
@@ -68,9 +69,27 @@ namespace Nyx {
 		UUID GetUUID() { return Material.GetUUID(); }
 	};
 
-	struct SelectedComponent
+	struct DirectionalLightComponent
 	{
-		SelectedComponent() = default;
-		SelectedComponent(const SelectedComponent&) = default;
+		Ref<DirectionalLight> Light;
+
+		DirectionalLightComponent() = default;
+		DirectionalLightComponent(const DirectionalLightComponent&) = default;
+		DirectionalLightComponent(Ref<DirectionalLight> light)
+			: Light(light)
+		{
+		}
+	};
+
+	struct PointLightComponent
+	{
+		Ref<PointLight> Light;
+
+		PointLightComponent() = default;
+		PointLightComponent(const PointLightComponent&) = default;
+		PointLightComponent(Ref<PointLight> light)
+			: Light(light)
+		{
+		}
 	};
 }

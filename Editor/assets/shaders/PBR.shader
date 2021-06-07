@@ -73,6 +73,7 @@ struct DirectionalLight
 {
 	vec3 Radiance;
 	vec3 Direction;
+	bool Active;
 };
 
 struct PointLight
@@ -80,6 +81,7 @@ struct PointLight
 	vec3 Position;
 	vec3 Radiance;
 	float Intensity;
+	bool Active;
 };
 
 // Uniform Buffers
@@ -93,7 +95,7 @@ layout(std140, binding = 0) uniform CameraBuffer
 layout(std140, binding = 1) uniform LightBuffer
 {
 	DirectionalLight DirectionLight;
-	PointLight PLight;
+	PointLight PointLights[4];
 } r_LightBuffer;
 
 // Constants
@@ -214,26 +216,35 @@ vec3 DirectionalLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R
 
 vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
-	vec3 Li = normalize(r_LightBuffer.PLight.Position - v_WorldPosition);
-	vec3 Lh = normalize(Li + V);
+	vec3 result;
+	for (int i = 0; i < 4; i++)
+	{
+		if (r_LightBuffer.PointLights[i].Active)
+		{
+			vec3 Li = normalize(r_LightBuffer.PointLights[i].Position - v_WorldPosition);
+			vec3 Lh = normalize(Li + V);
 
-	float distance = length(r_LightBuffer.PLight.Position - v_WorldPosition);
-	float attenuation = 1.0 / (distance * distance);
-	vec3 Lradiance = r_LightBuffer.PLight.Radiance * r_LightBuffer.PLight.Intensity * attenuation;
+			float distance = length(r_LightBuffer.PointLights[i].Position - v_WorldPosition);
+			float attenuation = 1.0 / (distance * distance);
+			//	vec3 Lradiance = r_LightBuffer.PLight.Radiance * r_LightBuffer.PLight.Intensity * attenuation; // TODO: Fix Intensity
+			vec3 Lradiance = r_LightBuffer.PointLights[i].Radiance * attenuation;
 
-	float cosLi = max(0.0, dot(N, Li));
-	float cosLh = max(0.0, dot(N, Lh));
+			float cosLi = max(0.0, dot(N, Li));
+			float cosLh = max(0.0, dot(N, Lh));
 
-	vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, V)));
-	float D = ndfGGX(cosLh, R);
-	float G = gaSchlickGGX(cosLi, NdotV, R);
+			vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, V)));
+			float D = ndfGGX(cosLh, R);
+			float G = gaSchlickGGX(cosLi, NdotV, R);
 
-	vec3 kd = (1.0 - F) * (1.0 - M);
-	vec3 diffuseBRDF = kd * albedo;
+			vec3 kd = (1.0 - F) * (1.0 - M);
+			vec3 diffuseBRDF = kd * albedo;
 
-	vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * NdotV);
+			vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * NdotV);
+			result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+		}
+	}
 
-	return (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+	return result;
 }
 
 vec3 IBL_Contribution(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, float NdotV, vec3 F0)
@@ -269,6 +280,7 @@ float ShadowCalculation(vec3 shadowCoords, float shadowFade)
 
 void main()
 {
+	// Get PBR values (maps or constants)
 	vec3 albedo = GetAlbedo(v_TexCoords);
 	vec3 normal = GetNormal(v_TexCoords, v_Normal);
 	float metalness = GetMetalness(v_TexCoords);
@@ -285,17 +297,24 @@ void main()
 	vec3 F0 = mix(Fdielectric, albedo, metalness);
 
 	// Calulate light contributions
-	vec3 directionalLight_Contribution = DirectionalLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 pointLight_Contribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 IBL_Contribution = IBL_Contribution(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
-	// Calulate shadow data
-	vec3 shadowCoords = v_LightSpacePosition.xyz / v_LightSpacePosition.w;
-	shadowCoords = shadowCoords * 0.5 + 0.5;
-	float distance = length(r_CameraBuffer.CameraPosition - v_WorldPosition);
-	float shadowFade = 1.0f - smoothstep(u_MaxShadowDistance - u_ShadowFade, u_MaxShadowDistance, distance);
+	// If the direction light is active calulate it's contribution and the shadow map data
+	vec3 directionalLight_Contribution = vec3(0.0f);
+	float shadow = 0.0f;
+	if (r_LightBuffer.DirectionLight.Active)
+	{
+		directionalLight_Contribution = DirectionalLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 
-	float shadow = 1.0f - ShadowCalculation(shadowCoords, shadowFade);
-	
-	color = vec4(directionalLight_Contribution * shadow + IBL_Contribution, 1.0f);
+		// Calulate shadow data
+		vec3 shadowCoords = v_LightSpacePosition.xyz / v_LightSpacePosition.w;
+		shadowCoords = shadowCoords * 0.5 + 0.5;
+		float distance = length(r_CameraBuffer.CameraPosition - v_WorldPosition);
+		float shadowFade = 1.0f - smoothstep(u_MaxShadowDistance - u_ShadowFade, u_MaxShadowDistance, distance);
+
+		shadow = 1.0f - ShadowCalculation(shadowCoords, shadowFade);
+	}
+
+	color = vec4(directionalLight_Contribution * shadow + IBL_Contribution + pointLight_Contribution, 1.0f);
 }

@@ -26,12 +26,13 @@ namespace Nyx
         Ref<Shader> SkyboxShader;
         Ref<Shader> DepthShader;
 
-		Ref<EnvironmentMap> SceneEnvironmentMap;
-		Ref<LightEnvironment> SceneLightEnvironment;
+		Ref<EnvironmentMap> EnvironmentMap;
+		Ref<LightEnvironment> LightEnvironment;
 
         Ref<Camera> ShadowCamera;
         Ref<Material> DepthMaterial;
 
+        bool ClearShadowBuffer;
         struct ShadowSettings
         {
             float Size = 16.0f;
@@ -87,8 +88,12 @@ namespace Nyx
             s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
         }
 
+        s_Data.ClearShadowBuffer = false;
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
         s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
+        
+        s_Data.EnvironmentMap = CreateRef<EnvironmentMap>();
+        s_Data.LightEnvironment = CreateRef<LightEnvironment>();
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -99,12 +104,14 @@ namespace Nyx
 
     void SceneRenderer::End()
     {
-        Renderer::SetEnvironment(s_Data.SceneEnvironmentMap, s_Data.SceneLightEnvironment);
+        Renderer::SetEnvironment(s_Data.EnvironmentMap, s_Data.LightEnvironment);
 
         // Render
         ShadowPass();
         GeometryPass();
         CompositePass();
+
+        s_Data.LightEnvironment->Clear();
 
         s_Data.RenderCommands.clear();
         s_Data.ActiveScene = nullptr;
@@ -116,25 +123,46 @@ namespace Nyx
         s_Data.RenderCommands.push_back(RenderCommand(mesh, transform));
     }
 
+    void SceneRenderer::SubmitDirectionalLight(Ref<DirectionalLight> light)
+    {
+        NX_CORE_ASSERT(s_Data.LightEnvironment->GetDirectionalLights().size() <= 1, "As of now there can only be one directional light in the scene");
+        s_Data.LightEnvironment->SubmitDirectionalLight(light);
+    }
+
+    void SceneRenderer::SubmitPointLight(Ref<PointLight> light)
+    {
+        s_Data.LightEnvironment->SubmitPointLight(light);
+    }
+
     void SceneRenderer::ShadowPass()
     {
-        s_Data.ShadowCamera->SetProjectionMatrix(glm::ortho(-s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, -s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, s_Data.ShadowSetting.NearClip, s_Data.ShadowSetting.FarClip));
-
-        glm::vec3 lightDirection = s_Data.SceneLightEnvironment->GetDirectionalLight().Direction;
-        s_Data.ShadowCamera->SetViewMatrix(glm::lookAt(lightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
-
-        Renderer::BeginRenderPass(s_Data.ShadowPass);
-        Renderer::BeginScene(s_Data.ShadowCamera);
-
-        for (RenderCommand command : s_Data.RenderCommands)
+        if (s_Data.LightEnvironment->GetDirectionalLights().size() > 0)
         {
-            Renderer::SubmitMesh(command.Mesh, command.Transform, s_Data.DepthMaterial);
+            s_Data.ShadowCamera->SetProjectionMatrix(glm::ortho(-s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, -s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, s_Data.ShadowSetting.NearClip, s_Data.ShadowSetting.FarClip));
+
+            glm::vec3 lightDirection = s_Data.LightEnvironment->GetDirectionalLights()[0]->Direction;
+            s_Data.ShadowCamera->SetViewMatrix(glm::lookAt(lightDirection, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+
+            Renderer::BeginRenderPass(s_Data.ShadowPass);
+            Renderer::BeginScene(s_Data.ShadowCamera);
+
+            for (RenderCommand command : s_Data.RenderCommands)
+            {
+                Renderer::SubmitMesh(command.Mesh, command.Transform, s_Data.DepthMaterial);
+            }
+
+            Renderer::EndScene();
+            Renderer::EndRenderPass();
+
+            Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
+            s_Data.ClearShadowBuffer = true;
         }
-
-        Renderer::EndScene();
-        Renderer::EndRenderPass();
-
-        Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
+        else if (s_Data.ClearShadowBuffer)
+        {
+            s_Data.ShadowPass->GetSpecification().Framebuffer->Bind();
+            s_Data.ShadowPass->GetSpecification().Framebuffer->Clear();
+            s_Data.ClearShadowBuffer = false;
+        }
     }
 
     void SceneRenderer::GeometryPass()
@@ -160,7 +188,6 @@ namespace Nyx
     {
         Renderer::BeginRenderPass(s_Data.CompositePass);
 
-        // Bad desgin but not sure of any better approach
         s_Data.CompositeShader->Bind();
         s_Data.CompositeShader->SetUniformFloat("u_Material.Exposure", s_Data.ActiveCamera->GetExposure());
         s_Data.GeometryPass->GetSpecification().Framebuffer->BindColorTexture(0, 0);
@@ -193,13 +220,6 @@ namespace Nyx
             destination->Clear();
 
         destination->Unbind();
-    }
-
-    void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
-    {
-        NX_CORE_ASSERT(s_Data.ActiveScene, "");
-        s_Data.SceneEnvironmentMap = environmentMap;
-        s_Data.SceneLightEnvironment = lightEnvironment;
     }
 
     void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)

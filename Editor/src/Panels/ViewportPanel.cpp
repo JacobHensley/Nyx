@@ -45,14 +45,14 @@ namespace Nyx {
 		{
 			camera->SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), m_Size.x, m_Size.y, 0.01f, 1000.0f));
 			m_LastSize = m_Size;
-			Nyx::SceneRenderer::Resize(m_Size.x, m_Size.y);
+			Nyx::SceneRenderer::Resize((uint32_t)m_Size.x, (uint32_t)m_Size.y);
 		}
 
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
 
-	const glm::vec2& ViewportPanel::GetMouseNDC()
+	glm::vec2 ViewportPanel::GetMouseNDC()
 	{
 		auto [mouseX, mouseY] = ImGui::GetMousePos();
 		mouseX -= m_Position.x;

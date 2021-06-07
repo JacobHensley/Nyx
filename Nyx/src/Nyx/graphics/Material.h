@@ -92,25 +92,6 @@ namespace Nyx {
             return m_Shader->GetHash() + m_MaterialSortKey;
         }
 
-        uint32_t HashBuffer() const
-        {
-         /*   uint32_t result = 0;
-            const uint32_t prime = 31;
-            for (uint32_t i = 0; i < m_Shader->GetMaterialUniformBufferSize(); ++i) {
-                result = m_UniformDataBuffer[i] + (result * prime);
-            }
-            return result; */
-            
-            // TEST
-            uint32_t texturesHash = 0;
-            for (int i = 0; i < m_Textures.size(); i++)
-            {
-                if (m_Textures[i] != nullptr)
-                    texturesHash += std::hash<std::string>{}(m_Textures[i]->GetPath());
-            }
-            return std::hash<std::string_view>()(std::string_view((char*)m_UniformDataBuffer, m_Shader->GetMaterialUniformBufferSize())) + texturesHash;
-        }
-
         bool operator==(const Material& other) const
         {
             return GetHash() == other.GetHash();
@@ -123,12 +104,10 @@ namespace Nyx {
 
         bool operator<(const Material& other) const
         {
-        /*    if (m_IsOpaque == other.m_IsOpaque)
+            if (m_IsOpaque == other.m_IsOpaque)
                 return m_MaterialSortKey < other.m_MaterialSortKey;
 
-            return m_IsOpaque; */
-
-            return HashBuffer() < other.HashBuffer();
+            return m_IsOpaque;
         }
 
     private:

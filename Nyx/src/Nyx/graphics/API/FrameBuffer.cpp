@@ -18,7 +18,7 @@ namespace Nyx {
 		{
 			auto width = Application::GetApp().GetWindow()->GetWidth();
 			auto height = Application::GetApp().GetWindow()->GetHeight();
-			Resize(width * spec.Scale, height * spec.Scale);
+			Resize((int)(width * spec.Scale), (int)(height * spec.Scale));
 		}
 		else
 		{

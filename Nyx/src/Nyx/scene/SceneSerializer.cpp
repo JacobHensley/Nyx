@@ -126,12 +126,6 @@ namespace Nyx
 
 		out << YAML::BeginMap; // Scene Map
 
-		//Save and load as one map
-		out << YAML::Key << "RadianceMap UUID" << YAML::Value << scene->GetEnvironmentMap()->radianceMap.GetUUID();
-		out << YAML::Key << "IrradianceMap UUID" << YAML::Value << scene->GetEnvironmentMap()->irradianceMap.GetUUID();
-
-		//TODO: lights
-
 		// Objects
 		out << YAML::Key << "Objects";
 		out << YAML::Value;
@@ -205,6 +199,8 @@ namespace Nyx
 			out << YAML::EndMap;
 		}
 
+		//TODO: lights, EnvironmentMap
+
 		out << YAML::EndMap; // Object
 	}
 
@@ -231,19 +227,20 @@ namespace Nyx
 
 		}
 
+		//TODO: lights, EnvironmentMap
 		uint64_t radianceMapUUID = nodes[1]["RadianceMap UUID"].as<uint64_t>();
 		uint64_t irradianceMapUUID = nodes[1]["IrradianceMap UUID"].as<uint64_t>();
 		Ref<EnvironmentMap> environmentMap = CreateRef<EnvironmentMap>(UUID(radianceMapUUID), UUID(irradianceMapUUID));
 
-		//TODO: Load lights
 		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
 
 		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.5f, -0.75f));
-		lightEnvironment->SetDirectionalLight(directionalLight);
-		PointLight pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
-		lightEnvironment->SetPointLight(pointLight);
+	//	lightEnvironment->SetDirectionalLight(directionalLight);
 
-		Ref<Scene> scene = CreateRef<Scene>(environmentMap, lightEnvironment);
+		PointLight pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+	//	lightEnvironment->SetPointLight(pointLight);
+
+		Ref<Scene> scene = CreateRef<Scene>();
 
 		YAML::Node objects = nodes[1]["Objects"];
 		for (int i = 0; i < objects.size(); i++)

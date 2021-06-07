@@ -5,8 +5,7 @@
 
 namespace Nyx {
 
-	Scene::Scene(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
-		: m_EnvironmentMap(environmentMap), m_LightEnvironment(lightEnvironment)
+	Scene::Scene()
 	{
 	}
 
@@ -17,9 +16,20 @@ namespace Nyx {
 	void Scene::Render(Ref<Camera> camera)
 	{
 		SceneRenderer::Begin(this, camera);
-		SceneRenderer::SetEnvironment(m_EnvironmentMap, m_LightEnvironment);
-		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
 
+		auto directionalLightComponents = m_Registry.view<DirectionalLightComponent>();
+		for (auto object : directionalLightComponents) {
+			auto& directionalLightComponent = directionalLightComponents.get<DirectionalLightComponent>(object);
+			SceneRenderer::SubmitDirectionalLight(directionalLightComponent.Light);
+		}
+
+		auto pointLightComponents = m_Registry.view<PointLightComponent>();
+		for (auto object : pointLightComponents) {
+			auto& pointLightComponent = pointLightComponents.get<PointLightComponent>(object);
+			SceneRenderer::SubmitPointLight(pointLightComponent.Light);
+		}
+
+		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
 		for (auto object : group)
 		{
 			auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(object);

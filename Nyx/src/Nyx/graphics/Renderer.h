@@ -1,6 +1,7 @@
 #pragma once
 #include "Nyx/Core/Core.h"
 #include "Nyx/scene/Scene.h"
+#include "Nyx/graphics/LightEnvironment.h"
 #include "Nyx/Graphics/Mesh.h"
 #include "Nyx/Graphics/Material.h"
 #include "Nyx/graphics/Camera.h"

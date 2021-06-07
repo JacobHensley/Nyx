@@ -37,11 +37,6 @@ namespace Nyx {
 		m_ObjectPanel.Render(m_SelectedObject);
 
 		SceneRenderer::OnImGuiRender();
-
-		ImGui::Begin("Scene Settings");
-		ImGui::SliderFloat3("Point Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetPointLight().Position), -1, 1);
-		ImGui::SliderFloat3("Dir Light", glm::value_ptr(m_Scene->GetLightEnvironment()->GetDirectionalLight().Direction), -1, 1);
-		ImGui::End();
 	}
 
 	void EditorLayer::OnEvent(Event& e)
@@ -114,7 +109,7 @@ namespace Nyx {
 					localRay.Origin = glm::inverse(worldTransform) * glm::vec4(localRay.Origin, 1.0f);
 					localRay.Direction = glm::inverse(glm::mat3(worldTransform)) * localRay.Direction;
 
-					for (int i = subMesh.TriangleOffset; i < (subMesh.TriangleOffset + subMesh.TriangleCount); i++)
+					for (uint32_t i = subMesh.TriangleOffset; i < (subMesh.TriangleOffset + subMesh.TriangleCount); i++)
 					{
 						Triangle triangle = mesh->GetTriangles()[i];
 						bool triangleIntersection = localRay.IntersectsTriangle(triangle);

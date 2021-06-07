@@ -45,7 +45,7 @@ namespace Nyx {
 		void SetViewPortSize(int x, int y, int width, int height);
 
 		inline uint32_t GetFrameBufferID() const { return m_FrameBufferID; }
-		inline std::vector<uint32_t>& const GetColorAttachments() { return m_ColorAttachments; }
+		inline std::vector<uint32_t>& GetColorAttachments() { return m_ColorAttachments; }
 		inline uint32_t const GetDepthAttachment() const { return m_DepthAttachment; }
 
 		inline uint32_t GetWidth() const { return m_Width;}

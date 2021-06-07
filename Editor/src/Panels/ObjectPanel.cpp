@@ -13,7 +13,7 @@ namespace Nyx {
 	{
 	}
 
-	static int selectedIndex = -1;
+	static int selectedMaterialIndex = -1;
 	void ObjectPanel::Render(SceneObject selectedObject)
 	{
 		ImGui::Begin("Object Properties");
@@ -33,6 +33,48 @@ namespace Nyx {
 			{
 				if (nameInput != name && selectedObject.HasComponent<TagComponent>())
 					selectedObject.GetComponent<TagComponent>().Tag = nameInput;
+			}
+
+			ImGui::SameLine();
+
+			// Button to add component
+			if (ImGui::Button("Add Component"))
+			{
+				ImGui::OpenPopup("AddComponent");
+			}
+
+			// Popop to add components
+			if (ImGui::BeginPopup("AddComponent"))
+			{
+				ImGui::Text("Components");
+				ImGui::Separator();
+
+				// Add transform component
+				if (!selectedObject.HasComponent<TransformComponent>() && ImGui::Selectable("Transform"))
+				{
+					selectedObject.AddComponent<TransformComponent>();
+				}
+
+				// Add mesh component
+				if (!selectedObject.HasComponent<MeshComponent>() && ImGui::Selectable("Mesh"))
+				{
+					auto defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
+					selectedObject.AddComponent<MeshComponent>(defaultMesh);
+				}
+
+				// Add DirectionalLight component
+				if (!selectedObject.HasComponent<DirectionalLightComponent>() && ImGui::Selectable("Directional Light"))
+				{
+					selectedObject.AddComponent<DirectionalLightComponent>(CreateRef<DirectionalLight>());
+				}
+
+				// Add PointLight component
+				if (!selectedObject.HasComponent<PointLightComponent>() && ImGui::Selectable("Point Light"))
+				{
+					selectedObject.AddComponent<PointLightComponent>(CreateRef<PointLight>());
+				}
+
+				ImGui::EndPopup();
 			}
 
 			// Transform component
@@ -82,30 +124,26 @@ namespace Nyx {
 
 				// Material list
 				std::vector<Ref<Material>> materials = mesh->GetMaterials();
-				if (ImGui::ListBoxHeader("##MaterialList", materials.size()))
+				if (ImGui::ListBoxHeader("##MaterialList", (int)materials.size()))
 				{
 					for (int i = 0; i < materials.size(); i++)
 					{
-						if (ImGui::Selectable(materials[i]->GetName().c_str(), i == selectedIndex))
+						if (ImGui::Selectable(materials[i]->GetName().c_str(), i == selectedMaterialIndex))
 						{
-							selectedIndex = i;
+							selectedMaterialIndex = i;
 						}
 					}
 					ImGui::ListBoxFooter();
 					ImGui::Separator();
 				}
 
-				// Move to material window
-				// -----------------------------------------------------------
 				// Material viewer
-				if (selectedIndex != -1)
+				if (selectedMaterialIndex != -1)
 				{
-					ImGui::Text("%d", materials[selectedIndex]->HashBuffer());
-
-					ImGui::Text(materials[selectedIndex]->GetShader()->GetPath().c_str());
+					ImGui::Text(materials[selectedMaterialIndex]->GetShader()->GetPath().c_str());
 
 					// Display all textures in material
-					const std::vector<Ref<Texture>>& textures = materials[selectedIndex]->GetTextures();
+					const std::vector<Ref<Texture>>& textures = materials[selectedMaterialIndex]->GetTextures();
 					for (int i = 0; i < textures.size(); i++)
 					{
 						if (textures[i] != nullptr)
@@ -124,9 +162,9 @@ namespace Nyx {
 						}
 					}
 
-					ImGui::PushItemWidth(175);
 					// Display uniforms in material
-					Ref<Shader> materialShader = materials[selectedIndex]->GetShader();
+					ImGui::PushItemWidth(175);
+					Ref<Shader> materialShader = materials[selectedMaterialIndex]->GetShader();
 					const std::unordered_map<std::string, ShaderUniform>& uniforms = materialShader->GetMaterialUniforms();
 					for (auto const& [name, uniform] : uniforms)
 					{
@@ -135,37 +173,37 @@ namespace Nyx {
 						{
 						case UniformType::FLOAT:
 						{	
-							float& uniform = materials[selectedIndex]->Get<float>(name);
+							float& uniform = materials[selectedMaterialIndex]->Get<float>(name);
 							ImGui::DragFloat(uniformName.c_str(), &uniform, 0.1f, 0.0f, 1.0f);
 						}
 						break;
 						case UniformType::INT:
 						{	
-							int& uniform = materials[selectedIndex]->Get<int>(name);
-							ImGui::DragInt(uniformName.c_str(), &uniform, 0.1f, 0.0f, 1.0f);
+							int& uniform = materials[selectedMaterialIndex]->Get<int>(name);
+							ImGui::DragInt(uniformName.c_str(), &uniform, 0.1f, 0, 1);
 						}
 						break;
 						case UniformType::FLOAT2:
 						{	
-							glm::vec2& uniform = materials[selectedIndex]->Get<glm::vec2>(name);
+							glm::vec2& uniform = materials[selectedMaterialIndex]->Get<glm::vec2>(name);
 							ImGui::DragFloat2(uniformName.c_str(), glm::value_ptr(uniform), 0.1f, 0.0f, 1.0f);
 						}
 						break;
 						case UniformType::FLOAT3:
 						{	
-							glm::vec3& uniform = materials[selectedIndex]->Get<glm::vec3>(name);
+							glm::vec3& uniform = materials[selectedMaterialIndex]->Get<glm::vec3>(name);
 							ImGui::DragFloat3(uniformName.c_str(), glm::value_ptr(uniform), 0.1f, 0.0f, 1.0f);
 						}
 						break;
 						case UniformType::FLOAT4:
 						{	
-							glm::vec4& uniform = materials[selectedIndex]->Get<glm::vec4>(name);
+							glm::vec4& uniform = materials[selectedMaterialIndex]->Get<glm::vec4>(name);
 							ImGui::DragFloat4(uniformName.c_str(), glm::value_ptr(uniform), 0.1f, 0.0f, 1.0f);
 						}
 						break;
 						case UniformType::BOOL:
 						{	
-							bool& uniform = materials[selectedIndex]->Get<bool>(name);
+							bool& uniform = materials[selectedMaterialIndex]->Get<bool>(name);
 							ImGui::Checkbox(uniformName.c_str(), &uniform);
 						}
 						break;
@@ -175,12 +213,27 @@ namespace Nyx {
 					}
 					ImGui::PopItemWidth();
 				}
-				// -----------------------------------------------------------
-
 			}
 			else
 			{
-				selectedIndex = -1;
+				selectedMaterialIndex = -1;
+			}
+
+			// DirectionalLight component
+			if (selectedObject.HasComponent<DirectionalLightComponent>() && ImGui::CollapsingHeader("Directional Light"))
+			{
+				DirectionalLightComponent& directionalLightComponent = selectedObject.GetComponent<DirectionalLightComponent>();
+				Ref<DirectionalLight> light = directionalLightComponent.Light;
+				ImGui::DragFloat3("Direction", glm::value_ptr(light->Direction), 0.1f, -1.0f, 1.0f);
+			//	ImGui::Checkbox("Active", &light->Active);
+			}
+
+			// PointLight component
+			if (selectedObject.HasComponent<PointLightComponent>() && ImGui::CollapsingHeader("Point Light"))
+			{
+				PointLightComponent& pointLightComponent = selectedObject.GetComponent<PointLightComponent>();
+				Ref<PointLight> light = pointLightComponent.Light;
+				ImGui::DragFloat3("Position", glm::value_ptr(light->Position), 0.1f);
 			}
 		}
 

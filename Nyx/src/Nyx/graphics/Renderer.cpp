@@ -31,7 +31,7 @@ namespace Nyx {
 		struct LightBuffer
 		{
 			DirectionalLight DirectionalLight;
-			PointLight PointLight;
+			PointLight PointLights[4];
 		};
 
 		struct ShadowBuffer
@@ -86,8 +86,6 @@ namespace Nyx {
 		UniformBuffer::ShadowBuffer ShadowBuffer;
 		uint32_t ShadowBufferID = -1;
 
-		//Bake light
-
 		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList; // Map::<sortkey, Map::<Shader, Map::<Material, drawlist>>>
 		std::unordered_map<std::string, std::function<void(const ShaderResource&)>> RendereResourceFunctions;
 	};
@@ -140,14 +138,22 @@ namespace Nyx {
 
 	void Renderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 	{
-		Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
+	/*	Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
 		radiance->Bind(RenderResourceBindings::RadianceMap);
 		Ref<TextureCube> irradiance = AssetManager::GetByUUID<TextureCube>(environmentMap->irradianceMap.GetUUID());
-		irradiance->Bind(RenderResourceBindings::IrradianceMap);
+		irradiance->Bind(RenderResourceBindings::IrradianceMap); */
 
-		s_Data.LightBuffer.DirectionalLight = lightEnvironment->GetDirectionalLight();
-		s_Data.LightBuffer.PointLight = lightEnvironment->GetPointLight();
-		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
+		if (lightEnvironment->GetDirectionalLights().size() > 0)
+			s_Data.LightBuffer.DirectionalLight = *lightEnvironment->GetDirectionalLights()[0];
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (lightEnvironment->GetPointLights().size() > i)
+				s_Data.LightBuffer.PointLights[i] = *lightEnvironment->GetPointLights()[i];
+		}
+
+		if (lightEnvironment->GetPointLights().size() > 0 || lightEnvironment->GetDirectionalLights().size() > 0)
+			UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
 	}
 
 	void Renderer::SetShadowMap(const glm::mat4 viewProjection, uint32_t ID)
@@ -245,7 +251,7 @@ namespace Nyx {
 	void Renderer::UploadUniformBuffer(uint32_t bufferID, uint32_t bindingPoint, uint32_t size, const void* data)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
-		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bufferID);
+	//	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bufferID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 	}
 }

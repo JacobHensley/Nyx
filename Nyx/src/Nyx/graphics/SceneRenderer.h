@@ -2,6 +2,7 @@
 #include "Nyx/Core/Core.h"
 #include "Nyx/Scene/Scene.h"
 #include "Nyx/Graphics/API/FrameBuffer.h"
+#include "Nyx/graphics/LightEnvironment.h"
 #include "Nyx/Graphics/Shader.h"
 #include "Nyx/Graphics/Mesh.h"
 
@@ -18,7 +19,6 @@ namespace Nyx
         glm::mat4  Transform;
         Ref<Material> MaterialOverride;
     };
-
   
     class SceneRenderer
     {
@@ -29,9 +29,11 @@ namespace Nyx
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
         
+        static void SubmitDirectionalLight(Ref<DirectionalLight> light);
+        static void SubmitPointLight(Ref<PointLight> light);
+
         static void OnImGuiRender();
 
-        static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
 
         static Ref<FrameBuffer> GetFinalBuffer();

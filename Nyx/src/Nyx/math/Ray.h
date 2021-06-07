@@ -21,7 +21,7 @@ namespace Nyx {
 
         bool IntersectsTriangle(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3)
         {
-            const float EPSILON = 0.0000001;
+            const float EPSILON = (float)0.0000001;
             glm::vec3 vertex0 = p1;
             glm::vec3 vertex1 = p2;
             glm::vec3 vertex2 = p3;
@@ -33,7 +33,7 @@ namespace Nyx {
             a = glm::dot(edge1, h);
             if (a > -EPSILON && a < EPSILON)
                 return false;    // This ray is parallel to this triangle.
-            f = 1.0 / a;
+            f = (float)(1.0 / a);
             s = Origin - vertex0;
             u = f * glm::dot(s, h);
             if (u < 0.0 || u > 1.0)
