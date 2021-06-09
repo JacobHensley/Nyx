@@ -31,7 +31,7 @@ namespace Nyx {
 		struct LightBuffer
 		{
 			DirectionalLight DirectionalLight;
-			PointLight PointLights[4];
+			PointLight PointLights[8];
 		};
 
 		struct ShadowBuffer
@@ -75,6 +75,7 @@ namespace Nyx {
 		Ref<EnvironmentMap> ActiveEnvironmentMap;
 
 		Ref<Texture> BRDFLutTexture;
+		Ref<TextureCube> DefaultSkyboxTexture;
 		Ref<FullscreenQaud> FullscreenQaud;
 		
 		UniformBuffer::CameraBuffer CameraBuffer;
@@ -97,6 +98,8 @@ namespace Nyx {
 		GenerateUniformBuffer(s_Data.CameraBufferID, UniformBuffer::UniformBufferBinding::CAMERA_BUFFER, sizeof(s_Data.CameraBuffer));
 		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
 		GenerateUniformBuffer(s_Data.ShadowBufferID, UniformBuffer::UniformBufferBinding::SHADOW_BUFFER, sizeof(s_Data.ShadowBuffer));
+
+		s_Data.DefaultSkyboxTexture = CreateRef<TextureCube>("assets/textures/Canyon_Irradiance.png");
 
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
@@ -138,22 +141,40 @@ namespace Nyx {
 
 	void Renderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 	{
-	/*	Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
-		radiance->Bind(RenderResourceBindings::RadianceMap);
-		Ref<TextureCube> irradiance = AssetManager::GetByUUID<TextureCube>(environmentMap->irradianceMap.GetUUID());
-		irradiance->Bind(RenderResourceBindings::IrradianceMap); */
+		if (environmentMap->radianceMap != 0)
+		{
+			Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
+			radiance->Bind(RenderResourceBindings::RadianceMap);
+		}
+		else
+		{
+			s_Data.DefaultSkyboxTexture->Bind(RenderResourceBindings::RadianceMap);
+		}
+
+		if (environmentMap->irradianceMap != 0)
+		{
+			Ref<TextureCube> irradiance = AssetManager::GetByUUID<TextureCube>(environmentMap->irradianceMap.GetUUID());
+			irradiance->Bind(RenderResourceBindings::IrradianceMap);
+		}
+		else
+		{
+			s_Data.DefaultSkyboxTexture->Bind(RenderResourceBindings::IrradianceMap);
+		}
 
 		if (lightEnvironment->GetDirectionalLights().size() > 0)
 			s_Data.LightBuffer.DirectionalLight = *lightEnvironment->GetDirectionalLights()[0];
+		else
+			s_Data.LightBuffer.DirectionalLight = DirectionalLight();
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			if (lightEnvironment->GetPointLights().size() > i)
 				s_Data.LightBuffer.PointLights[i] = *lightEnvironment->GetPointLights()[i];
+			else
+				s_Data.LightBuffer.PointLights[i] = PointLight();
 		}
 
-		if (lightEnvironment->GetPointLights().size() > 0 || lightEnvironment->GetDirectionalLights().size() > 0)
-			UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
+		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
 	}
 
 	void Renderer::SetShadowMap(const glm::mat4 viewProjection, uint32_t ID)
@@ -251,7 +272,6 @@ namespace Nyx {
 	void Renderer::UploadUniformBuffer(uint32_t bufferID, uint32_t bindingPoint, uint32_t size, const void* data)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, bufferID);
-	//	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bufferID);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
 	}
 }

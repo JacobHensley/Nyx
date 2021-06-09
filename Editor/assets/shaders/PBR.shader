@@ -48,7 +48,6 @@ void main()
 	v_Normal = mat3(r_Renderer.Transform) * a_Normal;
 	v_WorldPosition = vec3(r_Renderer.Transform * vec4(a_Position, 1.0f));
 	v_TexCoords = a_TexCoords;
-//	v_WorldNormals = mat3(r_Renderer.Transform) * mat3(a_Tangent, a_Binormals, a_Normal);
 	v_WorldNormals = inverse(transpose(mat3(r_Renderer.Transform))) * a_Normal;
 
 	v_LightSpacePosition = r_ShadowBuffer.ShadowMapViewProjection * r_Renderer.Transform * vec4(a_Position, 1.0f);
@@ -95,7 +94,7 @@ layout(std140, binding = 0) uniform CameraBuffer
 layout(std140, binding = 1) uniform LightBuffer
 {
 	DirectionalLight DirectionLight;
-	PointLight PointLights[4];
+	PointLight PointLights[8];
 } r_LightBuffer;
 
 // Constants
@@ -217,7 +216,7 @@ vec3 DirectionalLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R
 vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
 {
 	vec3 result;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (r_LightBuffer.PointLights[i].Active)
 		{
@@ -226,8 +225,7 @@ vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, floa
 
 			float distance = length(r_LightBuffer.PointLights[i].Position - v_WorldPosition);
 			float attenuation = 1.0 / (distance * distance);
-			//	vec3 Lradiance = r_LightBuffer.PLight.Radiance * r_LightBuffer.PLight.Intensity * attenuation; // TODO: Fix Intensity
-			vec3 Lradiance = r_LightBuffer.PointLights[i].Radiance * attenuation;
+			vec3 Lradiance = r_LightBuffer.PointLights[i].Radiance * r_LightBuffer.PointLights[i].Intensity * attenuation;
 
 			float cosLi = max(0.0, dot(N, Li));
 			float cosLh = max(0.0, dot(N, Lh));
@@ -267,8 +265,10 @@ float ShadowCalculation(vec3 shadowCoords, float shadowFade)
 {
 	// get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
 	float closestDepth = texture(r_ShadowMap, shadowCoords.xy).r;
+
 	// get depth of current fragment from light's perspective
 	float currentDepth = shadowCoords.z;
+
 	// check whether current frag pos is in shadow
 	float bias = max(0.002 * (1.0 - dot(v_WorldNormals, r_LightBuffer.DirectionLight.Direction)), 0.002);
 	float shadow = step(closestDepth + bias, currentDepth);
@@ -303,6 +303,7 @@ void main()
 	// If the direction light is active calulate it's contribution and the shadow map data
 	vec3 directionalLight_Contribution = vec3(0.0f);
 	float shadow = 0.0f;
+
 	if (r_LightBuffer.DirectionLight.Active)
 	{
 		directionalLight_Contribution = DirectionalLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);

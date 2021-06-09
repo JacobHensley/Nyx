@@ -17,19 +17,51 @@ namespace Nyx {
 	{
 		SceneRenderer::Begin(this, camera);
 
-		auto directionalLightComponents = m_Registry.view<DirectionalLightComponent>();
-		for (auto object : directionalLightComponents) {
-			auto& directionalLightComponent = directionalLightComponents.get<DirectionalLightComponent>(object);
-			SceneRenderer::SubmitDirectionalLight(directionalLightComponent.Light);
+		m_LightEnvironment = CreateRef<LightEnvironment>();
+		m_EnvironmentMap = CreateRef<EnvironmentMap>();
+		
+		// Directional Lights
+		auto directionalLightComponents = m_Registry.group<DirectionalLightComponent>(entt::get<TransformComponent>);
+		for (auto object : directionalLightComponents) 
+		{
+			auto [transform, directionalLightComponent] = directionalLightComponents.get<TransformComponent, DirectionalLightComponent>(object);
+
+			Ref<DirectionalLight> light = CreateRef<DirectionalLight>();
+			light->Direction = transform.Rotation;
+			light->Radiance = directionalLightComponent.Radiance;
+			light->Active = directionalLightComponent.Active;
+
+			m_LightEnvironment->AddDirectionalLight(light);
 		}
 
-		auto pointLightComponents = m_Registry.view<PointLightComponent>();
-		for (auto object : pointLightComponents) {
-			auto& pointLightComponent = pointLightComponents.get<PointLightComponent>(object);
-			SceneRenderer::SubmitPointLight(pointLightComponent.Light);
+		// Point Lights
+		auto pointLightComponents = m_Registry.group<PointLightComponent>(entt::get<TransformComponent>);
+		for (auto object : pointLightComponents)
+		{
+			auto [transform, pointLightComponent] = pointLightComponents.get<TransformComponent, PointLightComponent>(object);
+
+			Ref<PointLight> light = CreateRef<PointLight>();
+			light->Position = transform.Translation;
+			light->Radiance = pointLightComponent.Radiance;
+			light->Intensity = pointLightComponent.Intensity;
+			light->Active = pointLightComponent.Active;
+
+			m_LightEnvironment->AddPointLight(light);
 		}
 
-		auto group = m_Registry.group<TransformComponent>(entt::get<MeshComponent>);
+		// Environment Map
+		auto environmentMapComponents = m_Registry.view<EnvironmentMapComponent>();
+		for (auto object : environmentMapComponents)
+		{
+			auto& environmentMapComponent = environmentMapComponents.get<EnvironmentMapComponent>(object);
+			m_EnvironmentMap->irradianceMap = environmentMapComponent.IrradianceMap;
+			m_EnvironmentMap->radianceMap = environmentMapComponent.RadianceMap;
+		}
+
+		SceneRenderer::SetEnvironment(m_EnvironmentMap, m_LightEnvironment);
+
+		// Meshes
+		auto group = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
 		for (auto object : group)
 		{
 			auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(object);

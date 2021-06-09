@@ -29,8 +29,7 @@ namespace Nyx
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
         
-        static void SubmitDirectionalLight(Ref<DirectionalLight> light);
-        static void SubmitPointLight(Ref<PointLight> light);
+        static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
 
         static void OnImGuiRender();
 

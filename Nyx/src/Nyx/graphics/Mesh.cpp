@@ -234,6 +234,7 @@ namespace Nyx {
 					material = CreateRef<Material>(aiMaterialName.C_Str(), SceneRenderer::GetPBRShader());
 				}
 
+				// Make static so as to not generate for every mesh
 				Ref<Texture> defaultTexture = CreateRef<Texture>(1, 1);
 				defaultTexture->SetData(new byte[4], 4);
 

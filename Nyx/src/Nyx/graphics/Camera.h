@@ -1,4 +1,5 @@
 #pragma once
+#include "Nyx/Events/Event.h"
 #include <glm/glm.hpp>
 
 namespace Nyx {
@@ -11,6 +12,8 @@ namespace Nyx {
 	public:
 		void Update();
 		void Reset();
+		
+		void OnEvent(Event& e);
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }

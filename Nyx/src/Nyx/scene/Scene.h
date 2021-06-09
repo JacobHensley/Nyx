@@ -2,6 +2,7 @@
 #include "Nyx/Scene/SceneObject.h"
 #include "Nyx/Asset/Asset.h"
 #include "Nyx/Graphics/Camera.h"
+#include "Nyx/graphics/LightEnvironment.h"
 #include <entt/include/entt.hpp>
 #include <String>
 
@@ -28,6 +29,9 @@ namespace Nyx {
 	private:
 		entt::registry m_Registry;
 		std::string m_Path;
+
+		Ref<LightEnvironment> m_LightEnvironment;
+		Ref<EnvironmentMap> m_EnvironmentMap;
 
 		friend class SceneObject;
 	};

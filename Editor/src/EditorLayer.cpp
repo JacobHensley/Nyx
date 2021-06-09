@@ -12,7 +12,7 @@ namespace Nyx {
 	void EditorLayer::Init()
 	{
 		m_EditorCamera = CreateRef<Camera>(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 100.0f));
-		m_Scene = SceneSerializer::Load("assets/scenes/GlassTest.nyx");
+		m_Scene = SceneSerializer::Load("assets/scenes/Shapes.nyx");
 
 		m_ViewportPanel = ViewportPanel();
 		m_HierarchyPanel = SceneHierarchyPanel(m_Scene);
@@ -56,6 +56,8 @@ namespace Nyx {
 			Ray mouseRay = CastCameraRay();
 			m_SelectedObject = PickObject(mouseRay);
 		}
+		
+		m_EditorCamera->OnEvent(e);
 	}
 
 	Ray EditorLayer::CastCameraRay()

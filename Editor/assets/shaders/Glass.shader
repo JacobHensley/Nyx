@@ -73,9 +73,8 @@ layout(std140, binding = 0) uniform CameraBuffer
 layout(std140, binding = 1) uniform LightBuffer
 {
 	DirectionalLight DirectionLight;
-	PointLight PLight;
+	PointLight PointLights[8];
 } r_LightBuffer;
-
 
 // Constants
 const float Epsilon = 0.00001;

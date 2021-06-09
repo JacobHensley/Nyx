@@ -5,12 +5,10 @@ namespace Nyx {
 
 	struct DirectionalLight
 	{
-		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
-		float padding01 = 0.0f;
-		glm::vec3 Direction = { 1.0f, 1.0f, 1.0f };
-		float padding02 = 0.0f;
-		uint32_t Active = true;
-		float padding03[3];
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };   // 12
+		float padding01 = 0.0f;                      // 16
+		glm::vec3 Direction = { 1.0f, 1.0f, 1.0f };  // 28
+		uint32_t Active = false;                      // 32
 
 		DirectionalLight() = default;
 		DirectionalLight(glm::vec3 radiance, glm::vec3 direction)
@@ -21,13 +19,12 @@ namespace Nyx {
 
 	struct PointLight
 	{
-		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
-		float padding03 = 0.0f;
-		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
-		float padding04 = 0.0f;
-		float Intensity = 1.0f;
-		uint32_t Active = true;
-		float padding05[2];
+		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };    // 
+		float padding03 = 0.0f;                       // 16
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };    // 28
+		float Intensity = 1.0f;                       // 32
+		uint32_t Active = false;                      // 36
+		float p[3];
 
 		PointLight() = default;
 		PointLight(glm::vec3 position, glm::vec3 radiance, float intensity)
@@ -42,8 +39,8 @@ namespace Nyx {
 		LightEnvironment() = default;
 		~LightEnvironment() = default;
 
-		inline void SubmitDirectionalLight(Ref<DirectionalLight> light) { m_DirectionalLights.push_back(light); }
-		inline void SubmitPointLight(Ref<PointLight> light) { m_PointLights.push_back(light); }
+		inline void AddDirectionalLight(Ref<DirectionalLight> light) { m_DirectionalLights.push_back(light); }
+		inline void AddPointLight(Ref<PointLight> light) { m_PointLights.push_back(light); }
 
 		inline void Clear() { m_DirectionalLights.clear(); m_PointLights.clear(); }
 

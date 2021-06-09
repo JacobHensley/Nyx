@@ -71,24 +71,35 @@ namespace Nyx {
 
 	struct DirectionalLightComponent
 	{
-		Ref<DirectionalLight> Light;
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		uint32_t Active = true;
 
 		DirectionalLightComponent() = default;
 		DirectionalLightComponent(const DirectionalLightComponent&) = default;
-		DirectionalLightComponent(Ref<DirectionalLight> light)
-			: Light(light)
-		{
-		}
 	};
 
 	struct PointLightComponent
 	{
-		Ref<PointLight> Light;
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float Intensity = 1.0f;
+		uint32_t Active = true;
 
 		PointLightComponent() = default;
 		PointLightComponent(const PointLightComponent&) = default;
-		PointLightComponent(Ref<PointLight> light)
-			: Light(light)
+	};
+
+	struct EnvironmentMapComponent
+	{
+		AssetHandle RadianceMap;
+		AssetHandle IrradianceMap;
+
+		Ref<TextureCube> GetRadianceMap() { return RadianceMap.Get<TextureCube>(); }
+		Ref<TextureCube> GetIrradianceMap() { return IrradianceMap.Get<TextureCube>(); }
+
+		EnvironmentMapComponent() = default;
+		EnvironmentMapComponent(const EnvironmentMapComponent&) = default;
+		EnvironmentMapComponent(AssetHandle radianceMap, AssetHandle irradianceMap)
+			: RadianceMap(radianceMap), IrradianceMap(irradianceMap)
 		{
 		}
 	};

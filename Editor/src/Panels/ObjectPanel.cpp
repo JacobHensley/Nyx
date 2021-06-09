@@ -65,13 +65,21 @@ namespace Nyx {
 				// Add DirectionalLight component
 				if (!selectedObject.HasComponent<DirectionalLightComponent>() && ImGui::Selectable("Directional Light"))
 				{
-					selectedObject.AddComponent<DirectionalLightComponent>(CreateRef<DirectionalLight>());
+					selectedObject.AddComponent<DirectionalLightComponent>();
 				}
 
 				// Add PointLight component
 				if (!selectedObject.HasComponent<PointLightComponent>() && ImGui::Selectable("Point Light"))
 				{
-					selectedObject.AddComponent<PointLightComponent>(CreateRef<PointLight>());
+					selectedObject.AddComponent<PointLightComponent>();
+				}
+
+				// Add EnvironmentMap component
+				if (!selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::Selectable("Environment Map"))
+				{
+					auto radiance = AssetManager::Load<TextureCube>("assets/Textures/Canyon_Radiance.png");
+					auto irradiance = AssetManager::Load<TextureCube>("assets/Textures/Canyon_Irradiance.png");
+					selectedObject.AddComponent<EnvironmentMapComponent>(radiance, irradiance);
 				}
 
 				ImGui::EndPopup();
@@ -223,17 +231,32 @@ namespace Nyx {
 			if (selectedObject.HasComponent<DirectionalLightComponent>() && ImGui::CollapsingHeader("Directional Light"))
 			{
 				DirectionalLightComponent& directionalLightComponent = selectedObject.GetComponent<DirectionalLightComponent>();
-				Ref<DirectionalLight> light = directionalLightComponent.Light;
-				ImGui::DragFloat3("Direction", glm::value_ptr(light->Direction), 0.1f, -1.0f, 1.0f);
-			//	ImGui::Checkbox("Active", &light->Active);
+
+				ImGui::ColorEdit3("Color", glm::value_ptr(directionalLightComponent.Radiance));
+
+				bool active = (bool)directionalLightComponent.Active;
+				if (ImGui::Checkbox("Active##directionalLight", &active))
+					directionalLightComponent.Active = (uint32_t)active;
 			}
 
 			// PointLight component
 			if (selectedObject.HasComponent<PointLightComponent>() && ImGui::CollapsingHeader("Point Light"))
 			{
 				PointLightComponent& pointLightComponent = selectedObject.GetComponent<PointLightComponent>();
-				Ref<PointLight> light = pointLightComponent.Light;
-				ImGui::DragFloat3("Position", glm::value_ptr(light->Position), 0.1f);
+
+				ImGui::ColorEdit3("Color", glm::value_ptr(pointLightComponent.Radiance));
+				ImGui::DragFloat("Intensity", &pointLightComponent.Intensity);
+
+				bool active = (bool)pointLightComponent.Active;
+				if (ImGui::Checkbox("Active##pointLight", &active))
+					pointLightComponent.Active = (uint32_t)active;
+			}
+
+			// EnvironmentMap component
+			if (selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::CollapsingHeader("Environment Map"))
+			{
+				EnvironmentMapComponent& environmentMapComponent = selectedObject.GetComponent<EnvironmentMapComponent>();
+				// Add abilty to change map here
 			}
 		}
 

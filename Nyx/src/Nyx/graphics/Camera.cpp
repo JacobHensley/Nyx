@@ -1,7 +1,10 @@
 #include "NXpch.h"
 #include "Camera.h"
+#include "Nyx/Core/Log.h"
 #include "Nyx/Input/Input.h"
 #include "Nyx/Input/KeyCodes.h"
+#include "Nyx/Events/KeyEvent.h"
+#include "Nyx/Events/MouseEvent.h"
 #include <imgui.h>
 #include <imgui/ImGuizmo.h>
 #include <glm/gtx/quaternion.hpp>
@@ -18,23 +21,24 @@ namespace Nyx {
 
 	void Camera::Update()
 	{
-		if (Input::IsKeyPressed(NX_KEY_LEFT_ALT) && !ImGuizmo::IsUsing())
+		const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
+		glm::vec2 delta = mouse - m_InitialMousePosition;
+		m_InitialMousePosition = mouse;
+
+		m_Moving = false;
+
+		if (!ImGuizmo::IsUsing())
 		{
-			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
-			glm::vec2 delta = mouse - m_InitialMousePosition;
-			m_InitialMousePosition = mouse;
-			m_Moving = true;
-			
-			if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
+			if (Input::IsKeyPressed(NX_KEY_LEFT_SHIFT) && Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
+			{
+				m_Moving = true;
 				MousePan(delta);
-			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_LEFT))
+			}
+			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_MIDDLE))
+			{
+				m_Moving = true;
 				MouseRotate(delta);
-			else if (Input::IsMouseButtonPressed(NX_MOUSE_BUTTON_RIGHT))
-				MouseZoom(delta.y);
-		}
-		else
-		{
-			m_Moving = false;
+			}
 		}
 
 		m_Position = CalculatePosition();
@@ -48,7 +52,7 @@ namespace Nyx {
 	{
 		m_PanSpeed = 0.001f;
 		m_RotationSpeed = 0.001f;
-		m_ZoomSpeed = 0.05f;
+		m_ZoomSpeed = 0.8f;
 
 		m_Position = { -10, 10, 10 };
 		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
@@ -58,6 +62,20 @@ namespace Nyx {
 
 		m_Yaw = 3.0f * (float)PI / 4.0f;
 		m_Pitch = PI / 4.0f;
+	}
+
+	void Camera::OnEvent(Event& e)
+	{
+		if (e.GetEventType() == MouseScrolled)
+		{
+			MouseZoom(((MouseScrolledEvent&)e).GetYOffset());
+		}
+
+		if (e.GetEventType() == KeyPressed)
+		{
+			if (((KeyPressedEvent&)e).GetKeycode() == NX_KEY_F)
+				Reset();
+		}
 	}
 
 	void Camera::MousePan(const glm::vec2& delta)

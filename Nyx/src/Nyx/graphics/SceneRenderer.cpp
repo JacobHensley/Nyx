@@ -91,9 +91,6 @@ namespace Nyx
         s_Data.ClearShadowBuffer = false;
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
         s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
-        
-        s_Data.EnvironmentMap = CreateRef<EnvironmentMap>();
-        s_Data.LightEnvironment = CreateRef<LightEnvironment>();
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -123,20 +120,15 @@ namespace Nyx
         s_Data.RenderCommands.push_back(RenderCommand(mesh, transform));
     }
 
-    void SceneRenderer::SubmitDirectionalLight(Ref<DirectionalLight> light)
+    void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
     {
-        NX_CORE_ASSERT(s_Data.LightEnvironment->GetDirectionalLights().size() <= 1, "As of now there can only be one directional light in the scene");
-        s_Data.LightEnvironment->SubmitDirectionalLight(light);
-    }
-
-    void SceneRenderer::SubmitPointLight(Ref<PointLight> light)
-    {
-        s_Data.LightEnvironment->SubmitPointLight(light);
+        s_Data.EnvironmentMap = environmentMap;
+        s_Data.LightEnvironment = lightEnvironment;
     }
 
     void SceneRenderer::ShadowPass()
     {
-        if (s_Data.LightEnvironment->GetDirectionalLights().size() > 0)
+        if (s_Data.LightEnvironment->GetDirectionalLights().size() > 0 && s_Data.LightEnvironment->GetDirectionalLights()[0]->Active)
         {
             s_Data.ShadowCamera->SetProjectionMatrix(glm::ortho(-s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, -s_Data.ShadowSetting.Size, s_Data.ShadowSetting.Size, s_Data.ShadowSetting.NearClip, s_Data.ShadowSetting.FarClip));
 
@@ -154,7 +146,6 @@ namespace Nyx
             Renderer::EndScene();
             Renderer::EndRenderPass();
 
-            Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
             s_Data.ClearShadowBuffer = true;
         }
         else if (s_Data.ClearShadowBuffer)
@@ -163,6 +154,9 @@ namespace Nyx
             s_Data.ShadowPass->GetSpecification().Framebuffer->Clear();
             s_Data.ClearShadowBuffer = false;
         }
+
+        // Should we upload the shadow map buffer every frame even if there is no active light?
+        Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
     }
 
     void SceneRenderer::GeometryPass()
