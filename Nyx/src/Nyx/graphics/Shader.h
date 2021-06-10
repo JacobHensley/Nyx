@@ -56,7 +56,7 @@ namespace Nyx {
 
 		void Bind();
 		void Unbind();
-		bool Reload(); // This function is not implemented as of now
+		bool Reload();
 
 		inline const std::string& GetPath() const { return m_Path; }
 		inline uint32_t GetShaderProgram() const { return m_ShaderProgram; }
@@ -82,15 +82,16 @@ namespace Nyx {
 		}
 
 	private:
-		void Init();
+		bool Init();
 
 		std::unordered_map<ShaderStage, std::string> SplitShaders(const std::string& path);
-		uint32_t CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc);
+		bool CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc);
 		void ShaderProgramReflect();
 
 	private:
 		std::string m_Path;
 		uint32_t m_ShaderProgram;
+		bool m_Initialized = false;
 
 		std::unordered_map<ShaderStage, std::string> m_ShaderSrc;
 

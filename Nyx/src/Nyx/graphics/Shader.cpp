@@ -58,14 +58,17 @@ namespace Nyx {
 		Init();
 	}
 
-	void Shader::Init()
+	bool Shader::Init()
 	{
 		m_ShaderSrc = SplitShaders(m_Path);
-		m_ShaderProgram = CompileShaders(m_ShaderSrc);
+		bool compileResult = CompileShaders(m_ShaderSrc);
 		ShaderProgramReflect();
+
+		m_Initialized = true;
+		return compileResult;
 	}
 
-	uint32_t Shader::CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc)
+	bool Shader::CompileShaders(const std::unordered_map<ShaderStage, std::string>& shaderSrc)
 	{
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
@@ -76,14 +79,16 @@ namespace Nyx {
 		GLuint program = glCreateProgram();
 		GLuint shaderIDs[2];
 		uint32_t index = 0;
-
+		
 		for (auto&& [stage, src] : shaderSrc)
 		{
 			auto compilationResult = compiler.CompileGlslToSpv(src, Utils::ShaderStageToShaderc(stage), m_Path.c_str(), options);
+
 			if (compilationResult.GetCompilationStatus() != shaderc_compilation_status_success)
 			{
 				NX_CORE_ERROR("Warnings ({0}), Errors ({1}) \n{2}", compilationResult.GetNumWarnings(), compilationResult.GetNumErrors(), compilationResult.GetErrorMessage());
-				NX_CORE_ASSERT(false, "");
+				NX_CORE_ASSERT(m_Initialized, "");
+				return false;
 			}
 
 			const uint8_t* data = reinterpret_cast<const uint8_t*>(compilationResult.cbegin());
@@ -112,7 +117,8 @@ namespace Nyx {
 			if (infoLog.size() > 0)
 			{
 				glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
-				NX_CORE_ASSERT(false, &infoLog[0]);
+				NX_CORE_ASSERT(m_Initialized, &infoLog[0]);
+				return false;
 			}
 
 			glDeleteProgram(program);
@@ -123,7 +129,8 @@ namespace Nyx {
 			glDetachShader(program, shader);
 		}
 
-		return program;
+		m_ShaderProgram =  program;
+		return true;
 	}
 
 	//Add #Line as to reset error message line number for each shader stage
@@ -273,9 +280,20 @@ namespace Nyx {
 		glUseProgram(0);
 	}
 
+	// Works... but suspiciously
 	bool Shader::Reload()
 	{
-		return false;
+		m_RendererUniforms.clear();
+		m_MaterialUniforms.clear();
+		m_Resources.clear();
+
+		bool result = Init();
+		if (result)
+			NX_CORE_INFO("Successfully reloaded shader");
+		else
+			NX_CORE_WARN("Failed to reload shader");
+
+		return result;
 	}
 
 	uint32_t Shader::SetUniformInt(const std::string& name, int value)

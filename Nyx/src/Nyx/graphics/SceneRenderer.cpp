@@ -120,12 +120,6 @@ namespace Nyx
         s_Data.RenderCommands.push_back(RenderCommand(mesh, transform));
     }
 
-    void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
-    {
-        s_Data.EnvironmentMap = environmentMap;
-        s_Data.LightEnvironment = lightEnvironment;
-    }
-
     void SceneRenderer::ShadowPass()
     {
         if (s_Data.LightEnvironment->GetDirectionalLights().size() > 0 && s_Data.LightEnvironment->GetDirectionalLights()[0]->Active)
@@ -191,6 +185,18 @@ namespace Nyx
         Renderer::EndRenderPass();
     }
 
+    void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
+    {
+        s_Data.EnvironmentMap = environmentMap;
+        s_Data.LightEnvironment = lightEnvironment;
+    }
+    
+    void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)
+    {
+        s_Data.GeometryPass->GetSpecification().Framebuffer->Resize(width, height);
+        s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
+    }
+
     void SceneRenderer::OnImGuiRender()
     {
         ImGui::Begin("Scene Renderer");
@@ -206,7 +212,7 @@ namespace Nyx
 
         ImGui::End();
     }
-     
+
     void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear = true)
     {
         destination->Bind();
@@ -214,12 +220,6 @@ namespace Nyx
             destination->Clear();
 
         destination->Unbind();
-    }
-
-    void Nyx::SceneRenderer::Resize(uint32_t width, uint32_t height)
-    {
-        s_Data.GeometryPass->GetSpecification().Framebuffer->Resize(width, height);
-        s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
     }
 
     Ref<FrameBuffer> Nyx::SceneRenderer::GetFinalBuffer()
@@ -235,6 +235,16 @@ namespace Nyx
     Ref<Shader> SceneRenderer::GetGlassShader()
     {
         return s_Data.GlassShader;
+    }
+
+    Ref<Shader> SceneRenderer::GetCompositeShader()
+    {
+        return s_Data.CompositeShader;
+    }
+
+    Ref<Shader> SceneRenderer::GetSkyboxShader()
+    {
+        return s_Data.SkyboxShader;
     }
 
 }

@@ -4,6 +4,40 @@
 
 namespace Nyx {
 
+	template<typename T>
+	static AssetHandle LoadAssetWidget(Ref<Asset> asset, const std::string& path, const char* filter, const std::string& id)
+	{
+		std::string meshInput = path;
+		meshInput.reserve(128);
+
+		// Load Mesh button
+		if (ImGui::Button((" ... " + id).c_str()))
+		{
+			std::string file = OpenFileExplorer(filter);
+			if (file != "")
+			{
+				if (file != path)
+					return AssetManager::Load<T>(file);
+				else
+					asset->Reload();
+			}
+		}
+
+		// Mesh path input field
+		ImGui::SameLine();
+		ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 70);
+		if (ImGui::InputText(id.c_str(), &meshInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+		{
+			if (meshInput != path)
+			{
+				std::string newString = meshInput.c_str();
+				return AssetManager::Load<T>(newString);
+			}
+		}
+
+		return AssetHandle();
+	}
+
 	ObjectPanel::ObjectPanel(Ref<Scene> scene)
 		:	m_Scene(scene)
 	{
@@ -99,36 +133,11 @@ namespace Nyx {
 			if (selectedObject.HasComponent<MeshComponent>() && ImGui::CollapsingHeader("Mesh"))
 			{
 				MeshComponent& meshComponent = selectedObject.GetComponent<MeshComponent>();
-
 				Ref<Mesh> mesh = meshComponent.GetMesh();
-				const std::string& path = mesh->GetPath();
-				std::string meshInput = path;
-				meshInput.reserve(128);
 				
-				// Load Mesh button
-				if (ImGui::Button(" ... "))
-				{
-					std::string file = OpenFileExplorer("FBX\0*.FBX\0");
-					if (file != "")
-					{
-						if (file != path)
-							meshComponent.Mesh = AssetManager::Load<Mesh>(file);
-						else
-							mesh->Reload();
-					}
-				}
-
-				// Mesh path input field
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - 70);
-				if (ImGui::InputText("##MeshPathInput", &meshInput, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
-				{
-					if (meshInput != path)
-					{
-						std::string newString = meshInput.c_str();
-						meshComponent.Mesh = AssetManager::Load<Mesh>(newString);
-					}
-				}
+				AssetHandle handle = LoadAssetWidget<Mesh>(mesh, mesh->GetPath(), "FBX\0*.FBX\0", "##MeshInput");
+				if (handle != 0)
+					meshComponent.Mesh = handle;
 
 				// Material list
 				std::vector<Ref<Material>> materials = mesh->GetMaterials();
@@ -256,7 +265,18 @@ namespace Nyx {
 			if (selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::CollapsingHeader("Environment Map"))
 			{
 				EnvironmentMapComponent& environmentMapComponent = selectedObject.GetComponent<EnvironmentMapComponent>();
-				// Add abilty to change map here
+
+				// Load Radiance Map
+				Ref<TextureCube> radianceMap = environmentMapComponent.GetRadianceMap();
+				AssetHandle radiancHandle = LoadAssetWidget<TextureCube>(radianceMap, radianceMap->GetPath(), "PNG\0*.PNG\0", "##RadianceInput");
+				if (radiancHandle != 0)
+					environmentMapComponent.RadianceMap = radiancHandle;
+
+				// Load Irradiance Map
+				Ref<TextureCube> irradianceMap = environmentMapComponent.GetIrradianceMap();
+				AssetHandle irradianceHandle = LoadAssetWidget<TextureCube>(irradianceMap, irradianceMap->GetPath(), "PNG\0*.PNG\0", "##IrradianceInput");
+				if (irradianceHandle != 0)
+					environmentMapComponent.IrradianceMap = irradianceHandle;
 			}
 		}
 

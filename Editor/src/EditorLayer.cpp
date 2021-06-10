@@ -37,6 +37,20 @@ namespace Nyx {
 		m_ObjectPanel.Render(m_SelectedObject);
 
 		SceneRenderer::OnImGuiRender();
+
+		// Move somwhere else
+		ImGui::Begin("Shader Reload");
+		
+		if (ImGui::Button("Reload PBR Shader"))
+			SceneRenderer::GetPBRShader()->Reload();;
+		if (ImGui::Button("Reload Glass Shader"))
+			SceneRenderer::GetGlassShader()->Reload();
+		if (ImGui::Button("Reload Composite Shader"))
+			SceneRenderer::GetCompositeShader()->Reload();
+		if (ImGui::Button("Reload Skybox Shader"))
+			SceneRenderer::GetSkyboxShader()->Reload();
+		
+		ImGui::End();
 	}
 
 	void EditorLayer::OnEvent(Event& e)

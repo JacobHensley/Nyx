@@ -14,6 +14,8 @@ namespace Nyx {
     public:
 		virtual ~Asset() = default;
 
+		virtual bool Reload() { return false; }
+
 		bool operator==(const Asset& other) const
 		{
 			return false;
