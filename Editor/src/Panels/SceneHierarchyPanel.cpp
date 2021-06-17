@@ -3,16 +3,11 @@
 
 namespace Nyx {
 
-	SceneHierarchyPanel::SceneHierarchyPanel(Ref<Scene> scene)
-		:	m_Scene(scene)
-	{
-	}
-
 	SceneHierarchyPanel::SceneHierarchyPanel()
 	{
 	}
 
-	void SceneHierarchyPanel::Render(SceneObject& selectedObject)
+	void SceneHierarchyPanel::Render(Ref<Scene>& scene, SceneObject& selectedObject)
 	{
 		ImGui::Begin("Scene");
 
@@ -20,10 +15,10 @@ namespace Nyx {
 		int index = 0;
 
 		// Iterate though all objects in the scene
-		m_Scene->GetRegistry().each([&](auto objectID)
+		scene->GetRegistry().each([&](auto objectID)
 		{
 			// Check if object is vaild
-			SceneObject object = { objectID, m_Scene.get() };
+			SceneObject object = { objectID, scene.get() };
 			if (!object)
 				return;
 
@@ -47,7 +42,7 @@ namespace Nyx {
 
 				if (ImGui::Selectable("Delete"))
 				{
-					m_Scene->Remove(object);
+					scene->Remove(object);
 					if (selectedObject == object)
 						selectedObject = {};
 				}
@@ -72,12 +67,12 @@ namespace Nyx {
 
 			if (ImGui::Selectable("Add empty object"))
 			{
-				selectedObject = m_Scene->CreateObject("Untitled Object");
+				selectedObject = scene->CreateObject("Untitled Object");
 			}
 
 			if (ImGui::Selectable("Add mesh object"))
 			{
-				selectedObject = m_Scene->CreateObject("Untitled Object");
+				selectedObject = scene->CreateObject("Untitled Object");
 
 				// Load defaul mesh if it does not already exist
 				AssetHandle defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");

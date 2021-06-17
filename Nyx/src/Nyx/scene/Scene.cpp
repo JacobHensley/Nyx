@@ -6,6 +6,7 @@
 namespace Nyx {
 
 	Scene::Scene()
+		:	m_Path("")
 	{
 	}
 

@@ -1,9 +1,6 @@
 #include "NXpch.h"
 #include "SceneSerializer.h"
 #include "Nyx/Scene/Components.h"
-#include <yaml-cpp/yaml.h>
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 template<>
 struct YAML::convert<glm::vec3> {
@@ -52,38 +49,8 @@ struct YAML::convert<glm::vec4> {
 
 };
 
-template<>
-struct YAML::convert<glm::quat> {
-	static YAML::Node encode(const glm::quat& rhs) {
-		YAML::Node node;
-		node.push_back(rhs.w);
-		node.push_back(rhs.x);
-		node.push_back(rhs.y);
-		node.push_back(rhs.z);
-		return node;
-	}
-
-	static bool decode(const YAML::Node& node, glm::quat& rhs) {
-		if (!node.IsSequence() || node.size() != 4) {
-			return false;
-		}
-
-		rhs.w = node[0].as<float>();
-		rhs.x = node[1].as<float>();
-		rhs.y = node[2].as<float>();
-		rhs.z = node[3].as<float>();
-		return true;
-	}
-
-};
-
 namespace Nyx
 {
-	YAML::Emitter& operator << (YAML::Emitter& out, const glm::quat& q) {
-		out << YAML::Flow;
-		out << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;
-		return out;
-	}
 
 	YAML::Emitter& operator << (YAML::Emitter& out, const glm::vec3& v) {
 		out << YAML::Flow;
@@ -95,41 +62,55 @@ namespace Nyx
 	{
 		YAML::Emitter out;
 
-		//Asset Map will be moved into project file
-		out << YAML::BeginMap; // Asset Map
-		out << YAML::Key << "Assets";
-		out << YAML::Value;
+		SerializeAssets(out);
+		SerializeObjects(scene, out);
+
+		std::ofstream fout(path);
+		fout << out.c_str();
+	}
+
+	Ref<Scene> SceneSerializer::Load(const std::string& path)
+	{
+		std::vector<YAML::Node> nodes = YAML::LoadAllFromFile(path);
+
+		Ref<Scene> scene = CreateRef<Scene>();
+
+		YAML::Node assets = nodes[0];
+		LoadAssets(assets);
+
+		YAML::Node objects = nodes[1];
+		LoadObjects(scene, objects);
+
+		return scene;
+	}
+
+	void SceneSerializer::SerializeAssets(YAML::Emitter& out)
+	{
 		out << YAML::BeginSeq;
 
 		auto assetPaths = AssetManager::GetAssetPaths();
 		auto AssetUUIDs = AssetManager::GetAssets();
 
-		// Assets
 		for (auto const& [uuid, asset] : AssetUUIDs)
 		{
-			out << YAML::BeginMap; // Asset
+			out << YAML::BeginMap;
 
-			out << YAML::Key << "UUID" << YAML::Value << (UUID)uuid;
-			out << YAML::Key << "Asset Type" << YAML::Value << AssetManager::GetAssetTypeName(asset->m_AssetType);
-
-			if (assetPaths.find(uuid) != assetPaths.end()) 
+			if (assetPaths.find(uuid) != assetPaths.end())
 			{
+				out << YAML::Key << "UUID" << YAML::Value << (UUID)uuid;
+				out << YAML::Key << "Asset Type" << YAML::Value << AssetManager::GetAssetTypeName(asset->m_AssetType);
 				out << YAML::Key << "Path" << YAML::Value << assetPaths.at(uuid);
 			}
 
-			out << YAML::EndMap; // Asset
+			out << YAML::EndMap;
 		}
 
 		out << YAML::EndSeq;
-		out << YAML::EndMap; // Asset Map
+	}
 
-
-		out << YAML::BeginMap; // Scene Map
-
-		// Objects
-		out << YAML::Key << "Objects";
-		out << YAML::Value;
-		out << YAML::BeginSeq; // Object List
+	void SceneSerializer::SerializeObjects(Ref<Scene>& scene, YAML::Emitter& out)
+	{
+		out << YAML::BeginSeq;
 
 		scene->GetRegistry().each([&](auto objectID)
 		{
@@ -140,16 +121,12 @@ namespace Nyx
 			SerializeObject(out, object);
 		});
 
-		out << YAML::EndSeq; // Object List
-		out << YAML::EndMap; // Scene Map
-
-		std::ofstream fout(path);
-		fout << out.c_str();
+		out << YAML::EndSeq;
 	}
 
-	static void SerializeObject(YAML::Emitter& out, SceneObject object)
+	void SceneSerializer::SerializeObject(YAML::Emitter& out, SceneObject object)
 	{
-		out << YAML::BeginMap; // Object
+		out << YAML::BeginMap;
 
 		if (object.HasComponent<TagComponent>())
 		{
@@ -157,6 +134,7 @@ namespace Nyx
 			out << YAML::BeginMap;
 
 			auto& tag = object.GetComponent<TagComponent>().Tag;
+
 			out << YAML::Key << "Tag" << YAML::Value << tag;
 
 			out << YAML::EndMap;
@@ -168,6 +146,7 @@ namespace Nyx
 			out << YAML::BeginMap;
 
 			auto& transformComponent = object.GetComponent<TransformComponent>();
+
 			out << YAML::Key << "Translation" << YAML::Value << transformComponent.Translation;
 			out << YAML::Key << "Rotation"    << YAML::Value << transformComponent.Rotation;
 			out << YAML::Key << "Scale"       << YAML::Value << transformComponent.Scale;
@@ -181,68 +160,74 @@ namespace Nyx
 			out << YAML::BeginMap;
 
 			auto& meshComponent = object.GetComponent<MeshComponent>();
-			out << YAML::Key << "UUID" << YAML::Value << meshComponent.GetUUID();
-			out << YAML::Key << "Path" << YAML::Value << meshComponent.GetMesh()->GetPath();
+
+			out << YAML::Key << "Mesh UUID" << YAML::Value << meshComponent.GetUUID();
 
 			out << YAML::EndMap;
 		}
 
-		if (object.HasComponent<MaterialComponent>())
+		if (object.HasComponent<PointLightComponent>())
 		{
-			out << YAML::Key << "MaterialComponent";
+			out << YAML::Key << "PointLightComponent";
 			out << YAML::BeginMap;
 
-			auto& materialComponent = object.GetComponent<MaterialComponent>();
-			out << YAML::Key << "UUID" << YAML::Value << materialComponent.GetUUID();
-			out << YAML::Key << "Path" << YAML::Value << "NULL"; //Material will soon have their own file or maybe a index into a file of many materials
+			auto& pointLightComponent = object.GetComponent<PointLightComponent>();
+
+			out << YAML::Key << "Radiance"  << YAML::Value << pointLightComponent.Radiance;
+			out << YAML::Key << "Intensity" << YAML::Value << pointLightComponent.Intensity;
+			out << YAML::Key << "Active"    << YAML::Value << pointLightComponent.Active;
 
 			out << YAML::EndMap;
 		}
 
-		//TODO: lights, EnvironmentMap
+		if (object.HasComponent<DirectionalLightComponent>())
+		{
+			out << YAML::Key << "DirectionalLightComponent";
+			out << YAML::BeginMap;
 
-		out << YAML::EndMap; // Object
+			auto& directionalLightComponent = object.GetComponent<DirectionalLightComponent>();
+
+			out << YAML::Key << "Radiance" << YAML::Value << directionalLightComponent.Radiance;
+			out << YAML::Key << "Active"   << YAML::Value << directionalLightComponent.Active;
+
+			out << YAML::EndMap;
+		}
+
+		if (object.HasComponent<EnvironmentMapComponent>())
+		{
+			out << YAML::Key << "EnvironmentMapComponent";
+			out << YAML::BeginMap;
+
+			auto& environmentMapComponent = object.GetComponent<EnvironmentMapComponent>();
+
+			out << YAML::Key << "IrradianceMap UUID" << YAML::Value << environmentMapComponent.IrradianceMap.GetUUID();
+			out << YAML::Key << "RadianceMap UUID"   << YAML::Value << environmentMapComponent.RadianceMap.GetUUID();
+
+			out << YAML::EndMap;
+		}
+
+		out << YAML::EndMap;
 	}
 
-	Ref<Scene> SceneSerializer::Load(const std::string& path)
+	void SceneSerializer::LoadAssets(YAML::Node assets)
 	{
-		std::vector<YAML::Node> nodes = YAML::LoadAllFromFile(path);
-
-		YAML::Node assets = nodes[0]["Assets"];
 		for (int i = 0; i < assets.size(); i++)
 		{
 			uint64_t UUID = assets[i]["UUID"].as<uint64_t>();
-			std::string path = assets[i]["Path"] ? assets[i]["Path"].as<std::string>() : "";
-
-			if (path != "")
-			{
-				std::string type = assets[i]["Asset Type"].as<std::string>();
-				if (type == "Mesh")
-					AssetManager::TryInsertAndLoad<Mesh>(UUID, path);
-				else if (type == "Texture")
-					AssetManager::TryInsertAndLoad<Texture>(UUID, path);
-				else if (type == "TextureCube")
-					AssetManager::TryInsertAndLoad<TextureCube>(UUID, path);
-			}
-
+			std::string type = assets[i]["Asset Type"].as<std::string>();
+			std::string path = assets[i]["Path"].as<std::string>();
+			
+			if (type == "Mesh")
+				AssetManager::TryInsertAndLoad<Mesh>(UUID, path);
+			else if (type == "Texture")
+				AssetManager::TryInsertAndLoad<Texture>(UUID, path);
+			else if (type == "TextureCube")
+				AssetManager::TryInsertAndLoad<TextureCube>(UUID, path); 
 		}
+	}
 
-		//TODO: lights, EnvironmentMap
-		uint64_t radianceMapUUID = nodes[1]["RadianceMap UUID"].as<uint64_t>();
-		uint64_t irradianceMapUUID = nodes[1]["IrradianceMap UUID"].as<uint64_t>();
-		Ref<EnvironmentMap> environmentMap = CreateRef<EnvironmentMap>(UUID(radianceMapUUID), UUID(irradianceMapUUID));
-
-		Ref<LightEnvironment> lightEnvironment = CreateRef<LightEnvironment>();
-
-		DirectionalLight directionalLight = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.5f, -0.75f));
-	//	lightEnvironment->SetDirectionalLight(directionalLight);
-
-		PointLight pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
-	//	lightEnvironment->SetPointLight(pointLight);
-
-		Ref<Scene> scene = CreateRef<Scene>();
-
-		YAML::Node objects = nodes[1]["Objects"];
+	void SceneSerializer::LoadObjects(Ref<Scene>& scene, YAML::Node objects)
+	{
 		for (int i = 0; i < objects.size(); i++)
 		{
 			SceneObject object = scene->CreateObject();
@@ -250,39 +235,49 @@ namespace Nyx
 			YAML::Node tagComponent = objects[i]["TagComponent"];
 			if (tagComponent)
 			{
-				std::string tag = tagComponent["Tag"].as<std::string>();
-				object.AddComponent<TagComponent>(tag);
+				TagComponent& component = object.AddComponent<TagComponent>();
+
+				component.Tag = tagComponent["Tag"].as<std::string>();
 			}
 
 			YAML::Node transformComponent = objects[i]["TransformComponent"];
 			if (transformComponent)
 			{
-				TransformComponent& tc = object.AddComponent<TransformComponent>();
+				TransformComponent& component = object.AddComponent<TransformComponent>();
 
-				tc.Translation = transformComponent["Translation"].as<glm::vec3>();
-				tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
-				tc.Scale = transformComponent["Scale"].as<glm::vec3>();
+				component.Translation = transformComponent["Translation"].as<glm::vec3>();
+				component.Rotation = transformComponent["Rotation"].as<glm::vec3>();
+				component.Scale = transformComponent["Scale"].as<glm::vec3>();
 			}
 
 			YAML::Node meshComponent = objects[i]["MeshComponent"];
 			if (meshComponent)
 			{
-				uint64_t UUID = meshComponent["UUID"].as<uint64_t>();
-				AssetHandle handle(UUID);
+				MeshComponent& component = object.AddComponent<MeshComponent>();
 
-				MeshComponent& mc = object.AddComponent<MeshComponent>(handle);
+				uint64_t UUID = meshComponent["Mesh UUID"].as<uint64_t>();
+				component.Mesh = AssetHandle(UUID);
 			}
 
-			YAML::Node materialComponent = objects[i]["MaterialComponent"];
-			if (materialComponent)
+			YAML::Node pointLightComponent = objects[i]["PointLightComponent"];
+			if (pointLightComponent)
 			{
-				uint64_t UUID = materialComponent["UUID"].as<uint64_t>();
-				AssetHandle handle(UUID);
+				PointLightComponent& component = object.AddComponent<PointLightComponent>();
+				
+				component.Radiance = pointLightComponent["Radiance"].as<glm::vec3>();
+				component.Intensity = pointLightComponent["Intensity"].as<float>();
+				component.Active = pointLightComponent["Active"].as<uint32_t>();
+			}
 
-				MaterialComponent& mc = object.AddComponent<MaterialComponent>(handle);
+			YAML::Node directionalLightComponent = objects[i]["DirectionalLightComponent"];
+			if (directionalLightComponent)
+			{
+				DirectionalLightComponent& component = object.AddComponent<DirectionalLightComponent>();
+
+				component.Radiance = directionalLightComponent["Radiance"].as<glm::vec3>();
+				component.Active = directionalLightComponent["Active"].as<uint32_t>();
 			}
 		}
-
-		return scene;
 	}
+
 }

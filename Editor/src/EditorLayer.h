@@ -20,6 +20,15 @@ namespace Nyx {
 
 		void OnEvent(Event& e);
 
+	private:
+		void UpdateShortcuts();
+
+	private:
+		void RenderShaderReload();
+		void RenderToolBar();
+		void SaveScene(const std::string& path = "");
+		void LoadScene();
+
 		Ray CastCameraRay();
 		SceneObject PickObject(Ray& ray);
 

@@ -6,13 +6,9 @@ namespace Nyx {
 	class SceneHierarchyPanel
 	{
 	public:
-		SceneHierarchyPanel(Ref<Scene> scene);
 		SceneHierarchyPanel();
 
-		void Render(SceneObject& selectedObject);
-
-	private:
-		Ref<Scene> m_Scene;
+		void Render(Ref<Scene>& scene, SceneObject& selectedObject);
 	};
 
 }
