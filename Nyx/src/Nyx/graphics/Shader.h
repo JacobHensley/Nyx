@@ -14,12 +14,12 @@ namespace Nyx {
 
 	enum class ShaderStage
 	{
-		NONE = -1, VERTEX, FRAGMENT
+		NONE = -1, VERTEX, FRAGMENT, COMPUTE
 	};
 
 	enum class UniformType
 	{
-		NONE = -1, BOOL, INT, FLOAT, FLOAT2, FLOAT3, FLOAT4, MAT4, TEXTURE_2D, TEXTURE_CUBE
+		NONE = -1, BOOL, INT, FLOAT, FLOAT2, FLOAT3, FLOAT4, MAT4, TEXTURE_2D, TEXTURE_CUBE, IMAGE_2D
 	};
 
 	struct ShaderUniform

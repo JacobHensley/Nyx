@@ -32,6 +32,10 @@ namespace Nyx
         Ref<Camera> ShadowCamera;
         Ref<Material> DepthMaterial;
 
+        // Compute shader test
+        Ref<Shader> ComputeShader;
+        Ref<Texture> ComputeShaderTexture;
+
         bool ClearShadowBuffer;
         struct ShadowSettings
         {
@@ -88,6 +92,12 @@ namespace Nyx
             s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
         }
 
+        // Compute shader test
+        s_Data.ComputeShader = CreateRef<Shader>("assets/shaders/Compute.shader");
+        TextureParameters params;
+        params.format = TextureFormat::RGBA16F;
+        s_Data.ComputeShaderTexture = CreateRef<Texture>(1024, 1024, params);
+        
         s_Data.ClearShadowBuffer = false;
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
         s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
@@ -102,6 +112,8 @@ namespace Nyx
     void SceneRenderer::End()
     {
         Renderer::SetEnvironment(s_Data.EnvironmentMap, s_Data.LightEnvironment);
+
+        DispatchCompute();
 
         // Render
         ShadowPass();
@@ -197,18 +209,35 @@ namespace Nyx
         s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
     }
 
+    void SceneRenderer::DispatchCompute()
+    {
+        s_Data.ComputeShader->Bind();
+
+        Ref<Texture> texture = s_Data.ComputeShaderTexture;
+        glBindImageTexture(0, texture->GetTextureID(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+        glDispatchCompute(texture->GetWidth() / 32, texture->GetHeight() / 32, 1);
+    }
+
     void SceneRenderer::OnImGuiRender()
     {
         ImGui::Begin("Scene Renderer");
 
-        ImGui::DragFloat("Size", &s_Data.ShadowSetting.Size);
-        ImGui::DragFloat("Near Clip", &s_Data.ShadowSetting.NearClip);
-        ImGui::DragFloat("Far Clip", &s_Data.ShadowSetting.FarClip);
-        ImGui::DragFloat("Max Shadow Distance", &s_Data.ShadowSetting.MaxShadowDistance);
-        ImGui::DragFloat("Shadow Fade", &s_Data.ShadowSetting.ShadowFade);
-
         auto size = ImGui::GetContentRegionAvail();
-        ImGui::Image((ImTextureID)s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
+
+        if (ImGui::CollapsingHeader("Shadow Settings"))
+        {
+            ImGui::DragFloat("Size", &s_Data.ShadowSetting.Size);
+            ImGui::DragFloat("Near Clip", &s_Data.ShadowSetting.NearClip);
+            ImGui::DragFloat("Far Clip", &s_Data.ShadowSetting.FarClip);
+            ImGui::DragFloat("Max Shadow Distance", &s_Data.ShadowSetting.MaxShadowDistance);
+            ImGui::DragFloat("Shadow Fade", &s_Data.ShadowSetting.ShadowFade);
+
+            ImGui::Image((ImTextureID)s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
+        }
+        if (ImGui::CollapsingHeader("Compute shader demo"))
+        {
+            ImGui::Image((ImTextureID)s_Data.ComputeShaderTexture->GetTextureID(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
+        }
 
         ImGui::End();
     }

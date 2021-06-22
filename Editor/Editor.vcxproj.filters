@@ -18,4 +18,7 @@
     <ClCompile Include="src\Panels\SceneHierarchyPanel.cpp" />
     <ClCompile Include="src\Panels\ObjectPanel.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\Compute.shader" />
+  </ItemGroup>
 </Project>

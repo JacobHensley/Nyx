@@ -31,6 +31,7 @@ namespace Nyx
         
         static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
+        static void DispatchCompute();
 
         static void OnImGuiRender();
 

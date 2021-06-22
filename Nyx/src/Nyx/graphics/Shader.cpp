@@ -14,6 +14,7 @@ namespace Nyx {
 			{
 				case ShaderStage::VERTEX:	return shaderc_vertex_shader;
 				case ShaderStage::FRAGMENT: return shaderc_fragment_shader;
+				case ShaderStage::COMPUTE: return shaderc_compute_shader;
 			}
 
 			NX_CORE_ASSERT(false, "Unknown Type");
@@ -26,6 +27,7 @@ namespace Nyx {
 			{
 				case ShaderStage::VERTEX:	return GL_VERTEX_SHADER;
 				case ShaderStage::FRAGMENT: return GL_FRAGMENT_SHADER;
+				case ShaderStage::COMPUTE: return GL_COMPUTE_SHADER;
 			}
 
 			NX_CORE_ASSERT(false, "Unknown Type");
@@ -45,6 +47,7 @@ namespace Nyx {
 				case GL_FLOAT_MAT4:	  return UniformType::MAT4;
 				case GL_SAMPLER_2D:	  return UniformType::TEXTURE_2D;
 				case GL_SAMPLER_CUBE: return UniformType::TEXTURE_CUBE;
+				case GL_IMAGE_2D:     return UniformType::IMAGE_2D;
 			}
 
 			NX_CORE_ASSERT(false, "Unknown Type");
@@ -77,7 +80,7 @@ namespace Nyx {
 		options.SetTargetEnvironment(shaderc_target_env_opengl, shaderVersion);
 
 		GLuint program = glCreateProgram();
-		GLuint shaderIDs[2];
+		std::vector<GLuint> shaderIDs(shaderSrc.size());
 		uint32_t index = 0;
 		
 		for (auto&& [stage, src] : shaderSrc)
@@ -155,6 +158,10 @@ namespace Nyx {
 				else if (line.find("Fragment") != std::string::npos)
 				{
 					stage = ShaderStage::FRAGMENT;
+				}
+				else if (line.find("Compute") != std::string::npos)
+				{
+					stage = ShaderStage::COMPUTE;
 				}
 			}
 			else
