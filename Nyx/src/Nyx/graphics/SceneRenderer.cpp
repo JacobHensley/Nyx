@@ -25,16 +25,15 @@ namespace Nyx
         Ref<Shader> CompositeShader;
         Ref<Shader> SkyboxShader;
         Ref<Shader> DepthShader;
+        Ref<Shader> EquirectToCubemapShader;
+        Ref<Shader> FilterCubemapShader;
+        Ref<Shader> ComputeIrradianceMapShader;
 
 		Ref<EnvironmentMap> EnvironmentMap;
 		Ref<LightEnvironment> LightEnvironment;
 
         Ref<Camera> ShadowCamera;
         Ref<Material> DepthMaterial;
-
-        // Compute shader test
-        Ref<Shader> ComputeShader;
-        Ref<Texture> ComputeShaderTexture;
 
         bool ClearShadowBuffer;
         struct ShadowSettings
@@ -52,11 +51,15 @@ namespace Nyx
 
     void SceneRenderer::Init()
     {
+        // Shaders - Move to shader libary
         s_Data.PBRShader = CreateRef<Shader>("assets/shaders/PBR.shader");
         s_Data.GlassShader = CreateRef<Shader>("assets/shaders/Glass.shader");
         s_Data.CompositeShader = CreateRef<Shader>("assets/shaders/Composite.shader");
         s_Data.SkyboxShader = CreateRef<Shader>("assets/shaders/Skybox.shader");
         s_Data.DepthShader = CreateRef<Shader>("assets/shaders/Depth.shader");
+        s_Data.EquirectToCubemapShader = CreateRef<Shader>("assets/shaders/EquirectToCubemap.shader");
+        s_Data.FilterCubemapShader = CreateRef<Shader>("assets/shaders/FilterCubemap.shader");
+        s_Data.ComputeIrradianceMapShader = CreateRef<Shader>("assets/shaders/ComputeIrradianceMap.shader");
 
         // Geometry Pass
         {
@@ -91,12 +94,6 @@ namespace Nyx
             renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
             s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
         }
-
-        // Compute shader test
-        s_Data.ComputeShader = CreateRef<Shader>("assets/shaders/Compute.shader");
-        TextureParameters params;
-        params.format = TextureFormat::RGBA16F;
-        s_Data.ComputeShaderTexture = CreateRef<Texture>(1024, 1024, params);
         
         s_Data.ClearShadowBuffer = false;
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
@@ -112,8 +109,6 @@ namespace Nyx
     void SceneRenderer::End()
     {
         Renderer::SetEnvironment(s_Data.EnvironmentMap, s_Data.LightEnvironment);
-
-        DispatchCompute();
 
         // Render
         ShadowPass();
@@ -161,7 +156,6 @@ namespace Nyx
             s_Data.ClearShadowBuffer = false;
         }
 
-        // Should we upload the shadow map buffer every frame even if there is no active light?
         Renderer::SetShadowMap(s_Data.ShadowCamera->GetProjectionMatrix() * s_Data.ShadowCamera->GetViewMatrix(), s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment());
     }
 
@@ -209,15 +203,6 @@ namespace Nyx
         s_Data.CompositePass->GetSpecification().Framebuffer->Resize(width, height);
     }
 
-    void SceneRenderer::DispatchCompute()
-    {
-        s_Data.ComputeShader->Bind();
-
-        Ref<Texture> texture = s_Data.ComputeShaderTexture;
-        glBindImageTexture(0, texture->GetTextureID(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-        glDispatchCompute(texture->GetWidth() / 32, texture->GetHeight() / 32, 1);
-    }
-
     void SceneRenderer::OnImGuiRender()
     {
         ImGui::Begin("Scene Renderer");
@@ -233,10 +218,6 @@ namespace Nyx
             ImGui::DragFloat("Shadow Fade", &s_Data.ShadowSetting.ShadowFade);
 
             ImGui::Image((ImTextureID)s_Data.ShadowPass->GetSpecification().Framebuffer->GetDepthAttachment(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
-        }
-        if (ImGui::CollapsingHeader("Compute shader demo"))
-        {
-            ImGui::Image((ImTextureID)s_Data.ComputeShaderTexture->GetTextureID(), { size.x, size.x }, { 0, 1 }, { 1, 0 });
         }
 
         ImGui::End();
@@ -274,6 +255,21 @@ namespace Nyx
     Ref<Shader> SceneRenderer::GetSkyboxShader()
     {
         return s_Data.SkyboxShader;
+    }
+
+    Ref<Shader> SceneRenderer::GetEquirectToCubemapShader()
+    {
+        return s_Data.EquirectToCubemapShader;
+    }
+
+    Ref<Shader> SceneRenderer::GetFilterCubemapShader()
+    {
+        return s_Data.FilterCubemapShader;
+    }
+
+    Ref<Shader> SceneRenderer::GetComputeIrradianceMapShader()
+    {
+        return s_Data.ComputeIrradianceMapShader;
     }
 
 }

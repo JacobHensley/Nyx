@@ -9,20 +9,23 @@ namespace Nyx {
 	{
 	public:
 		TextureCube(const std::string& path);
+		TextureCube(uint32_t id, uint32_t width, uint32_t height);
 		~TextureCube();
 
 	public:
-		void Bind(uint slot);
+		void Bind(uint32_t slot);
 		void Unbind();
 
+		Ref<TextureCube> CalculateIrradianceMap();
+
 		inline const std::string& GetPath() { return m_Path; }
-		inline const uint GetTextureID() const { return m_TextureID; }
+		inline const uint32_t GetTextureID() const { return m_TextureID; }
 
 	private:
-		uint LoadFromFile(const std::string& path);
+		void LoadFromFile(const std::string& path);
 
 		std::string m_Path;
-		uint m_TextureID;
+		uint32_t m_TextureID;
 		int m_Width;
 		int m_Height;
 	};

@@ -102,5 +102,10 @@ namespace Nyx {
 			: RadianceMap(radianceMap), IrradianceMap(irradianceMap)
 		{
 		}
+		EnvironmentMapComponent(AssetHandle radianceMap)
+			: RadianceMap(radianceMap)
+		{
+			IrradianceMap = AssetManager::Insert(radianceMap.Get<TextureCube>()->CalculateIrradianceMap());
+		}
 	};
 }

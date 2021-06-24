@@ -26,9 +26,10 @@ void main()
 layout(location = 0) in vec3 v_Position;
 layout(location = 0) out vec4 color;
 
-layout(binding = 1) uniform samplerCube r_IrradianceTexture;
+layout(binding = 1) uniform samplerCube r_SkyboxTexture;
 
 void main()
 {
-	color = texture(r_IrradianceTexture, v_Position);
+	color = texture(r_SkyboxTexture, v_Position);
+	color = textureLod(r_SkyboxTexture, v_Position, 0);
 }

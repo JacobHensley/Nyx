@@ -75,7 +75,8 @@ namespace Nyx {
 		Ref<EnvironmentMap> ActiveEnvironmentMap;
 
 		Ref<Texture> BRDFLutTexture;
-		Ref<TextureCube> DefaultSkyboxTexture;
+		Ref<TextureCube> DefaultSkyboxTextureRadiance;
+		Ref<TextureCube> DefaultSkyboxTextureIrradiance;
 		Ref<FullscreenQaud> FullscreenQaud;
 		
 		UniformBuffer::CameraBuffer CameraBuffer;
@@ -99,7 +100,8 @@ namespace Nyx {
 		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
 		GenerateUniformBuffer(s_Data.ShadowBufferID, UniformBuffer::UniformBufferBinding::SHADOW_BUFFER, sizeof(s_Data.ShadowBuffer));
 
-		s_Data.DefaultSkyboxTexture = CreateRef<TextureCube>("assets/textures/Canyon_Irradiance.png");
+		s_Data.DefaultSkyboxTextureRadiance = CreateRef<TextureCube>("assets/textures/environment.hdr");
+		s_Data.DefaultSkyboxTextureIrradiance = s_Data.DefaultSkyboxTextureRadiance->CalculateIrradianceMap();
 
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");
 		s_Data.FullscreenQaud = CreateRef<FullscreenQaud>();
@@ -148,7 +150,7 @@ namespace Nyx {
 		}
 		else
 		{
-			s_Data.DefaultSkyboxTexture->Bind(RenderResourceBindings::RadianceMap);
+			s_Data.DefaultSkyboxTextureRadiance->Bind(RenderResourceBindings::RadianceMap);
 		}
 
 		if (environmentMap->irradianceMap != 0)
@@ -158,7 +160,7 @@ namespace Nyx {
 		}
 		else
 		{
-			s_Data.DefaultSkyboxTexture->Bind(RenderResourceBindings::IrradianceMap);
+			s_Data.DefaultSkyboxTextureIrradiance->Bind(RenderResourceBindings::IrradianceMap);
 		}
 
 		if (lightEnvironment->GetDirectionalLights().size() > 0)

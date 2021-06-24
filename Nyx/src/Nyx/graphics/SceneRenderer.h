@@ -31,7 +31,6 @@ namespace Nyx
         
         static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
-        static void DispatchCompute();
 
         static void OnImGuiRender();
 
@@ -41,6 +40,9 @@ namespace Nyx
         static Ref<Shader> GetGlassShader();
         static Ref<Shader> GetCompositeShader();
         static Ref<Shader> GetSkyboxShader();
+        static Ref<Shader> GetEquirectToCubemapShader();
+        static Ref<Shader> GetFilterCubemapShader();
+        static Ref<Shader> GetComputeIrradianceMapShader();
 
     private:
         static void ShadowPass();

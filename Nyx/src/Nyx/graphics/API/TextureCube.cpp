@@ -1,5 +1,12 @@
 #include "NXpch.h"
 #include "TextureCube.h"
+#include "Nyx/graphics/Shader.h"
+#include "Nyx/graphics/SceneRenderer.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
 #include <Glad/glad.h>
 #include <stbimage/stb_image.h>
 
@@ -12,11 +19,16 @@ namespace Nyx {
 		NX_CORE_INFO("Created TextureCube at Path: {0}", path);
 	}
 
+	TextureCube::TextureCube(uint32_t id, uint32_t width, uint32_t height)
+		:	m_TextureID(id), m_Width(width), m_Height(height)
+	{
+	}
+
 	TextureCube::~TextureCube()
 	{
 	}
 
-	void TextureCube::Bind(uint slot)
+	void TextureCube::Bind(uint32_t slot)
 	{
 		glBindTextureUnit(slot, m_TextureID);
 	}
@@ -26,101 +38,78 @@ namespace Nyx {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	uint TextureCube::LoadFromFile(const std::string& path)
+	Ref<TextureCube> TextureCube::CalculateIrradianceMap()
 	{
-		int bpp;
-		byte* imageData = stbi_load(path.c_str(), &m_Width, &m_Height, &bpp, STBI_rgb);
-		NX_CORE_ASSERT(imageData, "Image Data is Null");
+		uint32_t mapSize = 32;
 
-		int faceWidth = m_Width / 4;
-		int faceHeight = m_Height / 3;
-		NX_CORE_ASSERT(faceWidth == faceHeight, "Image is not the right size");
+		Ref<Shader> irradianceMapShader = SceneRenderer::GetComputeIrradianceMapShader();
+		
+		uint32_t irradianceMapID;
+		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &irradianceMapID);
+		glTextureStorage2D(irradianceMapID, 1, GL_RGBA16F, mapSize, mapSize);
+		glTextureParameteri(irradianceMapID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(irradianceMapID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		std::array<byte*, 6> faceBuffers;
+		irradianceMapShader->Bind();
+		glBindTextureUnit(0, m_TextureID);
+		glBindImageTexture(0, irradianceMapID, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+		glDispatchCompute(mapSize / 32, mapSize / 32, 6);
 
-		for (int i = 0; i < faceBuffers.size(); i++)
-			faceBuffers[i] = new byte[faceWidth * faceHeight * 3];
+		return CreateRef<TextureCube>(irradianceMapID, mapSize, mapSize);
+	}
 
-		int faceIndex = 0;
+	void TextureCube::LoadFromFile(const std::string& path)
+	{
+		uint32_t mapSize = 1024;
+		uint32_t numMips = 11;
 
-		int y = 1;
-		for (int x = 0; x < 4; x++)
+		m_Width = 1024;
+		m_Height = 1024;
+
+		// Create empty cubemap
+		uint32_t unfilteredCubemapID;
+		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &unfilteredCubemapID);
+		glTextureStorage2D(unfilteredCubemapID, numMips, GL_RGBA16F, mapSize, mapSize);
+		glTextureParameteri(unfilteredCubemapID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(unfilteredCubemapID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// Load texture from disk
+		Texture equirectTexture = Texture(path, TextureParameters(TextureFormat::RGBA16F));
+
+		// Map texture from disk into cubemap
+		Ref<Shader> equirectToCubemapShader = SceneRenderer::GetEquirectToCubemapShader();
+		equirectToCubemapShader->Bind();
+		glBindTextureUnit(0, equirectTexture.GetTextureID());
+		glBindImageTexture(0, unfilteredCubemapID, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+		glDispatchCompute(mapSize / 32, mapSize / 32, 6);
+		
+		glGenerateTextureMipmap(unfilteredCubemapID);
+
+		// Create cubemap to hold filtered map
+		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_TextureID);
+		glTextureStorage2D(m_TextureID, numMips, GL_RGBA16F, mapSize, mapSize);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_TextureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// Copy cubemap into empty cubemap
+		glCopyImageSubData(unfilteredCubemapID, GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0, m_TextureID, GL_TEXTURE_CUBE_MAP, 0, 0, 0, 0, mapSize, mapSize, 6);
+
+		// Filter cubemap
+		Ref<Shader> filterCubemapShader = SceneRenderer::GetFilterCubemapShader();
+
+		filterCubemapShader->Bind();
+		glBindTextureUnit(0, unfilteredCubemapID);
+
+		const float deltaRoughness = 1.0f / numMips;
+		for (int level = 1, size = mapSize / 2; level <= numMips; ++level, size /= 2) 
 		{
-			int xFaceOffset = x * faceWidth;
-			int yFaceOffset = y * faceHeight;
-
-			byte* dest = faceBuffers[faceIndex];
-			for (int yPixel = 0; yPixel < faceHeight; yPixel++)
-			{
-				int yOffset = yFaceOffset + yPixel;
-				for (int xPixel = 0; xPixel < faceWidth; xPixel++)
-				{
-					int xOffset = xFaceOffset + xPixel;
-					dest[(xPixel + yPixel * faceWidth) * bpp + 0] = imageData[(xOffset + yOffset * m_Width) * bpp + 0];
-					dest[(xPixel + yPixel * faceWidth) * bpp + 1] = imageData[(xOffset + yOffset * m_Width) * bpp + 1];
-					dest[(xPixel + yPixel * faceWidth) * bpp + 2] = imageData[(xOffset + yOffset * m_Width) * bpp + 2];
-				}
-			}
-			faceIndex++;
+			const GLuint numGroups = glm::max(1, size / 32);
+			glBindImageTexture(0, m_TextureID, level, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+			glProgramUniform1f(filterCubemapShader->GetShaderProgram(), 0, level * deltaRoughness);
+			glDispatchCompute(numGroups, numGroups, 6);
 		}
 
-		int x = 1;
-		for (int y = 0; y < 3; y++)
-		{
-			if (y != 1)
-			{
-				int xFaceOffset = x * faceWidth;
-				int yFaceOffset = y * faceHeight;
-
-				byte* dest = faceBuffers[faceIndex];
-				for (int yPixel = 0; yPixel < faceHeight; yPixel++)
-				{
-					int yOffset = yFaceOffset + yPixel;
-					for (int xPixel = 0; xPixel < faceWidth; xPixel++)
-					{
-						int xOffset = xFaceOffset + xPixel;
-						dest[(xPixel + yPixel * faceWidth) * bpp + 0] = imageData[(xOffset + yOffset * m_Width) * bpp + 0];
-						dest[(xPixel + yPixel * faceWidth) * bpp + 1] = imageData[(xOffset + yOffset * m_Width) * bpp + 1];
-						dest[(xPixel + yPixel * faceWidth) * bpp + 2] = imageData[(xOffset + yOffset * m_Width) * bpp + 2];
-					}
-				}
-				faceIndex++;
-			}
-		}
-
-
-		glGenTextures(1, &m_TextureID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_TextureID);
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		auto format = GL_RGB;
-		auto internalFormat = GL_RGB;
-
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[2]);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[0]);
-
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[4]);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[5]);
-
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[1]);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalFormat, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faceBuffers[3]);
-
-		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		for (int i = 0; i < faceBuffers.size(); i++)
-		{
-			delete[] faceBuffers[i];
-		}
-
-		stbi_image_free(imageData);
-
-		return uint();
+		glDeleteTextures(1, &unfilteredCubemapID); 
 	}
 
 }

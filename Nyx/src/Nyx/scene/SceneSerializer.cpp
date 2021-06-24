@@ -93,16 +93,16 @@ namespace Nyx
 
 		for (auto const& [uuid, asset] : AssetUUIDs)
 		{
-			out << YAML::BeginMap;
-
 			if (assetPaths.find(uuid) != assetPaths.end())
 			{
+				out << YAML::BeginMap;
+
 				out << YAML::Key << "UUID" << YAML::Value << (UUID)uuid;
 				out << YAML::Key << "Asset Type" << YAML::Value << AssetManager::GetAssetTypeName(asset->m_AssetType);
 				out << YAML::Key << "Path" << YAML::Value << assetPaths.at(uuid);
-			}
 
-			out << YAML::EndMap;
+				out << YAML::EndMap;
+			}
 		}
 
 		out << YAML::EndSeq;
@@ -200,8 +200,7 @@ namespace Nyx
 
 			auto& environmentMapComponent = object.GetComponent<EnvironmentMapComponent>();
 
-			out << YAML::Key << "IrradianceMap UUID" << YAML::Value << environmentMapComponent.IrradianceMap.GetUUID();
-			out << YAML::Key << "RadianceMap UUID"   << YAML::Value << environmentMapComponent.RadianceMap.GetUUID();
+			out << YAML::Key << "RadianceMap UUID" << YAML::Value << environmentMapComponent.RadianceMap.GetUUID();
 
 			out << YAML::EndMap;
 		}
@@ -276,6 +275,16 @@ namespace Nyx
 
 				component.Radiance = directionalLightComponent["Radiance"].as<glm::vec3>();
 				component.Active = directionalLightComponent["Active"].as<uint32_t>();
+			}
+
+			YAML::Node environmentMapComponent = objects[i]["EnvironmentMapComponent"];
+			if (environmentMapComponent)
+			{
+				EnvironmentMapComponent& component = object.AddComponent<EnvironmentMapComponent>();
+
+				uint64_t UUID = environmentMapComponent["RadianceMap UUID"].as<uint64_t>();
+				component.RadianceMap = AssetHandle(UUID);
+				component.IrradianceMap = AssetManager::Insert(AssetManager::Get<TextureCube>(component.RadianceMap)->CalculateIrradianceMap());
 			}
 		}
 	}

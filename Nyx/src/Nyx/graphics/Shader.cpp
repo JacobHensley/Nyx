@@ -48,6 +48,7 @@ namespace Nyx {
 				case GL_SAMPLER_2D:	  return UniformType::TEXTURE_2D;
 				case GL_SAMPLER_CUBE: return UniformType::TEXTURE_CUBE;
 				case GL_IMAGE_2D:     return UniformType::IMAGE_2D;
+				case GL_IMAGE_CUBE:   return UniformType::IMAGE_CUBE;
 			}
 
 			NX_CORE_ASSERT(false, "Unknown Type");
@@ -64,6 +65,8 @@ namespace Nyx {
 	bool Shader::Init()
 	{
 		m_ShaderSrc = SplitShaders(m_Path);
+		NX_CORE_ASSERT(m_ShaderSrc.size() >= 1, "Shader is empty or path is invalid");
+
 		bool compileResult = CompileShaders(m_ShaderSrc);
 		ShaderProgramReflect();
 

@@ -111,9 +111,8 @@ namespace Nyx {
 				// Add EnvironmentMap component
 				if (!selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::Selectable("Environment Map"))
 				{
-					auto radiance = AssetManager::Load<TextureCube>("assets/Textures/Canyon_Radiance.png");
-					auto irradiance = AssetManager::Load<TextureCube>("assets/Textures/Canyon_Irradiance.png");
-					selectedObject.AddComponent<EnvironmentMapComponent>(radiance, irradiance);
+					auto radiance = AssetManager::Load<TextureCube>("assets/Textures/environment.hdr");
+					selectedObject.AddComponent<EnvironmentMapComponent>(radiance);
 				}
 
 				ImGui::EndPopup();
@@ -268,15 +267,12 @@ namespace Nyx {
 
 				// Load Radiance Map
 				Ref<TextureCube> radianceMap = environmentMapComponent.GetRadianceMap();
-				AssetHandle radiancHandle = LoadAssetWidget<TextureCube>(radianceMap, radianceMap->GetPath(), "PNG\0*.PNG\0", "##RadianceInput");
+				AssetHandle radiancHandle = LoadAssetWidget<TextureCube>(radianceMap, radianceMap->GetPath(), "PNG\0*.PNG\0HDR\0*.HDR\0", "##RadianceInput");
 				if (radiancHandle != 0)
+				{
 					environmentMapComponent.RadianceMap = radiancHandle;
-
-				// Load Irradiance Map
-				Ref<TextureCube> irradianceMap = environmentMapComponent.GetIrradianceMap();
-				AssetHandle irradianceHandle = LoadAssetWidget<TextureCube>(irradianceMap, irradianceMap->GetPath(), "PNG\0*.PNG\0", "##IrradianceInput");
-				if (irradianceHandle != 0)
-					environmentMapComponent.IrradianceMap = irradianceHandle;
+					environmentMapComponent.IrradianceMap = AssetManager::Insert(AssetManager::Get<TextureCube>(radiancHandle)->CalculateIrradianceMap());
+				}
 			}
 		}
 
