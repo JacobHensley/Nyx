@@ -18,12 +18,7 @@ void main()
 layout(location = 0) in vec2 v_TexCoords;
 layout(location = 0) out vec4 color;
 
-struct Material
-{
-	float Exposure;
-};
-
-layout(location = 1) uniform Material u_Material;
+layout(location = 0) uniform float u_Exposure;
 
 uniform sampler2D u_InputTexture;
 
@@ -32,7 +27,7 @@ void main()
 	const float gamma = 2.2;
 	const float pureWhite = 1.0;
 
-	vec3 textureColor = texture(u_InputTexture, v_TexCoords).rgb * u_Material.Exposure;
+	vec3 textureColor = texture(u_InputTexture, v_TexCoords).rgb * u_Exposure;
 
 	// Reinhard tonemapping operator.
 	// see: "Photographic Tone Reproduction for Digital Images", eq. 4

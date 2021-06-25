@@ -35,6 +35,8 @@ namespace Nyx
         Ref<Camera> ShadowCamera;
         Ref<Material> DepthMaterial;
 
+        uint32_t UseIrradianceSkybox;
+
         bool ClearShadowBuffer;
         struct ShadowSettings
         {
@@ -98,6 +100,8 @@ namespace Nyx
         s_Data.ClearShadowBuffer = false;
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
         s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
+
+        s_Data.UseIrradianceSkybox = false;
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -161,8 +165,10 @@ namespace Nyx
 
     void SceneRenderer::GeometryPass()
     {
+        // Move into scene setting uniform buffer
         glProgramUniform1f(s_Data.PBRShader->GetShaderProgram(), 10, s_Data.ShadowSetting.MaxShadowDistance);
         glProgramUniform1f(s_Data.PBRShader->GetShaderProgram(), 11, s_Data.ShadowSetting.ShadowFade);
+        glProgramUniform1i(s_Data.SkyboxShader->GetShaderProgram(), 0, s_Data.UseIrradianceSkybox);
 
         Renderer::BeginRenderPass(s_Data.GeometryPass);
         Renderer::BeginScene(s_Data.ActiveCamera);
@@ -182,8 +188,10 @@ namespace Nyx
     {
         Renderer::BeginRenderPass(s_Data.CompositePass);
 
+        // Move into scene setting uniform buffer
+        glProgramUniform1f(s_Data.CompositeShader->GetShaderProgram(), 0, s_Data.ActiveCamera->GetExposure());
+
         s_Data.CompositeShader->Bind();
-        s_Data.CompositeShader->SetUniformFloat("u_Material.Exposure", s_Data.ActiveCamera->GetExposure());
         s_Data.GeometryPass->GetSpecification().Framebuffer->BindColorTexture(0, 0);
 
         Renderer::DrawFullscreenQuad(s_Data.CompositeShader, false);
@@ -208,6 +216,17 @@ namespace Nyx
         ImGui::Begin("Scene Renderer");
 
         auto size = ImGui::GetContentRegionAvail();
+
+        if (ImGui::CollapsingHeader("Scene Settings"))
+        {
+            float exposure = s_Data.ActiveCamera->GetExposure();
+            if (ImGui::DragFloat("Exposure", &exposure, 0.1f, 0.0f, 100.0f))
+                s_Data.ActiveCamera->SetExposure(exposure);
+
+            bool active = (bool)s_Data.UseIrradianceSkybox;
+            if (ImGui::Checkbox("Irradiance Skybox", &active))
+                s_Data.UseIrradianceSkybox = (uint32_t)active;
+        }
 
         if (ImGui::CollapsingHeader("Shadow Settings"))
         {

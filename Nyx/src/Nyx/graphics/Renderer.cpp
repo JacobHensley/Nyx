@@ -100,7 +100,7 @@ namespace Nyx {
 		GenerateUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer));
 		GenerateUniformBuffer(s_Data.ShadowBufferID, UniformBuffer::UniformBufferBinding::SHADOW_BUFFER, sizeof(s_Data.ShadowBuffer));
 
-		s_Data.DefaultSkyboxTextureRadiance = CreateRef<TextureCube>("assets/textures/environment.hdr");
+		s_Data.DefaultSkyboxTextureRadiance = CreateRef<TextureCube>("assets/Textures/Kiara Dawn.hdr");
 		s_Data.DefaultSkyboxTextureIrradiance = s_Data.DefaultSkyboxTextureRadiance->CalculateIrradianceMap();
 
 		s_Data.BRDFLutTexture = CreateRef<Texture>("assets/textures/Brdf_Lut.png");

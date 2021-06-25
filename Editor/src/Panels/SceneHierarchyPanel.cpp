@@ -75,7 +75,7 @@ namespace Nyx {
 				selectedObject = scene->CreateObject("Untitled Object");
 
 				// Load defaul mesh if it does not already exist
-				AssetHandle defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
+				AssetHandle defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube1m.fbx");
 				selectedObject.AddComponent<MeshComponent>(defaultMesh);
 			}
 

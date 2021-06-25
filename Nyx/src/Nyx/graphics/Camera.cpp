@@ -52,7 +52,7 @@ namespace Nyx {
 	{
 		m_PanSpeed = 0.001f;
 		m_RotationSpeed = 0.001f;
-		m_ZoomSpeed = 0.8f;
+		m_ZoomSpeed = 0.9f;
 
 		m_Position = { -10, 10, 10 };
 		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);

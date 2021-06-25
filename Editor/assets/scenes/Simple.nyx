@@ -1,0 +1,85 @@
+- UUID: 3547182117072683573
+  Asset Type: TextureCube
+  Path: C:\dev\Nyx\Editor\assets\textures\Kiara Dawn.hdr
+- UUID: 11074401462984820822
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Cube1m.fbx
+- UUID: 16412889944113039334
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Torus1m.fbx
+- UUID: 15095078343087348623
+  Asset Type: TextureCube
+  Path: C:\dev\Nyx\Editor\assets\textures\Lilienstein.hdr
+- UUID: 2384961101101864976
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Sphere1m.fbx
+---
+- TagComponent:
+    Tag: "Blue Light\x00Ligh"
+  TransformComponent:
+    Translation: [-2.59841228, 0.92927897, 0]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  PointLightComponent:
+    Radiance: [0.123471737, 0, 1]
+    Intensity: 1
+    Active: 1
+- TagComponent:
+    Tag: "Red Light\x00Light"
+  TransformComponent:
+    Translation: [-2.66859007, 0.665604472, 3.22280669]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  PointLightComponent:
+    Radiance: [1, 0, 0]
+    Intensity: 1
+    Active: 1
+- TagComponent:
+    Tag: "Cube\x00led Object"
+  TransformComponent:
+    Translation: [-1.83268499, 2.74389195, 2.06102967]
+    Rotation: [-0.501451194, 0.126572341, 0.507800519]
+    Scale: [0.999999762, 0.999999881, 0.999999762]
+  MeshComponent:
+    Mesh UUID: 11074401462984820822
+- TagComponent:
+    Tag: "Light\x00ed Object"
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [-1.60165322, 0.839092255, 1.66971934]
+    Scale: [1, 1, 1]
+  DirectionalLightComponent:
+    Radiance: [0.606177568, 0.606171489, 0.606171489]
+    Active: 1
+- TagComponent:
+    Tag: "Torus\x00ed Object"
+  TransformComponent:
+    Translation: [-0.856317043, 1.14142454, 0.59969461]
+    Rotation: [2.48958158, -0.383642018, -1.53271115]
+    Scale: [1.43999648, 1.44000089, 1.43999982]
+  MeshComponent:
+    Mesh UUID: 16412889944113039334
+- TagComponent:
+    Tag: "Sphere\x00d Object"
+  TransformComponent:
+    Translation: [-0.239947319, 1.2986629, 2.76304555]
+    Rotation: [0, -0, 0]
+    Scale: [1.48000002, 1.48000002, 1.48000002]
+  MeshComponent:
+    Mesh UUID: 2384961101101864976
+- TagComponent:
+    Tag: "Plane\x00ed Object"
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [0, -0, 0]
+    Scale: [10, 0.0398511849, 10]
+  MeshComponent:
+    Mesh UUID: 11074401462984820822
+- TagComponent:
+    Tag: "Sky Light\x00bject"
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  EnvironmentMapComponent:
+    RadianceMap UUID: 15095078343087348623

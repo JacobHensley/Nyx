@@ -92,7 +92,7 @@ namespace Nyx {
 				// Add mesh component
 				if (!selectedObject.HasComponent<MeshComponent>() && ImGui::Selectable("Mesh"))
 				{
-					auto defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube.fbx");
+					auto defaultMesh = AssetManager::Load<Mesh>("assets/models/Cube1m.fbx");
 					selectedObject.AddComponent<MeshComponent>(defaultMesh);
 				}
 
@@ -111,7 +111,7 @@ namespace Nyx {
 				// Add EnvironmentMap component
 				if (!selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::Selectable("Environment Map"))
 				{
-					auto radiance = AssetManager::Load<TextureCube>("assets/Textures/environment.hdr");
+					auto radiance = AssetManager::Load<TextureCube>("assets/Textures/Kiara Dawn.hdr");
 					selectedObject.AddComponent<EnvironmentMapComponent>(radiance);
 				}
 
@@ -267,7 +267,7 @@ namespace Nyx {
 
 				// Load Radiance Map
 				Ref<TextureCube> radianceMap = environmentMapComponent.GetRadianceMap();
-				AssetHandle radiancHandle = LoadAssetWidget<TextureCube>(radianceMap, radianceMap->GetPath(), "PNG\0*.PNG\0HDR\0*.HDR\0", "##RadianceInput");
+				AssetHandle radiancHandle = LoadAssetWidget<TextureCube>(radianceMap, radianceMap->GetPath(), "HDR\0*.HDR\0", "##RadianceInput");
 				if (radiancHandle != 0)
 				{
 					environmentMapComponent.RadianceMap = radiancHandle;
