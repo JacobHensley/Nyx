@@ -108,6 +108,12 @@ namespace Nyx {
 					selectedObject.AddComponent<PointLightComponent>();
 				}
 
+				// Add SpotLight component
+				if (!selectedObject.HasComponent<SpotLightComponent>() && ImGui::Selectable("Spot Light"))
+				{
+					selectedObject.AddComponent<SpotLightComponent>();
+				}
+				
 				// Add EnvironmentMap component
 				if (!selectedObject.HasComponent<EnvironmentMapComponent>() && ImGui::Selectable("Environment Map"))
 				{
@@ -258,6 +264,21 @@ namespace Nyx {
 				bool active = (bool)pointLightComponent.Active;
 				if (ImGui::Checkbox("Active##pointLight", &active))
 					pointLightComponent.Active = (uint32_t)active;
+			}
+
+			// SpotLight component
+			if (selectedObject.HasComponent<SpotLightComponent>() && ImGui::CollapsingHeader("Spot Light"))
+			{
+				SpotLightComponent& spotLightComponent = selectedObject.GetComponent<SpotLightComponent>();
+
+				ImGui::ColorEdit3("Color", glm::value_ptr(spotLightComponent.Radiance));
+				ImGui::DragFloat("Outer Cut Off", &spotLightComponent.OuterCutoff);
+				ImGui::DragFloat("Inner Cut Off", &spotLightComponent.InnerCutoff);
+				ImGui::DragFloat("Intensity", &spotLightComponent.Intensity);
+
+				bool active = (bool)spotLightComponent.Active;
+				if (ImGui::Checkbox("Active##spotLight", &active))
+					spotLightComponent.Active = (uint32_t)active;
 			}
 
 			// EnvironmentMap component

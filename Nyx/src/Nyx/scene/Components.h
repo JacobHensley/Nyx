@@ -79,6 +79,18 @@ namespace Nyx {
 		PointLightComponent(const PointLightComponent&) = default;
 	};
 
+	struct SpotLightComponent
+	{
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float InnerCutoff = 25.0f; // Degrees
+		float OuterCutoff = 45.0f;
+		float Intensity = 1.0f;
+		uint32_t Active = true;
+
+		SpotLightComponent() = default;
+		SpotLightComponent(const SpotLightComponent&) = default;
+	};
+
 	struct EnvironmentMapComponent
 	{
 		AssetHandle RadianceMap;

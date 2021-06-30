@@ -193,6 +193,22 @@ namespace Nyx
 			out << YAML::EndMap;
 		}
 
+		if (object.HasComponent<SpotLightComponent>())
+		{
+			out << YAML::Key << "SpotLightComponent";
+			out << YAML::BeginMap;
+
+			auto& spotLightComponent = object.GetComponent<SpotLightComponent>();
+
+			out << YAML::Key << "Radiance" << YAML::Value << spotLightComponent.Radiance;
+			out << YAML::Key << "InnerCutoff" << YAML::Value << spotLightComponent.InnerCutoff;
+			out << YAML::Key << "OuterCutoff" << YAML::Value << spotLightComponent.OuterCutoff;
+			out << YAML::Key << "Intensity" << YAML::Value << spotLightComponent.Intensity;
+			out << YAML::Key << "Active" << YAML::Value << spotLightComponent.Active;
+
+			out << YAML::EndMap;
+		}
+
 		if (object.HasComponent<EnvironmentMapComponent>())
 		{
 			out << YAML::Key << "EnvironmentMapComponent";
@@ -275,6 +291,18 @@ namespace Nyx
 
 				component.Radiance = directionalLightComponent["Radiance"].as<glm::vec3>();
 				component.Active = directionalLightComponent["Active"].as<uint32_t>();
+			}
+
+			YAML::Node spotLightComponent = objects[i]["SpotLightComponent"];
+			if (spotLightComponent)
+			{
+				SpotLightComponent& component = object.AddComponent<SpotLightComponent>();
+
+				component.Radiance = spotLightComponent["Radiance"].as<glm::vec3>();
+				component.InnerCutoff = spotLightComponent["InnerCutoff"].as<float>();
+				component.OuterCutoff = spotLightComponent["OuterCutoff"].as<float>();
+				component.Intensity = spotLightComponent["Intensity"].as<float>();
+				component.Active = spotLightComponent["Active"].as<uint32_t>();
 			}
 
 			YAML::Node environmentMapComponent = objects[i]["EnvironmentMapComponent"];

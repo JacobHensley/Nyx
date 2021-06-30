@@ -50,6 +50,24 @@ namespace Nyx {
 			m_LightEnvironment->AddPointLight(light);
 		}
 
+		// Spot Lights
+		auto spotLightComponents = m_Registry.group<SpotLightComponent>(entt::get<TransformComponent>);
+		for (auto object : spotLightComponents)
+		{
+			auto [transform, spotLightComponent] = spotLightComponents.get<TransformComponent, SpotLightComponent>(object);
+
+			Ref<SpotLight> light = CreateRef<SpotLight>();
+			light->Position = transform.Translation;
+			light->Direction = transform.Rotation;
+			light->Radiance = spotLightComponent.Radiance;
+			light->OuterCutoff = spotLightComponent.OuterCutoff;
+			light->InnerCutoff = spotLightComponent.InnerCutoff;
+			light->Intensity = spotLightComponent.Intensity;
+			light->Active = spotLightComponent.Active;
+
+			m_LightEnvironment->AddSpotLight(light);
+		}
+
 		// Environment Map
 		auto environmentMapComponents = m_Registry.view<EnvironmentMapComponent>();
 		for (auto object : environmentMapComponents)

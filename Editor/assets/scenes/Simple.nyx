@@ -13,35 +13,82 @@
 - UUID: 2384961101101864976
   Asset Type: Mesh
   Path: C:\dev\Nyx\Editor\assets\models\Sphere1m.fbx
+- UUID: 7177607229188632387
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Monkey1m.fbx
 ---
 - TagComponent:
-    Tag: "Blue Light\x00Ligh"
+    Tag: "Sphere 2\x00Object"
   TransformComponent:
-    Translation: [-2.59841228, 0.92927897, 0]
+    Translation: [1.97776556, 0.985558927, 2.99831009]
     Rotation: [0, -0, 0]
+    Scale: [0.597599983, 0.597599983, 0.597599983]
+  MeshComponent:
+    Mesh UUID: 2384961101101864976
+- TagComponent:
+    Tag: "Monkey\x00d Object"
+  TransformComponent:
+    Translation: [2.17852139, 0.561011732, -2.75972581]
+    Rotation: [0, -1.52279472, 0]
     Scale: [1, 1, 1]
-  PointLightComponent:
-    Radiance: [0.123471737, 0, 1]
-    Intensity: 1
+  MeshComponent:
+    Mesh UUID: 7177607229188632387
+- TagComponent:
+    Tag: "Pink Light\x00\x00ect"
+  TransformComponent:
+    Translation: [-0.58431524, 1.17365444, -2.59805679]
+    Rotation: [1.67816651, -0.145635337, -1.12954456e-06]
+    Scale: [0.999999881, 1.00000024, 0.999999285]
+  SpotLightComponent:
+    Radiance: [1, 0, 0.994048119]
+    InnerCutoff: 25
+    OuterCutoff: 48
+    Intensity: 4
     Active: 1
 - TagComponent:
-    Tag: "Red Light\x00Light"
+    Tag: "Green Light\x00igh"
   TransformComponent:
-    Translation: [-2.66859007, 0.665604472, 3.22280669]
-    Rotation: [0, -0, 0]
-    Scale: [1, 1, 1]
-  PointLightComponent:
-    Radiance: [1, 0, 0]
-    Intensity: 1
+    Translation: [1.92645228, 1.67818785, 3.10676813]
+    Rotation: [0, -0.0803583413, 0]
+    Scale: [0.999999881, 1, 0.999999881]
+  SpotLightComponent:
+    Radiance: [0, 1, 0.0357143879]
+    InnerCutoff: 3
+    OuterCutoff: 46
+    Intensity: 3
     Active: 1
 - TagComponent:
-    Tag: "Cube\x00led Object"
+    Tag: "Sky Light\x00bject"
   TransformComponent:
-    Translation: [-1.83268499, 2.74389195, 2.06102967]
-    Rotation: [-0.501451194, 0.126572341, 0.507800519]
-    Scale: [0.999999762, 0.999999881, 0.999999762]
+    Translation: [0, 0, 0]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  EnvironmentMapComponent:
+    RadianceMap UUID: 15095078343087348623
+- TagComponent:
+    Tag: "Plane\x00ed Object"
+  TransformComponent:
+    Translation: [0, -0.0136661232, 0]
+    Rotation: [0, -0, 0]
+    Scale: [10, 0.0398511849, 10]
   MeshComponent:
     Mesh UUID: 11074401462984820822
+- TagComponent:
+    Tag: "Sphere\x00d Object"
+  TransformComponent:
+    Translation: [-0.239947319, 1.2986629, 2.76304555]
+    Rotation: [0, -0, 0]
+    Scale: [1.48000002, 1.48000002, 1.48000002]
+  MeshComponent:
+    Mesh UUID: 2384961101101864976
+- TagComponent:
+    Tag: "Torus\x00ed Object"
+  TransformComponent:
+    Translation: [-0.856317043, 1.14142454, 0.59969461]
+    Rotation: [2.48958158, -0.383642018, -1.53271115]
+    Scale: [1.43999648, 1.44000089, 1.43999982]
+  MeshComponent:
+    Mesh UUID: 16412889944113039334
 - TagComponent:
     Tag: "Light\x00ed Object"
   TransformComponent:
@@ -52,34 +99,30 @@
     Radiance: [0.606177568, 0.606171489, 0.606171489]
     Active: 1
 - TagComponent:
-    Tag: "Torus\x00ed Object"
+    Tag: "Cube\x00led Object"
   TransformComponent:
-    Translation: [-0.856317043, 1.14142454, 0.59969461]
-    Rotation: [2.48958158, -0.383642018, -1.53271115]
-    Scale: [1.43999648, 1.44000089, 1.43999982]
-  MeshComponent:
-    Mesh UUID: 16412889944113039334
-- TagComponent:
-    Tag: "Sphere\x00d Object"
-  TransformComponent:
-    Translation: [-0.239947319, 1.2986629, 2.76304555]
-    Rotation: [0, -0, 0]
-    Scale: [1.48000002, 1.48000002, 1.48000002]
-  MeshComponent:
-    Mesh UUID: 2384961101101864976
-- TagComponent:
-    Tag: "Plane\x00ed Object"
-  TransformComponent:
-    Translation: [0, 0, 0]
-    Rotation: [0, -0, 0]
-    Scale: [10, 0.0398511849, 10]
+    Translation: [-1.83268499, 2.74389195, 2.06102967]
+    Rotation: [-0.501451194, 0.126572341, 0.507800519]
+    Scale: [0.999999762, 0.999999881, 0.999999762]
   MeshComponent:
     Mesh UUID: 11074401462984820822
 - TagComponent:
-    Tag: "Sky Light\x00bject"
+    Tag: "Red Light\x00Light"
   TransformComponent:
-    Translation: [0, 0, 0]
+    Translation: [-2.05248117, 1.30407381, 2.04747796]
     Rotation: [0, -0, 0]
     Scale: [1, 1, 1]
-  EnvironmentMapComponent:
-    RadianceMap UUID: 15095078343087348623
+  PointLightComponent:
+    Radiance: [1, 0, 0]
+    Intensity: 2
+    Active: 1
+- TagComponent:
+    Tag: "Blue Light\x00Ligh"
+  TransformComponent:
+    Translation: [-2.59841228, 0.92927897, -1.09470057]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  PointLightComponent:
+    Radiance: [0.123471737, 0, 1]
+    Intensity: 3
+    Active: 1

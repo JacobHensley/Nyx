@@ -70,8 +70,8 @@ layout(location = 0) out vec4 color;
 // Types
 struct DirectionalLight
 {
-	vec3 Radiance;
 	vec3 Direction;
+	vec3 Radiance;
 	bool Active;
 };
 
@@ -79,6 +79,17 @@ struct PointLight
 {
 	vec3 Position;
 	vec3 Radiance;
+	float Intensity;
+	bool Active;
+};
+
+struct SpotLight
+{
+	vec3 Position;
+	vec3 Direction;
+	vec3 Radiance;
+	float InnerCutoff;
+	float OuterCutoff;
 	float Intensity;
 	bool Active;
 };
@@ -95,6 +106,7 @@ layout(std140, binding = 1) uniform LightBuffer
 {
 	DirectionalLight DirectionLight;
 	PointLight PointLights[8];
+	SpotLight SpotLights[8];
 } r_LightBuffer;
 
 // Constants
@@ -245,6 +257,54 @@ vec3 PointLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, floa
 	return result;
 }
 
+vec3 SpotLight_Contribution(vec3 F0, vec3 V, vec3 N, vec3 albedo, float R, float M, float NdotV)
+{
+	vec3 result;
+	for (int i = 0; i < 8; i++)
+	{
+		if (r_LightBuffer.SpotLights[i].Active)
+		{	
+			vec3 spotlightDirection = normalize(-r_LightBuffer.SpotLights[i].Direction);
+			float cutOff = cos(r_LightBuffer.SpotLights[i].InnerCutoff * PI / 180.0f);
+			float outerCutoff = cos(r_LightBuffer.SpotLights[i].OuterCutoff * PI / 180.0f);
+
+			vec3 Li = normalize(r_LightBuffer.SpotLights[i].Position - v_WorldPosition);
+			float theta = dot(Li, spotlightDirection);
+			float epsilon = cutOff - outerCutoff;
+			float intensity = r_LightBuffer.SpotLights[i].Intensity * clamp((theta - outerCutoff) / epsilon, 0.0, 1.0);
+
+			if (theta > outerCutoff)
+			{
+				vec3 Lh = normalize(Li + V);
+
+				float distance = length(r_LightBuffer.SpotLights[i].Position - v_WorldPosition);
+				float constant = 1.0f;
+				float linearValue = 0.09f;
+				float quadratic = 0.032f;
+				float attenuation = 1.0 / (constant + linearValue * distance + quadratic * (distance * distance));
+				//float attenuation = 1.0 / (distance * distance);
+
+				vec3 Lradiance = r_LightBuffer.SpotLights[i].Radiance;
+
+				float cosLi = max(0.0, dot(N, Li));
+				float cosLh = max(0.0, dot(N, Lh));
+
+				vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, V)));
+				float D = ndfGGX(cosLh, R);
+				float G = gaSchlickGGX(cosLi, NdotV, R);
+
+				vec3 kd = (1.0 - F) * (1.0 - M);
+				vec3 diffuseBRDF = kd * albedo * intensity * attenuation;
+
+				vec3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * NdotV) * intensity * attenuation;
+				result += (diffuseBRDF + specularBRDF) * Lradiance * cosLi;
+			}
+		}
+	}
+
+	return clamp(result, 0.0, 20.0);
+}
+
 vec3 IBL_Contribution(vec3 Lr, vec3 albedo, float R, float M, vec3 N, vec3 V, float NdotV, vec3 F0)
 {
 	vec3 irradiance = texture(r_IrradianceTexture, N).rgb;
@@ -298,6 +358,7 @@ void main()
 
 	// Calulate light contributions
 	vec3 pointLight_Contribution = PointLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
+	vec3 spotLight_Contribution = SpotLight_Contribution(F0, view, normal, albedo, roughness, metalness, NdotV);
 	vec3 IBL_Contribution = IBL_Contribution(Lr, albedo, roughness, metalness, normal, view, NdotV, F0);
 
 	// If the direction light is active calulate it's contribution and the shadow map data
@@ -317,5 +378,5 @@ void main()
 		shadow = 1.0f - ShadowCalculation(shadowCoords, shadowFade);
 	}
 
-	color = vec4(directionalLight_Contribution * shadow + IBL_Contribution + pointLight_Contribution, 1.0f);
+	color = vec4(directionalLight_Contribution * shadow + IBL_Contribution + pointLight_Contribution + spotLight_Contribution, 1.0f);
 }

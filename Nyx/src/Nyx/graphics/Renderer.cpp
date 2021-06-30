@@ -32,6 +32,7 @@ namespace Nyx {
 		{
 			DirectionalLight DirectionalLight;
 			PointLight PointLights[8];
+			SpotLight SpotLights[8];
 		};
 
 		struct ShadowBuffer
@@ -180,6 +181,15 @@ namespace Nyx {
 				s_Data.LightBuffer.PointLights[i] = *lightEnvironment->GetPointLights()[i];
 			else
 				s_Data.LightBuffer.PointLights[i] = PointLight();
+		}
+
+		// Spot Lights
+		for (int i = 0; i < 8; i++)
+		{
+			if (lightEnvironment->GetSpotLights().size() > i)
+				s_Data.LightBuffer.SpotLights[i] = *lightEnvironment->GetSpotLights()[i];
+			else
+				s_Data.LightBuffer.SpotLights[i] = SpotLight();
 		}
 
 		UploadUniformBuffer(s_Data.LightBufferID, UniformBuffer::UniformBufferBinding::LIGHT_BUFFER, sizeof(s_Data.LightBuffer), &s_Data.LightBuffer);
