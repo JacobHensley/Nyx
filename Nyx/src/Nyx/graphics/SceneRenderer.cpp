@@ -17,6 +17,7 @@ namespace Nyx
         std::vector<RenderCommand> RenderCommands;
 
         Ref<RenderPass> GeometryPass;
+        Ref<RenderPass> MaskPass;
         Ref<RenderPass> CompositePass;
         Ref<RenderPass> ShadowPass;
 
@@ -28,14 +29,26 @@ namespace Nyx
         Ref<Shader> EquirectToCubemapShader;
         Ref<Shader> FilterCubemapShader;
         Ref<Shader> ComputeIrradianceMapShader;
+        Ref<Shader> CopyShader;
+        Ref<Shader> MaskShader;
+
+        Ref<Shader> JumpFloodInitShader;
+        Ref<Shader> JumpFloodShader;
+        Ref<Shader> FinalJumpFloodShader;
+
+        Ref<FrameBuffer> JumpFloodBuffer1;
+        Ref<FrameBuffer> JumpFloodBuffer2;
+
+        Ref<Material> MaskMaterial;
+        Ref<Material> DepthMaterial;
 
 		Ref<EnvironmentMap> EnvironmentMap;
 		Ref<LightEnvironment> LightEnvironment;
 
-        Ref<Camera> ShadowCamera;
-        Ref<Material> DepthMaterial;
-
         uint32_t UseIrradianceSkybox;
+        uint32_t SelectedObjectID;
+
+        Ref<Camera> ShadowCamera;
 
         bool ClearShadowBuffer;
         struct ShadowSettings
@@ -63,6 +76,12 @@ namespace Nyx
         s_Data.FilterCubemapShader = CreateRef<Shader>("assets/shaders/FilterCubemap.shader");
         s_Data.ComputeIrradianceMapShader = CreateRef<Shader>("assets/shaders/ComputeIrradianceMap.shader");
 
+        s_Data.JumpFloodInitShader = CreateRef<Shader>("assets/shaders/JumpFlood/JumpFloodInit.shader");
+        s_Data.JumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood/JumpFlood.shader");
+        s_Data.FinalJumpFloodShader = CreateRef<Shader>("assets/shaders/JumpFlood/FinalJumpFlood.shader");
+        s_Data.CopyShader = CreateRef<Shader>("assets/shaders/Copy.shader");
+        s_Data.MaskShader = CreateRef<Shader>("assets/shaders/Mask.shader");
+
         // Geometry Pass
         {
 			FramebufferSpecification fbSpec;
@@ -72,6 +91,16 @@ namespace Nyx
 			RenderPassSpecification renderPassSpec;
             renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
             s_Data.GeometryPass = CreateRef<RenderPass>(renderPassSpec);
+        }
+
+        // Mask Pass
+        {
+            FramebufferSpecification fbSpec;
+            fbSpec.Scale = 1.0f;
+            fbSpec.ColorAttachments = { TextureFormat::RGBA };
+            RenderPassSpecification renderPassSpec;
+            renderPassSpec.Framebuffer = CreateRef<FrameBuffer>(fbSpec);
+            s_Data.MaskPass = CreateRef<RenderPass>(renderPassSpec);
         }
 
         // Composite Pass
@@ -97,11 +126,30 @@ namespace Nyx
             s_Data.ShadowPass = CreateRef<RenderPass>(renderPassSpec);
         }
         
-        s_Data.ClearShadowBuffer = false;
+        // JumpFlood buffer 1
+        {
+            FramebufferSpecification fbSpec;
+            fbSpec.Scale = 1.0f;
+            fbSpec.ColorAttachments = { TextureFormat::RGBA16F };
+            s_Data.JumpFloodBuffer1 = CreateRef<FrameBuffer>(fbSpec);
+        }
+
+        // JumpFlood buffer 2
+        {
+            FramebufferSpecification fbSpec;
+            fbSpec.Scale = 1.0f;
+            fbSpec.ColorAttachments = { TextureFormat::RGBA16F };
+            s_Data.JumpFloodBuffer2 = CreateRef<FrameBuffer>(fbSpec);
+        }
+
+        s_Data.MaskMaterial = CreateRef<Material>(s_Data.MaskShader);
         s_Data.DepthMaterial = CreateRef<Material>(s_Data.DepthShader);
+
+        s_Data.ClearShadowBuffer = false;
         s_Data.ShadowCamera = CreateRef<Camera>(glm::ortho(-16.0f, 16.0f, -16.0f, 16.0f, -15.0f, 15.0f));
 
         s_Data.UseIrradianceSkybox = false;
+        s_Data.SelectedObjectID = -1;
     }
 
     void SceneRenderer::Begin(Scene* scene, Ref<Camera> camera)
@@ -117,17 +165,18 @@ namespace Nyx
         // Render
         ShadowPass();
         GeometryPass();
+        OutlinePass();
         CompositePass();
 
         s_Data.LightEnvironment->Clear();
 
         s_Data.RenderCommands.clear();
         s_Data.ActiveScene = nullptr;
+        s_Data.SelectedObjectID = -1;
     }
 
-    void Nyx::SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
+    void SceneRenderer::SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform)
     {
-        // TODO: culling
         s_Data.RenderCommands.push_back(RenderCommand(mesh, transform));
     }
 
@@ -177,11 +226,64 @@ namespace Nyx
 
         for (RenderCommand command : s_Data.RenderCommands)
         {
-            Renderer::SubmitMesh(command.Mesh, command.Transform, command.MaterialOverride);
+            Renderer::SubmitMesh(command.Mesh, command.Transform, nullptr);
         }
 
         Renderer::EndScene();
         Renderer::EndRenderPass();
+    }
+
+    static int s_Steps = 3;
+    void SceneRenderer::OutlinePass()
+    {   
+        // Don't do the pass if there is no selected object
+        if (s_Data.SelectedObjectID != -1)
+        {
+            // Render mask pass
+            Renderer::BeginRenderPass(s_Data.MaskPass);
+            Renderer::BeginScene(s_Data.ActiveCamera);
+
+            int i = 0;
+            for (RenderCommand command : s_Data.RenderCommands)
+            {
+                if (i == s_Data.SelectedObjectID)
+                    Renderer::SubmitMesh(command.Mesh, command.Transform, s_Data.MaskMaterial);
+                i++;
+            }
+
+            Renderer::EndScene();
+            Renderer::EndRenderPass();
+
+            // Set state for pass
+            glBlendFunc(GL_ONE, GL_ZERO);
+
+            // Initial pass
+            s_Data.JumpFloodInitShader->Bind();
+            s_Data.JumpFloodInitShader->SetUniformFloat2("u_TextureSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
+            Blit(s_Data.MaskPass->GetSpecification().Framebuffer, s_Data.JumpFloodBuffer1, s_Data.JumpFloodInitShader, true);
+
+            // Jumpflood cycle
+            int step = std::round(std::pow(s_Steps - 1, 2));
+            while (step != 0) {
+
+                s_Data.JumpFloodShader->Bind();
+                s_Data.JumpFloodShader->SetUniformInt("u_Step", step);
+                s_Data.JumpFloodShader->SetUniformFloat2("u_TexelSize", glm::vec2(1.0f / 1280.0f, 1.0f / 720.0f));
+                Blit(s_Data.JumpFloodBuffer1, s_Data.JumpFloodBuffer2, s_Data.JumpFloodShader, true);
+
+                Ref<FrameBuffer> tmp = s_Data.JumpFloodBuffer1;
+                s_Data.JumpFloodBuffer1 = s_Data.JumpFloodBuffer2;
+                s_Data.JumpFloodBuffer2 = tmp;
+
+                step /= 2;
+            }
+
+            // Restore state
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Composite jumpflood buffer onto geometry buffer
+            Blit(s_Data.JumpFloodBuffer1, s_Data.GeometryPass->GetSpecification().Framebuffer, s_Data.FinalJumpFloodShader, false);
+        }
     }
 
     void SceneRenderer::CompositePass()
@@ -198,6 +300,12 @@ namespace Nyx
 
         Renderer::EndRenderPass();
     }
+
+    void SceneRenderer::SetSelectedObject(int selectedObjectID)
+    {
+        s_Data.SelectedObjectID = selectedObjectID;
+    }
+
 
     void SceneRenderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
     {
@@ -242,12 +350,18 @@ namespace Nyx
         ImGui::End();
     }
 
-    void SceneRenderer::Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear = true)
+    void SceneRenderer::Blit(Ref<FrameBuffer> src, Ref<FrameBuffer> destination, Ref<Shader>& shader, bool clear = true)
     {
         destination->Bind();
         if (clear)
             destination->Clear();
 
+        shader->Bind();
+
+        src->BindColorTexture(0, 0);
+        Renderer::DrawFullscreenQuad(shader, true);
+
+        shader->Unbind();
         destination->Unbind();
     }
 

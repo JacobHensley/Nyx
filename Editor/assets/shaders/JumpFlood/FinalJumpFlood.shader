@@ -19,7 +19,7 @@ layout(location = 2) in vec2 v_TexCoords;
 
 layout(location = 0) out vec4 outColor;
 
-layout(location = 5) uniform sampler2D r_InputTexture;
+layout(binding = 0) uniform sampler2D r_InputTexture;
 
 void main()
 {
@@ -29,23 +29,18 @@ void main()
     //Squared distance is stored in the z component
     float dist = sqrt(curr.z);
 
-    //Calculate a nice stripe effect based on distance
-//    float alpha = smoothstep(0.8, 1, sin(140 * dist));
-    float alpha;
-    if (dist < 0.002f) // outline thickness
+    float alpha = 0.0f;
+    if (dist < 0.003f) // outline thickness
         alpha = 1.0f;
     else
         alpha = 0.0f;
+    
     vec3 color;
 
     //Calculate color based on inside/outside flag
     //w is non-zero if we are inside
-    if (curr.w != 0) {
-    //    color = 0.05 * vec3(0, 0, 0.6) / dist;
-    }
-    else {
-        color = vec3(1, 1, 1);
-    }
+    if (curr.w == 0)
+        color = vec3(1.0f, 0.4f, 0.0f);
 
     outColor = vec4(color, alpha);
 }

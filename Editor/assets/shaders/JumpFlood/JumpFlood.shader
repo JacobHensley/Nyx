@@ -5,11 +5,11 @@ layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TexCoords;
 
 layout(location = 0) out vec2 v_TexCoords;
-layout(location = 3) out vec2 v_UV[9];
 layout(location = 2) out vec2 v_TexelSize;
+layout(location = 3) out vec2 v_UV[9];
 
 layout(location = 0) uniform vec2 u_TexelSize;
-layout(location = 4) uniform int u_Step;
+layout(location = 1) uniform int u_Step;
 
 void main()
 {
@@ -41,12 +41,12 @@ void main()
 #version 450 core
 
 layout(location = 0) in vec2 v_TexCoords;
-layout(location = 3) in vec2 v_UV[9];
 layout(location = 2) in vec2 v_TexelSize;
+layout(location = 3) in vec2 v_UV[9];
 
-layout(location = 0) out vec4 outColor;
+layout(location = 0) out vec4 color;
 
-layout(location = 5) uniform sampler2D r_InputTexture;
+layout(binding = 0) uniform sampler2D r_InputTexture;
 
 float ScreenDist(vec2 v) {
     float ratio = v_TexelSize.x / v_TexelSize.y;
@@ -94,5 +94,5 @@ void main()
         }
     }
 
-    outColor = curr;
+    color = curr;
 }

@@ -27,8 +27,6 @@ namespace Nyx
 	void Material::Bind()
 	{
 		m_Shader->Bind();
-		BindTextures();
-		UploadUniforms();
 	}
 
 	void Material::Unbind()

@@ -54,19 +54,10 @@ namespace Nyx {
 		UUID GetUUID() { return Mesh.GetUUID(); }
 	};
 
-	struct MaterialComponent
+	struct SelectedComponent
 	{
-		AssetHandle Material;
-	
-		MaterialComponent() = default;
-		MaterialComponent(const MaterialComponent&) = default;
-		MaterialComponent(AssetHandle material)
-			: Material(material)
-		{
-		}
-
-		Ref<Nyx::Material> GetMaterial() { return Material.Get<Nyx::Material>(); }
-		UUID GetUUID() { return Material.GetUUID(); }
+		SelectedComponent() = default;
+		SelectedComponent(const SelectedComponent&) = default;
 	};
 
 	struct DirectionalLightComponent

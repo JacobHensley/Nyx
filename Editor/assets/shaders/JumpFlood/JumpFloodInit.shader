@@ -4,7 +4,7 @@
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec2 a_TexCoords;
 
-layout(location = 2) out vec2 v_TexCoords;
+layout(location = 0) out vec2 v_TexCoords;
 
 void main()
 {
@@ -15,12 +15,13 @@ void main()
 #Shader Fragment
 #version 450 core
 
-layout(location = 2) in vec2 v_TexCoords;
+layout(location = 0) in vec2 v_TexCoords;
 
-layout(location = 0) out vec4 outColor;
+layout(location = 0) out vec4 color;
 
-layout(location = 4) uniform vec2 u_TextureSize;
-layout(location = 5) uniform sampler2D r_InputTexture;
+layout(location = 0) uniform vec2 u_TextureSize;
+layout(binding = 0) uniform sampler2D r_InputTexture;
+
 
 float ScreenDist(vec2 v) {
     float ratio = u_TextureSize.x / u_TextureSize.y; // texture size, texel size
@@ -30,7 +31,7 @@ float ScreenDist(vec2 v) {
 
 void main()
 {
-    vec4 color = texture(r_InputTexture, v_TexCoords);
+    vec4 textureColor = texture(r_InputTexture, v_TexCoords);
 
     vec4 result;
     result.xy = vec2(100, 100);
@@ -38,11 +39,11 @@ void main()
 
     //This line determines what is considered inside vs outside
     //For this example, alpha is the determining factor
-    result.w = color.a > 0.5 ? 1 : 0;
+    result.w = textureColor.a > 0.5 ? 1 : 0;
 
     //All pixels start out as pointing wayy too far out.
     //100 image units is very far.
     //W flags whether or not we are inside or outside
 
-    outColor = result;
+    color = result;
 }

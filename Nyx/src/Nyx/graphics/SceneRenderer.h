@@ -10,14 +10,13 @@ namespace Nyx
 {
     struct RenderCommand
     {
-        RenderCommand(Ref<Mesh> mesh, const glm::mat4& transform, Ref<Material> materialOverride = nullptr)
-            : Mesh(mesh), Transform(transform), MaterialOverride(materialOverride)
+        RenderCommand(Ref<Mesh> mesh, const glm::mat4& transform)
+            : Mesh(mesh), Transform(transform)
         {
         }
 
         Ref<Mesh> Mesh;
-        glm::mat4  Transform;
-        Ref<Material> MaterialOverride;
+        glm::mat4 Transform;
     };
   
     class SceneRenderer
@@ -29,6 +28,7 @@ namespace Nyx
 
         static void SubmitMesh(Ref<Mesh> mesh, glm::mat4 transform);
         
+        static void SetSelectedObject(int selectedObjectID);
         static void SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment);
         static void Resize(uint32_t width, uint32_t height);
 
@@ -47,8 +47,9 @@ namespace Nyx
     private:
         static void ShadowPass();
         static void GeometryPass();
+        static void OutlinePass();
         static void CompositePass();
 
-        static void Blit(Ref<FrameBuffer>& src, Ref<FrameBuffer>& destination, Ref<Shader>& shader, bool clear);
+        static void Blit(Ref<FrameBuffer> src, Ref<FrameBuffer> destination, Ref<Shader>& shader, bool clear);
     };
 }

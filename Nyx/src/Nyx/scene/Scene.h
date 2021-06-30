@@ -21,6 +21,8 @@ namespace Nyx {
 		SceneObject CreateObject(const std::string& tag);
 		void Remove(SceneObject& sceneObject);
 
+		inline void SetSelectedObject(SceneObject object) { m_SelectedObject = object; }
+
 		inline entt::registry& GetRegistry() { return m_Registry; }
 
 		inline const std::string& GetPath() { return m_Path; }
@@ -29,6 +31,8 @@ namespace Nyx {
 	private:
 		entt::registry m_Registry;
 		std::string m_Path;
+
+		SceneObject m_SelectedObject;
 
 		Ref<LightEnvironment> m_LightEnvironment;
 		Ref<EnvironmentMap> m_EnvironmentMap;

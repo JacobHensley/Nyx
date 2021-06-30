@@ -5,10 +5,10 @@ namespace Nyx {
 
 	struct DirectionalLight
 	{
-		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };   // 12
-		float padding01 = 0.0f;                      // 16
-		glm::vec3 Direction = { 1.0f, 1.0f, 1.0f };  // 28
-		uint32_t Active = false;                      // 32
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float padding01 = 0.0f;
+		glm::vec3 Direction = { 1.0f, 1.0f, 1.0f };
+		uint32_t Active = false;
 
 		DirectionalLight() = default;
 		DirectionalLight(glm::vec3 radiance, glm::vec3 direction)
@@ -19,11 +19,11 @@ namespace Nyx {
 
 	struct PointLight
 	{
-		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };    // 
-		float padding03 = 0.0f;                       // 16
-		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };    // 28
-		float Intensity = 1.0f;                       // 32
-		uint32_t Active = false;                      // 36
+		glm::vec3 Position = { 0.0f, 0.0f, 0.0f };
+		float padding03 = 0.0f;
+		glm::vec3 Radiance = { 1.0f, 1.0f, 1.0f };
+		float Intensity = 1.0f;
+		uint32_t Active = false;
 		float p[3];
 
 		PointLight() = default;

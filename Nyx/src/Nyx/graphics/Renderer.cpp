@@ -64,6 +64,7 @@ namespace Nyx {
 	{
 		Nyx::SubMesh SubMesh;
 		glm::mat4 Transform;
+		Ref<Material> Material;
 		Ref<VertexArray> MeshVA;
 		Ref<IndexBuffer> MeshIB;
 	};
@@ -88,7 +89,8 @@ namespace Nyx {
 		UniformBuffer::ShadowBuffer ShadowBuffer;
 		uint32_t ShadowBufferID = -1;
 
-		std::map<MaterialRef, std::vector<SubmeshDrawCommand>> DrawList; // Map::<sortkey, Map::<Shader, Map::<Material, drawlist>>>
+		// std::map<sortKey, std:unordered_map<Shader, std:unordered_map<Material, commandList>>>
+		std::map<int, std::unordered_map<Ref<Shader>, std::unordered_map<Ref<Material>, std::vector<SubmeshDrawCommand>>>> DrawList;
 		std::unordered_map<std::string, std::function<void(const ShaderResource&)>> RendereResourceFunctions;
 	};
 
@@ -143,6 +145,7 @@ namespace Nyx {
 
 	void Renderer::SetEnvironment(Ref<EnvironmentMap> environmentMap, Ref<LightEnvironment> lightEnvironment)
 	{
+		// Rradiance Map
 		if (environmentMap->radianceMap != 0)
 		{
 			Ref<TextureCube> radiance = AssetManager::GetByUUID<TextureCube>(environmentMap->radianceMap.GetUUID());
@@ -153,6 +156,7 @@ namespace Nyx {
 			s_Data.DefaultSkyboxTextureRadiance->Bind(RenderResourceBindings::RadianceMap);
 		}
 
+		// Irradiance Map
 		if (environmentMap->irradianceMap != 0)
 		{
 			Ref<TextureCube> irradiance = AssetManager::GetByUUID<TextureCube>(environmentMap->irradianceMap.GetUUID());
@@ -163,11 +167,13 @@ namespace Nyx {
 			s_Data.DefaultSkyboxTextureIrradiance->Bind(RenderResourceBindings::IrradianceMap);
 		}
 
+		// Directional Light
 		if (lightEnvironment->GetDirectionalLights().size() > 0)
 			s_Data.LightBuffer.DirectionalLight = *lightEnvironment->GetDirectionalLights()[0];
 		else
 			s_Data.LightBuffer.DirectionalLight = DirectionalLight();
 
+		// Point Lights
 		for (int i = 0; i < 8; i++)
 		{
 			if (lightEnvironment->GetPointLights().size() > i)
@@ -189,42 +195,52 @@ namespace Nyx {
 
 	void Renderer::FlushDrawList()
 	{
-		for (auto& [materialRef, meshList] : s_Data.DrawList)
+		for (auto& [sortKey, shaderList] : s_Data.DrawList)
 		{
-			Ref<Material> material = materialRef.Material;
-			glm::vec3 cameraPosition = s_Data.ActiveCamera->GetPosition();
-
-			std::sort(meshList.begin(), meshList.end(), [material, cameraPosition](auto& a, auto& b)
+			for (auto& [shader, materialList] : shaderList)
 			{
-				float MeshADistance = glm::length(cameraPosition - glm::vec3(a.Transform[3]));
-				float MeshBDistance = glm::length(cameraPosition - glm::vec3(b.Transform[3]));
-				if (!material->IsOpaque())
-					return MeshADistance > MeshBDistance;
+				// Do shader stage stuff here
+				shader->Bind();
+				const std::unordered_map<std::string, ShaderUniform>& rendererUniforms = shader->GetRendererUniforms();
 
-				return MeshADistance < MeshBDistance;
-			});
+				for (auto& [material, commandList] : materialList)
+				{	
+					// Do material stage stuff here
+					material->BindTextures();
+					material->UploadUniforms();
 
-			material->Bind();
+					for (auto& command : commandList)
+					{
+						SubMesh& commandSubmesh = command.SubMesh;
+						glm::mat4& commandTransform = command.Transform;
+						Ref<Material> commandMaterial = command.Material;
 
-			Ref<Shader> shader = material->GetShader();
-			
-			const std::unordered_map<std::string, ShaderUniform>& rendererUniforms = shader->GetRendererUniforms();
-			for (auto& submeshDC : meshList)
-			{
-				SubMesh& submesh = submeshDC.SubMesh;
-				glm::mat4& transform = submeshDC.Transform; // Entity transform
+						// Sort command list by distance and opaqueness
+						glm::vec3 cameraPosition = s_Data.ActiveCamera->GetPosition();
+						std::sort(commandList.begin(), commandList.end(), [commandMaterial, cameraPosition](auto& a, auto& b)
+						{
+							float MeshADistance = glm::length(cameraPosition - glm::vec3(a.Transform[3]));
+							float MeshBDistance = glm::length(cameraPosition - glm::vec3(b.Transform[3]));
+							if (!commandMaterial->IsOpaque())
+								return MeshADistance > MeshBDistance;
 
-				if (rendererUniforms.find("r_Renderer.Transform") != rendererUniforms.end())
-				{
-					ShaderUniform transformUniform = rendererUniforms.at("r_Renderer.Transform");
-					shader->SetUniformMat4(transformUniform.Name, transform * submesh.Transform);
+							return MeshADistance < MeshBDistance;
+						});
+
+						// Upload final transform uniform
+						if (rendererUniforms.find("r_Renderer.Transform") != rendererUniforms.end())
+						{
+							ShaderUniform transformUniform = rendererUniforms.at("r_Renderer.Transform");
+							shader->SetUniformMat4(transformUniform.Name, commandTransform * commandSubmesh.Transform);
+						}
+
+						command.MeshVA->Bind();
+						command.MeshIB->Bind();
+
+						glEnable(GL_DEPTH_TEST); // TEMP
+						glDrawElementsBaseVertex(GL_TRIANGLES, commandSubmesh.IndexCount, GL_UNSIGNED_INT, (void*)(commandSubmesh.IndexOffset * sizeof(uint)), commandSubmesh.VertexOffset);
+					}
 				}
-
-				submeshDC.MeshVA->Bind();
-				submeshDC.MeshIB->Bind();
-
-				glEnable(GL_DEPTH_TEST); // TEMP
-				glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(submesh.IndexOffset * sizeof(uint)), submesh.VertexOffset);
 			}
 		}
 
@@ -248,7 +264,7 @@ namespace Nyx {
 				material = materials[subMesh.MaterialIndex];
 			}
 
-			s_Data.DrawList[material].push_back({ subMesh, transform, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
+			s_Data.DrawList[material->GetMaterialSortKey()][material->GetShader()][material].push_back({ subMesh, transform, material, mesh->GetVertexArray(), mesh->GetIndexBuffer() });
 		}
 	}
 

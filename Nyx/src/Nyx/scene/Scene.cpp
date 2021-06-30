@@ -62,11 +62,18 @@ namespace Nyx {
 		SceneRenderer::SetEnvironment(m_EnvironmentMap, m_LightEnvironment);
 
 		// Meshes
+		int i = 0;
 		auto group = m_Registry.group<MeshComponent>(entt::get<TransformComponent>);
 		for (auto object : group)
 		{
 			auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(object);
+
 			SceneRenderer::SubmitMesh(mesh.GetMesh(), transform.GetTransform());
+
+			if (object == m_SelectedObject)
+				SceneRenderer::SetSelectedObject(i);
+
+			i++;
 		}
 
 		SceneRenderer::End();

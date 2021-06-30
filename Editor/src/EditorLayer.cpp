@@ -24,6 +24,8 @@ namespace Nyx {
 		m_Scene->Update();
 		m_EditorCamera->Update();
 
+		m_Scene->SetSelectedObject(m_SelectedObject);
+		 
 		UpdateShortcuts();
 	}
 

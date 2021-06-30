@@ -25,6 +25,9 @@ namespace Nyx {
 
         void Bind();
         void Unbind();
+        void BindTextures();
+        void UploadUniforms();
+
         bool Reload(); // This function is not implemented as of now
 
         template<typename T>
@@ -112,8 +115,6 @@ namespace Nyx {
 
     private:
         void Init();
-        void BindTextures();
-        void UploadUniforms();
 
     private:
         Ref<Shader> m_Shader;
