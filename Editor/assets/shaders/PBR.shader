@@ -329,6 +329,7 @@ float ShadowCalculation(vec3 shadowCoords, float shadowFade)
 	// get depth of current fragment from light's perspective
 	float currentDepth = shadowCoords.z;
 
+	// TODO: v_WorldNormals[2]
 	// check whether current frag pos is in shadow
 	float bias = max(0.002 * (1.0 - dot(v_WorldNormals, r_LightBuffer.DirectionLight.Direction)), 0.002);
 	float shadow = step(closestDepth + bias, currentDepth);

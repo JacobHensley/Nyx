@@ -1,0 +1,159 @@
+- UUID: 8202937217282281809
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VaseRound_normal.png
+- UUID: 13180021028486946193
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Bricks_a_Albedo.png
+- UUID: 6416793975125275345
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Details_normal.png
+- UUID: 11402447676543988889
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VaseRound_diffuse.png
+- UUID: 14117106053459650865
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Cube1m.fbx
+- UUID: 1803562282655253835
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Thorn_diffuse.png
+- UUID: 14589390953138406117
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Thorn_normal.png
+- UUID: 4763124662309847781
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Red_normal.png
+- UUID: 5347122934734216660
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VasePlant_normal.png
+- UUID: 3160428171675690900
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_FlagPole_normal.png
+- UUID: 13566387488553493692
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VasePlant_diffuse.png
+- UUID: 16823729725662863676
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Red_diffuse.png
+- UUID: 31290142922994830
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Background_Albedo.png
+- UUID: 13326516829434577486
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Blue_diffuse.png
+- UUID: 12269733186086014017
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Background_Normal.png
+- UUID: 13356443487211262145
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Blue_normal.png
+- UUID: 2036911345743705263
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Bricks_a_Normal.png
+- UUID: 14541808718083477743
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Floor_diffuse.png
+- UUID: 2350349247608889602
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Arch_diffuse.png
+- UUID: 55048425331859930
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Arch_normal.png
+- UUID: 12547809724567663770
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Green_normal.png
+- UUID: 1863180912773851226
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Vase_diffuse.png
+- UUID: 8697131059788365086
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Ceiling_diffuse.png
+- UUID: 9346882109543865246
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VaseHanging_diffuse.png
+- UUID: 9853161625638826346
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Ceiling_normal.png
+- UUID: 13447426564163614634
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza.fbx
+- UUID: 16036914053637881296
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_a_diffuse.png
+- UUID: 5435744383229498478
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_a_normal.png
+- UUID: 6179251371280618951
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Floor_normal.png
+- UUID: 12263268013507469757
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_c_diffuse.png
+- UUID: 4318320783752172349
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Roof_normal.png
+- UUID: 17192500538870056778
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_c_normal.png
+- UUID: 9041145340094321314
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Details_diffuse.png
+- UUID: 2740186851680026067
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_b_diffuse.png
+- UUID: 1333112346232721155
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Column_b_normal.png
+- UUID: 13973473139733823620
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_FlagPole_diffuse.png
+- UUID: 10405310082004209860
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\ChainTexture_Albedo.png
+- UUID: 18212424717745620852
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Green_diffuse.png
+- UUID: 11513979677085442537
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Green_normal.png
+- UUID: 11328187759260159003
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Fabric_Red_normal.png
+- UUID: 12414613782788699638
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Blue_diffuse.png
+- UUID: 9642578613600215772
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Blue_normal.png
+- UUID: 4626343713717125336
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Red_diffuse.png
+- UUID: 3635885421568911085
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Curtain_Green_diffuse.png
+- UUID: 11376228676186917473
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\ChainTexture_Normal.png
+- UUID: 7717202459146780832
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\VaseHanging_normal.png
+- UUID: 1697166016282936198
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Vase_normal.png
+- UUID: 209325579676378421
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Lion_Albedo.png
+- UUID: 9692760598015369399
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Lion_Normal.png
+- UUID: 12380536901865802667
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Sponza\Sponza_Roof_diffuse.png
+---
+- TagComponent:
+    Tag: Untitled Object
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [0, -0, 0]
+    Scale: [1, 1, 1]
+  MeshComponent:
+    Mesh UUID: 13447426564163614634

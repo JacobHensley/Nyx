@@ -1,0 +1,44 @@
+- UUID: 9626995885656121027
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Cube1m.fbx
+- UUID: 14733699077406707023
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Cerberus\Cerberus_Roughness.png
+- UUID: 10615762380074898055
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Cerberus\Cerberus_Metalness.png
+- UUID: 15980735346334581977
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Cerberus\Cerberus_Albedo.png
+- UUID: 3887353277470969420
+  Asset Type: Texture
+  Path: C:\dev\Nyx\Editor\assets\models\Cerberus\Cerberus_Normal.png
+- UUID: 14994154247597921949
+  Asset Type: Mesh
+  Path: C:\dev\Nyx\Editor\assets\models\Cerberus\Cerberus.fbx
+---
+- TagComponent:
+    Tag: Untitled Object
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [-1.66235936, 1.1320982, -1.52616477]
+    Scale: [0.999999762, 1.00000012, 1.00000036]
+  DirectionalLightComponent:
+    Radiance: [1, 1, 1]
+    Active: 1
+- TagComponent:
+    Tag: "Plane\x00ed Object"
+  TransformComponent:
+    Translation: [0, -0.899999976, 0]
+    Rotation: [0, -0, 0]
+    Scale: [10, 0.0399102047, 10]
+  MeshComponent:
+    Mesh UUID: 9626995885656121027
+- TagComponent:
+    Tag: "Cerberus\x00Object"
+  TransformComponent:
+    Translation: [0, 0, 0]
+    Rotation: [0, -0, 0]
+    Scale: [2, 2, 2]
+  MeshComponent:
+    Mesh UUID: 14994154247597921949
