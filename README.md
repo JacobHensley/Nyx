@@ -2,4 +2,6 @@
 
 Nyx is a C++ realtime high performance rendering engine.
 
-Nyx is built by [@TheCherno](https://github.com/TheCherno) and me as he teaches me programming and is partially based on his Hazel Engine.
+Nyx is built by me with help of [@TheCherno](https://github.com/TheCherno) as he teaches me programming and is partially based on his Hazel Engine.
+
+<img src="https://www.jdhensley.com/assets/Nyx400x200.png" width="600">
